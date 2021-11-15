@@ -7,7 +7,11 @@ const Register = () => {
   const router = useRouter();
 
   function validate(value) {
-    let arrOfEmail = ["hi@itechart-group.com", "bey", "hello"];
+    let arrOfEmail = [
+      "misha.mishin@itechart-group.com",
+      "ivan.ivanov@itechart-group.com",
+      "andrei.andreev@itechart-group.com",
+    ];
     let error = {};
     if (!value.email) {
       error.email = "Email is required";
