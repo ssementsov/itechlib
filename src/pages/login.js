@@ -56,7 +56,7 @@ const Login = () => {
             >
               <Grid item xs={12} md={12}>
                 <GoogleLogin
-                  clientId="712390560273-hsd5cnnq6anhfh7d2vk5ibavmabpj5sv.apps.googleusercontent.com"
+                  clientId={process.env.GOOGLE_CLIENT_ID}
                   render={(renderProps) => (
                     <Button
                       fullWidth
