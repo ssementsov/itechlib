@@ -13,6 +13,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { Book } from "../../__mocks__/books";
 
 export const BooksListResults = ({ books, ...rest }) => {
   const [selectedBookIds, setSelectedBookIds] = useState([]);
@@ -97,11 +98,11 @@ export const BooksListResults = ({ books, ...rest }) => {
                   <TableRow
                     hover
                     key={book.id}
-                    selected={selectedBookIds.indexOf(book.id) !== -1}
+                    selected={selectedBookIds.includes(book.id)}
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
-                        checked={selectedBookIds.indexOf(book.id) !== -1}
+                        checked={selectedBookIds.includes(book.id)}
                         onChange={(event) => handleSelectOne(event, book.id)}
                         value="true"
                       />
@@ -144,5 +145,5 @@ export const BooksListResults = ({ books, ...rest }) => {
 };
 
 BooksListResults.propTypes = {
-  books: PropTypes.array.isRequired,
+  books: PropTypes.arrayOf(PropTypes.instanceOf(Book)),
 };

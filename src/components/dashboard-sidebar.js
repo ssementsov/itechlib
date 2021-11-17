@@ -13,6 +13,7 @@ import { SettingsIcon } from "../icons/settings-icon";
 import { HelpIcon } from "../icons/help-icon";
 import { Logo } from "./logo";
 import { NavItem } from "./nav-item";
+import { theme } from "../theme/index";
 
 const items = [
   {
@@ -65,19 +66,12 @@ export const DashboardSidebar = (props) => {
     noSsr: false,
   });
 
-  useEffect(
-    () => {
-      if (!router.isReady) {
-        return;
-      }
-
-      if (open) {
-        onClose?.();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.asPath]
-  );
+  useEffect(() => {
+    if (open) {
+      onClose?.();
+    }
+    return;
+  }, [router.asPath]);
 
   const content = (
     <>
@@ -103,8 +97,9 @@ export const DashboardSidebar = (props) => {
           </Box>
         </div>
         <Divider
+          theme={theme}
           sx={{
-            borderColor: "#2D3748",
+            borderColor: "background.divider",
             my: 3,
           }}
         />
@@ -118,7 +113,7 @@ export const DashboardSidebar = (props) => {
             />
           ))}
         </Box>
-        <Divider sx={{ borderColor: "#2D3748" }} />
+        <Divider sx={{ borderColor: "background.divider" }} />
         <Box
           sx={{
             px: 2,
@@ -132,6 +127,8 @@ export const DashboardSidebar = (props) => {
       </Box>
     </>
   );
+
+  const propsForDrawer = {};
 
   if (lgUp) {
     return (

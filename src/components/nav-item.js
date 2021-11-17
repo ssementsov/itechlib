@@ -7,6 +7,23 @@ export const NavItem = (props) => {
   const { href, icon, title, ...others } = props;
   const router = useRouter();
   const active = href ? router.pathname === href : false;
+  const stylesForButton = {
+    backgroundColor: active && "action.activeСategory",
+    borderRadius: 1,
+    color: active ? "secondary.main" : "neutral.300",
+    fontWeight: active && "fontWeightBold",
+    justifyContent: "flex-start",
+    px: 3,
+    textAlign: "left",
+    textTransform: "none",
+    width: "100%",
+    "& .MuiButton-startIcon": {
+      color: active ? "secondary.main" : "neutral.400",
+    },
+    "&:hover": {
+      backgroundColor: "action.activeСategory",
+    },
+  };
 
   return (
     <ListItem
@@ -24,23 +41,7 @@ export const NavItem = (props) => {
           component="a"
           startIcon={icon}
           disableRipple
-          sx={{
-            backgroundColor: active && "rgba(255,255,255, 0.08)",
-            borderRadius: 1,
-            color: active ? "secondary.main" : "neutral.300",
-            fontWeight: active && "fontWeightBold",
-            justifyContent: "flex-start",
-            px: 3,
-            textAlign: "left",
-            textTransform: "none",
-            width: "100%",
-            "& .MuiButton-startIcon": {
-              color: active ? "secondary.main" : "neutral.400",
-            },
-            "&:hover": {
-              backgroundColor: "rgba(255,255,255, 0.08)",
-            },
-          }}
+          sx={stylesForButton}
         >
           <Box sx={{ flexGrow: 1 }}>{title}</Box>
         </Button>
