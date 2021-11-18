@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
+import AddNewBookModal from "../AddNewBook/AddNewBookModal";
 
 export const BooksListToolbar = (props) => (
   <Box {...props}>
@@ -24,11 +25,9 @@ export const BooksListToolbar = (props) => (
       <Typography sx={{ m: 1 }} variant="h4">
         Book catalogue
       </Typography>
-      <Box sx={{ m: 1 }}>
+      <Box sx={{ m: 1, display: "flex" }}>
         <Button sx={{ mr: 1 }}>Suggest a book</Button>
-        <Button color="primary" variant="contained">
-          Add a Book
-        </Button>
+        <AddNewBookModal />
       </Box>
     </Box>
     <Box sx={{ mt: 3 }}>

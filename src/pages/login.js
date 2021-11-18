@@ -6,7 +6,7 @@ import { GoogleLogin } from "react-google-login";
 const Login = () => {
   const router = useRouter();
 
-  const responseGoogle = (response) => {
+  const responseGoogle = () => {
     router.push("/home");
   };
 
