@@ -11,10 +11,10 @@ services:
       - lib
     container_name: nginx_lib
     volumes:
-      - front:/usr/share/nginx/html
+      - exchange:/usr/share/nginx/html
 networks:
   lib:
     name: lib 
 volumes:
-  front:
-    name: 
+  exchange:
+    name: exchange
