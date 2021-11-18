@@ -1,5 +1,13 @@
 version: '3.5'
 services:
+  React:
+    build:   
+      context: ./React
+      dockerfile: Dockerfile
+    networks:
+      - lib
+    container_name: react
+    
   nginx:
     build:   
       context: ./nginx
