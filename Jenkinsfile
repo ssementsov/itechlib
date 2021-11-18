@@ -1,0 +1,41 @@
+pipeline {
+          agent none
+           options {
+		timestamps ()
+	    } 
+	
+	stages{
+		     stage('Create docker'){
+				agent{
+				    dockerfile{  
+					        filename './React/Dockerfile'
+	                        args '--name yarn -v exchange:/exchange  '
+					  	
+				    }
+	            }
+	           		 stages{
+	                		stage('Build'){
+						steps{
+						                sh '''
+						                yarn install
+								            yarn build
+						                cp -r build/* /exchange
+						                '''
+							    	}
+	                		}
+				    }
+			}	    
+		    stage('Nginx'){
+		      agent any
+           		 stages{
+                		stage('Start Nginx'){
+                    			steps{
+				                 sh '''
+		 			              	docker-compose up -d ''' 
+			    	        }
+                             }
+			}	 
+		 
+		   }
+		}	
+	}    
