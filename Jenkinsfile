@@ -17,8 +17,8 @@ pipeline {
 	                		stage('Build'){
 						steps{
 						                sh '''
-						                yarn install
-								            yarn build
+								npm install
+						                npm run build
 						                cp -r build/* /exchange
 						                '''
 							    	}
