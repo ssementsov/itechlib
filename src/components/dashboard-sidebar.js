@@ -67,10 +67,9 @@ export const DashboardSidebar = (props) => {
   });
 
   useEffect(() => {
-    if (open) {
+    if (router.isReady && open) {
       onClose?.();
     }
-    return;
   }, [router.asPath]);
 
   const content = (
@@ -127,8 +126,6 @@ export const DashboardSidebar = (props) => {
       </Box>
     </>
   );
-
-  const propsForDrawer = {};
 
   if (lgUp) {
     return (

@@ -13,7 +13,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Book } from "../../__mocks__/books";
+import { Book } from "../../services/book";
 
 export const BooksListResults = ({ books, ...rest }) => {
   const [selectedBookIds, setSelectedBookIds] = useState([]);

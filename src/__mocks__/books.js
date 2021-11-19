@@ -1,26 +1,5 @@
 import { v4 as uuid } from "uuid";
-
-export class Book {
-  constructor(
-    id,
-    title,
-    author,
-    cathegory,
-    language,
-    description,
-    rating,
-    status
-  ) {
-    this.id = id;
-    this.title = title;
-    this.author = author;
-    this.cathegory = cathegory;
-    this.language = language;
-    this.description = description;
-    this.rating = rating;
-    this.status = status;
-  }
-}
+import { Book } from "./../services/book";
 
 let newBook = new Book(
   uuid(),
