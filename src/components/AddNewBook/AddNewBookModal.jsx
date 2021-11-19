@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Box, Modal, Button } from "@mui/material";
 import AddNewBookFormBox from "./AddNewBookFormBox";
-import { maxHeight } from "@mui/system";
 
 const style = {
   position: "absolute",
@@ -21,7 +20,7 @@ const style = {
 };
 
 export default function AddNewBookModal() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -32,7 +31,7 @@ export default function AddNewBookModal() {
   return (
     <div>
       <Button onClick={handleOpen} color="primary" variant="contained">
-        Add a Book
+        Add a book
       </Button>
       <Modal open={open} onClose={handleClose}>
         <Box

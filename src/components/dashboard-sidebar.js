@@ -67,10 +67,10 @@ export const DashboardSidebar = (props) => {
   });
 
   useEffect(() => {
-    if (open) {
+    if (router.isReady && open) {
       onClose?.();
     }
-    return;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.asPath]);
 
   const content = (
@@ -127,8 +127,6 @@ export const DashboardSidebar = (props) => {
       </Box>
     </>
   );
-
-  const propsForDrawer = {};
 
   if (lgUp) {
     return (
