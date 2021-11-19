@@ -1,6 +1,6 @@
-import { useState } from "react";
-import PerfectScrollbar from "react-perfect-scrollbar";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import PropTypes from 'prop-types'
 import {
   Box,
   Card,
@@ -12,57 +12,57 @@ import {
   TablePagination,
   TableRow,
   Typography,
-} from "@mui/material";
-import { Book } from "../../__mocks__/books";
+} from '@mui/material'
+import { Book } from '../../__mocks__/books'
 
 export const BooksListResults = ({ books, ...rest }) => {
-  const [selectedBookIds, setSelectedBookIds] = useState([]);
-  const pages = [5, 10, 25];
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page]);
+  const [selectedBookIds, setSelectedBookIds] = useState([])
+  const pages = [5, 10, 25]
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(pages[page])
 
   const handleSelectAll = (event) => {
-    let newSelectedBookIds;
+    let newSelectedBookIds
 
     if (event.target.checked) {
-      newSelectedBookIds = books.map((book) => book.id);
+      newSelectedBookIds = books.map((book) => book.id)
     } else {
-      newSelectedBookIds = [];
+      newSelectedBookIds = []
     }
 
-    setSelectedBookIds(newSelectedBookIds);
-  };
+    setSelectedBookIds(newSelectedBookIds)
+  }
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedBookIds.indexOf(id);
-    let newSelectedBookIds = [];
+    const selectedIndex = selectedBookIds.indexOf(id)
+    let newSelectedBookIds = []
 
     if (selectedIndex === -1) {
-      newSelectedBookIds = newSelectedBookIds.concat(selectedBookIds, id);
+      newSelectedBookIds = newSelectedBookIds.concat(selectedBookIds, id)
     } else if (selectedIndex === 0) {
-      newSelectedBookIds = newSelectedBookIds.concat(selectedBookIds.slice(1));
+      newSelectedBookIds = newSelectedBookIds.concat(selectedBookIds.slice(1))
     } else if (selectedIndex === selectedBookIds.length - 1) {
       newSelectedBookIds = newSelectedBookIds.concat(
         selectedBookIds.slice(0, -1)
-      );
+      )
     } else if (selectedIndex > 0) {
       newSelectedBookIds = newSelectedBookIds.concat(
         selectedBookIds.slice(0, selectedIndex),
         selectedBookIds.slice(selectedIndex + 1)
-      );
+      )
     }
 
-    setSelectedBookIds(newSelectedBookIds);
-  };
+    setSelectedBookIds(newSelectedBookIds)
+  }
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
   return (
     <Card {...rest}>
@@ -110,8 +110,8 @@ export const BooksListResults = ({ books, ...rest }) => {
                     <TableCell>
                       <Box
                         sx={{
-                          alignItems: "center",
-                          display: "flex",
+                          alignItems: 'center',
+                          display: 'flex',
                         }}
                       >
                         <Typography color="textPrimary" variant="body1">
@@ -141,9 +141,9 @@ export const BooksListResults = ({ books, ...rest }) => {
         rowsPerPageOptions={pages}
       />
     </Card>
-  );
-};
+  )
+}
 
 BooksListResults.propTypes = {
   books: PropTypes.arrayOf(PropTypes.instanceOf(Book)),
-};
+}
