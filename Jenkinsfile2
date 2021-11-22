@@ -1,16 +1,8 @@
 pipeline {
-          agent none
-           options {
-		timestamps ()
-	    } 
-   Stages   
-	    stage('Create docker'){
-				agent{
-				    dockerfile{  
-					        filename './React/Dockerfile2'
-	           	    }
-	       }
-		 }
-	}
+         agent{
+	       dockerfile{  
+	           filename './React/Dockerfile2'
+	      }
+	  }
     
 }
