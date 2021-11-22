@@ -1,14 +1,24 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { GoogleLogin } from "react-google-login";
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { Box, Button, Container, Grid, Typography } from '@mui/material'
+import { GoogleLogin } from 'react-google-login'
 
 const Login = () => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const responseGoogle = () => {
-    router.push("/home");
-  };
+  const responseGoogle = (response) => {
+    let userName = JSON.stringify(response.profileObj.givenName)
+    localStorage.setItem('UserName', userName)
+    router.push('/home')
+  }
+
+  useEffect(() => {
+    let userName = localStorage.getItem('UserName')
+    if (userName && router.pathname === '/login') {
+      router.push('/home')
+    }
+  })
 
   return (
     <>
@@ -18,25 +28,25 @@ const Login = () => {
       <Box
         component="main"
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           flexGrow: 1,
-          minHeight: "100%",
+          minHeight: '100%',
         }}
       >
         <Container
           maxWidth="sm"
           sx={{
-            border: "1px solid #838E9F",
-            boxShadow: "2px 2px 4px #838E9F",
-            borderRadius: "25px",
+            border: '1px solid #838E9F',
+            boxShadow: '2px 2px 4px #838E9F',
+            borderRadius: '25px',
           }}
         >
           <form>
             <Box
               sx={{
                 my: 4,
-                textAlign: "center",
+                textAlign: 'center',
               }}
             >
               <Typography color="textPrimary" variant="h4">
@@ -71,7 +81,7 @@ const Login = () => {
                   )}
                   onSuccess={responseGoogle}
                   onFailure={responseGoogle}
-                  cookiePolicy={"single_host_origin"}
+                  cookiePolicy={'single_host_origin'}
                 />
               </Grid>
             </Grid>
@@ -79,7 +89,7 @@ const Login = () => {
         </Container>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
