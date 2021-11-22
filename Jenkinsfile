@@ -18,10 +18,6 @@ pipeline {
 						steps{
 						                sh '''
 								npm install
-								npm i eslint --save-dev
-								npx install-peerdeps --dev eslint-config-airbnb
-								npm i -D babel-eslint
-								npm i -D eslint-config-prettier eslint-plugin-prettier
 								npm run build
 						                cp -r build/* /exchange
 						                '''
