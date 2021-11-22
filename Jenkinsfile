@@ -18,7 +18,8 @@ pipeline {
 						steps{
 						                sh '''
 								npm install
-						                npm run build
+								npm i -D babel-eslint eslint-config-airbnb eslint eslint-plugin-jsx-a11y eslint-plugin-import eslint-plugin-react eslint-plugin-react-hooks
+								npm run build
 						                cp -r build/* /exchange
 						                '''
 							    	}
