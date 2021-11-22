@@ -1,8 +1,12 @@
-node {
-         agent{
-	       dockerfile{  
-	           filename './React/Dockerfile2'
-	      }
-	  }
-    
+pipeline {
+    agent {
+        dockerfile { filename './React/Dockerfile2' }
+    }
+    stages {
+        stage('Test') {
+            steps {
+                sh 'node --version'
+            }
+        }
+    }
 }
