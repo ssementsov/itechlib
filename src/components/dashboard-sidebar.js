@@ -29,7 +29,7 @@ const items = [
   {
     href: '/main-catalogue',
     icon: <MainCatalogueIcon fontSize="small" />,
-    title: 'Main Catalogue',
+    title: 'Main catalogue',
   },
   {
     href: '/given-books',

@@ -1,36 +1,50 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Box, Container } from "@mui/material";
-import { CloseIcon } from "../../icons/close-icon";
-import AddNewBookForm from "./AddNewBookForm";
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { Box, Container } from '@mui/material'
+import { CloseIcon } from '../../icons/close-icon'
+import AddNewBookForm from './AddNewBookForm'
 
 const AddNewBookFormBox = ({ handleClose }) => {
-  const router = useRouter();
+  const router = useRouter()
+
+  function validate(value) {
+    let error = {}
+    if (
+      value.linkToWeb &&
+      !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[A-Z0-9+&@#%=~_|$])/i.test(
+        value.linkToWeb
+      )
+    ) {
+      error.linkToWeb = 'Please enter correct link'
+    }
+    return error
+  }
+
   const formik = useFormik({
     initialValues: {
-      title: "",
-      author: "",
-      сathegory: "",
-      languages: "",
-      description: "",
-      linkToWeb: "",
-      status: "",
+      title: '',
+      author: '',
+      сathegory: '',
+      languages: '',
+      description: '',
+      linkToWeb: '',
+      status: '',
     },
     validationSchema: Yup.object({
-      title: Yup.string().max(255).required("Title is required"),
-      author: Yup.string().max(255).required("Author is required"),
-      сathegory: Yup.string().required("Cathegory is required"),
-      languages: Yup.string().required("Language is required"),
-      description: Yup.string().max(255).required("Description is required"),
-      linkToWeb: Yup.string().required("Title is required"),
-      status: Yup.string().required("Status is required"),
+      title: Yup.string().max(255).required('Title is required'),
+      author: Yup.string().max(255).required('Author is required'),
+      сathegory: Yup.string().required('Cathegory is required'),
+      languages: Yup.string().required('Language is required'),
+      description: Yup.string().max(255).required('Description is required'),
+      status: Yup.string().required('Status is required'),
     }),
+    validate,
     onSubmit: () => {
-      router.push("/home");
+      router.push('/home')
     },
-  });
+  })
 
   return (
     <>
@@ -40,25 +54,25 @@ const AddNewBookFormBox = ({ handleClose }) => {
       <Box
         component="main"
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           flexGrow: 1,
-          minHeight: "100%",
+          minHeight: '100%',
         }}
       >
         <Container maxWidth="sm">
           <Box
             sx={{
-              position: "absolute",
+              position: 'absolute',
               right: 22,
               top: 22,
-              cursor: "pointer",
+              cursor: 'pointer',
             }}
           >
             <CloseIcon
               onClick={handleClose}
               sx={{
-                justifySelf: "flex-end",
+                justifySelf: 'flex-end',
               }}
             />
           </Box>
@@ -66,7 +80,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
         </Container>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default AddNewBookFormBox;
+export default AddNewBookFormBox

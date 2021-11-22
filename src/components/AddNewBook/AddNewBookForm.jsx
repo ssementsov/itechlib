@@ -1,28 +1,28 @@
-import React from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { cathegories } from "./datas-for-form-options/cathegories";
-import { languages } from "./datas-for-form-options/languages";
-import { statuses } from "./datas-for-form-options/statuses";
+import React from 'react'
+import { Box, Button, MenuItem, TextField, Typography } from '@mui/material'
+import { cathegories } from './datas-for-form-options/cathegories'
+import { languages } from './datas-for-form-options/languages'
+import { statuses } from './datas-for-form-options/statuses'
 
 const createOptions = (option) => {
-  if (option.defaultValue === "") {
+  if (option.defaultValue === '') {
     return (
-      <option
+      <MenuItem
         key={option.defaultValue}
         value={option.defaultValue}
         disabled={option.disabled}
       >
         {option.defaultLabel}
-      </option>
-    );
+      </MenuItem>
+    )
   } else {
     return (
-      <option key={option.value} value={option.value}>
+      <MenuItem key={option.value} value={option.value}>
         {option.label}
-      </option>
-    );
+      </MenuItem>
+    )
   }
-};
+}
 
 const AddNewBookForm = ({ formik }) => {
   return (
@@ -64,8 +64,8 @@ const AddNewBookForm = ({ formik }) => {
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
+        label="Cathegory*"
         select
-        SelectProps={{ native: true }}
         value={formik.values.сathegory}
         variant="outlined"
       >
@@ -79,8 +79,8 @@ const AddNewBookForm = ({ formik }) => {
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
+        label="Language*"
         select
-        SelectProps={{ native: true }}
         value={formik.values.languages}
         variant="outlined"
       >
@@ -118,8 +118,8 @@ const AddNewBookForm = ({ formik }) => {
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
+        label="Status*"
         select
-        SelectProps={{ native: true }}
         value={formik.values.status}
         variant="outlined"
       >
@@ -138,7 +138,7 @@ const AddNewBookForm = ({ formik }) => {
         </Button>
       </Box>
     </form>
-  );
-};
+  )
+}
 
-export default AddNewBookForm;
+export default AddNewBookForm

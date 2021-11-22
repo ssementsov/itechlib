@@ -8,6 +8,7 @@ const Login = () => {
   const router = useRouter()
 
   const responseGoogle = (response) => {
+    console.log(response.tokenId)
     let userName = JSON.stringify(response.profileObj.givenName)
     localStorage.setItem('UserName', userName)
     router.push('/home')
@@ -15,7 +16,7 @@ const Login = () => {
 
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
-    if (userName && router.pathname === '/login') {
+    if (userName && (router.pathname === '/login' || router.pathname === '/')) {
       router.push('/home')
     }
   })
