@@ -18,7 +18,7 @@ pipeline {
 						steps{
 						                sh '''
 								npm install
-						                npm run build
+						                npm run dev
 						                cp -r build/* /exchange
 						                '''
 							    	}
