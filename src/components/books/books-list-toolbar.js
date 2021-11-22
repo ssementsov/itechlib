@@ -7,34 +7,33 @@ import {
   InputAdornment,
   SvgIcon,
   Typography,
-} from "@mui/material";
-import { Search as SearchIcon } from "../../icons/search";
+} from '@mui/material'
+import { Search as SearchIcon } from '../../icons/search'
+import AddNewBookModal from '../AddNewBook/AddNewBookModal'
 
 export const BooksListToolbar = (props) => (
   <Box {...props}>
     <Box
       sx={{
-        alignItems: "center",
-        display: "flex",
-        justifyContent: "space-between",
-        flexWrap: "wrap",
+        alignItems: 'center',
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
         m: -1,
       }}
     >
       <Typography sx={{ m: 1 }} variant="h4">
-        Book catalogue
+        Main catalogue
       </Typography>
-      <Box sx={{ m: 1 }}>
+      <Box sx={{ m: 1, display: 'flex' }}>
         <Button sx={{ mr: 1 }}>Suggest a book</Button>
-        <Button color="primary" variant="contained">
-          Add a Book
-        </Button>
+        <AddNewBookModal />
       </Box>
     </Box>
     <Box sx={{ mt: 3 }}>
       <Card>
         <CardContent>
-          <Box sx={{ maxWidth: 500 }}>
+          <Box>
             <TextField
               fullWidth
               InputProps={{
@@ -46,7 +45,7 @@ export const BooksListToolbar = (props) => (
                   </InputAdornment>
                 ),
               }}
-              placeholder="Search the book"
+              placeholder="Search a book"
               variant="outlined"
             />
           </Box>
@@ -54,4 +53,4 @@ export const BooksListToolbar = (props) => (
       </Card>
     </Box>
   </Box>
-);
+)

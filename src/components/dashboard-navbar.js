@@ -1,16 +1,16 @@
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import { AppBar, Avatar, Box, IconButton, Toolbar } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import { UserCircle as UserCircleIcon } from "../icons/user-circle";
+import PropTypes from 'prop-types'
+import { styled } from '@mui/material/styles'
+import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
+import { UserCircle as UserCircleIcon } from '../icons/user-circle'
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3],
-}));
+}))
 
 export const DashboardNavbar = (props) => {
-  const { onSidebarOpen, ...other } = props;
+  const { onSidebarOpen, ...other } = props
 
   return (
     <>
@@ -20,7 +20,7 @@ export const DashboardNavbar = (props) => {
             lg: 280,
           },
           width: {
-            lg: "calc(100% - 280px)",
+            lg: 'calc(100% - 280px)',
           },
         }}
         {...other}
@@ -37,8 +37,8 @@ export const DashboardNavbar = (props) => {
             onClick={onSidebarOpen}
             sx={{
               display: {
-                xs: "inline-flex",
-                lg: "none",
+                xs: 'inline-flex',
+                lg: 'none',
               },
             }}
           >
@@ -58,9 +58,9 @@ export const DashboardNavbar = (props) => {
         </Toolbar>
       </DashboardNavbarRoot>
     </>
-  );
-};
+  )
+}
 
 DashboardNavbar.propTypes = {
   onSidebarOpen: PropTypes.func,
-};
+}

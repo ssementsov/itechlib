@@ -1,70 +1,70 @@
-import { useEffect } from "react";
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import PropTypes from "prop-types";
-import { Box, Divider, Drawer, Typography, useMediaQuery } from "@mui/material";
-import { HomePageIcon } from "../icons/home-page-icon";
-import { TakenBooksIcon } from "../icons/taken-books-icon";
-import { SuggestionIcon } from "../icons/suggestion-icon";
-import { GivenBooksIcon } from "../icons/given-books-icon";
-import { MainCatalogueIcon } from "../icons/main-catalogue-icon";
-import { MyBooksIcon } from "../icons/my-books-icon";
-import { SettingsIcon } from "../icons/settings-icon";
-import { HelpIcon } from "../icons/help-icon";
-import { Logo } from "./logo";
-import { NavItem } from "./nav-item";
-import { theme } from "../theme/index";
+import { useEffect } from 'react'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material'
+import { HomePageIcon } from '../icons/home-page-icon'
+import { TakenBooksIcon } from '../icons/taken-books-icon'
+import { SuggestionIcon } from '../icons/suggestion-icon'
+import { GivenBooksIcon } from '../icons/given-books-icon'
+import { MainCatalogueIcon } from '../icons/main-catalogue-icon'
+import { MyBooksIcon } from '../icons/my-books-icon'
+import { SettingsIcon } from '../icons/settings-icon'
+import { HelpIcon } from '../icons/help-icon'
+import { Logo } from './logo'
+import { NavItem } from './nav-item'
+import { theme } from '../theme/index'
 
 const items = [
   {
-    href: "/home",
+    href: '/home',
     icon: <HomePageIcon fontSize="small" />,
-    title: "Home page",
+    title: 'Home page',
   },
   {
-    href: "/my-books",
+    href: '/my-books',
     icon: <MyBooksIcon fontSize="small" />,
-    title: "My books",
+    title: 'My books',
   },
   {
-    href: "/main-catalogue",
+    href: '/main-catalogue',
     icon: <MainCatalogueIcon fontSize="small" />,
-    title: "Main Catalogue",
+    title: 'Main catalogue',
   },
   {
-    href: "/given-books",
+    href: '/given-books',
     icon: <GivenBooksIcon fontSize="small" />,
-    title: "The books I gave",
+    title: 'The books I gave',
   },
   {
-    href: "/taken-books",
+    href: '/taken-books',
     icon: <TakenBooksIcon fontSize="small" />,
-    title: "The books I took",
+    title: 'The books I took',
   },
   {
-    href: "/suggestion",
+    href: '/suggestion',
     icon: <SuggestionIcon fontSize="small" />,
-    title: "View suggestion list",
+    title: 'View suggestion list',
   },
   {
-    href: "/register",
+    href: '/register',
     icon: <SettingsIcon fontSize="small" />,
-    title: "Settings",
+    title: 'Settings',
   },
   {
-    href: "/404",
+    href: '/404',
     icon: <HelpIcon fontSize="small" />,
-    title: "Help",
+    title: 'Help',
   },
-];
+]
 
 export const DashboardSidebar = (props) => {
-  const { open, onClose } = props;
-  const router = useRouter();
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
+  const { open, onClose } = props
+  const router = useRouter()
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false,
-  });
+  })
 
   useEffect(() => {
     if (router.isReady && open) {
@@ -76,9 +76,9 @@ export const DashboardSidebar = (props) => {
     <>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
         }}
       >
         <div>
@@ -98,7 +98,7 @@ export const DashboardSidebar = (props) => {
         <Divider
           theme={theme}
           sx={{
-            borderColor: "background.divider",
+            borderColor: 'background.divider',
             my: 3,
           }}
         />
@@ -112,7 +112,7 @@ export const DashboardSidebar = (props) => {
             />
           ))}
         </Box>
-        <Divider sx={{ borderColor: "background.divider" }} />
+        <Divider sx={{ borderColor: 'background.divider' }} />
         <Box
           sx={{
             px: 2,
@@ -144,7 +144,7 @@ export const DashboardSidebar = (props) => {
       <Drawer open {...propsDrawer}>
         {content}
       </Drawer>
-    );
+    )
   }
 
   return (
@@ -156,10 +156,10 @@ export const DashboardSidebar = (props) => {
     >
       {content}
     </Drawer>
-  );
-};
+  )
+}
 
 DashboardSidebar.propTypes = {
   onClose: PropTypes.func,
   open: PropTypes.bool,
-};
+}

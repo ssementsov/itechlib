@@ -1,0 +1,28 @@
+{
+  "extends":  [
+    "react-app",
+    "prettier",
+    "next/core-web-vitals",
+    "eslint:recommended"
+  ],
+  "rules": {
+    "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
+    "@next/next/no-img-element": "off",
+    "jsx-a11y/alt-text": "off",
+    "react/display-name": "off",
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "maximum": 3
+      }
+    ],
+    "jsx-quotes": [
+      1,
+      "prefer-double"
+    ]
+  },
+  "plugins": [
+    "prettier"
+  ]
+}
+
