@@ -3,6 +3,8 @@ import { Box, Button, MenuItem, TextField, Typography } from '@mui/material'
 import { cathegories } from './datas-for-form-options/cathegories'
 import { languages } from './datas-for-form-options/languages'
 import { statuses } from './datas-for-form-options/statuses'
+import { readers } from './datas-for-form-options/readers'
+import DatePicker from './DatePicker'
 
 const createOptions = (option) => {
   if (option.defaultValue === '') {
@@ -125,6 +127,22 @@ const AddNewBookForm = ({ formik }) => {
       >
         {statuses.map(createOptions)}
       </TextField>
+      <TextField
+        error={Boolean(formik.touched.reader && formik.errors.reader)}
+        fullWidth
+        helperText={formik.touched.reader && formik.errors.reader}
+        name="reader"
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        margin="dense"
+        label="Reader*"
+        select
+        value={formik.values.reader}
+        variant="outlined"
+      >
+        {readers.map(createOptions)}
+      </TextField>
+      <DatePicker />
       <Box sx={{ py: 2 }}>
         <Button
           color="primary"

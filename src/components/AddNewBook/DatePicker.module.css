@@ -1,0 +1,10 @@
+.rdrCalendarWrapper{
+    color: #000000;
+    height: 60px;
+    overflow: hidden;
+    transition: all 1s ease;
+  }
+  .rdrCalendarWrapper:hover{
+    height: 300px;
+    overflow: hidden;
+  }

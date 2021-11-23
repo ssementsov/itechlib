@@ -31,6 +31,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
       description: '',
       linkToWeb: '',
       status: '',
+      reader: '',
     },
     validationSchema: Yup.object({
       title: Yup.string().max(255).required('Title is required'),
@@ -39,6 +40,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
       languages: Yup.string().required('Language is required'),
       description: Yup.string().max(255).required('Description is required'),
       status: Yup.string().required('Status is required'),
+      reader: Yup.string().required('Reader is required'),
     }),
     validate,
     onSubmit: () => {
