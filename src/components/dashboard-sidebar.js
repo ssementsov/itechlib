@@ -68,9 +68,10 @@ export const DashboardSidebar = (props) => {
 
   useEffect(() => {
     if (router.isReady && open) {
-      onClose?.();
+      onClose?.()
     }
-  }, [router.asPath]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.asPath])
 
   const content = (
     <>
@@ -84,6 +85,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink href="/home" passHref>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a>
                 <Logo
                   sx={{
@@ -125,19 +127,19 @@ export const DashboardSidebar = (props) => {
         </Box>
       </Box>
     </>
-  );
+  )
 
   const propsDrawer = {
-    anchor: "left",
+    anchor: 'left',
     PaperProps: {
       sx: {
-        backgroundColor: "neutral.900",
-        color: "#FFFFFF",
+        backgroundColor: 'neutral.900',
+        color: '#FFFFFF',
         width: 280,
       },
     },
-    variant: lgUp ? "permanent" : "temporary",
-  };
+    variant: lgUp ? 'permanent' : 'temporary',
+  }
 
   if (lgUp) {
     return (

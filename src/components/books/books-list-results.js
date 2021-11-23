@@ -11,8 +11,8 @@ import {
   TablePagination,
   TableRow,
   Typography,
- from "@mui/material";
-import { Book } from "../../services/book";
+} from '@mui/material'
+import { Book } from '../../services/book'
 
 export const BooksListResults = ({ books, ...rest }) => {
   const pages = [5, 10, 25]
