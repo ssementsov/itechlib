@@ -19,7 +19,7 @@ pipeline {
 						                sh '''
 								npm install
 								npm run build
-						                cp -r build/* /exchange
+						                cp -r .next/* /exchange
 						                '''
 							    	}
 	                		}
