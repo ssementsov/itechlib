@@ -4,7 +4,7 @@ import { cathegories } from './datas-for-form-options/cathegories'
 import { languages } from './datas-for-form-options/languages'
 import { statuses } from './datas-for-form-options/statuses'
 import { readers } from './datas-for-form-options/readers'
-import DatePicker from './DatePicker'
+import DatePickerForForm from './DatePickerForForm'
 
 const createOptions = (option) => {
   if (option.defaultValue === '') {
@@ -142,7 +142,19 @@ const AddNewBookForm = ({ formik }) => {
       >
         {readers.map(createOptions)}
       </TextField>
-      <DatePicker />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          mt: 1,
+        }}
+      >
+        <Typography color="textSecondary" variant="boby1" alignSelf="center">
+          In use
+        </Typography>
+        <DatePickerForForm placeholder={'from'} />
+        <DatePickerForForm placeholder={'to'} />
+      </Box>
       <Box sx={{ py: 2 }}>
         <Button
           color="primary"
