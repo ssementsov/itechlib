@@ -1,4 +1,3 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
@@ -21,9 +20,9 @@ const AddNewBookFormBox = ({ handleClose }) => {
     } else if (value.status === 'in use' && !value.reader) {
       error.reader = 'Reader is required'
     } else if (value.status === 'in use' && !value.dateFrom) {
-      error.reader = 'Date is required'
+      error.dateFrom = 'Date is required'
     } else if (value.status === 'in use' && !value.dateTo) {
-      error.reader = 'Date is required'
+      error.dateTo = 'Date is required'
     }
     return error
   }
@@ -42,27 +41,25 @@ const AddNewBookFormBox = ({ handleClose }) => {
       dateTo: null,
     },
     validationSchema: Yup.object({
-      title: Yup.string().min(5).max(255).required('Title is required'),
+      title: Yup.string().min(2).max(255).required('Title is required'),
       author: Yup.string().min(2).max(255).required('Author is required'),
       category: Yup.string().required('Category is required'),
       languages: Yup.string().required('Language is required'),
       description: Yup.string()
-        .min(10)
+        .min(3)
         .max(255)
         .required('Description is required'),
       status: Yup.string().required('Status is required'),
     }),
     validate,
     onSubmit: () => {
+      console.log('hi')
       router.push('/home')
     },
   })
 
   return (
     <>
-      <Head>
-        <title>Add a book</title>
-      </Head>
       <Box
         component="main"
         sx={{
