@@ -2,7 +2,7 @@ version: '3.5'
 services:
   nodeJS:
     build:   
-      context: ./node
+      context: ./nginx
       dockerfile: Dockerfile
     restart: always  
     ports:
