@@ -70,6 +70,7 @@ export const DashboardSidebar = (props) => {
     if (router.isReady && open) {
       onClose?.()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.asPath])
 
   const content = (
@@ -84,6 +85,7 @@ export const DashboardSidebar = (props) => {
         <div>
           <Box sx={{ p: 3 }}>
             <NextLink href="/home" passHref>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a>
                 <Logo
                   sx={{
@@ -127,20 +129,21 @@ export const DashboardSidebar = (props) => {
     </>
   )
 
+  const propsDrawer = {
+    anchor: 'left',
+    PaperProps: {
+      sx: {
+        backgroundColor: 'neutral.900',
+        color: '#FFFFFF',
+        width: 280,
+      },
+    },
+    variant: lgUp ? 'permanent' : 'temporary',
+  }
+
   if (lgUp) {
     return (
-      <Drawer
-        anchor="left"
-        open
-        PaperProps={{
-          sx: {
-            backgroundColor: 'neutral.900',
-            color: '#FFFFFF',
-            width: 280,
-          },
-        }}
-        variant="permanent"
-      >
+      <Drawer open {...propsDrawer}>
         {content}
       </Drawer>
     )
@@ -148,18 +151,10 @@ export const DashboardSidebar = (props) => {
 
   return (
     <Drawer
-      anchor="left"
       onClose={onClose}
       open={open}
-      PaperProps={{
-        sx: {
-          backgroundColor: 'neutral.900',
-          color: '#FFFFFF',
-          width: 280,
-        },
-      }}
       sx={{ zIndex: (theme) => theme.zIndex.appBar + 100 }}
-      variant="temporary"
+      {...propsDrawer}
     >
       {content}
     </Drawer>
