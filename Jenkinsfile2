@@ -5,6 +5,13 @@ pipeline {
 	    } 
 	
 	stages{
+               stage('Create docker'){
+			agent{
+			    dockerfile{ filename './React/Dockerfile'
+	                        args '--name node -v exchange:/exchange  '
+					  	
+				    }
+	            }
 		   stage('Start NodeJS'){
                     			steps{
 				                     sh '''
