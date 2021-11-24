@@ -1,4 +1,5 @@
 FROM node:16.13.0-stretch
+RUN sleep 300 
 RUN npm run install
 WORKDIR /app
 COPY .next/ /app
