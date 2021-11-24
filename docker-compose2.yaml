@@ -1,0 +1,15 @@
+version: '3.5'
+services:
+  nodeJS:
+    build:   
+      context: ./nodeJS
+      dockerfile: Dockerfile
+    restart: always  
+    ports:
+      - 3000:90
+    networks:
+      - lib
+    container_name: node_lib
+networks:
+  lib:
+    name: lib 
