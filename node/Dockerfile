@@ -1,3 +1,4 @@
 FROM node:16.13.0-stretch
-CMD npm run start 
 EXPOSE 3000
+RUN sleep 300
+CMD npm run start 
