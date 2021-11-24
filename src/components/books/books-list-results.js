@@ -19,6 +19,7 @@ export const BooksListResults = ({ books, ...rest }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(pages[page])
 
+  // eslint-disable-next-line no-unused-vars
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -37,7 +38,7 @@ export const BooksListResults = ({ books, ...rest }) => {
               <TableRow>
                 <TableCell>TITLE</TableCell>
                 <TableCell>AUTHOR</TableCell>
-                <TableCell>CATHEGORY</TableCell>
+                <TableCell>CATEGORY</TableCell>
                 <TableCell>LANGUAGE</TableCell>
                 <TableCell>DESCRIPTION</TableCell>
                 <TableCell>RATING</TableCell>

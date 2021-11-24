@@ -3,8 +3,7 @@ import { Box, Button, MenuItem, TextField, Typography } from '@mui/material'
 import { cathegories } from './datas-for-form-options/cathegories'
 import { languages } from './datas-for-form-options/languages'
 import { statuses } from './datas-for-form-options/statuses'
-import { readers } from './datas-for-form-options/readers'
-import DatePickerForForm from './DatePickerForForm'
+import HiddenForm from './HiddenForm'
 
 const createOptions = (option) => {
   if (option.defaultValue === '') {
@@ -59,16 +58,16 @@ const AddNewBookForm = ({ formik }) => {
         variant="outlined"
       />
       <TextField
-        error={Boolean(formik.touched.сathegory && formik.errors.сathegory)}
+        error={Boolean(formik.touched.category && formik.errors.category)}
         fullWidth
-        helperText={formik.touched.сathegory && formik.errors.сathegory}
-        name="сathegory"
+        helperText={formik.touched.category && formik.errors.category}
+        name="category"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
-        label="Cathegory*"
+        label="Category*"
         select
-        value={formik.values.сathegory}
+        value={formik.values.category}
         variant="outlined"
       >
         {cathegories.map(createOptions)}
@@ -127,34 +126,10 @@ const AddNewBookForm = ({ formik }) => {
       >
         {statuses.map(createOptions)}
       </TextField>
-      <TextField
-        error={Boolean(formik.touched.reader && formik.errors.reader)}
-        fullWidth
-        helperText={formik.touched.reader && formik.errors.reader}
-        name="reader"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        margin="dense"
-        label="Reader*"
-        select
-        value={formik.values.reader}
-        variant="outlined"
-      >
-        {readers.map(createOptions)}
-      </TextField>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          mt: 1,
-        }}
-      >
-        <Typography color="textSecondary" variant="boby1" alignSelf="center">
-          In use
-        </Typography>
-        <DatePickerForForm placeholder={'from'} />
-        <DatePickerForForm placeholder={'to'} />
-      </Box>
+      {formik.values.status === 'in use' && (
+        <HiddenForm formik={formik} createOptions={createOptions} />
+      )}
+
       <Box sx={{ py: 2 }}>
         <Button
           color="primary"

@@ -1,7 +1,7 @@
 export const cathegories = [
   {
     defaultValue: "",
-    defaultLabel: "Cathegory*",
+    defaultLabel: "Category*",
     disabled: true,
   },
   {
