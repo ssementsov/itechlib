@@ -18,6 +18,12 @@ const AddNewBookFormBox = ({ handleClose }) => {
       )
     ) {
       error.linkToWeb = 'Please enter correct link'
+    } else if (value.status === 'in use' && !value.reader) {
+      error.reader = 'Reader is required'
+    } else if (value.status === 'in use' && !value.dateFrom) {
+      error.reader = 'Date is required'
+    } else if (value.status === 'in use' && !value.dateTo) {
+      error.reader = 'Date is required'
     }
     return error
   }
@@ -32,20 +38,19 @@ const AddNewBookFormBox = ({ handleClose }) => {
       linkToWeb: '',
       status: '',
       reader: '',
-      dateFrom: '',
-      dateTo: '',
+      dateFrom: null,
+      dateTo: null,
     },
     validationSchema: Yup.object({
-      title: Yup.string().max(255).required('Title is required'),
-      author: Yup.string().max(255).required('Author is required'),
+      title: Yup.string().min(5).max(255).required('Title is required'),
+      author: Yup.string().min(2).max(255).required('Author is required'),
       category: Yup.string().required('Category is required'),
       languages: Yup.string().required('Language is required'),
-      description: Yup.string().max(255).required('Description is required'),
-      linkToWeb: Yup.string().url(),
+      description: Yup.string()
+        .min(10)
+        .max(255)
+        .required('Description is required'),
       status: Yup.string().required('Status is required'),
-      reader: Yup.string().required('Reader is required'),
-      dateFrom: Yup.date(),
-      dateTo: Yup.date().required('Date is required'),
     }),
     validate,
     onSubmit: () => {

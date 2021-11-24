@@ -8,7 +8,6 @@ const Login = () => {
   const router = useRouter()
 
   const responseGoogle = (response) => {
-    console.log(response.tokenId)
     let userName = JSON.stringify(response.profileObj.givenName)
     localStorage.setItem('UserName', userName)
     router.push('/home')

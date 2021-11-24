@@ -11,7 +11,7 @@ const HiddenForm = ({ formik, createOptions }) => {
     years: 1,
   })
   const maxDate = add(new Date(), {
-    years: 1,
+    months: 1,
   })
   return (
     <Box>
@@ -55,6 +55,7 @@ const HiddenForm = ({ formik, createOptions }) => {
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
               minDate={minDate}
+              maxDate={new Date()}
               error={Boolean(formik.touched.dateFrom && formik.errors.dateFrom)}
               helperText={formik.touched.dateFrom && formik.errors.dateFrom}
               name="dateFrom"
@@ -67,8 +68,6 @@ const HiddenForm = ({ formik, createOptions }) => {
               renderInput={(params) => (
                 <TextField
                   sx={{
-                    border: '1px solid #E6E8F0',
-                    borderRadius: '8px',
                     width: '150px',
                   }}
                   {...params}
@@ -85,6 +84,7 @@ const HiddenForm = ({ formik, createOptions }) => {
         >
           <LocalizationProvider dateAdapter={AdapterDateFns}>
             <DatePicker
+              minDate={new Date()}
               maxDate={maxDate}
               error={Boolean(formik.touched.dateTo && formik.errors.dateTo)}
               helperText={formik.touched.dateTo && formik.errors.dateTo}
