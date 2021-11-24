@@ -11,7 +11,7 @@ services:
       - lib
     container_name: nginx_lib
     volumes:
-      - exchange:/usr/share/nginx/html
+      - exchange:/tmp
 networks:
   lib:
     name: lib 
