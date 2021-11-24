@@ -3,4 +3,4 @@ RUN npm run install
 WORKDIR /app
 COPY .next/ /app
 CMD npm run start 
-EXPOSE 90
+EXPOSE 3000
