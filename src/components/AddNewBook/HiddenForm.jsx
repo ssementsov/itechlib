@@ -56,17 +56,18 @@ const HiddenForm = ({ formik, createOptions }) => {
             <DatePicker
               minDate={minDate}
               maxDate={new Date()}
-              error={Boolean(formik.touched.dateFrom && formik.errors.dateFrom)}
-              helperText={formik.touched.dateFrom && formik.errors.dateFrom}
               name="dateFrom"
               onChange={(value) => {
                 formik.setFieldValue('dateFrom', value)
               }}
-              onBlur={formik.handleBlur}
               value={formik.values.dateFrom}
               label="from"
               renderInput={(params) => (
                 <TextField
+                  error={Boolean(
+                    formik.touched.dateFrom && formik.errors.dateFrom
+                  )}
+                  helperText={formik.touched.dateFrom && formik.errors.dateFrom}
                   sx={{
                     width: '150px',
                   }}
@@ -86,20 +87,17 @@ const HiddenForm = ({ formik, createOptions }) => {
             <DatePicker
               minDate={new Date()}
               maxDate={maxDate}
-              error={Boolean(formik.touched.dateTo && formik.errors.dateTo)}
-              helperText={formik.touched.dateTo && formik.errors.dateTo}
               name="dateTo"
               onChange={(value) => {
                 formik.setFieldValue('dateTo', value)
               }}
-              onBlur={formik.handleBlur}
               value={formik.values.dateTo}
               label="till"
               renderInput={(params) => (
                 <TextField
+                  error={Boolean(formik.touched.dateTo && formik.errors.dateTo)}
+                  helperText={formik.touched.dateTo && formik.errors.dateTo}
                   sx={{
-                    border: '1px solid #E6E8F0',
-                    borderRadius: '8px',
                     width: '150px',
                   }}
                   {...params}

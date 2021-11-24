@@ -123,6 +123,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          color: '#cc0000',
+        },
+      },
+    },
     MuiTableHead: {
       styleOverrides: {
         root: {

@@ -19,9 +19,11 @@ const AddNewBookFormBox = ({ handleClose }) => {
       error.linkToWeb = 'Please enter correct link'
     } else if (value.status === 'in use' && !value.reader) {
       error.reader = 'Reader is required'
-    } else if (value.status === 'in use' && !value.dateFrom) {
+    }
+    if (value.status === 'in use' && !value.dateFrom) {
       error.dateFrom = 'Date is required'
-    } else if (value.status === 'in use' && !value.dateTo) {
+    }
+    if (value.status === 'in use' && !value.dateTo) {
       error.dateTo = 'Date is required'
     }
     return error
@@ -53,7 +55,6 @@ const AddNewBookFormBox = ({ handleClose }) => {
     }),
     validate,
     onSubmit: () => {
-      console.log('hi')
       router.push('/home')
     },
   })
