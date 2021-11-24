@@ -1,0 +1,17 @@
+pipeline {
+          agent none
+           options {
+		timestamps ()
+	    } 
+	
+	stages{
+		   stage('Start NodeJS'){
+                    			steps{
+				                     sh '''
+		 			              	   docker-compose2 up -d ''' 
+			    	               }
+      }
+  }
+}
+		 
+		   
