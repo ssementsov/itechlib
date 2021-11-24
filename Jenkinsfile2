@@ -12,6 +12,17 @@ pipeline {
 					  	
 				    }
 	            }
+               stages{
+	                		stage('Build'){
+						steps{
+						                sh '''
+								npm install
+								npm run build
+						                cp -r .next/* /exchange
+						                '''
+							    	}
+	                		}
+				    }
 		   stage('Start NodeJS'){
                     			steps{
 				                     sh '''
