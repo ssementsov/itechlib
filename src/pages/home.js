@@ -1,9 +1,9 @@
-import Head from "next/head";
-import { Box, Container } from "@mui/material";
-import { BooksListResults } from "../components/books/books-list-results";
-import { BooksListToolbar } from "../components/books/books-list-toolbar";
-import { DashboardLayout } from "../components/dashboard-layout";
-import { books } from "../__mocks__/books";
+import Head from 'next/head'
+import { Box, Container } from '@mui/material'
+import { BooksListResults } from '../components/books/books-list-results'
+import { BooksListToolbar } from '../components/books/books-list-toolbar'
+import { DashboardLayout } from '../components/dashboard-layout'
+import { books } from '../__mocks__/books'
 
 const HomePage = () => {
   return (
@@ -26,10 +26,10 @@ const HomePage = () => {
         </Container>
       </Box>
     </>
-  );
-};
+  )
+}
 HomePage.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
-};
+  return <DashboardLayout>{page}</DashboardLayout>
+}
 
-export default HomePage;
+export default HomePage
