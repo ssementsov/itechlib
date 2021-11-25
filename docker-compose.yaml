@@ -3,7 +3,7 @@ services:
   node:
     build:   
       context: ./node
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile2
     restart: always  
     ports:
       - 3000:90
