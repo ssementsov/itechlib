@@ -19,22 +19,23 @@ pipeline {
 						                sh '''
 								npm install
 								npm run build
-						                cp -r .next/* /exchange
+								npm run start 
+						                # cp -r .next/* /exchange
 						                '''
 							    	}
 	                		}
 				    }
 			}	    
-		    stage('Nginx'){
-		      agent any
-           		 stages{
-                		stage('Start Nginx'){
-                    			steps{
-				                 sh '''
-		 			              	docker-compose up -d ''' 
-			    	        }
-                             }
-			}	 
+		#    stage('Nginx'){
+		#      agent any
+           	#	 stages{
+                #		stage('Start Nginx'){
+                #    			steps{
+		#		                 sh '''
+		# 			              	docker-compose up -d ''' 
+		#	    	        }
+                #             }
+		#	}	 
 		 
 		   }
 		}	
