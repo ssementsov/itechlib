@@ -10,7 +10,7 @@ pipeline {
 				agent{
 				    dockerfile{  
 					        filename './node/Dockerfile2'
-	                        args '--name yarn -v exchange:/exchange  '
+	                        args '--name node -v exchange:/exchange  '
 					  	
 				    }
 	            }
@@ -27,17 +27,7 @@ pipeline {
 	                		}
 				    }
 			}	    
-		  #  stage('NodeJS'){
-		   #     agent any
-           	#	 stages{
-                #		stage('Start NodeJS'){
-                 #   			steps{
-		#		                 sh '''
-		 #			              	docker-compose up -d ''' 
-		#	    	        }
-                 #            }
-		#	}	 
-		 
+	 
 		   }
 		}	
 	}    
