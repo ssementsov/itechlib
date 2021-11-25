@@ -11,6 +11,7 @@ pipeline {
 	                  steps{
 						                sh '''
 								docker-compose up -d
+								sleep 300
 								npm install
 								npm run build
 								(npm run start&)
