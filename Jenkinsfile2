@@ -19,7 +19,7 @@ pipeline {
 								npm install
 								npm run build
 								(npm run start&)
-								sleep 300
+								sleep 120
 						                '''
 							    	}
 	         }	    
