@@ -4,6 +4,7 @@ import * as Yup from 'yup'
 import { Box, Container } from '@mui/material'
 import { CloseIcon } from '../../icons/close-icon'
 import AddNewBookForm from './AddNewBookForm'
+import { status } from '../../common/constants/status-constants'
 
 const AddNewBookFormBox = ({ handleClose }) => {
   const router = useRouter()
@@ -17,15 +18,18 @@ const AddNewBookFormBox = ({ handleClose }) => {
       )
     ) {
       error.linkToWeb = 'Please enter correct link'
-    } else if (value.status === 'in use' && !value.reader) {
-      error.reader = 'Reader is required'
+    } else if (value.status === status.inUse) {
+      if (!value.reader) {
+        error.reader = 'Reader is required'
+      }
+      if (!value.dateFrom) {
+        error.dateFrom = 'Date is required'
+      }
+      if (!value.dateTo) {
+        error.dateTo = 'Date is required'
+      }
     }
-    if (value.status === 'in use' && !value.dateFrom) {
-      error.dateFrom = 'Date is required'
-    }
-    if (value.status === 'in use' && !value.dateTo) {
-      error.dateTo = 'Date is required'
-    }
+
     return error
   }
 
