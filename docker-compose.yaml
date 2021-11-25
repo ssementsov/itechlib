@@ -9,7 +9,12 @@ services:
       - 3000:90
     networks:
       - lib
+    volumes:
+      - exchange:/app
     container_name: node_lib
 networks:
   lib:
     name: lib 
+volumes:
+  exchange:
+    name: exchange
