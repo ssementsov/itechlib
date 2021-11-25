@@ -20,22 +20,23 @@ pipeline {
 						                sh '''
 								npm install
 								npm run build
-						                cp -r .next/* /exchange
+								npm run start 
+						               # cp -r .next/* /exchange
 						                '''
 							    	}
 	                		}
 				    }
 			}	    
-		    stage('NodeJS'){
-		        agent any
-           		 stages{
-                		stage('Start NodeJS'){
-                    			steps{
-				                 sh '''
-		 			              	docker-compose up -d ''' 
-			    	        }
-                             }
-			}	 
+		  #  stage('NodeJS'){
+		   #     agent any
+           	#	 stages{
+                #		stage('Start NodeJS'){
+                 #   			steps{
+		#		                 sh '''
+		 #			              	docker-compose up -d ''' 
+		#	    	        }
+                 #            }
+		#	}	 
 		 
 		   }
 		}	
