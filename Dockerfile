@@ -1,0 +1,2 @@
+FROM node:16.13-buster
+EXPOSE 3000
