@@ -37,11 +37,7 @@ export default function AddNewBookModal() {
         Add a book
       </Button>
       <Modal open={open} onClose={handleClose}>
-        <Box
-          sx={{
-            ...style,
-          }}
-        >
+        <Box sx={style}>
           <AddNewBookFormBox handleClose={handleClose} />
         </Box>
       </Modal>
