@@ -12,7 +12,7 @@ ppipeline {
         sh 'npm install --frozen-lockfile'
         sh 'npm run build'
         sh 'cd .next'
-	sh '(npm run start&)'       
+	sh 'npm run start'       
       }
    }
    
