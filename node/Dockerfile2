@@ -1,3 +1,4 @@
 FROM node:16.13.0-stretch
 WORKDIR /exchange
 EXPOSE 3000 
+CMD [ "node", "server.js" ]
