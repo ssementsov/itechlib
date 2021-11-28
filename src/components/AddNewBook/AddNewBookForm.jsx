@@ -6,23 +6,11 @@ import { statuses } from './datas-for-form-options/statuses'
 import HiddenForm from './HiddenForm'
 
 const createOptions = (option) => {
-  if (option.defaultValue === '') {
-    return (
-      <MenuItem
-        key={option.defaultValue}
-        value={option.defaultValue}
-        disabled={option.disabled}
-      >
-        {option.defaultLabel}
-      </MenuItem>
-    )
-  } else {
-    return (
-      <MenuItem key={option.value} value={option.value}>
-        {option.label}
-      </MenuItem>
-    )
-  }
+  return (
+    <MenuItem key={option.value} value={option.value}>
+      {option.label}
+    </MenuItem>
+  )
 }
 
 const AddNewBookForm = ({ formik }) => {
@@ -92,6 +80,7 @@ const AddNewBookForm = ({ formik }) => {
         fullWidth
         helperText={formik.touched.description && formik.errors.description}
         label="Description*"
+        multiline
         margin="dense"
         name="description"
         onBlur={formik.handleBlur}
