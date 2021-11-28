@@ -13,7 +13,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
     let error = {}
     if (
       value.linkToWeb &&
-      !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[A-Z0-9+&@#%=~_|$])/i.test(
+      !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
         value.linkToWeb
       )
     ) {
@@ -53,7 +53,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
       languages: Yup.string().required('Language is required'),
       description: Yup.string()
         .min(3)
-        .max(255)
+        .max(100)
         .required('Description is required'),
       status: Yup.string().required('Status is required'),
     }),

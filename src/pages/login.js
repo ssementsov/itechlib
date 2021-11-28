@@ -8,15 +8,19 @@ const Login = () => {
   const router = useRouter()
 
   const responseGoogle = (response) => {
-    let userName = JSON.stringify(response.profileObj.givenName)
-    localStorage.setItem('UserName', userName)
-    router.push('/home')
+    if (response) {
+      let userName = JSON.stringify(response.profileObj.givenName)
+      localStorage.setItem('UserName', userName)
+      router.replace('/home')
+    } else {
+      alert('Error')
+    }
   }
 
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
-    if (userName && (router.pathname === '/login' || router.pathname === '/')) {
-      router.push('/home')
+    if (userName) {
+      router.replace('/home')
     }
   })
 
@@ -67,6 +71,7 @@ const Login = () => {
               <Grid item xs={12} md={12}>
                 <GoogleLogin
                   clientId={process.env.GOOGLE_CLIENT_ID}
+                  isSignedIn={true}
                   render={(renderProps) => (
                     <Button
                       fullWidth

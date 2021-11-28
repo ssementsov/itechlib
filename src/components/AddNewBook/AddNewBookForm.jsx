@@ -4,6 +4,7 @@ import { cathegories } from './datas-for-form-options/cathegories'
 import { languages } from './datas-for-form-options/languages'
 import { statuses } from './datas-for-form-options/statuses'
 import HiddenForm from './HiddenForm'
+import { status } from '../../common/constants/status-constants'
 
 const createOptions = (option) => {
   if (option.defaultValue === '') {
@@ -126,7 +127,7 @@ const AddNewBookForm = ({ formik }) => {
       >
         {statuses.map(createOptions)}
       </TextField>
-      {formik.values.status === 'in use' && (
+      {formik.values.status === status.inUse && (
         <HiddenForm formik={formik} createOptions={createOptions} />
       )}
 

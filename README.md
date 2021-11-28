@@ -4,8 +4,8 @@ This project was made with [MUI's](https://mui.com/?ref=devias-io) components, [
 
 ## Quick start
 
-- Install dependencies: `npm install` or `yarn`
+- Install dependencies: `npm install`
 
-- Start the server: `npm run dev` or `yarn dev`
+- Start the server: `npm run dev`
 
 - Views are on: `localhost:3000`
