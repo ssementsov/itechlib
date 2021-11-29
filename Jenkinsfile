@@ -12,15 +12,13 @@ pipeline {
       steps {
 	sh 'npm install --frozen-lockfile'
         sh 'npm run build'
+	sh 'cp package.json /dist'       
         sh 'cp -r .next/* /dist'
       }
    }
      stage('Deploy'){	 
-	     agent {
-	             dockerfile{ filename 'Dockerfile' args '--name nodelib  -v dist:/dist'}
-	           }	
-	     steps{
-		 sh 'docker run -d --name lib -p 3000:3000 -v dist:/dist nodelib'
+	      steps{
+		 sh 'docker run -d -it --name lib -p 3000:3000 -v dist:/dist -w /dist node:16.13-buster sh '
 	     }
      }
   }	  
