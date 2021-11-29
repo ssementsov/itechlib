@@ -6,7 +6,8 @@ pipeline {
   stages {
      stage('Build') {	  
 	agent {
-	      docker{image 'node:16.13-buster'}
+	      docker{image 'node:16.13-buster'
+		     args '--name build  -v dist:/dist'}
 	}		
       steps {
 	sh 'npm install --frozen-lockfile'
