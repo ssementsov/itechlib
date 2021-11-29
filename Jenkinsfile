@@ -6,16 +6,21 @@ pipeline {
   stages {
      stage('Build') {	  
 	agent {
-	      dockerfile{ dir '/node' filename 'Dockerfile' args '--name node -p 3000:3000 -v dist:/dist'}
+	      docker{ image 'node:16.13-buster' args '--name build  -v dist:/dist'}
 	}		
       steps {
-	sh 'BUILD_ID=dontKillMe'      
-        sh 'npm install --frozen-lockfile'
+	sh 'npm install --frozen-lockfile'
         sh 'npm run build'
-        sh 'cd .next'
-	sh 'npm run start'       
+        sh 'cp .next /dist'
       }
    }
-   
+     stage('Deploy'){	 
+	     agent {
+	             dockerfile{ filename 'Dockerfile' args '--name nodelib  -v dist:/dist'}
+	           }	
+	     steps{
+		 docker run -d --name lib -p 3000:3000 -v dist:/dist nodelib
+	     }
+     }
   }	  
 }	
