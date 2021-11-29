@@ -21,7 +21,10 @@ export const BooksListToolbar = (props) => {
       search: '',
     },
     validationSchema: Yup.object({
-      search: Yup.string().max(255, 'Search must be less than 255 characters'),
+      search: Yup.string().max(
+        255,
+        'Search request must be less than 255 characters'
+      ),
     }),
     onSubmit: () => {
       router.push('/home')
