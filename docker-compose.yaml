@@ -2,11 +2,10 @@ version: '3.5'
 services:
   node:
     build:   
-      context: ./node
-      dockerfile: Dockerfile2
+      dockerfile: Dockerfile
     restart: always  
     ports:
-      - 3000:90
+      - 3000:3000
     networks:
       - lib
     volumes:
