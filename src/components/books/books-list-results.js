@@ -12,9 +12,9 @@ import {
 } from '@mui/material'
 import { Book } from '../../services/book'
 
-export const BooksListResults = ({ ...rest }) => {
+export const BooksListResults = () => {
   return (
-    <Card {...rest}>
+    <Card>
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
