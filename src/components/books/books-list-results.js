@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import PropTypes from 'prop-types'
 import {
@@ -8,27 +7,12 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
 } from '@mui/material'
 import { Book } from '../../services/book'
 
-export const BooksListResults = ({ books, ...rest }) => {
-  const pages = [5, 10, 25]
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(pages[page])
-
-  // eslint-disable-next-line no-unused-vars
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
+export const BooksListResults = ({ ...rest }) => {
   return (
     <Card {...rest}>
       <PerfectScrollbar>
@@ -59,15 +43,6 @@ export const BooksListResults = ({ books, ...rest }) => {
           </Table>
         </Box>
       </PerfectScrollbar>
-      <TablePagination
-        component="div"
-        count={books.length}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={pages}
-      />
     </Card>
   )
 }

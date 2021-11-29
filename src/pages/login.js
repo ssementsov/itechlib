@@ -8,13 +8,9 @@ const Login = () => {
   const router = useRouter()
 
   const responseGoogle = (response) => {
-    if (response) {
-      let userName = JSON.stringify(response.profileObj.givenName)
-      localStorage.setItem('UserName', userName)
-      router.replace('/home')
-    } else {
-      alert('Error')
-    }
+    let userName = JSON.stringify(response.profileObj.givenName)
+    localStorage.setItem('UserName', userName)
+    router.replace('/home')
   }
 
   useEffect(() => {

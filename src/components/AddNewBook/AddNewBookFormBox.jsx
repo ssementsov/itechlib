@@ -27,10 +27,6 @@ const AddNewBookFormBox = ({ handleClose }) => {
       )
     ) {
       error.linkToWeb = 'Please enter correct link'
-      // enqueueSnackbar('Something went wrong. Please retry.', {
-      //   variant: 'error',
-      //   autoHideDuration: 5000,
-      // })
     } else if (value.status === status.inUse) {
       if (!value.reader) {
         error.reader = 'Reader is required'
@@ -62,17 +58,17 @@ const AddNewBookFormBox = ({ handleClose }) => {
     validationSchema: Yup.object({
       title: Yup.string()
         .min(2, 'Title must be more than 2 characters')
-        .max(255, 'Title must be no more than 255 characters')
+        .max(255, 'Title must be less than 255 characters')
         .required('Title is required'),
       author: Yup.string()
         .min(2, 'Author must be more than 2 characters')
-        .max(255, 'Author must be no more than 255 characters')
+        .max(255, 'Author must be less than 255 characters')
         .required('Author is required'),
       category: Yup.string().required('Category is required'),
       languages: Yup.string().required('Language is required'),
       description: Yup.string()
         .min(10, 'Description must be more than 10 characters')
-        .max(100, 'Description must be no more than 100 characters')
+        .max(100, 'Description must be less than 100 characters')
         .required('Description is required'),
       status: Yup.string().required('Status is required'),
     }),

@@ -56,13 +56,9 @@ export const DashboardNavbar = (props) => {
     setAnchorEl(null)
   }
 
-  const handleLogoutSuccess = () => {
+  const handleLogout = () => {
     localStorage.removeItem('UserName')
     router.replace('/login')
-  }
-
-  const handleLogoutFailure = () => {
-    alert("Something wrong. You didn't logout")
   }
 
   return (
@@ -124,8 +120,8 @@ export const DashboardNavbar = (props) => {
               clientId={process.env.GOOGLE_CLIENT_ID}
               buttonText="Logout"
               isSignedIn={false}
-              onLogoutSuccess={handleLogoutSuccess}
-              onFailure={handleLogoutFailure}
+              onLogoutSuccess={handleLogout}
+              onFailure={handleLogout}
               render={(renderProps) => (
                 <MenuItem onClick={renderProps.onClick}>
                   <ListItemIcon>
