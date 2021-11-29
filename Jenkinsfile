@@ -5,21 +5,14 @@ pipeline {
 	}
   stages {
      stage('Build') {	  
-	agent {
-	      docker{image 'node:16.13-buster'
-		     args '--name build  -v dist:/dist'}
+	agent { dockerfile{ filename 'Dockerfile'
+	                    args '--name build'
+          		    }
 	}		
       steps {
-	sh 'npm install --frozen-lockfile'
-        sh 'npm run build'
-	sh 'cp package.json package-lock.json /dist'       
-        sh 'cp -r .next/* /dist'
-      }
-   }
-     stage('Deploy'){	 
-	      steps{
-		 sh 'docker run -d -it --name lib -p 3000:3000 -v dist:/dist -w /dist node:16.13-buster sh '
-	     }
-     }
+	sh 'docker build -f Dockerfile -t lib .'
+        sh 'docker run -it -p 3000:3000  lib'
+      }	
+    }
   }	  
 }	
