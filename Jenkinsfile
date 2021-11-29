@@ -12,7 +12,7 @@ pipeline {
       steps {
 	sh 'npm install --frozen-lockfile'
         sh 'npm run build'
-	sh 'cp package.json next.config.js /dist'       
+	sh 'cp package.json package-lock.json /dist'       
         sh 'cp -r .next/* /dist'
       }
    }
