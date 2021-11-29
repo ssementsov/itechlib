@@ -4,6 +4,11 @@ pipeline {
 		timestamps ()
 	}
   stages {
+	stage('Cloning our Git') {
+		steps {
+			git branch: 'Devops', url: 'https://github.com/ssementsov/itechlib'
+		}
+	}
      stage('Build') {	  
        steps {
 	sh 'sleep 300'       
