@@ -12,7 +12,7 @@ pipeline {
       steps {
 	sh 'npm install --frozen-lockfile'
         sh 'npm run build'
-        sh 'cp .next /dist'
+        sh 'cp -r .next/* /dist'
       }
    }
      stage('Deploy'){	 
