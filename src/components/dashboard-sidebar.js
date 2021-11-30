@@ -61,7 +61,7 @@ const items = [
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props
   const router = useRouter()
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false,
   })
@@ -98,7 +98,6 @@ export const DashboardSidebar = (props) => {
           </Box>
         </div>
         <Divider
-          theme={theme}
           sx={{
             borderColor: 'background.divider',
             my: 3,

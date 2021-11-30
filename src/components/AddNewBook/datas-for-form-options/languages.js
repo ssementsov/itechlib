@@ -1,15 +1,10 @@
 export const languages = [
   {
-    defaultValue: "",
-    defaultLabel: "Language*",
-    disabled: true,
+    value: 'russian',
+    label: 'Russian',
   },
   {
-    value: "russian",
-    label: "Russian",
+    value: 'english',
+    label: 'English',
   },
-  {
-    value: "english",
-    label: "English",
-  },
-];
+]

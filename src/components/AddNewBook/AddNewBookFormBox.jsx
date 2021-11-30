@@ -5,9 +5,18 @@ import { Box, Container } from '@mui/material'
 import { CloseIcon } from '../../icons/close-icon'
 import AddNewBookForm from './AddNewBookForm'
 import { status } from '../../common/constants/status-constants'
+import { useSnackbar } from 'notistack'
 
 const AddNewBookFormBox = ({ handleClose }) => {
   const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar()
+
+  const handleClick = () => {
+    enqueueSnackbar('Your book has been added successfully!', {
+      variant: 'success',
+      autoHideDuration: 5000,
+    })
+  }
 
   function validate(value) {
     let error = {}
@@ -47,18 +56,26 @@ const AddNewBookFormBox = ({ handleClose }) => {
       dateTo: null,
     },
     validationSchema: Yup.object({
-      title: Yup.string().min(2).max(255).required('Title is required'),
-      author: Yup.string().min(2).max(255).required('Author is required'),
+      title: Yup.string()
+        .min(2, 'Title must be more than 2 characters')
+        .max(255, 'Title must be less than 255 characters')
+        .required('Title is required'),
+      author: Yup.string()
+        .min(2, 'Author must be more than 2 characters')
+        .max(255, 'Author must be less than 255 characters')
+        .required('Author is required'),
       category: Yup.string().required('Category is required'),
       languages: Yup.string().required('Language is required'),
       description: Yup.string()
-        .min(3)
-        .max(100)
+        .min(10, 'Description must be more than 10 characters')
+        .max(100, 'Description must be less than 100 characters')
         .required('Description is required'),
       status: Yup.string().required('Status is required'),
     }),
     validate,
     onSubmit: () => {
+      handleClick()
+      handleClose()
       router.push('/home')
     },
   })

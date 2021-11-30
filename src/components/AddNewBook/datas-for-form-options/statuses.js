@@ -1,11 +1,6 @@
 import { status } from '../../../common/constants/status-constants'
 export const statuses = [
   {
-    defaultValue: '',
-    defaultLabel: 'Status*',
-    disabled: true,
-  },
-  {
     value: status.available,
     label: 'Available',
   },
