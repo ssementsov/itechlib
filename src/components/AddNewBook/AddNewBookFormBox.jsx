@@ -5,18 +5,9 @@ import { Box, Container } from '@mui/material'
 import { CloseIcon } from '../../icons/close-icon'
 import AddNewBookForm from './AddNewBookForm'
 import { status } from '../../common/constants/status-constants'
-import { useSnackbar } from 'notistack'
 
 const AddNewBookFormBox = ({ handleClose }) => {
   const router = useRouter()
-  const { enqueueSnackbar } = useSnackbar()
-
-  const handleClick = () => {
-    enqueueSnackbar('Your book has been added successfully!', {
-      variant: 'success',
-      autoHideDuration: 5000,
-    })
-  }
 
   function validate(value) {
     let error = {}
@@ -74,7 +65,6 @@ const AddNewBookFormBox = ({ handleClose }) => {
     }),
     validate,
     onSubmit: () => {
-      handleClick()
       handleClose()
       router.push('/home')
     },
