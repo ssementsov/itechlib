@@ -66,7 +66,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
     validate,
     onSubmit: () => {
       handleClose()
-      router.push('/home')
+      router.push('/main-catalogue')
     },
   })
 
