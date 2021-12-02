@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import { Box, Container, Grid, Card, Button } from '@mui/material'
 import { BookDetails } from '../../components/book/book-details'
 import { DashboardLayout } from '../../components/dashboard-layout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import router from 'next/router'
 
 export default function BookPreviewPage() {
   return (
@@ -19,17 +19,16 @@ export default function BookPreviewPage() {
           pb: 8,
         }}
       >
-        <Link href="/main-catalogue" passHref>
-          <Button
-            component="a"
-            startIcon={<ArrowBackIcon fontSize="small" />}
-            sx={{
-              ml: 2,
-            }}
-          >
-            Back to main catalogue
-          </Button>
-        </Link>
+        <Button
+          onClick={() => router.push('/main-catalogue')}
+          component="a"
+          startIcon={<ArrowBackIcon fontSize="small" />}
+          sx={{
+            ml: 2,
+          }}
+        >
+          Back to main catalogue
+        </Button>
         <Container
           maxWidth="lg"
           sx={{
@@ -45,7 +44,7 @@ export default function BookPreviewPage() {
                   width: '250px',
                   height: '258px',
                 }}
-              ></Card>
+              />
             </Grid>
             <Grid item lg={8} md={9} xs={12}>
               <BookDetails />

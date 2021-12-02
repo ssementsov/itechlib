@@ -11,9 +11,9 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import Link from 'next/link'
-import { Book } from '../../modules/book'
+import { Book } from '../../models/book'
 import { titles } from '../../common/constants/titles-constants'
+import router from 'next/router'
 
 export const BooksListResults = ({ books }) => {
   return (
@@ -33,26 +33,28 @@ export const BooksListResults = ({ books }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {books.length > 0 ? (
+              {books.length ? (
                 books.map((book, id) => (
-                  <Link href={`/books/${id + 1}`} key={book.id} passHref>
-                    <TableRow hover>
-                      <TableCell>{book.title}</TableCell>
-                      <TableCell>{book.author}</TableCell>
-                      <TableCell>{book.cathegory}</TableCell>
-                      <TableCell>{book.language}</TableCell>
-                      <TableCell>{book.description}</TableCell>
-                      <TableCell>
-                        <Rating
-                          name="read-only"
-                          value={book.rating}
-                          size="small"
-                          readOnly
-                        />
-                      </TableCell>
-                      <TableCell>{book.status}</TableCell>
-                    </TableRow>
-                  </Link>
+                  <TableRow
+                    onClick={() => router.push(`/books/${id + 1}`)}
+                    key={book.id}
+                    hover
+                  >
+                    <TableCell>{book.title}</TableCell>
+                    <TableCell>{book.author}</TableCell>
+                    <TableCell>{book.cathegory}</TableCell>
+                    <TableCell>{book.language}</TableCell>
+                    <TableCell>{book.description}</TableCell>
+                    <TableCell>
+                      <Rating
+                        name="read-only"
+                        value={book.rating}
+                        size="small"
+                        readOnly
+                      />
+                    </TableCell>
+                    <TableCell>{book.status}</TableCell>
+                  </TableRow>
                 ))
               ) : (
                 <TableRow>

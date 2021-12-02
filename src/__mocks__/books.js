@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { Book } from '../modules/book'
+import { Book } from '../models/book'
 
 let newBook = new Book(
   uuid(),
@@ -9,7 +9,7 @@ let newBook = new Book(
   'English',
   'https://www.amazon.com/C-Programming-Language-4th/dp/0321563840',
   null,
-  'available',
+  'Available',
   'Some description about the book'
 )
 let newBook2 = new Book(
@@ -20,7 +20,7 @@ let newBook2 = new Book(
   'Russian',
   'https://www.amazon.com/C-Programming-Language-4th/dp/0321563840',
   3,
-  'available',
+  'Available',
   'Some description about the book'
 )
 
