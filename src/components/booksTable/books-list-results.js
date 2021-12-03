@@ -1,5 +1,4 @@
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import PropTypes from 'prop-types'
 import {
   Box,
   Card,
@@ -11,7 +10,6 @@ import {
   TableRow,
   Typography,
 } from '@mui/material'
-import { Book } from '../../models/book'
 import { titles } from '../../common/constants/titles-constants'
 import router from 'next/router'
 
@@ -36,7 +34,7 @@ export const BooksListResults = ({ books }) => {
               {books.length ? (
                 books.map((book, id) => (
                   <TableRow
-                    onClick={() => router.push(`/books/${id + 1}`)}
+                    onClick={() => router.push(`book/${id + 1}`)}
                     key={book.id}
                     hover
                   >
@@ -73,8 +71,4 @@ export const BooksListResults = ({ books }) => {
       </PerfectScrollbar>
     </Card>
   )
-}
-
-BooksListResults.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.instanceOf(Book)),
 }

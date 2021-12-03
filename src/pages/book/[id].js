@@ -5,7 +5,7 @@ import { DashboardLayout } from '../../components/dashboard-layout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import router from 'next/router'
 
-export default function BookPreviewPage() {
+export default function BookPreviewPage({ books }) {
   return (
     <>
       <Head>
@@ -47,7 +47,7 @@ export default function BookPreviewPage() {
               />
             </Grid>
             <Grid item lg={8} md={9} xs={12}>
-              <BookDetails />
+              <BookDetails books={books} />
             </Grid>
           </Grid>
         </Container>
@@ -58,4 +58,15 @@ export default function BookPreviewPage() {
 
 BookPreviewPage.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>
+}
+
+export async function getServerSideProps() {
+  const res = await fetch('https://my.backend/books')
+  const books = await res.json()
+
+  return {
+    props: {
+      books,
+    },
+  }
 }

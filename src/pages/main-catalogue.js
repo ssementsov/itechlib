@@ -3,9 +3,8 @@ import { Box, Container } from '@mui/material'
 import { BooksListResults } from '../components/booksTable/books-list-results'
 import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
 import { DashboardLayout } from '../components/dashboard-layout'
-import { books } from '../__mocks__/books'
 
-const mainCatalogue = () => {
+const mainCatalogue = ({ books }) => {
   return (
     <>
       <Head>
@@ -33,3 +32,14 @@ mainCatalogue.getLayout = (page) => {
 }
 
 export default mainCatalogue
+
+export async function getStaticProps() {
+  const res = await fetch('https://my.backend/books')
+  const books = await res.json()
+
+  return {
+    props: {
+      books,
+    },
+  }
+}

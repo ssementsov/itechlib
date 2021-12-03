@@ -13,7 +13,6 @@ import {
   TableRow,
 } from '@mui/material'
 import { titles } from './../../common/constants/titles-constants'
-import { books } from '../../__mocks__/books'
 import { styled } from '@mui/material/styles'
 import { useRouter } from 'next/router'
 
@@ -25,7 +24,7 @@ const TblCell = styled(TableCell)(() => ({
   padding: '5px 35px',
 }))
 
-export const BookDetails = () => {
+export const BookDetails = ({books}) => {
   const { query } = useRouter()
   let book = books[query.id - 1]
   return (
