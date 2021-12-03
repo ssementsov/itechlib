@@ -83,7 +83,7 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Box sx={{ p: 3 }}>
+          <Box sx={{ p: 3, pb: 0 }}>
             <NextLink href="/home" passHref>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a>

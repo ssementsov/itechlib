@@ -111,6 +111,7 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           overflow: 'auto',
+          boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
         },
       },
     },
@@ -157,6 +158,10 @@ export const theme = createTheme({
     },
     MuiTableCell: {
       styleOverrides: {
+        root: {
+          textAlign: 'center',
+          cursor: 'pointer',
+        },
         sizeSmall: {
           padding: '16px',
         },

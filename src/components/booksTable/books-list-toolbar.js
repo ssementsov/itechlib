@@ -27,7 +27,7 @@ export const BooksListToolbar = (props) => {
       ),
     }),
     onSubmit: () => {
-      router.push('/home')
+      router.push('/main-catalogue')
     },
   })
 

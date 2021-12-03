@@ -35,7 +35,7 @@ const Register = () => {
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
     if (userName) {
-      router.replace('/home')
+      router.replace('/main-catalogue')
     }
   })
   return (

@@ -10,13 +10,13 @@ const Login = () => {
   const responseGoogle = (response) => {
     let userName = JSON.stringify(response.profileObj.givenName)
     localStorage.setItem('UserName', userName)
-    router.replace('/home')
+    router.replace('/main-catalogue')
   }
 
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
     if (userName) {
-      router.replace('/home')
+      router.replace('/main-catalogue')
     }
   })
 

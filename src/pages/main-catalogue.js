@@ -1,15 +1,15 @@
 import Head from 'next/head'
 import { Box, Container } from '@mui/material'
-import { BooksListResults } from '../components/books/books-list-results'
-import { BooksListToolbar } from '../components/books/books-list-toolbar'
+import { BooksListResults } from '../components/booksTable/books-list-results'
+import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
 import { DashboardLayout } from '../components/dashboard-layout'
 import { books } from '../__mocks__/books'
 
-const HomePage = () => {
+const mainCatalogue = () => {
   return (
     <>
       <Head>
-        <title>Home page</title>
+        <title>Main catalogue</title>
       </Head>
       <Box
         component="main"
@@ -28,8 +28,8 @@ const HomePage = () => {
     </>
   )
 }
-HomePage.getLayout = (page) => {
+mainCatalogue.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>
 }
 
-export default HomePage
+export default mainCatalogue
