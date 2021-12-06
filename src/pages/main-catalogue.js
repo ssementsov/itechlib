@@ -33,7 +33,7 @@ mainCatalogue.getLayout = (page) => {
 
 export default mainCatalogue
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await fetch('https://my.backend/books')
   const books = await res.json()
 
