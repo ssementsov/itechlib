@@ -5,6 +5,7 @@ import { Box, Container } from '@mui/material'
 import { CloseIcon } from '../../icons/close-icon'
 import AddNewBookForm from './AddNewBookForm'
 import { status } from '../../common/constants/status-constants'
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
 const AddNewBookFormBox = ({ handleClose }) => {
   const router = useRouter()
@@ -66,7 +67,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
     validate,
     onSubmit: () => {
       handleClose()
-      router.push('/main-catalogue')
+      router.push(MAIN_CATALOGUE_PATH)
     },
   })
 

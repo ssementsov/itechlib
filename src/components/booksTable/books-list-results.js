@@ -12,6 +12,7 @@ import {
 } from '@mui/material'
 import { titles } from '../../common/constants/titles-constants'
 import router from 'next/router'
+import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants'
 
 export const BooksListResults = ({ books }) => {
   return (
@@ -34,7 +35,9 @@ export const BooksListResults = ({ books }) => {
               {books.length ? (
                 books.map((book, id) => (
                   <TableRow
-                    onClick={() => router.push(`book/${id + 1}`)}
+                    onClick={() =>
+                      router.push(`${BOOK_PREVIEW_PAGE_PATH}${id + 1}`)
+                    }
                     key={book.id}
                     hover
                   >

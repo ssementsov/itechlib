@@ -13,6 +13,7 @@ import {
 } from '@mui/material'
 import { Search as SearchIcon } from '../../icons/search'
 import AddNewBookModal from '../AddNewBook/AddNewBookModal'
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
 export const BooksListToolbar = (props) => {
   const router = useRouter()
@@ -27,7 +28,7 @@ export const BooksListToolbar = (props) => {
       ),
     }),
     onSubmit: () => {
-      router.push('/main-catalogue')
+      router.push(MAIN_CATALOGUE_PATH)
     },
   })
 

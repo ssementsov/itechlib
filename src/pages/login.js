@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import { GoogleLogin } from 'react-google-login'
+import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants'
 
 const Login = () => {
   const router = useRouter()
@@ -10,13 +11,13 @@ const Login = () => {
   const responseGoogle = (response) => {
     let userName = JSON.stringify(response.profileObj.givenName)
     localStorage.setItem('UserName', userName)
-    router.replace('/main-catalogue')
+    router.replace(MAIN_CATALOGUE_PATH)
   }
 
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
     if (userName) {
-      router.replace('/main-catalogue')
+      router.replace(MAIN_CATALOGUE_PATH)
     }
   })
 
