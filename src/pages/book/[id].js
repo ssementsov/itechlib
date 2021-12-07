@@ -1,11 +1,12 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { Box, Container, Grid, Card, Button } from '@mui/material'
 import { BookDetails } from '../../components/book/book-details'
 import { DashboardLayout } from '../../components/dashboard-layout'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import router from 'next/router'
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
-export default function BookPreviewPage() {
+export default function BookPreviewPage({ book }) {
   return (
     <>
       <Head>
@@ -19,16 +20,17 @@ export default function BookPreviewPage() {
           pb: 8,
         }}
       >
-        <Button
-          onClick={() => router.push('/main-catalogue')}
-          component="a"
-          startIcon={<ArrowBackIcon fontSize="small" />}
-          sx={{
-            ml: 2,
-          }}
-        >
-          Back to main catalogue
-        </Button>
+        <Link href={MAIN_CATALOGUE_PATH} passHref>
+          <Button
+            component="a"
+            startIcon={<ArrowBackIcon fontSize="small" />}
+            sx={{
+              ml: 2,
+            }}
+          >
+            Back to main catalogue
+          </Button>
+        </Link>
         <Container
           maxWidth="lg"
           sx={{
@@ -47,7 +49,7 @@ export default function BookPreviewPage() {
               />
             </Grid>
             <Grid item lg={8} md={9} xs={12}>
-              <BookDetails />
+              <BookDetails book={book} />
             </Grid>
           </Grid>
         </Container>
@@ -58,4 +60,20 @@ export default function BookPreviewPage() {
 
 BookPreviewPage.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>
+}
+
+export async function getServerSideProps({ params }) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/${params.id}`)
+  if (res.status === 404) {
+    return {
+      notFound: true,
+    }
+  }
+  const book = await res.json()
+
+  return {
+    props: {
+      book,
+    },
+  }
 }

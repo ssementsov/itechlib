@@ -3,6 +3,10 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useFormik } from 'formik'
 import { Box, Button, Container, TextField, Typography } from '@mui/material'
+import {
+  LOGIN_PATH,
+  MAIN_CATALOGUE_PATH,
+} from '../common/constants/route-constants'
 
 const Register = () => {
   const router = useRouter()
@@ -29,13 +33,13 @@ const Register = () => {
     },
     validate,
     onSubmit: () => {
-      router.push('/login')
+      router.push(LOGIN_PATH)
     },
   })
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
     if (userName) {
-      router.replace('/main-catalogue')
+      router.replace(MAIN_CATALOGUE_PATH)
     }
   })
   return (

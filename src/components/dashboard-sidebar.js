@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import NextLink from 'next/link'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material'
@@ -14,10 +14,14 @@ import { HelpIcon } from '../icons/help-icon'
 import { Logo } from './logo'
 import { NavItem } from './nav-item'
 import { theme } from '../theme/index'
+import {
+  HOME_PATH,
+  MAIN_CATALOGUE_PATH,
+} from '../common/constants/route-constants'
 
 const items = [
   {
-    href: '/home',
+    href: HOME_PATH,
     icon: <HomePageIcon fontSize="small" />,
     title: 'Home page',
   },
@@ -27,7 +31,7 @@ const items = [
     title: 'My books',
   },
   {
-    href: '/main-catalogue',
+    href: MAIN_CATALOGUE_PATH,
     icon: <MainCatalogueIcon fontSize="small" />,
     title: 'Main catalogue',
   },
@@ -84,7 +88,7 @@ export const DashboardSidebar = (props) => {
       >
         <div>
           <Box sx={{ p: 3, pb: 0 }}>
-            <NextLink href="/home" passHref>
+            <Link href={HOME_PATH} passHref>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a>
                 <Logo
@@ -94,7 +98,7 @@ export const DashboardSidebar = (props) => {
                   }}
                 />
               </a>
-            </NextLink>
+            </Link>
           </Box>
         </div>
         <Divider

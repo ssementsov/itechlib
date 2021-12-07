@@ -10,6 +10,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import Divider from '@mui/material/Divider'
 import Logout from '@mui/icons-material/Logout'
 import { GoogleLogout } from 'react-google-login'
+import { LOGIN_PATH } from '../common/constants/route-constants'
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -58,7 +59,7 @@ export const DashboardNavbar = (props) => {
 
   const handleLogout = () => {
     localStorage.removeItem('UserName')
-    router.replace('/login')
+    router.replace(LOGIN_PATH)
   }
 
   return (

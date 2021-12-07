@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid'
-import { Book } from '../models/book'
+import { Book } from './book'
 
 let newBook = new Book(
   uuid(),
