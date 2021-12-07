@@ -15,7 +15,7 @@ import { Search as SearchIcon } from '../../icons/search'
 import AddNewBookModal from '../AddNewBook/AddNewBookModal'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
-export const BooksListToolbar = (props) => {
+export const BooksListToolbar = () => {
   const router = useRouter()
   const formik = useFormik({
     initialValues: {
@@ -33,7 +33,7 @@ export const BooksListToolbar = (props) => {
   })
 
   return (
-    <Box {...props}>
+    <Box>
       <Box
         sx={{
           alignItems: 'center',
