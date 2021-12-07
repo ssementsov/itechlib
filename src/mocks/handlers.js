@@ -38,11 +38,11 @@ const bookList = [
 
 export const handlers = [
   // eslint-disable-next-line no-unused-vars
-  rest.get('https://my.backend/books', (req, res, ctx) => {
+  rest.get(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, (req, res, ctx) => {
     return res(ctx.json(bookList))
   }),
 
-  rest.get('https://my.backend/books/:bookId', (req, res, ctx) => {
+  rest.get(`${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/:bookId`, (req, res, ctx) => {
     const { bookId } = req.params
     if (bookId <= bookList.length) {
       return res(ctx.json(bookList[bookId - 1]))

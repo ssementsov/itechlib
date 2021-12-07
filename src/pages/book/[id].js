@@ -63,7 +63,7 @@ BookPreviewPage.getLayout = (page) => {
 }
 
 export async function getServerSideProps({ params }) {
-  const res = await fetch(`https://my.backend/books/${params.id}`)
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/${params.id}`)
   if (res.status === 404) {
     return {
       notFound: true,
