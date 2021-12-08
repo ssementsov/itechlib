@@ -15,7 +15,7 @@ import { Search as SearchIcon } from '../../icons/search'
 import AddNewBookModal from '../AddNewBook/AddNewBookModal'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
-export const BooksListToolbar = () => {
+export const BooksListToolbar = ({onCreate}) => {
   const router = useRouter()
   const formik = useFormik({
     initialValues: {
@@ -48,7 +48,7 @@ export const BooksListToolbar = () => {
         </Typography>
         <Box sx={{ m: 1, display: 'flex' }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>
-          <AddNewBookModal />
+          <AddNewBookModal onCreate={onCreate} />
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>

@@ -1,46 +1,12 @@
 import { rest } from 'msw'
-
-let bookList = [
-  {
-    id: 1,
-    title: 'Book 1',
-    author: 'Ivan Ivanov',
-    cathegory: 'Technical',
-    language: 'English',
-    link: 'https://www.amazon.com/C-Programming-Language-4th/dp/0321563840',
-    rating: 0,
-    status: 'Available',
-    description: 'Some description about the book',
-  },
-  {
-    id: 2,
-    title: 'Book 2',
-    author: 'Sergey Petrov',
-    cathegory: 'Technical',
-    language: 'English',
-    link: 'https://www.amazon.com/C-Programming-Language-4th/dp/0321563840',
-    rating: 0,
-    status: 'Not available',
-    description: 'Some description about the book',
-  },
-  {
-    id: 3,
-    title: 'Book 3',
-    author: 'Petr Petrov',
-    cathegory: 'Technical',
-    language: 'English',
-    link: 'https://www.amazon.com/C-Programming-Language-4th/dp/0321563840',
-    rating: 0,
-    status: 'Available',
-    description: 'Some description about the book',
-  },
-]
+import { bookList } from './db';
 
 export const handlers = [
   // eslint-disable-next-line no-unused-vars
   rest.get(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, (req, res, ctx) => {
-    console.log(bookList)
-    return res(ctx.json(bookList))
+    console.log('Return books list ', (new Date()).getTime());
+    console.log('Return books list ', JSON.parse(JSON.stringify(bookList)));
+    return res(ctx.delay(500), ctx.status(200), ctx.json(bookList))
   }),
 
   rest.get(`${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/:bookId`, (req, res, ctx) => {
@@ -55,6 +21,7 @@ export const handlers = [
   rest.post(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, (req, res, ctx) => {
     const id = bookList[bookList.length - 1].id + 1;
     const valuesOfBody = req.body
+    console.log(valuesOfBody)
     
     const newBook = {
       id: id,
@@ -69,7 +36,11 @@ export const handlers = [
       dateFrom: valuesOfBody.dateFrom,
       dateTo: valuesOfBody.dateTo
     }
-    bookList = [...bookList, newBook];
+    // bookList = [...bookList, newBook];
+
+    bookList.push(newBook);
+    console.log('Create new book ', (new Date()).getTime());
+    console.log('New list of books ', JSON.parse(JSON.stringify(bookList)));
     return res(ctx.status(201), ctx.json(newBook));
   }),
 ]

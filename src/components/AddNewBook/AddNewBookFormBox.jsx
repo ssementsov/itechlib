@@ -22,7 +22,7 @@ const createBook = async body => {
   }
 }
 
-const AddNewBookFormBox = ({ handleClose }) => {
+const AddNewBookFormBox = ({ handleClose, onCreate }) => {
   const router = useRouter()
 
   function validate(value) {
@@ -82,7 +82,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
     validate,
     onSubmit: async (values) => {
       const newBook = await createBook(values)
-      console.log(newBook)
+      onCreate(newBook)
       handleClose()
       router.push(MAIN_CATALOGUE_PATH)
     },

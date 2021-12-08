@@ -1,10 +1,10 @@
 export const cathegories = [
   {
-    value: 'professional',
+    value: 'Professional',
     label: 'Professional',
   },
   {
-    value: 'fiction',
+    value: 'Fiction',
     label: 'Fiction',
   },
 ]
