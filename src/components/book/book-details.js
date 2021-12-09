@@ -42,7 +42,7 @@ export const BookDetails = ({ book }) => {
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.category}</TblCell>
-                  <TblCell>{book.cathegory}</TblCell>
+                  <TblCell>{book.category}</TblCell>
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.language}</TblCell>

@@ -54,7 +54,7 @@ const AddNewBookFormBox = ({ handleClose, onCreate }) => {
       title: '',
       author: '',
       category: '',
-      languages: '',
+      language: '',
       description: '',
       linkToWeb: '',
       status: '',
@@ -72,7 +72,7 @@ const AddNewBookFormBox = ({ handleClose, onCreate }) => {
         .max(255, 'Author must be less than 255 characters')
         .required('Author is required'),
       category: Yup.string().required('Category is required'),
-      languages: Yup.string().required('Language is required'),
+      language: Yup.string().required('Language is required'),
       description: Yup.string()
         .min(10, 'Description must be more than 10 characters')
         .max(100, 'Description must be less than 100 characters')

@@ -62,16 +62,16 @@ const AddNewBookForm = ({ formik }) => {
         {cathegories.map(createOptions)}
       </TextField>
       <TextField
-        error={Boolean(formik.touched.languages && formik.errors.languages)}
+        error={Boolean(formik.touched.language && formik.errors.language)}
         fullWidth
-        helperText={formik.touched.languages && formik.errors.languages}
-        name="languages"
+        helperText={formik.touched.language && formik.errors.language}
+        name="language"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
         label="Language*"
         select
-        value={formik.values.languages}
+        value={formik.values.language}
         variant="outlined"
       >
         {languages.map(createOptions)}

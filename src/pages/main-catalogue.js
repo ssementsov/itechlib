@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Box, Container } from '@mui/material'
+import { Box, Container, Typography } from '@mui/material'
 import { BooksListResults } from '../components/booksTable/books-list-results'
 import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
 import { DashboardLayout } from '../components/dashboard-layout'
@@ -11,11 +11,12 @@ const getItem = async () => {
 };
 
 const MainCatalogue = () => {
-  const { data: book, error, mutate } = useSWR(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, () => getItem());
-  console.log(book, 'ffffffff')
+  const { data: book, error } = useSWR(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, () => getItem());
 
-  if (error) return <div>ошибка загрузки</div>
-  if (!book) return <div>загрузка...</div>
+  if (error) return <div>Error of loading</div>
+  if (!book) return  <Typography sx={{ my: 8, mx: 4 }} variant="h4">
+  Loading...
+</Typography>
 
   return (
     <>
@@ -31,7 +32,8 @@ const MainCatalogue = () => {
       >
         <Container maxWidth={false}>
           <BooksListToolbar onCreate={(newItem) => {
-          mutate([...book, newItem]);
+            book.unshift(newItem)
+            return book
         }} />
           <Box sx={{ mt: 3 }}>
             <BooksListResults  books={book} />
