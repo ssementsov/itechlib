@@ -41,7 +41,6 @@
     "eslint-config-next": "12.0.3-canary.7",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "msw": "^0.35.0",
     "prettier": "^2.4.1"
   },
   "scripts": {

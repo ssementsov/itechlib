@@ -1,12 +1,44 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { Box, Container, Grid, Card, Button } from '@mui/material'
-import { BookDetails } from '../../components/book/book-details'
-import { DashboardLayout } from '../../components/dashboard-layout'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
+import Head from "next/head";
+import Link from "next/link";
+import { Box, Container, Grid, Card, Button, Typography } from "@mui/material";
+import { BookDetails } from "../../components/book/book-details";
+import { DashboardLayout } from "../../components/dashboard-layout";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { useRouter } from "next/router";
+import useSWR from "swr";
 
-export default function BookPreviewPage({ book }) {
+const getItem = (url) => fetch(url).then((res) => res.json());
+
+function useBook(id) {
+  const { data, error } = useSWR(
+    `${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/${id}`,
+    getItem
+  );
+
+  return {
+    book: data,
+    loading: !error && !data,
+    error: error,
+  };
+}
+
+export default function BookPreviewPage() {
+  let router = useRouter();
+  const { book, loading, error } = useBook(router.query.id);
+  if (error)
+    return (
+      <Typography sx={{ my: 8, mx: 4 }} variant="h4">
+        There is no book in catalogue
+      </Typography>
+    );
+  if (loading)
+    return (
+      <Typography sx={{ my: 8, mx: 4 }} variant="h4">
+        Loading...
+      </Typography>
+    );
+
   return (
     <>
       <Head>
@@ -41,10 +73,10 @@ export default function BookPreviewPage({ book }) {
             <Grid item lg={3} md={3} xs={12}>
               <Card
                 sx={{
-                  background: 'white',
-                  margin: '0 auto',
-                  width: '250px',
-                  height: '258px',
+                  background: "white",
+                  margin: "0 auto",
+                  width: "250px",
+                  height: "258px",
                 }}
               />
             </Grid>
@@ -55,25 +87,9 @@ export default function BookPreviewPage({ book }) {
         </Container>
       </Box>
     </>
-  )
+  );
 }
 
 BookPreviewPage.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>
-}
-
-export async function getServerSideProps({ params }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/${params.id}`)
-  if (res.status === 404) {
-    return {
-      notFound: true,
-    }
-  }
-  const book = await res.json()
-
-  return {
-    props: {
-      book,
-    },
-  }
-}
+  return <DashboardLayout>{page}</DashboardLayout>;
+};

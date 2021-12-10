@@ -11,10 +11,6 @@ import { Slide } from '@mui/material'
 
 const clientSideEmotionCache = createEmotionCache()
 
-if (process.env.NODE_ENV === 'development') {
-  require('../mocks')
-}
-
 const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
