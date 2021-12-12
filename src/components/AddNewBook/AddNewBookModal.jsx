@@ -22,8 +22,9 @@ const style = {
   },
 }
 
-export default function AddNewBookModal({onCreate}) {
+export default function AddNewBookModal({ createBook }) {
   const [open, setOpen] = React.useState(false)
+
   const handleOpen = () => {
     setOpen(true)
   }
@@ -38,7 +39,10 @@ export default function AddNewBookModal({onCreate}) {
       </Button>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <AddNewBookFormBox onCreate={onCreate} handleClose={handleClose} />
+          <AddNewBookFormBox
+            createBook={createBook}
+            handleClose={handleClose}
+          />
         </Box>
       </Modal>
     </div>

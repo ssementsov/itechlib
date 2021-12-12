@@ -7,22 +7,7 @@ import AddNewBookForm from './AddNewBookForm'
 import { status } from '../../common/constants/status-constants'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
-const createBook = async body => {
-  try {
-    const res = await fetch(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      },
-      body: JSON.stringify(body)
-    });
-    return res.json();
-  } catch(e) {
-    console.log(e)
-  }
-}
-
-const AddNewBookFormBox = ({ handleClose, onCreate }) => {
+const AddNewBookFormBox = ({ handleClose, createBook }) => {
   const router = useRouter()
 
   function validate(value) {
@@ -81,8 +66,7 @@ const AddNewBookFormBox = ({ handleClose, onCreate }) => {
     }),
     validate,
     onSubmit: async (values) => {
-      const newBook = await createBook(values)
-      onCreate(newBook)
+      await createBook(values)
       handleClose()
       router.push(MAIN_CATALOGUE_PATH)
     },
