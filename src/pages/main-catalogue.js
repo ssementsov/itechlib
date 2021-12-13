@@ -1,54 +1,57 @@
-import Head from "next/head";
-import { Box, Container, Typography } from "@mui/material";
-import { BooksListResults } from "../components/booksTable/books-list-results";
-import { BooksListToolbar } from "../components/booksTable/books-list-toolbar";
-import { DashboardLayout } from "../components/dashboard-layout";
-import { useState, useEffect } from "react";
-import { withSnackbar } from "notistack";
+import Head from 'next/head'
+import {
+  onSnapshot,
+  collection,
+  orderBy,
+  query,
+  addDoc,
+} from '@firebase/firestore'
+import { db } from '../../firebase'
+import { Box, Container, Typography } from '@mui/material'
+import { BooksListResults } from '../components/booksTable/books-list-results'
+import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
+import { DashboardLayout } from '../components/dashboard-layout'
+import { useState, useEffect } from 'react'
+import { withSnackbar } from 'notistack'
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [books, setBooks] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [books, setBooks] = useState([])
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT)
-      .then((res) => res.json())
-      .then((result) => {
-        setIsLoaded(true);
-        setBooks(result);
-      });
-  });
+    const collectionRef = collection(db, 'books')
+
+    const q = query(collectionRef, orderBy('author'))
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      setBooks(
+        querySnapshot.docs.map((doc) => {
+          return {
+            ...doc.data(),
+            id: doc.id,
+          }
+        })
+      )
+      setIsLoaded(true)
+    })
+    return unsubscribe
+  }, [])
 
   const createBook = async (body) => {
-    fetch(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-      body: JSON.stringify(body),
+    const collectionRef = collection(db, 'books')
+    await addDoc(collectionRef, { ...body })
+    enqueueSnackbar('Your book has been added successfully!', {
+      variant: 'success',
     })
-      .then((res) => res.json())
-      .then((result) => {
-        setIsLoaded(true);
-        setBooks(result);
-        enqueueSnackbar("Your book has been added successfully!", {
-          variant: "success",
-        });
-      })
-      .catch(() => {
-        setIsLoaded(true);
-        enqueueSnackbar("Something went wrong. Please retry...", {
-          variant: "error",
-        });
-      });
-  };
+    setIsLoaded(true)
+  }
 
   if (!isLoaded) {
     return (
       <Typography sx={{ my: 8, mx: 4 }} variant="h4">
         Loading...
       </Typography>
-    );
+    )
   } else {
     return (
       <>
@@ -70,11 +73,11 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
           </Container>
         </Box>
       </>
-    );
+    )
   }
-};
+}
 MainCatalogue.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
-};
+  return <DashboardLayout>{page}</DashboardLayout>
+}
 
-export default withSnackbar(MainCatalogue);
+export default withSnackbar(MainCatalogue)
