@@ -5,28 +5,43 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  IconButton,
   Link,
   Rating,
   Table,
   TableBody,
   TableCell,
   TableRow,
-} from '@mui/material'
-import { titles } from './../../common/constants/titles-constants'
-import { styled } from '@mui/material/styles'
+} from "@mui/material";
+import { titles } from "./../../common/constants/titles-constants";
+import { styled } from "@mui/material/styles";
+import { DeleteIcon } from "../../icons/delete-icon";
+import { EditIcon } from "../../icons/edit-icon";
 
 const TblCell = styled(TableCell)(() => ({
-  textAlign: 'left',
-  cursor: 'auto',
-  borderBottom: '1px solid #E7E8EF',
-  borderTop: '1px solid #E7E8EF',
-  padding: '5px 35px',
-}))
+  textAlign: "left",
+  cursor: "auto",
+  borderBottom: "1px solid #E7E8EF",
+  borderTop: "1px solid #E7E8EF",
+  padding: "5px 35px",
+}));
 
 export const BookDetails = ({ book }) => {
   return (
     <Card>
-      <CardHeader title={book.title} />
+      <CardHeader
+        title={book.title}
+        action={
+          <>
+            <IconButton aria-label="delete">
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+            <IconButton aria-label="delete">
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
       <CardContent
         sx={{
           p: 0,
@@ -57,7 +72,7 @@ export const BookDetails = ({ book }) => {
                       target="_blank"
                       rel="noopener"
                     >
-                      {'Click here'}
+                      {"Click here"}
                     </Link>
                   </TblCell>
                 </TableRow>
@@ -70,7 +85,7 @@ export const BookDetails = ({ book }) => {
                       size="small"
                       readOnly
                       sx={{
-                        marginLeft: '-3px',
+                        marginLeft: "-3px",
                       }}
                     />
                   </TblCell>
@@ -90,8 +105,8 @@ export const BookDetails = ({ book }) => {
       </CardContent>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
+          display: "flex",
+          justifyContent: "flex-end",
           p: 2,
         }}
       >
@@ -100,5 +115,5 @@ export const BookDetails = ({ book }) => {
         </Button>
       </Box>
     </Card>
-  )
-}
+  );
+};
