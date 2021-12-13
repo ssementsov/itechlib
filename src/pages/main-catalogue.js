@@ -1,63 +1,54 @@
-import Head from 'next/head'
-import { Box, Container, Typography } from '@mui/material'
-import { BooksListResults } from '../components/booksTable/books-list-results'
-import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
-import { DashboardLayout } from '../components/dashboard-layout'
-import { useState, useEffect } from 'react'
+import Head from "next/head";
+import { Box, Container, Typography } from "@mui/material";
+import { BooksListResults } from "../components/booksTable/books-list-results";
+import { BooksListToolbar } from "../components/booksTable/books-list-toolbar";
+import { DashboardLayout } from "../components/dashboard-layout";
+import { useState, useEffect } from "react";
+import { withSnackbar } from "notistack";
 
-const MainCatalogue = () => {
-  const [error, setError] = useState(null)
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [books, setBooks] = useState([])
+const MainCatalogue = ({ enqueueSnackbar }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [books, setBooks] = useState([]);
 
   useEffect(() => {
     fetch(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT)
       .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true)
-          setBooks(result)
-        },
-        (error) => {
-          setIsLoaded(true)
-          setError(error)
-        }
-      )
-  }, [])
+      .then((result) => {
+        setIsLoaded(true);
+        setBooks(result);
+      });
+  });
 
   const createBook = async (body) => {
     fetch(process.env.NEXT_PUBLIC_BOOKS_ENDPOINT, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-type': 'application/json; charset=UTF-8',
+        "Content-type": "application/json; charset=UTF-8",
       },
       body: JSON.stringify(body),
     })
       .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true)
-          setBooks(result)
-        },
-        (error) => {
-          setIsLoaded(true)
-          setError(error)
-        }
-      )
-  }
+      .then((result) => {
+        setIsLoaded(true);
+        setBooks(result);
+        enqueueSnackbar("Your book has been added successfully!", {
+          variant: "success",
+        });
+      })
+      .catch(() => {
+        setIsLoaded(true);
+        enqueueSnackbar("Something went wrong. Please retry...", {
+          variant: "error",
+        });
+      });
+  };
 
-  if (error) {
-    return (
-      <Typography sx={{ my: 8, mx: 4 }} variant="h4">
-        Something wrong...
-      </Typography>
-    )
-  } else if (!isLoaded) {
+  if (!isLoaded) {
     return (
       <Typography sx={{ my: 8, mx: 4 }} variant="h4">
         Loading...
       </Typography>
-    )
+    );
   } else {
     return (
       <>
@@ -79,11 +70,11 @@ const MainCatalogue = () => {
           </Container>
         </Box>
       </>
-    )
+    );
   }
-}
+};
 MainCatalogue.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>
-}
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
 
-export default MainCatalogue
+export default withSnackbar(MainCatalogue);
