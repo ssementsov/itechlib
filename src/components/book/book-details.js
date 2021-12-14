@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
-import { DeleteIcon } from "../../icons/delete-icon";
 import { EditIcon } from "../../icons/edit-icon";
 import { withSnackbar } from "notistack";
 import { doc, deleteDoc } from "firebase/firestore";
@@ -23,6 +22,7 @@ import { db } from "../../../firebase";
 import { useRouter } from "next/router";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import { status } from "../../common/constants/status-constants";
+import CustomModal from "./../custom-modal";
 
 const TblCell = styled(TableCell)(() => ({
   textAlign: "left",
@@ -64,10 +64,8 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
         title={book.title}
         action={
           <>
-            <IconButton onClick={deleteBook} aria-label="delete">
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-            <IconButton aria-label="delete">
+            <CustomModal whatModal={"delete book"} deleteBook={deleteBook} />
+            <IconButton aria-label="edit">
               <EditIcon fontSize="small" />
             </IconButton>
           </>
