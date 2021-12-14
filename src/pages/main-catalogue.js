@@ -54,7 +54,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       setIsLoaded(true);
     }
   };
-  console.log(books);
+
   if (!isLoaded) {
     return (
       <Typography sx={{ my: 8, mx: 4 }} variant="h4">

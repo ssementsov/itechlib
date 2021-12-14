@@ -1,14 +1,14 @@
 export const readers = [
   {
-    value: 'ivan',
-    label: 'Ivan Ivanov',
+    value: "ivan",
+    label: "Ivan Ivanov",
   },
   {
-    value: 'nikolai',
-    label: 'Nikolai Nikolaev',
+    value: "nikolai",
+    label: "Nikolai Nikolaev",
   },
   {
-    value: 'sergey',
-    label: 'Sergey Sergeev',
+    value: "sergey",
+    label: "Sergey Sergeev",
   },
-]
+];
