@@ -17,6 +17,12 @@ import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
 import { DeleteIcon } from "../../icons/delete-icon";
 import { EditIcon } from "../../icons/edit-icon";
+import { withSnackbar } from "notistack";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { useRouter } from "next/router";
+import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { status } from "../../common/constants/status-constants";
 
 const TblCell = styled(TableCell)(() => ({
   textAlign: "left",
@@ -26,14 +32,39 @@ const TblCell = styled(TableCell)(() => ({
   padding: "5px 35px",
 }));
 
-export const BookDetails = ({ book }) => {
+const BookDetails = ({ book, enqueueSnackbar }) => {
+  const router = useRouter();
+
+  const deleteBook = async () => {
+    if (book.status === status.available) {
+      try {
+        await deleteDoc(doc(db, "books", router.query.id));
+        router.replace(MAIN_CATALOGUE_PATH);
+        enqueueSnackbar("Your book has been deleted successfully!", {
+          variant: "success",
+        });
+      } catch (e) {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
+      }
+    } else {
+      enqueueSnackbar(
+        "You can only delete books which are currently in “Available” status",
+        {
+          variant: "error",
+        }
+      );
+    }
+  };
+
   return (
     <Card>
       <CardHeader
         title={book.title}
         action={
           <>
-            <IconButton aria-label="delete">
+            <IconButton onClick={deleteBook} aria-label="delete">
               <DeleteIcon fontSize="small" />
             </IconButton>
             <IconButton aria-label="delete">
@@ -117,3 +148,5 @@ export const BookDetails = ({ book }) => {
     </Card>
   );
 };
+
+export default withSnackbar(BookDetails);

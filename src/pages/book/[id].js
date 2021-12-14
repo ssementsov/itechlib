@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { Box, Container, Grid, Card, Button } from "@mui/material";
-import { BookDetails } from "../../components/book/book-details";
+import BookDetails from "../../components/book/book-details";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
