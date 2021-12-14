@@ -33,17 +33,17 @@ export const BooksListResults = ({ books }) => {
             </TableHead>
             <TableBody>
               {books.length ? (
-                books.map((book, id) => (
+                books.map((book) => (
                   <TableRow
                     onClick={() =>
-                      router.push(`${BOOK_PREVIEW_PAGE_PATH}/${id + 1}`)
+                      router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}`)
                     }
                     key={book.id}
                     hover
                   >
                     <TableCell>{book.title}</TableCell>
                     <TableCell>{book.author}</TableCell>
-                    <TableCell>{book.cathegory}</TableCell>
+                    <TableCell>{book.category}</TableCell>
                     <TableCell>{book.language}</TableCell>
                     <TableCell>{book.description}</TableCell>
                     <TableCell>

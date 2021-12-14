@@ -7,7 +7,7 @@ import AddNewBookForm from './AddNewBookForm'
 import { status } from '../../common/constants/status-constants'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
-const AddNewBookFormBox = ({ handleClose }) => {
+const AddNewBookFormBox = ({ handleClose, createBook }) => {
   const router = useRouter()
 
   function validate(value) {
@@ -39,7 +39,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
       title: '',
       author: '',
       category: '',
-      languages: '',
+      language: '',
       description: '',
       linkToWeb: '',
       status: '',
@@ -57,7 +57,7 @@ const AddNewBookFormBox = ({ handleClose }) => {
         .max(255, 'Author must be less than 255 characters')
         .required('Author is required'),
       category: Yup.string().required('Category is required'),
-      languages: Yup.string().required('Language is required'),
+      language: Yup.string().required('Language is required'),
       description: Yup.string()
         .min(10, 'Description must be more than 10 characters')
         .max(100, 'Description must be less than 100 characters')
@@ -65,7 +65,8 @@ const AddNewBookFormBox = ({ handleClose }) => {
       status: Yup.string().required('Status is required'),
     }),
     validate,
-    onSubmit: () => {
+    onSubmit: async (values) => {
+      await createBook(values)
       handleClose()
       router.push(MAIN_CATALOGUE_PATH)
     },

@@ -1,10 +1,12 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { Box, Container, Grid, Card, Button } from '@mui/material'
-import { BookDetails } from '../../components/book/book-details'
-import { DashboardLayout } from '../../components/dashboard-layout'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
+import Head from "next/head";
+import Link from "next/link";
+import { Box, Container, Grid, Card, Button } from "@mui/material";
+import { BookDetails } from "../../components/book/book-details";
+import { DashboardLayout } from "../../components/dashboard-layout";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../firebase";
 
 export default function BookPreviewPage({ book }) {
   return (
@@ -41,10 +43,10 @@ export default function BookPreviewPage({ book }) {
             <Grid item lg={3} md={3} xs={12}>
               <Card
                 sx={{
-                  background: 'white',
-                  margin: '0 auto',
-                  width: '250px',
-                  height: '258px',
+                  background: "white",
+                  margin: "0 auto",
+                  width: "250px",
+                  height: "258px",
                 }}
               />
             </Grid>
@@ -55,25 +57,20 @@ export default function BookPreviewPage({ book }) {
         </Container>
       </Box>
     </>
-  )
+  );
 }
 
 BookPreviewPage.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>
-}
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
 
-export async function getServerSideProps({ params }) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BOOKS_ENDPOINT}/${params.id}`)
-  if (res.status === 404) {
-    return {
-      notFound: true,
-    }
-  }
-  const book = await res.json()
+export async function getServerSideProps(ctx) {
+  const { id } = ctx.params;
+  const docRef = doc(db, "books", id);
+  const docSnap = await getDoc(docRef);
+  const book = JSON.parse(JSON.stringify(docSnap.data()));
 
   return {
-    props: {
-      book,
-    },
-  }
+    props: { book },
+  };
 }

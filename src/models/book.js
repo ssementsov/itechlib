@@ -3,7 +3,7 @@ export class Book {
     id = '',
     title = '',
     author = '',
-    cathegory = '',
+    category = '',
     language = '',
     link = '',
     rating = '',
@@ -13,7 +13,7 @@ export class Book {
     this.id = id
     this.title = title
     this.author = author
-    this.cathegory = cathegory
+    this.category = category
     this.language = language
     this.link = link
     this.rating = rating
