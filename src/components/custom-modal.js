@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, Modal, Button, IconButton } from "@mui/material";
 import AddNewBookFormBox from "./AddNewBook/AddNewBookFormBox";
 import { DeleteIcon } from "./../icons/delete-icon";
+import { EditIcon } from "./../icons/edit-icon";
 import DeleteBookModal from "./deleteBook/delete-book-modal";
 
 const style = {
@@ -24,7 +25,13 @@ const style = {
   },
 };
 
-export default function CustomModal({ createBook, whatModal, deleteBook }) {
+export default function CustomModal({
+  createBook,
+  whatModal,
+  deleteBook,
+  editBook,
+  book,
+}) {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
@@ -43,6 +50,8 @@ export default function CustomModal({ createBook, whatModal, deleteBook }) {
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
             <AddNewBookFormBox
+              title={"Add New Book"}
+              buttonName={"Add"}
               createBook={createBook}
               handleClose={handleClose}
             />
@@ -61,6 +70,26 @@ export default function CustomModal({ createBook, whatModal, deleteBook }) {
             <DeleteBookModal
               deleteBook={deleteBook}
               handleClose={handleClose}
+            />
+          </Box>
+        </Modal>
+      </>
+    );
+  } else if (whatModal === "edit book") {
+    return (
+      <>
+        <IconButton onClick={handleOpen} aria-label="edit">
+          <EditIcon fontSize="small" />
+        </IconButton>
+        <Modal open={open} onClose={handleClose}>
+          <Box sx={style}>
+            <AddNewBookFormBox
+              title={"Edit Book Information"}
+              buttonName={"Save"}
+              handleClose={handleClose}
+              createBook={createBook}
+              editBook={editBook}
+              book={book}
             />
           </Box>
         </Modal>

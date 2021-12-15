@@ -14,12 +14,12 @@ const createOptions = (option) => {
   )
 }
 
-const AddNewBookForm = ({ formik }) => {
+const AddNewBookForm = ({ formik, title, buttonName }) => {
   return (
     <form onSubmit={formik.handleSubmit}>
       <Box sx={{ my: 3 }}>
         <Typography color="textPrimary" variant="h4" textAlign="center">
-          Add New Book
+          {title}
         </Typography>
       </Box>
       <TextField
@@ -129,7 +129,7 @@ const AddNewBookForm = ({ formik }) => {
           type="submit"
           variant="contained"
         >
-          Add
+          {buttonName}
         </Button>
       </Box>
     </form>

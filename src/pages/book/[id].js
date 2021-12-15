@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Box, Container, Grid, Card, Button } from "@mui/material";
 import BookDetails from "../../components/book/book-details";
 import { DashboardLayout } from "../../components/dashboard-layout";
@@ -7,8 +8,25 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
+import { useState, useEffect, useCallback } from "react";
 
-export default function BookPreviewPage({ book }) {
+export default function BookPreviewPage() {
+  const router = useRouter();
+  const [book, setBook] = useState({});
+  const id = router.query.id;
+
+  const fetchBook = useCallback(async () => {
+    const docRef = doc(db, "books", id);
+    const docSnap = await getDoc(docRef);
+    const data = JSON.parse(JSON.stringify(docSnap.data()));
+    const book = { ...data, idBook: id };
+    setBook(book);
+  }, [id]);
+
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook, router.query]);
+
   return (
     <>
       <Head>
@@ -51,7 +69,7 @@ export default function BookPreviewPage({ book }) {
               />
             </Grid>
             <Grid item lg={8} md={9} xs={12}>
-              <BookDetails book={book} />
+              <BookDetails book={book} fetchBook={fetchBook} />
             </Grid>
           </Grid>
         </Container>
@@ -63,14 +81,3 @@ export default function BookPreviewPage({ book }) {
 BookPreviewPage.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
-
-export async function getServerSideProps(ctx) {
-  const { id } = ctx.params;
-  const docRef = doc(db, "books", id);
-  const docSnap = await getDoc(docRef);
-  const book = JSON.parse(JSON.stringify(docSnap.data()));
-
-  return {
-    props: { book },
-  };
-}
