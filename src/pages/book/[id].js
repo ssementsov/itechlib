@@ -10,9 +10,9 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useState, useEffect, useCallback } from "react";
 
-export default function BookPreviewPage() {
+export default function BookPreviewPage({ initialeBook }) {
   const router = useRouter();
-  const [book, setBook] = useState({});
+  const [book, setBook] = useState(initialeBook);
   const id = router.query.id;
 
   const fetchBook = useCallback(async () => {
@@ -81,3 +81,15 @@ export default function BookPreviewPage() {
 BookPreviewPage.getLayout = (page) => {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
+
+export async function getServerSideProps(ctx) {
+  const { id } = ctx.params;
+  const docRef = doc(db, "books", id);
+  const docSnap = await getDoc(docRef);
+  const data = JSON.parse(JSON.stringify(docSnap.data()));
+  const initialeBook = { ...data, idBook: id };
+
+  return {
+    props: { initialeBook },
+  };
+}
