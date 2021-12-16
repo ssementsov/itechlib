@@ -16,6 +16,30 @@ const AddNewBookFormBox = ({
   book,
 }) => {
   const router = useRouter();
+  let newBook;
+
+  if (book) {
+    newBook = book.dateTo
+      ? {
+          ...book,
+          dateTo: new Date(book.dateTo.seconds * 1000),
+          dateFrom: new Date(book.dateFrom.seconds * 1000),
+        }
+      : book;
+  } else {
+    newBook = {
+      title: "",
+      author: "",
+      category: "",
+      language: "",
+      description: "",
+      linkToWeb: "",
+      status: "",
+      reader: "",
+      dateFrom: null,
+      dateTo: null,
+    };
+  }
 
   function validate(value) {
     let error = {};
@@ -42,24 +66,7 @@ const AddNewBookFormBox = ({
   }
 
   const formik = useFormik({
-    initialValues: book
-      ? {
-          ...book,
-          dateTo: new Date(book.dateTo.seconds * 1000),
-          dateFrom: new Date(book.dateFrom.seconds * 1000),
-        }
-      : {
-          title: "",
-          author: "",
-          category: "",
-          language: "",
-          description: "",
-          linkToWeb: "",
-          status: "",
-          reader: "",
-          dateFrom: null,
-          dateTo: null,
-        },
+    initialValues: newBook,
     validationSchema: Yup.object({
       title: Yup.string()
         .min(2, "Title must be more than 2 characters")

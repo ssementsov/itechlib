@@ -112,12 +112,12 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
                   <TblCell>{titles.link}</TblCell>
                   <TblCell>
                     <Link
-                      href={book.link}
+                      href={book.linkToWeb}
                       underline="hover"
                       target="_blank"
                       rel="noopener"
                     >
-                      {"Click here"}
+                      {"Open site"}
                     </Link>
                   </TblCell>
                 </TableRow>
