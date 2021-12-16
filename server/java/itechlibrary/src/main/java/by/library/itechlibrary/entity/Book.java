@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "book")
@@ -29,6 +30,9 @@ public class Book {
 
     @Column(name = "author")
     private String author;
+
+    @Column(name = "add_date")
+    private LocalDate createDate;
 
     @ManyToOne
     private Language language;

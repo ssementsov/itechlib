@@ -1,6 +1,6 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.dto.BookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/books")
 @Api(tags = "Endpoints for books")
@@ -22,7 +23,7 @@ public class BookController {
     @GetMapping
     @ApiOperation("get all books")
     @ResponseStatus(HttpStatus.OK)
-    public List<Book> getBooks() {
+    public List<BookDto> getBooks() {
 
         return bookService.findAll();
     }
@@ -30,7 +31,7 @@ public class BookController {
     @GetMapping("/{id}")
     @ApiOperation("get all books")
     @ResponseStatus(HttpStatus.OK)
-    public Book getBookById(@PathVariable("id") long id) {
+    public BookDto getBookById(@PathVariable("id") long id) {
 
         return bookService.findById(id);
     }
@@ -39,8 +40,24 @@ public class BookController {
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
-    public void sendMessage(@Valid @RequestBody Book book) {
+    public void addBook(@Valid @RequestBody BookDto bookDto) {
 
-        bookService.addBook(book);
+        bookService.saveBook(bookDto);
+    }
+
+    @PutMapping
+    @ApiOperation("update book")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateBook(@Valid @RequestBody BookDto bookDto) {
+
+        bookService.saveBook(bookDto);
+    }
+
+    @DeleteMapping
+    @ApiOperation("delete book by id")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeBook(@RequestParam("id") long id) {
+
+        bookService.remove(id);
     }
 }

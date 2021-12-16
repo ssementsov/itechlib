@@ -1,15 +1,17 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.dto.BookDto;
 
 import java.util.List;
 
 public interface BookService {
 
-    List<Book> findAll();
+    List<BookDto> findAll();
 
-    void addBook(Book book);
+    void saveBook(BookDto bookDto);
 
-    Book findById(long id);
+    BookDto findById(long id);
+
+    void remove(long id);
 
 }
