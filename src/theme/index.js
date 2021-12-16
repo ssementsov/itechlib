@@ -232,7 +232,7 @@ export const theme = createTheme({
       contrastText: "#FFFFFF",
     },
     error: {
-      main: "#cc0000",
+      main: "#d32f2f",
       light: "#DA6868",
       dark: "#922E2E",
       contrastText: "#FFFFFF",
