@@ -1,35 +1,35 @@
-import NextLink from "next/link";
-import { useRouter } from "next/router";
-import PropTypes from "prop-types";
-import { Box, Button, ListItem } from "@mui/material";
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import { Box, Button, ListItem } from '@mui/material'
 
 export const NavItem = (props) => {
-  const { href, icon, title, ...others } = props;
-  const router = useRouter();
-  const active = href ? router.pathname === href : false;
+  const { href, icon, title, ...others } = props
+  const router = useRouter()
+  const active = href ? router.pathname === href : false
   const stylesForButton = {
-    backgroundColor: active && "action.activeСategory",
+    backgroundColor: active && 'action.activeСategory',
     borderRadius: 1,
-    color: active ? "secondary.main" : "neutral.300",
-    fontWeight: active && "fontWeightBold",
-    justifyContent: "flex-start",
+    color: active ? 'secondary.main' : 'neutral.300',
+    fontWeight: active && 'fontWeightBold',
+    justifyContent: 'flex-start',
     px: 3,
-    textAlign: "left",
-    textTransform: "none",
-    width: "100%",
-    "& .MuiButton-startIcon": {
-      color: active ? "secondary.main" : "neutral.400",
+    textAlign: 'left',
+    textTransform: 'none',
+    width: '100%',
+    '& .MuiButton-startIcon': {
+      color: active ? 'secondary.main' : 'neutral.400',
     },
-    "&:hover": {
-      backgroundColor: "action.activeСategory",
+    '&:hover': {
+      backgroundColor: 'action.activeСategory',
     },
-  };
+  }
 
   return (
     <ListItem
       disableGutters
       sx={{
-        display: "flex",
+        display: 'flex',
         mb: 0.5,
         py: 0,
         px: 2,
@@ -47,11 +47,11 @@ export const NavItem = (props) => {
         </Button>
       </NextLink>
     </ListItem>
-  );
-};
+  )
+}
 
 NavItem.propTypes = {
   href: PropTypes.string,
   icon: PropTypes.node,
   title: PropTypes.string,
-};
+}

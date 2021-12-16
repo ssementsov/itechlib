@@ -1,58 +1,41 @@
 import { useEffect } from 'react'
-import NextLink from 'next/link'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
-import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material'
+import { Box, Divider, Drawer, useMediaQuery } from '@mui/material'
 import { HomePageIcon } from '../icons/home-page-icon'
-import { TakenBooksIcon } from '../icons/taken-books-icon'
-import { SuggestionIcon } from '../icons/suggestion-icon'
-import { GivenBooksIcon } from '../icons/given-books-icon'
-import { MainCatalogueIcon } from '../icons/main-catalogue-icon'
 import { MyBooksIcon } from '../icons/my-books-icon'
 import { SettingsIcon } from '../icons/settings-icon'
 import { HelpIcon } from '../icons/help-icon'
 import { Logo } from './logo'
 import { NavItem } from './nav-item'
 import { theme } from '../theme/index'
+import {
+  HOME_PATH,
+  MAIN_CATALOGUE_PATH,
+  MY_BOOKS_PATH,
+  REGISTER_PATH,
+  HELP_PATH
+} from '../common/constants/route-constants'
 
 const items = [
   {
-    href: '/home',
+    href: MAIN_CATALOGUE_PATH,
     icon: <HomePageIcon fontSize="small" />,
     title: 'Home page',
   },
   {
-    href: '/my-books',
+    href: MY_BOOKS_PATH,
     icon: <MyBooksIcon fontSize="small" />,
     title: 'My books',
   },
   {
-    href: '/main-catalogue',
-    icon: <MainCatalogueIcon fontSize="small" />,
-    title: 'Main catalogue',
-  },
-  {
-    href: '/given-books',
-    icon: <GivenBooksIcon fontSize="small" />,
-    title: 'The books I gave',
-  },
-  {
-    href: '/taken-books',
-    icon: <TakenBooksIcon fontSize="small" />,
-    title: 'The books I took',
-  },
-  {
-    href: '/suggestion',
-    icon: <SuggestionIcon fontSize="small" />,
-    title: 'View suggestion list',
-  },
-  {
-    href: '/register',
+    href: REGISTER_PATH,
     icon: <SettingsIcon fontSize="small" />,
     title: 'Settings',
   },
   {
-    href: '/404',
+    href: HELP_PATH,
     icon: <HelpIcon fontSize="small" />,
     title: 'Help',
   },
@@ -61,7 +44,7 @@ const items = [
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props
   const router = useRouter()
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true,
     noSsr: false,
   })
@@ -83,8 +66,8 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Box sx={{ p: 3 }}>
-            <NextLink href="/home" passHref>
+          <Box sx={{ p: 3, pb: 0 }}>
+            <Link href={HOME_PATH} passHref>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a>
                 <Logo
@@ -94,11 +77,10 @@ export const DashboardSidebar = (props) => {
                   }}
                 />
               </a>
-            </NextLink>
+            </Link>
           </Box>
         </div>
         <Divider
-          theme={theme}
           sx={{
             borderColor: 'background.divider',
             my: 3,
@@ -113,17 +95,6 @@ export const DashboardSidebar = (props) => {
               title={item.title}
             />
           ))}
-        </Box>
-        <Divider sx={{ borderColor: 'background.divider' }} />
-        <Box
-          sx={{
-            px: 2,
-            py: 3,
-          }}
-        >
-          <Typography color="neutral.500" variant="body2">
-            Terms and conditions
-          </Typography>
         </Box>
       </Box>
     </>

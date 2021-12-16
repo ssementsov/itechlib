@@ -6,6 +6,8 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import { theme } from "../theme";
+import { SnackbarProvider } from "notistack";
+import { Slide } from "@mui/material";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -22,8 +24,18 @@ const App = (props) => {
       </Head>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {getLayout(<Component {...pageProps} />)}
+          <SnackbarProvider
+            maxSnack={3}
+            hideIconVariant
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            TransitionComponent={Slide}
+          >
+            <CssBaseline />
+            {getLayout(<Component {...pageProps} />)}
+          </SnackbarProvider>
         </ThemeProvider>
       </LocalizationProvider>
     </CacheProvider>

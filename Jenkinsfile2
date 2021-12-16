@@ -1,43 +1,24 @@
 	 
 pipeline {
-          agent none
+          agent any
            options {
 		timestamps ()
 	    } 
 	
 	stages{
 		     stage('Create docker'){
-				agent{
-				    dockerfile{  
-					        filename './node/Dockerfile2'
-	                        args '--name yarn -v exchange:/exchange  '
-					  	
-				    }
-	            }
-	           		 stages{
-	                		stage('Build'){
-						steps{
+			
+	                  steps{
 						                sh '''
+								docker-compose up -d
+								sleep 300
 								npm install
 								npm run build
-						                cp -r .next/* /exchange
-						                '''
+								(npm run start&)
+								  '''
 							    	}
-	                		}
-				    }
-			}	    
-		    stage('NodeJS'){
-		        agent any
-           		 stages{
-                		stage('Start NodeJS'){
-                    			steps{
-				                 sh '''
-		 			              	docker-compose up -d ''' 
-			    	        }
-                             }
-			}	 
-		 
-		   }
-		}	
-	}    
+	         }	    
+	}	    
+	 
+}    
 		   

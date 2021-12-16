@@ -2,14 +2,18 @@ version: '3.5'
 services:
   node:
     build:   
-      context: ./node
       dockerfile: Dockerfile
     restart: always  
     ports:
-      - 3000:90
+      - 3000:3000
     networks:
       - lib
+    volumes:
+      - exchange:/app
     container_name: node_lib
 networks:
   lib:
     name: lib 
+volumes:
+  exchange:
+    name: exchange

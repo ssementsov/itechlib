@@ -1,15 +1,10 @@
 export const cathegories = [
   {
-    defaultValue: "",
-    defaultLabel: "Cathegory*",
-    disabled: true,
-  },
-  {
-    value: "professional",
+    value: "Professional",
     label: "Professional",
   },
   {
-    value: "fiction",
+    value: "Fiction",
     label: "Fiction",
   },
 ];

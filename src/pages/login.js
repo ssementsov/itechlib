@@ -3,21 +3,21 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import { GoogleLogin } from 'react-google-login'
+import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants'
 
 const Login = () => {
   const router = useRouter()
 
   const responseGoogle = (response) => {
-    console.log(response.tokenId)
     let userName = JSON.stringify(response.profileObj.givenName)
     localStorage.setItem('UserName', userName)
-    router.push('/home')
+    router.replace(MAIN_CATALOGUE_PATH)
   }
 
   useEffect(() => {
     let userName = localStorage.getItem('UserName')
-    if (userName && (router.pathname === '/login' || router.pathname === '/')) {
-      router.push('/home')
+    if (userName) {
+      router.replace(MAIN_CATALOGUE_PATH)
     }
   })
 
@@ -68,6 +68,7 @@ const Login = () => {
               <Grid item xs={12} md={12}>
                 <GoogleLogin
                   clientId={process.env.GOOGLE_CLIENT_ID}
+                  isSignedIn={true}
                   render={(renderProps) => (
                     <Button
                       fullWidth

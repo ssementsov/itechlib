@@ -1,24 +1,36 @@
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { Box, Container } from '@mui/material'
 import { CloseIcon } from '../../icons/close-icon'
 import AddNewBookForm from './AddNewBookForm'
+import { status } from '../../common/constants/status-constants'
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
-const AddNewBookFormBox = ({ handleClose }) => {
+const AddNewBookFormBox = ({ handleClose, createBook }) => {
   const router = useRouter()
 
   function validate(value) {
     let error = {}
     if (
       value.linkToWeb &&
-      !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[A-Z0-9+&@#%=~_|$])/i.test(
+      !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
         value.linkToWeb
       )
     ) {
       error.linkToWeb = 'Please enter correct link'
+    } else if (value.status === status.inUse) {
+      if (!value.reader) {
+        error.reader = 'Reader is required'
+      }
+      if (!value.dateFrom) {
+        error.dateFrom = 'Date is required'
+      }
+      if (!value.dateTo) {
+        error.dateTo = 'Date is required'
+      }
     }
+
     return error
   }
 
@@ -26,31 +38,42 @@ const AddNewBookFormBox = ({ handleClose }) => {
     initialValues: {
       title: '',
       author: '',
-      сathegory: '',
-      languages: '',
+      category: '',
+      language: '',
       description: '',
       linkToWeb: '',
       status: '',
+      reader: '',
+      dateFrom: null,
+      dateTo: null,
     },
     validationSchema: Yup.object({
-      title: Yup.string().max(255).required('Title is required'),
-      author: Yup.string().max(255).required('Author is required'),
-      сathegory: Yup.string().required('Cathegory is required'),
-      languages: Yup.string().required('Language is required'),
-      description: Yup.string().max(255).required('Description is required'),
+      title: Yup.string()
+        .min(2, 'Title must be more than 2 characters')
+        .max(255, 'Title must be less than 255 characters')
+        .required('Title is required'),
+      author: Yup.string()
+        .min(2, 'Author must be more than 2 characters')
+        .max(255, 'Author must be less than 255 characters')
+        .required('Author is required'),
+      category: Yup.string().required('Category is required'),
+      language: Yup.string().required('Language is required'),
+      description: Yup.string()
+        .min(10, 'Description must be more than 10 characters')
+        .max(100, 'Description must be less than 100 characters')
+        .required('Description is required'),
       status: Yup.string().required('Status is required'),
     }),
     validate,
-    onSubmit: () => {
-      router.push('/home')
+    onSubmit: async (values) => {
+      await createBook(values)
+      handleClose()
+      router.push(MAIN_CATALOGUE_PATH)
     },
   })
 
   return (
     <>
-      <Head>
-        <title>Add a book</title>
-      </Head>
       <Box
         component="main"
         sx={{

@@ -3,25 +3,15 @@ import { Box, Button, MenuItem, TextField, Typography } from '@mui/material'
 import { cathegories } from './datas-for-form-options/cathegories'
 import { languages } from './datas-for-form-options/languages'
 import { statuses } from './datas-for-form-options/statuses'
+import HiddenForm from './HiddenForm'
+import { status } from '../../common/constants/status-constants'
 
 const createOptions = (option) => {
-  if (option.defaultValue === '') {
-    return (
-      <MenuItem
-        key={option.defaultValue}
-        value={option.defaultValue}
-        disabled={option.disabled}
-      >
-        {option.defaultLabel}
-      </MenuItem>
-    )
-  } else {
-    return (
-      <MenuItem key={option.value} value={option.value}>
-        {option.label}
-      </MenuItem>
-    )
-  }
+  return (
+    <MenuItem key={option.value} value={option.value}>
+      {option.label}
+    </MenuItem>
+  )
 }
 
 const AddNewBookForm = ({ formik }) => {
@@ -57,31 +47,31 @@ const AddNewBookForm = ({ formik }) => {
         variant="outlined"
       />
       <TextField
-        error={Boolean(formik.touched.сathegory && formik.errors.сathegory)}
+        error={Boolean(formik.touched.category && formik.errors.category)}
         fullWidth
-        helperText={formik.touched.сathegory && formik.errors.сathegory}
-        name="сathegory"
+        helperText={formik.touched.category && formik.errors.category}
+        name="category"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
-        label="Cathegory*"
+        label="Category*"
         select
-        value={formik.values.сathegory}
+        value={formik.values.category}
         variant="outlined"
       >
         {cathegories.map(createOptions)}
       </TextField>
       <TextField
-        error={Boolean(formik.touched.languages && formik.errors.languages)}
+        error={Boolean(formik.touched.language && formik.errors.language)}
         fullWidth
-        helperText={formik.touched.languages && formik.errors.languages}
-        name="languages"
+        helperText={formik.touched.language && formik.errors.language}
+        name="language"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         margin="dense"
         label="Language*"
         select
-        value={formik.values.languages}
+        value={formik.values.language}
         variant="outlined"
       >
         {languages.map(createOptions)}
@@ -91,6 +81,7 @@ const AddNewBookForm = ({ formik }) => {
         fullWidth
         helperText={formik.touched.description && formik.errors.description}
         label="Description*"
+        multiline
         margin="dense"
         name="description"
         onBlur={formik.handleBlur}
@@ -125,6 +116,10 @@ const AddNewBookForm = ({ formik }) => {
       >
         {statuses.map(createOptions)}
       </TextField>
+      {formik.values.status === status.inUse && (
+        <HiddenForm formik={formik} createOptions={createOptions} />
+      )}
+
       <Box sx={{ py: 2 }}>
         <Button
           color="primary"

@@ -1,41 +1,19 @@
 pipeline {
-          agent none
-           options {
+	agent any
+	options {
 		timestamps ()
-	    } 
-	
-	stages{
-		     stage('Create docker'){
-				agent{
-				    dockerfile{  
-					        filename './React/Dockerfile'
-	                        args '--name yarn -v exchange:/exchange  '
-					  	
-				    }
-	            }
-	           		 stages{
-	                		stage('Build'){
-						steps{
-						                sh '''
-								npm install
-								npm run build
-						                cp -r .next/* /exchange
-						                '''
-							    	}
-	                		}
-				    }
-			}	    
-		    stage('Nginx'){
-		      agent any
-           		 stages{
-                		stage('Start Nginx'){
-                    			steps{
-				                 sh '''
-		 			              	docker-compose up -d ''' 
-			    	        }
-                             }
-			}	 
-		 
-		   }
-		}	
-	}    
+	}
+  stages {
+	stage('Cloning our Git') {
+		steps {
+			git branch: 'Development', url: 'https://github.com/ssementsov/itechlib'
+		}
+	}
+     stage('Build') {	  
+       steps {
+	sh 'docker-compose up -d -- build'
+        sh 'docker run -it -p 3000:3000  lib'
+      }	
+    }
+  }	  
+}	
