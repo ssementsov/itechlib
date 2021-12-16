@@ -43,7 +43,11 @@ const AddNewBookFormBox = ({
 
   const formik = useFormik({
     initialValues: book
-      ? book
+      ? {
+          ...book,
+          dateTo: new Date(book.dateTo.seconds * 1000),
+          dateFrom: new Date(book.dateFrom.seconds * 1000),
+        }
       : {
           title: "",
           author: "",
