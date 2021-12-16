@@ -5,7 +5,6 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  IconButton,
   Link,
   Rating,
   Table,
@@ -15,8 +14,13 @@ import {
 } from "@mui/material";
 import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
-import { DeleteIcon } from "../../icons/delete-icon";
-import { EditIcon } from "../../icons/edit-icon";
+import { withSnackbar } from "notistack";
+import { doc, deleteDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { useRouter } from "next/router";
+import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { status } from "../../common/constants/status-constants";
+import CustomModal from "./../custom-modal";
 
 const TblCell = styled(TableCell)(() => ({
   textAlign: "left",
@@ -26,19 +30,60 @@ const TblCell = styled(TableCell)(() => ({
   padding: "5px 35px",
 }));
 
-export const BookDetails = ({ book }) => {
+const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
+  const router = useRouter();
+
+  const deleteBook = async () => {
+    if (book.status === status.available) {
+      try {
+        await deleteDoc(doc(db, "books", router.query.id));
+        router.replace(MAIN_CATALOGUE_PATH);
+        enqueueSnackbar("Your book has been deleted successfully!", {
+          variant: "success",
+        });
+      } catch (e) {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
+      }
+    } else {
+      enqueueSnackbar(
+        "You can only delete books which are currently in “Available” status",
+        {
+          variant: "error",
+        }
+      );
+    }
+  };
+
+  const editBook = async (body) => {
+    try {
+      const docRef = doc(db, "books", book.idBook);
+      const bookUpdated = { ...body, timestamp: serverTimestamp() };
+      await updateDoc(docRef, bookUpdated);
+      fetchBook();
+      enqueueSnackbar("Your book has been updated successfully!", {
+        variant: "success",
+      });
+    } catch (e) {
+      enqueueSnackbar("Something went wrong... Please retry.", {
+        variant: "error",
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader
         title={book.title}
         action={
           <>
-            <IconButton aria-label="delete">
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-            <IconButton aria-label="delete">
-              <EditIcon fontSize="small" />
-            </IconButton>
+            <CustomModal whatModal={"delete book"} deleteBook={deleteBook} />
+            <CustomModal
+              whatModal={"edit book"}
+              editBook={editBook}
+              book={book}
+            />
           </>
         }
       />
@@ -67,12 +112,12 @@ export const BookDetails = ({ book }) => {
                   <TblCell>{titles.link}</TblCell>
                   <TblCell>
                     <Link
-                      href={book.link}
+                      href={book.linkToWeb}
                       underline="hover"
                       target="_blank"
                       rel="noopener"
                     >
-                      {"Click here"}
+                      {"Open site"}
                     </Link>
                   </TblCell>
                 </TableRow>
@@ -117,3 +162,5 @@ export const BookDetails = ({ book }) => {
     </Card>
   );
 };
+
+export default withSnackbar(BookDetails);

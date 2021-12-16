@@ -1,47 +1,47 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { useFormik } from 'formik'
-import { Box, Button, Container, TextField, Typography } from '@mui/material'
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useFormik } from "formik";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import {
   LOGIN_PATH,
   MAIN_CATALOGUE_PATH,
-} from '../common/constants/route-constants'
+} from "../common/constants/route-constants";
 
 const Register = () => {
-  const router = useRouter()
+  const router = useRouter();
 
   function validate(value) {
     let arrOfEmail = [
-      'misha.mishin@itechart-group.com',
-      'ivan.ivanov@itechart-group.com',
-      'andrei.andreev@itechart-group.com',
-    ]
-    let error = {}
+      "misha.mishin@itechart-group.com",
+      "ivan.ivanov@itechart-group.com",
+      "andrei.andreev@itechart-group.com",
+    ];
+    let error = {};
     if (!value.email) {
-      error.email = 'Email is required'
+      error.email = "Email is required";
     } else if (!/^[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
-      error.email = 'Please enter correct iTechArt email'
+      error.email = "Please enter correct iTechArt email";
     } else if (!arrOfEmail.includes(value.email)) {
-      error.email = 'Your email is not registered yet'
+      error.email = "Your email is not registered yet";
     }
-    return error
+    return error;
   }
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: "",
     },
     validate,
     onSubmit: () => {
-      router.push(LOGIN_PATH)
+      router.push(LOGIN_PATH);
     },
-  })
+  });
   useEffect(() => {
-    let userName = localStorage.getItem('UserName')
-    if (userName) {
-      router.replace(MAIN_CATALOGUE_PATH)
+    let userId = localStorage.getItem("UserId");
+    if (userId) {
+      router.replace(MAIN_CATALOGUE_PATH);
     }
-  })
+  });
   return (
     <>
       <Head>
@@ -50,18 +50,18 @@ const Register = () => {
       <Box
         component="main"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
+          alignItems: "center",
+          display: "flex",
           flexGrow: 1,
-          minHeight: '100%',
+          minHeight: "100%",
         }}
       >
         <Container
           maxWidth="sm"
           sx={{
-            border: '1px solid #838E9F',
-            boxShadow: '2px 2px 4px #838E9F',
-            borderRadius: '25px',
+            border: "1px solid #838E9F",
+            boxShadow: "2px 2px 4px #838E9F",
+            borderRadius: "25px",
           }}
         >
           <form onSubmit={formik.handleSubmit}>
@@ -109,7 +109,7 @@ const Register = () => {
         </Container>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;
