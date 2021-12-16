@@ -5,7 +5,6 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  IconButton,
   Link,
   Rating,
   Table,
@@ -15,9 +14,8 @@ import {
 } from "@mui/material";
 import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
-import { EditIcon } from "../../icons/edit-icon";
 import { withSnackbar } from "notistack";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useRouter } from "next/router";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
@@ -32,7 +30,7 @@ const TblCell = styled(TableCell)(() => ({
   padding: "5px 35px",
 }));
 
-const BookDetails = ({ book, enqueueSnackbar }) => {
+const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
   const router = useRouter();
 
   const deleteBook = async () => {
@@ -58,6 +56,22 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
     }
   };
 
+  const editBook = async (body) => {
+    try {
+      const docRef = doc(db, "books", book.idBook);
+      const bookUpdated = { ...body, timestamp: serverTimestamp() };
+      await updateDoc(docRef, bookUpdated);
+      fetchBook();
+      enqueueSnackbar("Your book has been updated successfully!", {
+        variant: "success",
+      });
+    } catch (e) {
+      enqueueSnackbar("Something went wrong... Please retry.", {
+        variant: "error",
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader
@@ -65,9 +79,11 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
         action={
           <>
             <CustomModal whatModal={"delete book"} deleteBook={deleteBook} />
-            <IconButton aria-label="edit">
-              <EditIcon fontSize="small" />
-            </IconButton>
+            <CustomModal
+              whatModal={"edit book"}
+              editBook={editBook}
+              book={book}
+            />
           </>
         }
       />
@@ -96,12 +112,12 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
                   <TblCell>{titles.link}</TblCell>
                   <TblCell>
                     <Link
-                      href={book.link}
+                      href={book.linkToWeb}
                       underline="hover"
                       target="_blank"
                       rel="noopener"
                     >
-                      {"Click here"}
+                      {"Open site"}
                     </Link>
                   </TblCell>
                 </TableRow>
