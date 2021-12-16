@@ -39,7 +39,4 @@ public class Book {
     @ManyToOne
     private Status status;
 
-//    @ManyToOne
-//    private User user;
-
 }

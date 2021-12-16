@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/books")
@@ -42,6 +41,6 @@ public class BookController {
     @ResponseStatus(HttpStatus.CREATED)
     public void sendMessage(@Valid @RequestBody Book book) {
 
-       bookService.addBook(book);
+        bookService.addBook(book);
     }
 }

@@ -19,18 +19,6 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-//    @Test
-//    void getAllBooks() throws Exception {
-//
-//        List<Book> bookList = new ArrayList<Book>();
-//        bookList.add(new Book());
-//        bookList.add(new Book());
-//        when(bookService.findAll()).thenReturn(bookList);
-//
-//        mockMvc.perform(MockMvcRequestBuilders.get("/todos")
-//                .contentType(MediaType.APPLICATION_JSON)
-//        ).andExpect(jsonPath("$", hasSize(2))).andDo(print());
-//    }
 
 
 }
