@@ -15,6 +15,7 @@ import router from "next/router";
 import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
 
 export const BooksListResults = ({ books }) => {
+  console.log(books);
   return (
     <Card>
       <PerfectScrollbar>
