@@ -1,67 +1,68 @@
-import Head from "next/head";
-import { Box, Container, Typography } from "@mui/material";
-import { BooksListResults } from "../components/booksTable/books-list-results";
-import { BooksListToolbar } from "../components/booksTable/books-list-toolbar";
-import { DashboardLayout } from "../components/dashboard-layout";
-import { useState, useEffect } from "react";
-import { withSnackbar } from "notistack";
-
-const axios = require("axios");
+import Head from 'next/head'
+import { Box, Container, Typography } from '@mui/material'
+import { BooksListResults } from '../components/booksTable/books-list-results'
+import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
+import { DashboardLayout } from '../components/dashboard-layout'
+import { useState, useEffect } from 'react'
+import { withSnackbar } from 'notistack'
+import api from '../api/books'
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [books, setBooks] = useState();
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [books, setBooks] = useState()
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8081/api/books")
+    api
+      .get('/api/books')
       .then(function (res) {
-        console.log(res.data);
-        setBooks(res.data);
-        setIsLoaded(true);
+        setBooks(res.data)
+        setIsLoaded(true)
       })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+      .catch(function () {
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        })
+      })
+  }, [enqueueSnackbar])
 
   const createBook = (newBook) => {
-    axios
-      .post("http://localhost:8081/api/books", {
+    let id = books.length ? books[books.length - 1].id + 1 : 1
+    api
+      .post('/api/books', {
         author: newBook.author,
         title: newBook.title,
         description: newBook.description,
         link: newBook.linkToWeb,
         category: {
-          id: 1,
+          id: id,
           name: newBook.category,
         },
-        id: 1,
+        id: id,
         language: {
-          id: 1,
+          id: id,
           name: newBook.language,
         },
       })
       .then(function () {
-        enqueueSnackbar("Your book has been added successfully!", {
-          variant: "success",
-        });
-        setIsLoaded(true);
+        enqueueSnackbar('Your book has been added successfully!', {
+          variant: 'success',
+        })
+        setIsLoaded(true)
       })
       .catch(function () {
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        });
-        setIsLoaded(true);
-      });
-  };
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        })
+        setIsLoaded(true)
+      })
+  }
 
   if (!isLoaded) {
     return (
       <Typography sx={{ my: 8, mx: 4 }} variant="h4">
         Loading...
       </Typography>
-    );
+    )
   } else {
     return (
       <>
@@ -83,11 +84,11 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
           </Container>
         </Box>
       </>
-    );
+    )
   }
-};
+}
 MainCatalogue.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
-};
+  return <DashboardLayout>{page}</DashboardLayout>
+}
 
-export default withSnackbar(MainCatalogue);
+export default withSnackbar(MainCatalogue)
