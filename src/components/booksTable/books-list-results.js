@@ -1,4 +1,4 @@
-import PerfectScrollbar from "react-perfect-scrollbar";
+import PerfectScrollbar from 'react-perfect-scrollbar'
 import {
   Box,
   Card,
@@ -9,13 +9,12 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import { titles } from "../../common/constants/titles-constants";
-import router from "next/router";
-import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
+} from '@mui/material'
+import { titles } from '../../common/constants/titles-constants'
+import router from 'next/router'
+import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants'
 
 export const BooksListResults = ({ books }) => {
-  console.log(books);
   return (
     <Card>
       <PerfectScrollbar>
@@ -44,8 +43,8 @@ export const BooksListResults = ({ books }) => {
                   >
                     <TableCell>{book.title}</TableCell>
                     <TableCell>{book.author}</TableCell>
-                    <TableCell>{book.category}</TableCell>
-                    <TableCell>{book.language}</TableCell>
+                    <TableCell>{book.category.name}</TableCell>
+                    <TableCell>{book.language.name}</TableCell>
                     <TableCell>{book.description}</TableCell>
                     <TableCell>
                       <Rating
@@ -62,7 +61,7 @@ export const BooksListResults = ({ books }) => {
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Typography
-                      sx={{ textAlign: "center", color: "action.active" }}
+                      sx={{ textAlign: 'center', color: 'action.active' }}
                     >
                       No books have been added yet!
                     </Typography>
@@ -74,5 +73,5 @@ export const BooksListResults = ({ books }) => {
         </Box>
       </PerfectScrollbar>
     </Card>
-  );
-};
+  )
+}
