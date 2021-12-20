@@ -1,8 +1,5 @@
 package by.library.itechlibrary.dto;
 
-import by.library.itechlibrary.entity.Category;
-import by.library.itechlibrary.entity.Language;
-import by.library.itechlibrary.entity.Status;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -24,9 +21,12 @@ public class BookDto {
     private String author;
 
     @NotNull
-    private Language language;
+    private LanguageDto language;
 
     @NotNull
-    private Category category;
+    private CategoryDto category;
+
+    @NotNull
+    private StatusDto status;
 
 }

@@ -29,13 +29,12 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("get all books")
+    @ApiOperation("get book by id")
     @ResponseStatus(HttpStatus.OK)
     public BookDto getBookById(@PathVariable("id") long id) {
 
         return bookService.findById(id);
     }
-
 
     @PostMapping
     @ApiOperation("create new book")
@@ -43,6 +42,7 @@ public class BookController {
     public void addBook(@Valid @RequestBody BookDto bookDto) {
 
         bookService.saveBook(bookDto);
+
     }
 
     @PutMapping
@@ -51,6 +51,7 @@ public class BookController {
     public void updateBook(@Valid @RequestBody BookDto bookDto) {
 
         bookService.saveBook(bookDto);
+
     }
 
     @DeleteMapping
@@ -59,5 +60,6 @@ public class BookController {
     public void removeBook(@RequestParam("id") long id) {
 
         bookService.remove(id);
+
     }
 }
