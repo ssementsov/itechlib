@@ -1,4 +1,4 @@
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import PerfectScrollbar from "react-perfect-scrollbar";
 import {
   Box,
   Card,
@@ -9,10 +9,14 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material'
-import { titles } from '../../common/constants/titles-constants'
-import router from 'next/router'
-import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants'
+} from "@mui/material";
+import { titles } from "../../common/constants/titles-constants";
+import router from "next/router";
+import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
+
+function toLowerCaseExeptFirstLetter(string) {
+  return string[0] + string.slice(1).toLowerCase();
+}
 
 export const BooksListResults = ({ books }) => {
   return (
@@ -33,35 +37,41 @@ export const BooksListResults = ({ books }) => {
             </TableHead>
             <TableBody>
               {books.length ? (
-                books.map((book) => (
-                  <TableRow
-                    onClick={() =>
-                      router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}`)
-                    }
-                    key={book.id}
-                    hover
-                  >
-                    <TableCell>{book.title}</TableCell>
-                    <TableCell>{book.author}</TableCell>
-                    <TableCell>{book.category.name}</TableCell>
-                    <TableCell>{book.language.name}</TableCell>
-                    <TableCell>{book.description}</TableCell>
-                    <TableCell>
-                      <Rating
-                        name="read-only"
-                        value={book.rating}
-                        size="small"
-                        readOnly
-                      />
-                    </TableCell>
-                    <TableCell>{book.status}</TableCell>
-                  </TableRow>
-                ))
+                books.map((book) => {
+                  return (
+                    <TableRow
+                      onClick={() =>
+                        router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}`)
+                      }
+                      key={book.id}
+                      hover
+                    >
+                      <TableCell>{book.title}</TableCell>
+                      <TableCell>{book.author}</TableCell>
+                      <TableCell>
+                        {toLowerCaseExeptFirstLetter(book.category.name)}
+                      </TableCell>
+                      <TableCell>
+                        {toLowerCaseExeptFirstLetter(book.language.name)}
+                      </TableCell>
+                      <TableCell>{book.description}</TableCell>
+                      <TableCell>
+                        <Rating
+                          name="read-only"
+                          value={book.rating}
+                          size="small"
+                          readOnly
+                        />
+                      </TableCell>
+                      <TableCell>{book.status}</TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Typography
-                      sx={{ textAlign: 'center', color: 'action.active' }}
+                      sx={{ textAlign: "center", color: "action.active" }}
                     >
                       No books have been added yet!
                     </Typography>
@@ -73,5 +83,5 @@ export const BooksListResults = ({ books }) => {
         </Box>
       </PerfectScrollbar>
     </Card>
-  )
-}
+  );
+};

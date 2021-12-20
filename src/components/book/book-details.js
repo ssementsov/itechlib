@@ -11,56 +11,60 @@ import {
   TableBody,
   TableCell,
   TableRow,
-} from '@mui/material'
-import { titles } from './../../common/constants/titles-constants'
-import { styled } from '@mui/material/styles'
-import { withSnackbar } from 'notistack'
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../../../firebase'
-import { useRouter } from 'next/router'
-import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
-import CustomModal from './../custom-modal'
-import api from '../../api/books'
+} from "@mui/material";
+import { titles } from "./../../common/constants/titles-constants";
+import { styled } from "@mui/material/styles";
+import { withSnackbar } from "notistack";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../../firebase";
+import { useRouter } from "next/router";
+import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import CustomModal from "./../custom-modal";
+import api from "../../api/books";
+
+function toLowerCaseExeptFirstLetter(string) {
+  return string[0] + string.slice(1).toLowerCase();
+}
 
 const TblCell = styled(TableCell)(() => ({
-  textAlign: 'left',
-  cursor: 'auto',
-  borderBottom: '1px solid #E7E8EF',
-  borderTop: '1px solid #E7E8EF',
-  padding: '5px 35px',
-}))
+  textAlign: "left",
+  cursor: "auto",
+  borderBottom: "1px solid #E7E8EF",
+  borderTop: "1px solid #E7E8EF",
+  padding: "5px 35px",
+}));
 
 const BookDetails = ({ book, enqueueSnackbar }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const deleteBook = async () => {
     try {
-      await api.delete(`/api/books/${book.id}`)
-      router.replace(MAIN_CATALOGUE_PATH)
-      enqueueSnackbar('Your book has been deleted successfully!', {
-        variant: 'success',
-      })
+      await api.delete(`/api/books/${book.id}`);
+      router.replace(MAIN_CATALOGUE_PATH);
+      enqueueSnackbar("Your book has been deleted successfully!", {
+        variant: "success",
+      });
     } catch (e) {
-      enqueueSnackbar('Something went wrong... Please retry.', {
-        variant: 'error',
-      })
+      enqueueSnackbar("Something went wrong... Please retry.", {
+        variant: "error",
+      });
     }
-  }
+  };
 
   const editBook = async (body) => {
     try {
-      const docRef = doc(db, 'books', book.idBook)
-      const bookUpdated = { ...body, timestamp: serverTimestamp() }
-      await updateDoc(docRef, bookUpdated)
-      enqueueSnackbar('Your book has been updated successfully!', {
-        variant: 'success',
-      })
+      const docRef = doc(db, "books", book.idBook);
+      const bookUpdated = { ...body, timestamp: serverTimestamp() };
+      await updateDoc(docRef, bookUpdated);
+      enqueueSnackbar("Your book has been updated successfully!", {
+        variant: "success",
+      });
     } catch (e) {
-      enqueueSnackbar('Something went wrong... Please retry.', {
-        variant: 'error',
-      })
+      enqueueSnackbar("Something went wrong... Please retry.", {
+        variant: "error",
+      });
     }
-  }
+  };
 
   return (
     <Card>
@@ -68,9 +72,9 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
         title={book.title}
         action={
           <>
-            <CustomModal whatModal={'delete book'} deleteBook={deleteBook} />
+            <CustomModal whatModal={"delete book"} deleteBook={deleteBook} />
             <CustomModal
-              whatModal={'edit book'}
+              whatModal={"edit book"}
               editBook={editBook}
               book={book}
             />
@@ -92,11 +96,15 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.category}</TblCell>
-                  <TblCell>{book.category.name}</TblCell>
+                  <TblCell>
+                    {toLowerCaseExeptFirstLetter(book.category.name)}
+                  </TblCell>
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.language}</TblCell>
-                  <TblCell>{book.language.name}</TblCell>
+                  <TblCell>
+                    {toLowerCaseExeptFirstLetter(book.language.name)}
+                  </TblCell>
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.link}</TblCell>
@@ -107,7 +115,7 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
                       target="_blank"
                       rel="noopener"
                     >
-                      {'Open site'}
+                      {"Open site"}
                     </Link>
                   </TblCell>
                 </TableRow>
@@ -120,7 +128,7 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
                       size="small"
                       readOnly
                       sx={{
-                        marginLeft: '-3px',
+                        marginLeft: "-3px",
                       }}
                     />
                   </TblCell>
@@ -140,8 +148,8 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
       </CardContent>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
+          display: "flex",
+          justifyContent: "flex-end",
           p: 2,
         }}
       >
@@ -150,7 +158,7 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
         </Button>
       </Box>
     </Card>
-  )
-}
+  );
+};
 
-export default withSnackbar(BookDetails)
+export default withSnackbar(BookDetails);
