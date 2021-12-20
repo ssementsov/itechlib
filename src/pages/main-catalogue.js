@@ -1,58 +1,64 @@
 import Head from "next/head";
-import {
-  onSnapshot,
-  collection,
-  orderBy,
-  query,
-  addDoc,
-  serverTimestamp,
-} from "@firebase/firestore";
-import { db } from "../../firebase";
 import { Box, Container, Typography } from "@mui/material";
 import { BooksListResults } from "../components/booksTable/books-list-results";
 import { BooksListToolbar } from "../components/booksTable/books-list-toolbar";
 import { DashboardLayout } from "../components/dashboard-layout";
 import { useState, useEffect } from "react";
 import { withSnackbar } from "notistack";
+import api from "../api/books";
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [books, setBooks] = useState([]);
-
+  const [books, setBooks] = useState();
   useEffect(() => {
-    const collectionRef = collection(db, "books");
-    const q = query(collectionRef, orderBy("timestamp", "desc"));
-    const unsub = onSnapshot(q, (querySnapshot) => {
-      setBooks(
-        querySnapshot.docs.map((doc) => {
-          return {
-            ...doc.data(),
-            id: doc.id,
-          };
-        })
-      );
-      setIsLoaded(true);
-    });
-    return unsub;
-  }, []);
+    api
+      .get("/api/books")
+      .then(function (res) {
+        setBooks(res.data);
+        setIsLoaded(true);
+      })
+      .catch(function () {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
+      });
+  }, [enqueueSnackbar]);
 
-  const createBook = async (body) => {
-    try {
-      const collectionRef = collection(db, "books");
-      await addDoc(collectionRef, {
-        ...body,
-        timestamp: serverTimestamp(),
+  const createBook = (values) => {
+    let id = books.length ? books[books.length - 1].id + 1 : 1;
+    let idCategory = values.category === "Professional" ? 1 : 2;
+    let idLanguage = values.language === "English" ? 1 : 2;
+    const newBook = {
+      author: values.author,
+      title: values.title,
+      description: values.description,
+      link: values.linkToWeb,
+      category: {
+        id: idCategory,
+        name: values.category,
+      },
+      id: id,
+      language: {
+        id: idLanguage,
+        name: values.language,
+      },
+    };
+    api
+      .post("/api/books", newBook)
+      .then(function () {
+        enqueueSnackbar("Your book has been added successfully!", {
+          variant: "success",
+        });
+        const newBooksList = [newBook, ...books];
+        setBooks(newBooksList);
+        setIsLoaded(true);
+      })
+      .catch(function () {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
+        setIsLoaded(true);
       });
-      enqueueSnackbar("Your book has been added successfully!", {
-        variant: "success",
-      });
-      setIsLoaded(true);
-    } catch (e) {
-      enqueueSnackbar("Something went wrong... Please retry.", {
-        variant: "error",
-      });
-      setIsLoaded(true);
-    }
   };
 
   if (!isLoaded) {

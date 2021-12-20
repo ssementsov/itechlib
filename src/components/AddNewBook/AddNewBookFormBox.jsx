@@ -10,7 +10,6 @@ import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 const AddNewBookFormBox = ({
   handleClose,
   createBook,
-  editBook,
   title,
   buttonName,
   book,
@@ -86,14 +85,9 @@ const AddNewBookFormBox = ({
     }),
     validate,
     onSubmit: async (values) => {
-      if ("timestamp" in values) {
-        await editBook(values);
-        handleClose();
-      } else {
-        await createBook(values);
-        handleClose();
-        router.push(MAIN_CATALOGUE_PATH);
-      }
+      await createBook(values);
+      handleClose();
+      router.push(MAIN_CATALOGUE_PATH);
     },
   });
 
