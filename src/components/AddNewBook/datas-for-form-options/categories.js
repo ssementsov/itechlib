@@ -1,4 +1,4 @@
-export const cathegories = [
+export const categories = [
   {
     value: "Professional",
     label: "Professional",

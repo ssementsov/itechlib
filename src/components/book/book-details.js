@@ -15,12 +15,16 @@ import {
 import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
 import { withSnackbar } from "notistack";
-import { doc, deleteDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
 import { useRouter } from "next/router";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
-import { status } from "../../common/constants/status-constants";
 import CustomModal from "./../custom-modal";
+import api from "../../api/books";
+
+function toLowerCaseExeptFirstLetter(string) {
+  return string[0] + string.slice(1).toLowerCase();
+}
 
 const TblCell = styled(TableCell)(() => ({
   textAlign: "left",
@@ -30,29 +34,20 @@ const TblCell = styled(TableCell)(() => ({
   padding: "5px 35px",
 }));
 
-const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
+const BookDetails = ({ book, enqueueSnackbar }) => {
   const router = useRouter();
 
   const deleteBook = async () => {
-    if (book.status === status.available) {
-      try {
-        await deleteDoc(doc(db, "books", router.query.id));
-        router.replace(MAIN_CATALOGUE_PATH);
-        enqueueSnackbar("Your book has been deleted successfully!", {
-          variant: "success",
-        });
-      } catch (e) {
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        });
-      }
-    } else {
-      enqueueSnackbar(
-        "You can only delete books which are currently in “Available” status",
-        {
-          variant: "error",
-        }
-      );
+    try {
+      await api.delete(`/api/books/${book.id}`);
+      router.replace(MAIN_CATALOGUE_PATH);
+      enqueueSnackbar("Your book has been deleted successfully!", {
+        variant: "success",
+      });
+    } catch (e) {
+      enqueueSnackbar("Something went wrong... Please retry.", {
+        variant: "error",
+      });
     }
   };
 
@@ -61,7 +56,6 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
       const docRef = doc(db, "books", book.idBook);
       const bookUpdated = { ...body, timestamp: serverTimestamp() };
       await updateDoc(docRef, bookUpdated);
-      fetchBook();
       enqueueSnackbar("Your book has been updated successfully!", {
         variant: "success",
       });
@@ -102,17 +96,21 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.category}</TblCell>
-                  <TblCell>{book.category}</TblCell>
+                  <TblCell>
+                    {toLowerCaseExeptFirstLetter(book.category.name)}
+                  </TblCell>
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.language}</TblCell>
-                  <TblCell>{book.language}</TblCell>
+                  <TblCell>
+                    {toLowerCaseExeptFirstLetter(book.language.name)}
+                  </TblCell>
                 </TableRow>
                 <TableRow>
                   <TblCell>{titles.link}</TblCell>
                   <TblCell>
                     <Link
-                      href={book.linkToWeb}
+                      href={book.link}
                       underline="hover"
                       target="_blank"
                       rel="noopener"

@@ -14,6 +14,10 @@ import { titles } from "../../common/constants/titles-constants";
 import router from "next/router";
 import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
 
+function toLowerCaseExeptFirstLetter(string) {
+  return string[0] + string.slice(1).toLowerCase();
+}
+
 export const BooksListResults = ({ books }) => {
   return (
     <Card>
@@ -33,30 +37,36 @@ export const BooksListResults = ({ books }) => {
             </TableHead>
             <TableBody>
               {books.length ? (
-                books.map((book) => (
-                  <TableRow
-                    onClick={() =>
-                      router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}`)
-                    }
-                    key={book.id}
-                    hover
-                  >
-                    <TableCell>{book.title}</TableCell>
-                    <TableCell>{book.author}</TableCell>
-                    <TableCell>{book.category}</TableCell>
-                    <TableCell>{book.language}</TableCell>
-                    <TableCell>{book.description}</TableCell>
-                    <TableCell>
-                      <Rating
-                        name="read-only"
-                        value={book.rating}
-                        size="small"
-                        readOnly
-                      />
-                    </TableCell>
-                    <TableCell>{book.status}</TableCell>
-                  </TableRow>
-                ))
+                books.map((book) => {
+                  return (
+                    <TableRow
+                      onClick={() =>
+                        router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}`)
+                      }
+                      key={book.id}
+                      hover
+                    >
+                      <TableCell>{book.title}</TableCell>
+                      <TableCell>{book.author}</TableCell>
+                      <TableCell>
+                        {toLowerCaseExeptFirstLetter(book.category.name)}
+                      </TableCell>
+                      <TableCell>
+                        {toLowerCaseExeptFirstLetter(book.language.name)}
+                      </TableCell>
+                      <TableCell>{book.description}</TableCell>
+                      <TableCell>
+                        <Rating
+                          name="read-only"
+                          value={book.rating}
+                          size="small"
+                          readOnly
+                        />
+                      </TableCell>
+                      <TableCell>{book.status}</TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell colSpan={8}>
