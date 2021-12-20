@@ -15,9 +15,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationSuccessHandler oauth2authSuccessHandler;
 
     public WebSecurityConfig(@Qualifier("oauth2authSuccessHandler") AuthenticationSuccessHandler oauth2authSuccessHandler) {
-        this.oauth2authSuccessHandler = oauth2authSuccessHandler;
-    }
 
+        this.oauth2authSuccessHandler = oauth2authSuccessHandler;
+
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -31,5 +32,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .oauth2Login()
                 .successHandler(oauth2authSuccessHandler);
+
     }
 }
