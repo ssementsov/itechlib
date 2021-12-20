@@ -19,6 +19,7 @@ function toLowerCaseExeptFirstLetter(string) {
 }
 
 export const BooksListResults = ({ books }) => {
+  console.log(books);
   return (
     <Card>
       <PerfectScrollbar>
@@ -63,7 +64,10 @@ export const BooksListResults = ({ books }) => {
                           readOnly
                         />
                       </TableCell>
-                      <TableCell>{book.status}</TableCell>
+                      <TableCell>
+                        {" "}
+                        {toLowerCaseExeptFirstLetter(book.status.name)}
+                      </TableCell>
                     </TableRow>
                   );
                 })

@@ -24,7 +24,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       });
   }, [enqueueSnackbar]);
 
-  const createBook = (values) => {
+  const createBook = async (values) => {
     let id = books.length ? books[books.length - 1].id + 1 : 1;
     let idCategory = values.category === "Professional" ? 1 : 2;
     let idLanguage = values.language === "English" ? 1 : 2;
@@ -32,7 +32,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       author: values.author,
       title: values.title,
       description: values.description,
-      link: values.linkToWeb,
+      link: values.link,
       category: {
         id: idCategory,
         name: values.category,
@@ -43,9 +43,10 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
         name: values.language,
       },
     };
-    api
+    await api
       .post("/api/books", newBook)
-      .then(function () {
+      .then(function (res) {
+        console.log(res);
         enqueueSnackbar("Your book has been added successfully!", {
           variant: "success",
         });

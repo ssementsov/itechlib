@@ -18,13 +18,15 @@ const AddNewBookFormBox = ({
   let newBook;
 
   if (book) {
-    newBook = book.dateTo
-      ? {
-          ...book,
-          dateTo: new Date(book.dateTo.seconds * 1000),
-          dateFrom: new Date(book.dateFrom.seconds * 1000),
-        }
-      : book;
+    newBook = {
+      language: book.language.name,
+      category: book.category.name,
+      author: book.author,
+      title: book.title,
+      description: book.description,
+      id: book.id,
+      link: book.link,
+    };
   } else {
     newBook = {
       title: "",
@@ -32,7 +34,7 @@ const AddNewBookFormBox = ({
       category: "",
       language: "",
       description: "",
-      linkToWeb: "",
+      link: "",
       status: "",
       reader: "",
       dateFrom: null,
@@ -43,12 +45,12 @@ const AddNewBookFormBox = ({
   function validate(value) {
     let error = {};
     if (
-      value.linkToWeb &&
+      value.link &&
       !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
-        value.linkToWeb
+        value.link
       )
     ) {
-      error.linkToWeb = "Please enter correct link";
+      error.link = "Please enter correct link";
     } else if (value.status === status.inUse) {
       if (!value.reader) {
         error.reader = "Reader is required";

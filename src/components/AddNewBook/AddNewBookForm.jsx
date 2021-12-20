@@ -90,15 +90,15 @@ const AddNewBookForm = ({ formik, title, buttonName }) => {
         variant="outlined"
       />
       <TextField
-        error={Boolean(formik.touched.linkToWeb && formik.errors.linkToWeb)}
+        error={Boolean(formik.touched.link && formik.errors.link)}
         fullWidth
-        helperText={formik.touched.linkToWeb && formik.errors.linkToWeb}
+        helperText={formik.touched.link && formik.errors.link}
         label="Link to external website"
         margin="dense"
-        name="linkToWeb"
+        name="link"
         onBlur={formik.handleBlur}
         onChange={formik.handleChange}
-        value={formik.values.linkToWeb}
+        value={formik.values.link}
         variant="outlined"
       />
       <TextField
