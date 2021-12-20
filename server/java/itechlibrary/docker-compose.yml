@@ -55,5 +55,15 @@ services:
         mode: host
     networks:
       - lib-network
+     
 
-
+  node:
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    restart: always  
+    ports:
+      - 3000:3000
+    networks:
+      - lib-network
+    container_name: node_lib
