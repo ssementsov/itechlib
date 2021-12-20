@@ -41,3 +41,19 @@ services:
       - lib-network
 
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - target: 80
+        published: 5050
+        protocol: tcp
+        mode: host
+    networks:
+      - lib-network
+
+
