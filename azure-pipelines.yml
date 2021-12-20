@@ -1,32 +1,39 @@
 trigger:
-# Development
   branches:
     include:
-     - Development
-
-pool:
-  vmImage: ubuntu-latest
-  demands:
-    - npm
-
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.13'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install npm@8.2.0
-    npm -v
-    npm run build
-  displayName: 'npm install and build'
-
-- task: CopyFiles@2
-  inputs:
-    Contents: '*.*' # Pull the build directory (React)
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  inputs: 
-    PathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
-    ArtifactName: 'www' # output artifact named www
+    - refs/heads/Devops
+name: $(date:yyyyMMdd)$(rev:.r)
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/Development
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - checkout: self
+  - task: Docker@0
+    displayName: Build an image
+    inputs:
+      azureSubscriptionEndpoint: 507fd6fc-b61b-4f21-b651-7b46506125b7
+      azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+      dockerFile: Dockerfile
+  - task: Docker@0
+    displayName: Push an image
+    enabled: False
+    inputs:
+      azureSubscriptionEndpoint: 507fd6fc-b61b-4f21-b651-7b46506125b7
+      azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+      action: Push an image
+  - task: AzureRmWebAppDeployment@4
+    displayName: 'Azure App Service Deploy: itechlib'
+    inputs:
+      ConnectedServiceName: 507fd6fc-b61b-4f21-b651-7b46506125b7
+      WebAppKind: webAppContainer
+      WebAppName: itechlib
+      DockerNamespace: itechlib.azurecr.io
+      DockerRepository: $(Build.Repository.Name):$(Build.BuildId)
+...
