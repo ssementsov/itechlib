@@ -2,7 +2,6 @@ package by.library.itechlibrary.dto;
 
 import by.library.itechlibrary.entity.Category;
 import by.library.itechlibrary.entity.Language;
-import by.library.itechlibrary.entity.Status;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -28,5 +27,8 @@ public class BookDto {
 
     @NotNull
     private Category category;
+
+    @NotNull
+    private StatusDto status;
 
 }
