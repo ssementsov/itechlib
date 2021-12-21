@@ -28,7 +28,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation("get all books")
+    @ApiOperation("get book by id")
     @ResponseStatus(HttpStatus.OK)
     public BookDto getBookById(@PathVariable("id") long id) {
 
@@ -39,9 +39,9 @@ public class BookController {
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBook(@Valid @RequestBody BookDto bookDto) {
+    public BookDto addBook(@Valid @RequestBody BookDto bookDto) {
 
-        bookService.saveBook(bookDto);
+        return bookService.saveBook(bookDto);
     }
 
     @PutMapping

@@ -34,7 +34,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void saveBook(BookDto bookDto) {
+    public BookDto saveBook(BookDto bookDto) {
 
         Book book = bookMapper.toBook(bookDto);
 
@@ -43,6 +43,8 @@ public class BookServiceImpl implements BookService {
         log.info("Try to save book");
 
         bookRepository.save(book);
+
+        return bookMapper.toBookDto(book);
 
     }
 
