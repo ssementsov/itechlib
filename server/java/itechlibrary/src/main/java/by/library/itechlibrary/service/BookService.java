@@ -8,7 +8,7 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    void saveBook(BookDto bookDto);
+    BookDto saveBook(BookDto bookDto);
 
     BookDto findById(long id);
 
