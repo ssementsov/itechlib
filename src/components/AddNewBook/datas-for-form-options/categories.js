@@ -1,10 +1,10 @@
 export const categories = [
   {
-    value: "Professional",
+    value: "PROFESSIONAL",
     label: "Professional",
   },
   {
-    value: "Fiction",
+    value: "FICTION",
     label: "Fiction",
   },
 ];
