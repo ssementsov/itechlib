@@ -1,9 +1,10 @@
 import { useRouter } from 'next/router'
 import { useFormik } from 'formik'
+import PropTypes from 'prop-types'
 import * as Yup from 'yup'
 import { Box, Container } from '@mui/material'
 import { CloseIcon } from '../../icons/close-icon'
-import AddNewBookForm from './AddNewBookForm'
+import AddNewBookForm from './add-new-book-form'
 import { status } from '../../common/constants/status-constants'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 
@@ -27,6 +28,9 @@ const AddNewBookFormBox = ({
       id: book.id,
       link: book.link,
       status: book.status.name,
+      reader: '',
+      dateFrom: null,
+      dateTo: null,
     }
   } else {
     newBook = {
@@ -130,6 +134,14 @@ const AddNewBookFormBox = ({
       </Box>
     </>
   )
+}
+
+AddNewBookFormBox.propTypes = {
+  handleClose: PropTypes.func,
+  createBook: PropTypes.func,
+  title: PropTypes.string,
+  buttonName: PropTypes.string,
+  book: PropTypes.object,
 }
 
 export default AddNewBookFormBox

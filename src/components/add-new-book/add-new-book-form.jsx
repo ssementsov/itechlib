@@ -1,18 +1,18 @@
-import React from "react";
-import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
-import { categories } from "./datas-for-form-options/categories";
-import { languages } from "./datas-for-form-options/languages";
-import { statuses } from "./datas-for-form-options/statuses";
-import HiddenForm from "./HiddenForm";
-import { status } from "../../common/constants/status-constants";
+import React from 'react'
+import { Box, Button, MenuItem, TextField, Typography } from '@mui/material'
+import { categories } from './datas-for-form-options/categories'
+import { languages } from './datas-for-form-options/languages'
+import { statuses } from './datas-for-form-options/statuses'
+import HiddenForm from './hidden-form'
+import { status } from '../../common/constants/status-constants'
 
 const createOptions = (option) => {
   return (
     <MenuItem key={option.value} value={option.value}>
       {option.label}
     </MenuItem>
-  );
-};
+  )
+}
 
 const AddNewBookForm = ({ formik, title, buttonName }) => {
   return (
@@ -133,7 +133,7 @@ const AddNewBookForm = ({ formik, title, buttonName }) => {
         </Button>
       </Box>
     </form>
-  );
-};
+  )
+}
 
-export default AddNewBookForm;
+export default AddNewBookForm
