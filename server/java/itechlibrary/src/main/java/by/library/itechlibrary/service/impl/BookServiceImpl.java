@@ -37,6 +37,7 @@ public class BookServiceImpl implements BookService {
     public void saveBook(BookDto bookDto) {
 
         Book book = bookMapper.toBook(bookDto);
+
         setDate(book);
 
         log.info("Try to save book");
@@ -67,8 +68,13 @@ public class BookServiceImpl implements BookService {
 
     private void setDate(Book book) {
 
-        LocalDate date = LocalDate.now();
-        book.setCreateDate(date);
+        if (book.getId() == 0) {
 
+            log.info("Try to set creation date.");
+
+            LocalDate date = LocalDate.now();
+            book.setCreateDate(date);
+
+        }
     }
 }
