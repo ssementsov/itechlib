@@ -1,14 +1,11 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.BookDto;
 import by.library.itechlibrary.entity.Book;
-import by.library.itechlibrary.entity.Status;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.mapper.BookMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
-import by.library.itechlibrary.service.StatusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,8 +23,6 @@ public class BookServiceImpl implements BookService {
 
     private final BookMapper bookMapper;
 
-    private final StatusService statusService;
-
     @Override
     public List<BookDto> findAll() {
 
@@ -42,7 +37,7 @@ public class BookServiceImpl implements BookService {
     public void saveBook(BookDto bookDto) {
 
         Book book = bookMapper.toBook(bookDto);
-        setDateAndStatus(book, StatusConstant.AVAILABLE);
+        setDate(book);
 
         log.info("Try to save book");
 
@@ -70,11 +65,9 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    private void setDateAndStatus(Book book, String statusStr){
+    private void setDate(Book book) {
 
-        Status status = statusService.findByName(statusStr);
         LocalDate date = LocalDate.now();
-        book.setStatus(status);
         book.setCreateDate(date);
 
     }
