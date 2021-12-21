@@ -11,6 +11,7 @@ import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 const AddNewBookFormBox = ({
   handleClose,
   createBook,
+  editBook,
   title,
   buttonName,
   book,
@@ -92,9 +93,14 @@ const AddNewBookFormBox = ({
     }),
     validate,
     onSubmit: async (values) => {
-      await createBook(values)
-      handleClose()
-      router.push(MAIN_CATALOGUE_PATH)
+      if ('id' in values) {
+        await editBook(values)
+        handleClose()
+      } else {
+        await createBook(values)
+        handleClose()
+        router.push(MAIN_CATALOGUE_PATH)
+      }
     },
   })
 
@@ -139,6 +145,7 @@ const AddNewBookFormBox = ({
 AddNewBookFormBox.propTypes = {
   handleClose: PropTypes.func,
   createBook: PropTypes.func,
+  editBook: PropTypes.func,
   title: PropTypes.string,
   buttonName: PropTypes.string,
   book: PropTypes.object,

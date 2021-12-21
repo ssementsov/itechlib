@@ -15,12 +15,11 @@ import {
 import { titles } from './../../common/constants/titles-constants'
 import { styled } from '@mui/material/styles'
 import { withSnackbar } from 'notistack'
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../../../firebase'
 import { useRouter } from 'next/router'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 import CustomModal from './../custom-modal'
 import { status } from '../../common/constants/status-constants'
+import { Book } from '../../models/book-model'
 import api from '../../api/books'
 
 function toLowerCaseExeptFirstLetter(string) {
@@ -35,7 +34,7 @@ const TblCell = styled(TableCell)(() => ({
   padding: '5px 35px',
 }))
 
-const BookDetails = ({ book, enqueueSnackbar }) => {
+const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
   const router = useRouter()
 
   const deleteBook = async () => {
@@ -61,11 +60,36 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
     }
   }
 
-  const editBook = async (body) => {
+  const editBook = async (values) => {
     try {
-      const docRef = doc(db, 'books', book.idBook)
-      const bookUpdated = { ...body, timestamp: serverTimestamp() }
-      await updateDoc(docRef, bookUpdated)
+      let idCategory = values.category === 'PROFESSIONAL' ? 1 : 2
+      let idLanguage = values.language === 'ENGLISH' ? 1 : 2
+      let idStatus
+      switch (values.status) {
+        case status.notAvailable:
+          idStatus = 2
+          break
+        case status.inUse:
+          idStatus = 3
+          break
+        default:
+          idStatus = 1
+      }
+      const editBook = new Book(
+        values.id,
+        values.title,
+        values.author,
+        idCategory,
+        values.category,
+        idLanguage,
+        values.language,
+        values.link,
+        idStatus,
+        values.status,
+        values.description
+      )
+      await api.put('/api/books/', editBook)
+      fetchBook()
       enqueueSnackbar('Your book has been updated successfully!', {
         variant: 'success',
       })

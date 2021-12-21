@@ -1,32 +1,36 @@
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Box, Container, Grid, Card, Button } from "@mui/material";
-import BookDetails from "../../components/book/book-details";
-import { DashboardLayout } from "../../components/dashboard-layout";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
-import { useState, useEffect } from "react";
-import api from "../../api/books";
-import { withSnackbar } from "notistack";
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { Box, Container, Grid, Card, Button } from '@mui/material'
+import BookDetails from '../../components/book/book-details'
+import { DashboardLayout } from '../../components/dashboard-layout'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
+import { useState, useEffect, useCallback } from 'react'
+import api from '../../api/books'
+import { withSnackbar } from 'notistack'
 
 function BookPreviewPage({ initialeBook, enqueueSnackbar }) {
-  const router = useRouter();
-  const [book, setBook] = useState(initialeBook);
-  const id = router.query.id;
+  const router = useRouter()
+  const [book, setBook] = useState(initialeBook)
+  const id = router.query.id
 
-  useEffect(() => {
+  const fetchBook = useCallback(() => {
     api
       .get(`/api/books/${id}`)
       .then(function (res) {
-        setBook(res.data);
+        setBook(res.data)
       })
       .catch(function () {
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        });
-      });
-  }, [enqueueSnackbar, id, router.query]);
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        })
+      })
+  }, [enqueueSnackbar, id])
+
+  useEffect(() => {
+    fetchBook()
+  }, [fetchBook])
 
   return (
     <>
@@ -62,42 +66,42 @@ function BookPreviewPage({ initialeBook, enqueueSnackbar }) {
             <Grid item lg={3} md={3} xs={12}>
               <Card
                 sx={{
-                  background: "white",
-                  margin: "0 auto",
-                  width: "250px",
-                  height: "258px",
+                  background: 'white',
+                  margin: '0 auto',
+                  width: '250px',
+                  height: '258px',
                 }}
               />
             </Grid>
             <Grid item lg={8} md={9} xs={12}>
-              <BookDetails book={book} />
+              <BookDetails fetchBook={fetchBook} book={book} />
             </Grid>
           </Grid>
         </Container>
       </Box>
     </>
-  );
+  )
 }
 
 BookPreviewPage.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>;
-};
+  return <DashboardLayout>{page}</DashboardLayout>
+}
 
-export default withSnackbar(BookPreviewPage);
+export default withSnackbar(BookPreviewPage)
 
 export async function getServerSideProps({ params }) {
-  const res = await api.get(`/api/books/${params.id}`);
+  const res = await api.get(`/api/books/${params.id}`)
 
-  const initialeBook = await res.data;
+  const initialeBook = await res.data
   if (!initialeBook) {
     return {
       notFound: true,
-    };
+    }
   }
 
   return {
     props: {
       initialeBook,
     },
-  };
+  }
 }

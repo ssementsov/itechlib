@@ -1,4 +1,5 @@
 import * as React from 'react'
+import PropTypes from 'prop-types'
 import { Box, Modal, Button, IconButton } from '@mui/material'
 import AddNewBookFormBox from './add-new-book/add-new-book-form-box'
 import { DeleteIcon } from './../icons/delete-icon'
@@ -96,4 +97,12 @@ export default function CustomModal({
       </>
     )
   }
+}
+
+CustomModal.propTypes = {
+  createBook: PropTypes.func,
+  editBook: PropTypes.func,
+  deleteBook: PropTypes.func,
+  book: PropTypes.object,
+  whatModal: PropTypes.string,
 }

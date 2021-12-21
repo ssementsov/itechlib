@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { withSnackbar } from 'notistack'
 import { status } from '../common/constants/status-constants'
 import api from '../api/books'
+import { Book } from '../models/book-model'
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -26,8 +27,8 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   }, [enqueueSnackbar])
 
   const createBook = async (values) => {
-    let idCategory = values.category === 'Professional' ? 1 : 2
-    let idLanguage = values.language === 'English' ? 1 : 2
+    let idCategory = values.category === 'PROFESSIONAL' ? 1 : 2
+    let idLanguage = values.language === 'ENGLISH' ? 1 : 2
     let idStatus
     switch (values.status) {
       case status.notAvailable:
@@ -39,25 +40,19 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       default:
         idStatus = 1
     }
-    const newBook = {
-      author: values.author,
-      title: values.title,
-      description: values.description,
-      link: values.link,
-      category: {
-        id: idCategory,
-        name: values.category,
-      },
-      id: 0,
-      language: {
-        id: idLanguage,
-        name: values.language,
-      },
-      status: {
-        id: idStatus,
-        name: values.status,
-      },
-    }
+    const newBook = new Book(
+      0,
+      values.title,
+      values.author,
+      idCategory,
+      values.category,
+      idLanguage,
+      values.language,
+      values.link,
+      idStatus,
+      values.status,
+      values.description
+    )
     await api
       .post('/api/books', newBook)
       .then(function (res) {
