@@ -52,10 +52,10 @@ public class BookController {
         bookService.saveBook(bookDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @ApiOperation("delete book by id")
     @ResponseStatus(HttpStatus.OK)
-    public void removeBook(@RequestParam("id") long id) {
+    public void removeBook(@PathVariable long id) {
 
         bookService.remove(id);
     }

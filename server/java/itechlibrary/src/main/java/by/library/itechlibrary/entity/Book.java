@@ -31,7 +31,7 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "add_date")
+    @Column(name = "add_date", updatable = false)
     private LocalDate createDate;
 
     @ManyToOne
