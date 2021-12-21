@@ -1,5 +1,5 @@
 export const status = {
-  available: "Available",
-  notAvailable: "Not available",
-  inUse: "In use",
+  available: "AVAILABLE",
+  notAvailable: "NOT AVAILABLE",
+  inUse: "IN USE",
 };
