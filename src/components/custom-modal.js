@@ -1,48 +1,49 @@
-import * as React from 'react'
-import PropTypes from 'prop-types'
-import { Box, Modal, Button, IconButton } from '@mui/material'
-import AddNewBookFormBox from './add-new-book/add-new-book-form-box'
-import { DeleteIcon } from './../icons/delete-icon'
-import { EditIcon } from './../icons/edit-icon'
-import DeleteBookModal from './delete-book/delete-book-modal'
+import * as React from "react";
+import PropTypes from "prop-types";
+import { Box, Modal, Button, IconButton } from "@mui/material";
+import AddNewBookFormBox from "./add-new-book/add-new-book-form-box";
+import { DeleteIcon } from "./../icons/delete-icon";
+import { EditIcon } from "./../icons/edit-icon";
+import DeleteBookModal from "./delete-book/delete-book-modal";
+import { typeModal } from "../common/constants/modal-type-constants";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  border: '1px solid #838E9F',
-  boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.35)',
-  borderRadius: '25px',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  bgcolor: "background.paper",
+  border: "1px solid #838E9F",
+  boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.35)",
+  borderRadius: "25px",
   pt: 2,
   px: 4,
   pb: 3,
   maxWidth: 580,
-  overflowY: 'auto',
-  maxHeight: '95vh',
-  '&:focus': {
-    outline: 'none',
+  overflowY: "auto",
+  maxHeight: "95vh",
+  "&:focus": {
+    outline: "none",
   },
-}
+};
 
 export default function CustomModal({
   createBook,
-  whatModal,
+  type,
   deleteBook,
   editBook,
   book,
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
-  if (whatModal === 'add book') {
+  if (type === typeModal.add) {
     return (
       <div>
         <Button onClick={handleOpen} color="primary" variant="contained">
@@ -51,16 +52,16 @@ export default function CustomModal({
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
             <AddNewBookFormBox
-              title={'Add New Book'}
-              buttonName={'Add'}
+              title={"Add New Book"}
+              buttonName={"Add"}
               createBook={createBook}
               handleClose={handleClose}
             />
           </Box>
         </Modal>
       </div>
-    )
-  } else if (whatModal === 'delete book') {
+    );
+  } else if (type === typeModal.delete) {
     return (
       <>
         <IconButton onClick={handleOpen} aria-label="delete">
@@ -75,8 +76,8 @@ export default function CustomModal({
           </Box>
         </Modal>
       </>
-    )
-  } else if (whatModal === 'edit book') {
+    );
+  } else if (type === typeModal.edit) {
     return (
       <>
         <IconButton onClick={handleOpen} aria-label="edit">
@@ -85,8 +86,8 @@ export default function CustomModal({
         <Modal open={open} onClose={handleClose}>
           <Box sx={style}>
             <AddNewBookFormBox
-              title={'Edit Book Information'}
-              buttonName={'Save'}
+              title={"Edit Book Information"}
+              buttonName={"Save"}
               handleClose={handleClose}
               createBook={createBook}
               editBook={editBook}
@@ -95,7 +96,7 @@ export default function CustomModal({
           </Box>
         </Modal>
       </>
-    )
+    );
   }
 }
 
@@ -103,6 +104,24 @@ CustomModal.propTypes = {
   createBook: PropTypes.func,
   editBook: PropTypes.func,
   deleteBook: PropTypes.func,
-  book: PropTypes.object,
-  whatModal: PropTypes.string,
-}
+  type: PropTypes.oneOf([typeModal.add, typeModal.delete, typeModal.edit]),
+  book: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    category: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    language: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    description: PropTypes.string,
+    link: PropTypes.string,
+    status: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  }),
+};

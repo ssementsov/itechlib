@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
 import CustomModal from "../custom-modal";
+import { typeModal } from "../../common/constants/modal-type-constants";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 
 export const BooksListToolbar = ({ createBook }) => {
@@ -48,7 +49,7 @@ export const BooksListToolbar = ({ createBook }) => {
         </Typography>
         <Box sx={{ m: 1, display: "flex" }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>
-          <CustomModal whatModal={"add book"} createBook={createBook} />
+          <CustomModal type={typeModal.add} createBook={createBook} />
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
