@@ -1,6 +1,3 @@
-import { useRouter } from "next/router";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import {
   Box,
   Button,
@@ -13,25 +10,8 @@ import {
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
 import CustomModal from "../custom-modal";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 
-export const BooksListToolbar = ({ createBook }) => {
-  const router = useRouter();
-  const formik = useFormik({
-    initialValues: {
-      search: "",
-    },
-    validationSchema: Yup.object({
-      search: Yup.string().max(
-        255,
-        "Search request must be less than 255 characters"
-      ),
-    }),
-    onSubmit: () => {
-      router.push(MAIN_CATALOGUE_PATH);
-    },
-  });
-
+export const BooksListToolbar = ({ createBook, search, setSearch }) => {
   return (
     <Box>
       <Box
@@ -55,29 +35,24 @@ export const BooksListToolbar = ({ createBook }) => {
         <Card>
           <CardContent>
             <Box>
-              <form onSubmit={formik.handleSubmit}>
-                <TextField
-                  name="search"
-                  type="text"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  value={formik.values.search}
-                  error={Boolean(formik.touched.search && formik.errors.search)}
-                  helperText={formik.touched.search && formik.errors.search}
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SvgIcon color="action" fontSize="small">
-                          <SearchIcon />
-                        </SvgIcon>
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Search a book"
-                  variant="outlined"
-                />
-              </form>
+              <TextField
+                name="search"
+                type="text"
+                onChange={(e) => setSearch(e.target.value)}
+                value={search}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SvgIcon color="action" fontSize="small">
+                        <SearchIcon />
+                      </SvgIcon>
+                    </InputAdornment>
+                  ),
+                }}
+                placeholder="Search a book"
+                variant="outlined"
+              />
             </Box>
           </CardContent>
         </Card>

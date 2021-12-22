@@ -1,4 +1,4 @@
-import PerfectScrollbar from 'react-perfect-scrollbar'
+import PerfectScrollbar from "react-perfect-scrollbar";
 import {
   Box,
   Card,
@@ -9,16 +9,16 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material'
-import { titles } from '../../common/constants/titles-constants'
-import router from 'next/router'
-import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants'
+} from "@mui/material";
+import { titles } from "../../common/constants/titles-constants";
+import router from "next/router";
+import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
 
 function toLowerCaseExeptFirstLetter(string) {
-  return string[0] + string.slice(1).toLowerCase()
+  return string[0] + string.slice(1).toLowerCase();
 }
 
-export const BooksListResults = ({ books }) => {
+export const BooksListResults = ({ books, startSearch }) => {
   return (
     <Card>
       <PerfectScrollbar>
@@ -67,15 +67,17 @@ export const BooksListResults = ({ books }) => {
                         {toLowerCaseExeptFirstLetter(book.status.name)}
                       </TableCell>
                     </TableRow>
-                  )
+                  );
                 })
               ) : (
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Typography
-                      sx={{ textAlign: 'center', color: 'action.active' }}
+                      sx={{ textAlign: "center", color: "action.active" }}
                     >
-                      No books have been added yet!
+                      {startSearch
+                        ? "No books found"
+                        : "No books have been added yet!"}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -85,5 +87,5 @@ export const BooksListResults = ({ books }) => {
         </Box>
       </PerfectScrollbar>
     </Card>
-  )
-}
+  );
+};
