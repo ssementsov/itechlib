@@ -54,6 +54,11 @@ databaseChangeLog:
                   type: SMALLINT
                   constraints:
                     nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
 
 
 
@@ -107,6 +112,19 @@ databaseChangeLog:
               - column:
                   name: name
                   type: VARCHAR(50)
+
+
+  - changeSet:
+      id:  22122021-add-ForeignKeyConstraint-user-to-book
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: book
+            constraintName: fk_books_user
+            referencedColumnNames: id
+            referencedTableName: user
+
 
   - changeSet:
       id:  15122021-add-ForeignKeyConstraint-status-to-book
