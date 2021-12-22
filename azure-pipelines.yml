@@ -7,7 +7,7 @@ resources:
   repositories:
   - repository: self
     type: git
-    ref: refs/heads/Development
+    ref: refs/heads/Devops
 jobs:
 - job: Job_1
   displayName: Agent job 1
@@ -15,25 +15,26 @@ jobs:
     vmImage: ubuntu-20.04
   steps:
   - checkout: self
-  - task: Docker@0
-    displayName: Build an image
+  - task: DockerCompose@0
+    displayName: Build services
     inputs:
-      azureSubscriptionEndpoint: 507fd6fc-b61b-4f21-b651-7b46506125b7
+      azureSubscriptionEndpoint: abd3c541-d04d-42ce-a2e4-8a7ce0ccfb19
       azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
-      dockerFile: Dockerfile
-  - task: Docker@0
-    displayName: Push an image
-    enabled: False
+      dockerComposeFile: docker-compose.yaml
+      action: Build services
+  - task: DockerCompose@0
+    displayName: Push services
     inputs:
-      azureSubscriptionEndpoint: 507fd6fc-b61b-4f21-b651-7b46506125b7
+      azureSubscriptionEndpoint: abd3c541-d04d-42ce-a2e4-8a7ce0ccfb19
       azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
-      action: Push an image
+      dockerComposeFile: docker-compose.yaml
+      action: Push services
   - task: AzureRmWebAppDeployment@4
     displayName: 'Azure App Service Deploy: itechlib'
     inputs:
-      ConnectedServiceName: 507fd6fc-b61b-4f21-b651-7b46506125b7
+      ConnectedServiceName: abd3c541-d04d-42ce-a2e4-8a7ce0ccfb19
       WebAppKind: webAppContainer
       WebAppName: itechlib
       DockerNamespace: itechlib.azurecr.io
-      DockerRepository: $(Build.Repository.Name):$(Build.BuildId)
-...
+      DockerRepository: itechlib2021_node
+      DockerImageTag: latest
