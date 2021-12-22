@@ -19,6 +19,7 @@
         <mapstruct.version>1.5.0.Beta1</mapstruct.version>
         <mapstruct-lombok.version>0.2.0</mapstruct-lombok.version>
         <commons-validator.version>1.7</commons-validator.version>
+        <spring-security-oauth2-autoconfigure.version>2.6.1</spring-security-oauth2-autoconfigure.version>
     </properties>
     <dependencies>
 
@@ -108,6 +109,21 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webflux</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
         </dependency>
 
     </dependencies>

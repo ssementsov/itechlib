@@ -21,3 +21,11 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 494563742290-l969e1ik0inbrhahh51dkn030gcrh1u3.apps.googleusercontent.com
+            clientSecret: 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
+
