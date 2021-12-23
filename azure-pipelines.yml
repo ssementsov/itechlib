@@ -1,13 +1,8 @@
-trigger:
-  branches:
-    include:
-    - refs/heads/Devops
-name: $(date:yyyyMMdd)$(rev:.r)
 resources:
   repositories:
   - repository: self
     type: git
-    ref: refs/heads/Devops
+    ref: refs/heads/Development
 jobs:
 - job: Job_1
   displayName: Agent job 1
@@ -18,23 +13,26 @@ jobs:
   - task: DockerCompose@0
     displayName: Build services
     inputs:
-      azureSubscriptionEndpoint: abd3c541-d04d-42ce-a2e4-8a7ce0ccfb19
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: 'Azure subscription 1 (7d136500-033c-49d1-85f8-efa4bab3e586)'
       azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
       dockerComposeFile: docker-compose.yaml
-      action: Build services
-  - task: DockerCompose@0
-    displayName: Push services
-    inputs:
-      azureSubscriptionEndpoint: abd3c541-d04d-42ce-a2e4-8a7ce0ccfb19
-      azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
-      dockerComposeFile: docker-compose.yaml
-      action: Push services
+      action: 'Build services'
+ # - task: DockerCompose@0
+ #   displayName: Push services
+  #  inputs:
+  #    containerregistrytype: 'Azure Container Registry'
+  #    azureSubscription: 'Azure subscription 1 (7d136500-033c-49d1-85f8-efa4bab3e586)'
+  #    azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+  #    dockerComposeFile: docker-compose.yaml
+  #    action: 'Push services'
   - task: AzureRmWebAppDeployment@4
     displayName: 'Azure App Service Deploy: itechlib'
     inputs:
-      ConnectedServiceName: abd3c541-d04d-42ce-a2e4-8a7ce0ccfb19
-      WebAppKind: webAppContainer
-      WebAppName: itechlib
-      DockerNamespace: itechlib.azurecr.io
-      DockerRepository: itechlib2021_node
-      DockerImageTag: latest
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'Azure subscription 1 (7d136500-033c-49d1-85f8-efa4bab3e586)'
+      appType: 'webAppContainer'
+      WebAppName: 'itechlib'
+      DockerNamespace: 'itechlib.azurecr.io'
+      DockerImageTag: 'latest'
+   
