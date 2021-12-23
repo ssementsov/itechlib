@@ -28,7 +28,7 @@ public class User {
     @Column(name = "corp_email", unique = true)
     private String corpEmail;
 
-    @Column(name = "google_email", unique = true)
+    @Column(name = "google_email", unique = false)
     private String googleEmail;
 
 }

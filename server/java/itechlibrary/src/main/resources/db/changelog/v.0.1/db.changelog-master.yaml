@@ -6,5 +6,8 @@ databaseChangeLog:
       file: db.changelog-book-status-category-language-user.yaml
       relativeToChangelogFile: true
   - include:
+      file: db.changelog-booking.yaml
+      relativeToChangelogFile: true
+  - include:
       file: db.changelog-add-data.yaml
       relativeToChangelogFile: true

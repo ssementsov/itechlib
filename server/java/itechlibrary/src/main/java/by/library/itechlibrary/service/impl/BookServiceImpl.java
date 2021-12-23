@@ -1,9 +1,11 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.config.Oauth2AuthenticationSuccessHandler;
+import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.BookDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.mapper.BookMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -39,11 +42,14 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto saveBook(BookDto bookDto) {
 
-        log.info("Try to set user and save book");
+        log.info("Try to map bookDto to book");
 
         Book book = bookMapper.toBook(bookDto);
+
+        log.info("Try to set user and save book");
+
         setDate(book);
-        setUser(book);
+        setUserOwner(book);
         book = bookRepository.save(book);
 
         return bookMapper.toBookDto(book);
@@ -65,18 +71,35 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try get books by user id.");
 
-        List<Book> books = bookRepository.findAllByUserId(id);
+        List<Book> books = bookRepository.findAllByOwnerId(id);
 
         return bookMapper.mapBookDtoList(books);
     }
 
+    public BookDto setReader(BookDto bookDto, long readerId) {
+
+
+        return bookDto;
+    }
+
+    @Transactional
     @Override
     public void remove(long id) {
 
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+
         log.info("Try to delete book by id {}", id);
 
-        bookRepository.deleteById(id);
+        if (!book.getStatus().equals(StatusConstant.IN_USE)) {
 
+            bookRepository.deleteById(id);
+
+        } else {
+
+            throw new WrongBookStatusException("You can't delete book with status IN USE.");
+
+        }
     }
 
     private void setDate(Book book) {
@@ -91,11 +114,11 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private void setUser(Book book) {
+    private void setUserOwner(Book book) {
 
-        if (book.getUser() == null) {
+        if (book.getOwner() == null) {
 
-            book.setUser(oauth2AuthenticationSuccessHandler.getCurrentUser());
+            book.setOwner(oauth2AuthenticationSuccessHandler.getCurrentUser());
 
         }
     }

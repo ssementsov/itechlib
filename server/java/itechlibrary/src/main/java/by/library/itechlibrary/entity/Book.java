@@ -34,16 +34,17 @@ public class Book {
     @Column(name = "add_date", updatable = false)
     private LocalDate createDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Language language;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Status status;
 
-    @ManyToOne
-    private User user;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    @JoinColumn(name = "user_id")
+    private User owner;
 
 }
