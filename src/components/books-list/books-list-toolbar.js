@@ -7,28 +7,28 @@ import {
   InputAdornment,
   SvgIcon,
   Typography,
-} from '@mui/material'
-import { Search as SearchIcon } from '../../icons/search'
-import CustomModal from '../custom-modal'
+} from "@mui/material";
+import { Search as SearchIcon } from "../../icons/search";
+import CustomModal from "../custom-modal";
 
-export const BooksListToolbar = ({ createBook, search, handleChange }) => {
+export const BooksListToolbar = ({ createBook, search, setSearch }) => {
   return (
     <Box>
       <Box
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
+          alignItems: "center",
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
           m: -1,
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
           Main catalogue
         </Typography>
-        <Box sx={{ m: 1, display: 'flex' }}>
+        <Box sx={{ m: 1, display: "flex" }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>
-          <CustomModal whatModal={'add book'} createBook={createBook} />
+          <CustomModal whatModal={"add book"} createBook={createBook} />
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
@@ -38,7 +38,7 @@ export const BooksListToolbar = ({ createBook, search, handleChange }) => {
               <TextField
                 name="search"
                 type="text"
-                onChange={(e) => handleChange(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 value={search}
                 fullWidth
                 InputProps={{
@@ -58,5 +58,5 @@ export const BooksListToolbar = ({ createBook, search, handleChange }) => {
         </Card>
       </Box>
     </Box>
-  )
-}
+  );
+};
