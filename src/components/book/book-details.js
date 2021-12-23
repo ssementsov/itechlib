@@ -24,7 +24,7 @@ import { language } from "../../common/constants/language-constants";
 import { category } from "../../common/constants/category-constants";
 import { typeModal } from "../../common/constants/modal-type-constants";
 import { Book } from "../../models/book-model";
-import api from "../../api/books";
+import { apiBooks } from "../../api/books/books";
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
@@ -41,15 +41,15 @@ const TblCell = styled(TableCell)(() => ({
 const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
   const router = useRouter();
 
-  const deleteBook = async () => {
+  const deleteBook = () => {
     if (book.status.name === status.available) {
       try {
-        await api.delete(`/api/books/${book.id}`);
+        apiBooks.remove(book.id);
         router.replace(MAIN_CATALOGUE_PATH);
         enqueueSnackbar("Your book has been deleted successfully!", {
           variant: "success",
         });
-      } catch (e) {
+      } catch {
         enqueueSnackbar("Something went wrong... Please retry.", {
           variant: "error",
         });
@@ -64,7 +64,7 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
     }
   };
 
-  const editBook = async (values) => {
+  const editBook = (values) => {
     try {
       let idCategory = values.category === category.professional ? 1 : 2;
       let idLanguage = values.language === language.english ? 1 : 2;
@@ -92,8 +92,9 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
         values.status,
         values.description
       );
-      await api.put("/api/books/", editBook);
-      fetchBook();
+      apiBooks.put(editBook).then(() => {
+        fetchBook();
+      });
       enqueueSnackbar("Your book has been updated successfully!", {
         variant: "success",
       });
