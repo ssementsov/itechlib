@@ -18,12 +18,11 @@ import java.util.List;
 @RequestMapping("/users")
 @Api(tags = "Endpoints for user")
 @RequiredArgsConstructor
-@PreAuthorize("isAuthenticated()")
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/check")
     @ApiOperation("check emails and connect two emails")
     @ResponseStatus(HttpStatus.OK)
     public void checkCorporateAndGoogleEmails(@Valid @RequestBody EmailCheckerDto emailCheckerDto) {
@@ -32,7 +31,7 @@ public class UserController {
 
     }
 
-    @PostMapping("/corp-email")
+    @PostMapping("/check/corp-email")
     @ApiOperation("check corporate email")
     @ResponseStatus(HttpStatus.OK)
     public void checkCorporateEmail(@RequestParam("email") String email) {
