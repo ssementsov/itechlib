@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { Box, Container, Typography } from '@mui/material'
-import { BooksListResults } from '../components/booksTable/books-list-results'
-import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
+import { BooksListResults } from '../components/books-list/books-list-results'
+import { BooksListToolbar } from '../components/books-list/books-list-toolbar'
 import { DashboardLayout } from '../components/dashboard-layout'
 import { useState, useEffect } from 'react'
 import { withSnackbar } from 'notistack'
@@ -26,7 +26,6 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   }, [enqueueSnackbar])
 
   const createBook = async (values) => {
-    let id = books.length ? books[books.length - 1].id + 1 : 1
     let idCategory = values.category === 'Professional' ? 1 : 2
     let idLanguage = values.language === 'English' ? 1 : 2
     let idStatus
@@ -49,7 +48,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
         id: idCategory,
         name: values.category,
       },
-      id: id,
+      id: 0,
       language: {
         id: idLanguage,
         name: values.language,
@@ -62,11 +61,10 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
     await api
       .post('/api/books', newBook)
       .then(function (res) {
-        console.log(res)
         enqueueSnackbar('Your book has been added successfully!', {
           variant: 'success',
         })
-        const newBooksList = [newBook, ...books]
+        const newBooksList = [res.data, ...books]
         setBooks(newBooksList)
         setIsLoaded(true)
       })

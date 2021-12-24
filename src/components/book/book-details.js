@@ -20,6 +20,7 @@ import { db } from '../../../firebase'
 import { useRouter } from 'next/router'
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
 import CustomModal from './../custom-modal'
+import { status } from '../../common/constants/status-constants'
 import api from '../../api/books'
 
 function toLowerCaseExeptFirstLetter(string) {
@@ -38,16 +39,25 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
   const router = useRouter()
 
   const deleteBook = async () => {
-    try {
-      await api.delete(`/api/books/${book.id}`)
-      router.replace(MAIN_CATALOGUE_PATH)
-      enqueueSnackbar('Your book has been deleted successfully!', {
-        variant: 'success',
-      })
-    } catch (e) {
-      enqueueSnackbar('Something went wrong... Please retry.', {
-        variant: 'error',
-      })
+    if (book.status.name === status.available) {
+      try {
+        await api.delete(`/api/books/${book.id}`)
+        router.replace(MAIN_CATALOGUE_PATH)
+        enqueueSnackbar('Your book has been deleted successfully!', {
+          variant: 'success',
+        })
+      } catch (e) {
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        })
+      }
+    } else {
+      enqueueSnackbar(
+        'You can only delete books which are currently in “Available” status',
+        {
+          variant: 'error',
+        }
+      )
     }
   }
 
