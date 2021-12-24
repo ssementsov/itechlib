@@ -32,7 +32,7 @@ public class UserController {
 
     }
 
-    @PostMapping("/corp-email")
+    @PostMapping("check/corp-email")
     @ApiOperation("check corporate email")
     @ResponseStatus(HttpStatus.OK)
     public void checkCorporateEmail(@RequestParam("email") String email) {

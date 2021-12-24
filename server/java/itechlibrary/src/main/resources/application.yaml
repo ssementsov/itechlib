@@ -28,4 +28,15 @@ spring:
           google:
             clientId: 494563742290-l969e1ik0inbrhahh51dkn030gcrh1u3.apps.googleusercontent.com
             clientSecret: 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
-
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: itechlib2021@gmail.com
+    password: Nestor911
+    properties:
+      mail:
+        smtp:
+          auth: true
+        starttls:
+          enable: true
