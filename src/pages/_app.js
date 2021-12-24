@@ -29,7 +29,7 @@ const App = (props) => {
             hideIconVariant
             anchorOrigin={{
               vertical: "top",
-              horizontal: "right",
+              horizontal: "center",
             }}
             TransitionComponent={Slide}
           >
