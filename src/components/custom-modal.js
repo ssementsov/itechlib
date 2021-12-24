@@ -5,6 +5,7 @@ import AddNewBookFormBox from './add-new-book/add-new-book-form-box'
 import { DeleteIcon } from './../icons/delete-icon'
 import { EditIcon } from './../icons/edit-icon'
 import DeleteBookModal from './delete-book/delete-book-modal'
+import { typeModal } from '../common/constants/modal-type-constants'
 
 const style = {
   position: 'absolute',
@@ -28,7 +29,7 @@ const style = {
 
 export default function CustomModal({
   createBook,
-  whatModal,
+  type,
   deleteBook,
   editBook,
   book,
@@ -42,60 +43,62 @@ export default function CustomModal({
     setOpen(false)
   }
 
-  if (whatModal === 'add book') {
-    return (
-      <div>
-        <Button onClick={handleOpen} color="primary" variant="contained">
-          Add a book
-        </Button>
-        <Modal open={open} onClose={handleClose}>
-          <Box sx={style}>
-            <AddNewBookFormBox
-              title={'Add New Book'}
-              buttonName={'Add'}
-              createBook={createBook}
-              handleClose={handleClose}
-            />
-          </Box>
-        </Modal>
-      </div>
-    )
-  } else if (whatModal === 'delete book') {
-    return (
-      <>
-        <IconButton onClick={handleOpen} aria-label="delete">
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-        <Modal open={open} onClose={handleClose}>
-          <Box sx={style}>
-            <DeleteBookModal
-              deleteBook={deleteBook}
-              handleClose={handleClose}
-            />
-          </Box>
-        </Modal>
-      </>
-    )
-  } else if (whatModal === 'edit book') {
-    return (
-      <>
-        <IconButton onClick={handleOpen} aria-label="edit">
-          <EditIcon fontSize="small" />
-        </IconButton>
-        <Modal open={open} onClose={handleClose}>
-          <Box sx={style}>
-            <AddNewBookFormBox
-              title={'Edit Book Information'}
-              buttonName={'Save'}
-              handleClose={handleClose}
-              createBook={createBook}
-              editBook={editBook}
-              book={book}
-            />
-          </Box>
-        </Modal>
-      </>
-    )
+  // eslint-disable-next-line default-case
+  switch (type) {
+    case typeModal.add:
+      return (
+        <div>
+          <Button onClick={handleOpen} color="primary" variant="contained">
+            Add a book
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              <AddNewBookFormBox
+                title={'Add New Book'}
+                buttonName={'Add'}
+                createBook={createBook}
+                handleClose={handleClose}
+              />
+            </Box>
+          </Modal>
+        </div>
+      )
+    case typeModal.delete:
+      return (
+        <>
+          <IconButton onClick={handleOpen} aria-label="delete">
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              <DeleteBookModal
+                deleteBook={deleteBook}
+                handleClose={handleClose}
+              />
+            </Box>
+          </Modal>
+        </>
+      )
+    case typeModal.edit:
+      return (
+        <>
+          <IconButton onClick={handleOpen} aria-label="edit">
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              <AddNewBookFormBox
+                title={'Edit Book Information'}
+                buttonName={'Save'}
+                handleClose={handleClose}
+                createBook={createBook}
+                editBook={editBook}
+                book={book}
+              />
+            </Box>
+          </Modal>
+        </>
+      )
   }
 }
 
@@ -103,6 +106,24 @@ CustomModal.propTypes = {
   createBook: PropTypes.func,
   editBook: PropTypes.func,
   deleteBook: PropTypes.func,
-  book: PropTypes.object,
-  whatModal: PropTypes.string,
+  type: PropTypes.oneOf(['ADD BOOK', 'DELETE BOOK', 'EDIT BOOK']),
+  book: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    category: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    language: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    description: PropTypes.string,
+    link: PropTypes.string,
+    status: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  }),
 }
