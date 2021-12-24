@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.dto.BookingDto;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -129,7 +130,7 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkFinishDate(LocalDate startDate, LocalDate finishDate) {
 
-        LocalDate maxDate = startDate.plusMonths(1);
+        LocalDate maxDate = startDate.plusMonths(BookingConstant.MONTH_COUNT);
         LocalDate currentDate = LocalDate.now();
 
         if (maxDate.isBefore(finishDate) || currentDate.isAfter(finishDate) || startDate.isAfter(finishDate)) {
