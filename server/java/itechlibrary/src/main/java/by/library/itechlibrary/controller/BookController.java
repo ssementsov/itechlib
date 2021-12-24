@@ -39,7 +39,7 @@ public class BookController {
     }
 
     @GetMapping("/user/{id}")
-    @ApiOperation("get book by user id")
+    @ApiOperation("get book by owner id")
     @ResponseStatus(HttpStatus.OK)
     public List<BookDto> getBooksByUserId(@PathVariable("id") long id) {
 

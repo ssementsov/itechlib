@@ -61,7 +61,6 @@ databaseChangeLog:
                     nullable: false
 
 
-
   - changeSet:
       id: 15122021-add-table-status
       author: maksim_maevsky

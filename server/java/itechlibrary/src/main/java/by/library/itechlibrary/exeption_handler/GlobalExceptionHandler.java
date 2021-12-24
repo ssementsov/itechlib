@@ -1,8 +1,7 @@
 package by.library.itechlibrary.exeption_handler;
 
 
-import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
-import by.library.itechlibrary.exeption_handler.exception.WrongGoogleEmailException;
+import by.library.itechlibrary.exeption_handler.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WrongGoogleEmailException.class)
     public ResponseEntity<IncorrectData> handleException(WrongGoogleEmailException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongDtoDataException.class)
+    public ResponseEntity<IncorrectData> handleException(WrongDtoDataException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongBookStatusException.class)
+    public ResponseEntity<IncorrectData> handleException(WrongBookStatusException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongDateException.class)
+    public ResponseEntity<IncorrectData> handleException(WrongDateException exception) {
 
         IncorrectData incorrectData = incorrectDataFilling(exception);
 

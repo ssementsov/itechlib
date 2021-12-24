@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: 23122021-add-booking
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: booking
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: start_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: finish_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rate
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: feedback
+                  type: VARCHAR(2048)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: book_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id:  23122021-add-ForeignKeyConstraint-user-to-booking
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: booking
+            constraintName: fk_booking_user
+            referencedColumnNames: id
+            referencedTableName: user
+
+
+  - changeSet:
+      id:  23122021-add-ForeignKeyConstraint-book-to-booking
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: book_id
+            baseTableName: booking
+            constraintName: fk_booking_book
+            referencedColumnNames: id
+            referencedTableName: book

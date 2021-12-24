@@ -29,4 +29,6 @@ public class BookDto {
     @NotNull
     private StatusDto status;
 
+    private UserDto owner;
+
 }
