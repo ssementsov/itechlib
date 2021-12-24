@@ -1,10 +1,11 @@
+import { category } from "../../../common/constants/category-constants";
 export const categories = [
   {
-    value: "PROFESSIONAL",
+    value: category.professional,
     label: "Professional",
   },
   {
-    value: "FICTION",
+    value: category.fiction,
     label: "Fiction",
   },
 ];

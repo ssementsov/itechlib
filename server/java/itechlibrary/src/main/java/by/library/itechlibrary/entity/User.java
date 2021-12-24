@@ -25,11 +25,10 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
-    @Column(name = "corp_email")
+    @Column(name = "corp_email", unique = true)
     private String corpEmail;
 
-    @Column(name = "google_email")
+    @Column(name = "google_email", unique = true)
     private String googleEmail;
-
 
 }

@@ -1,16 +1,17 @@
-import React from 'react'
-import DatePicker from '@mui/lab/DatePicker'
-import { Box, TextField, Typography } from '@mui/material'
-import { readers } from './datas-for-form-options/readers'
-import { sub, add } from 'date-fns'
+import React from "react";
+import PropTypes from "prop-types";
+import DatePicker from "@mui/lab/DatePicker";
+import { Box, TextField, Typography } from "@mui/material";
+import { readers } from "./datas-for-form-options/readers";
+import { sub, add } from "date-fns";
 
 const HiddenForm = ({ formik, createOptions }) => {
   const minDate = sub(new Date(), {
     years: 1,
-  })
+  });
   const maxDate = add(new Date(), {
     months: 1,
-  })
+  });
   return (
     <Box>
       <TextField
@@ -30,8 +31,8 @@ const HiddenForm = ({ formik, createOptions }) => {
       </TextField>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
+          display: "flex",
+          justifyContent: "space-between",
           mt: 1,
         }}
       >
@@ -46,8 +47,8 @@ const HiddenForm = ({ formik, createOptions }) => {
 
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
+            display: "flex",
+            justifyContent: "space-between",
           }}
         >
           <DatePicker
@@ -55,7 +56,7 @@ const HiddenForm = ({ formik, createOptions }) => {
             maxDate={new Date()}
             name="dateFrom"
             onChange={(value) => {
-              formik.setFieldValue('dateFrom', value)
+              formik.setFieldValue("dateFrom", value);
             }}
             value={formik.values.dateFrom}
             label="from"
@@ -66,7 +67,7 @@ const HiddenForm = ({ formik, createOptions }) => {
                 )}
                 helperText={formik.touched.dateFrom && formik.errors.dateFrom}
                 sx={{
-                  width: '150px',
+                  width: "150px",
                 }}
                 {...params}
               />
@@ -75,8 +76,8 @@ const HiddenForm = ({ formik, createOptions }) => {
         </Box>
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
+            display: "flex",
+            justifyContent: "space-between",
           }}
         >
           <DatePicker
@@ -84,7 +85,7 @@ const HiddenForm = ({ formik, createOptions }) => {
             maxDate={maxDate}
             name="dateTo"
             onChange={(value) => {
-              formik.setFieldValue('dateTo', value)
+              formik.setFieldValue("dateTo", value);
             }}
             value={formik.values.dateTo}
             label="till"
@@ -93,7 +94,7 @@ const HiddenForm = ({ formik, createOptions }) => {
                 error={Boolean(formik.touched.dateTo && formik.errors.dateTo)}
                 helperText={formik.touched.dateTo && formik.errors.dateTo}
                 sx={{
-                  width: '150px',
+                  width: "150px",
                 }}
                 {...params}
               />
@@ -102,7 +103,12 @@ const HiddenForm = ({ formik, createOptions }) => {
         </Box>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default HiddenForm
+HiddenForm.propTypes = {
+  formik: PropTypes.object,
+  createOptions: PropTypes.func,
+};
+
+export default HiddenForm;

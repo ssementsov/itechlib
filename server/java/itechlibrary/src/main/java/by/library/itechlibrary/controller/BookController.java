@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,9 +16,11 @@ import java.util.List;
 @RequestMapping("/books")
 @Api(tags = "Endpoints for books")
 @RequiredArgsConstructor
+@PreAuthorize("isAuthenticated()")
 public class BookController {
 
     private final BookService bookService;
+
 
     @GetMapping
     @ApiOperation("get all books")
@@ -35,6 +38,13 @@ public class BookController {
         return bookService.findById(id);
     }
 
+    @GetMapping("/user/{id}")
+    @ApiOperation("get book by user id")
+    @ResponseStatus(HttpStatus.OK)
+    public List<BookDto> getBooksByUserId(@PathVariable("id") long id) {
+
+        return bookService.findByUserId(id);
+    }
 
     @PostMapping
     @ApiOperation("create new book")
@@ -47,9 +57,9 @@ public class BookController {
     @PutMapping
     @ApiOperation("update book")
     @ResponseStatus(HttpStatus.OK)
-    public void updateBook(@Valid @RequestBody BookDto bookDto) {
+    public BookDto updateBook(@Valid @RequestBody BookDto bookDto) {
 
-        bookService.saveBook(bookDto);
+        return bookService.saveBook(bookDto);
     }
 
     @DeleteMapping("/{id}")

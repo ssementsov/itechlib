@@ -1,32 +1,38 @@
-trigger:
-# Development
-  branches:
-    include:
-     - Development
-
-pool:
-  vmImage: ubuntu-latest
-  demands:
-    - npm
-
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.13'
-  displayName: 'Install Node.js'
-
-- script: |
-    npm install npm@8.2.0
-    npm -v
-    npm run build
-  displayName: 'npm install and build'
-
-- task: CopyFiles@2
-  inputs:
-    Contents: '*.*' # Pull the build directory (React)
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-- task: PublishBuildArtifacts@1
-  inputs: 
-    PathtoPublish: $(Build.ArtifactStagingDirectory) # dist or build files
-    ArtifactName: 'www' # output artifact named www
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: Development
+jobs:
+- job: Job_1
+  displayName: Agent job 1
+  pool:
+    vmImage: ubuntu-20.04
+  steps:
+  - checkout: self
+  - task: DockerCompose@0
+    displayName: Build services
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: 'Azure subscription 1 (7d136500-033c-49d1-85f8-efa4bab3e586)'
+      azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+      dockerComposeFile: docker-compose.yaml
+      action: 'Build services'
+ # - task: DockerCompose@0
+ #   displayName: Push services
+  #  inputs:
+  #    containerregistrytype: 'Azure Container Registry'
+  #    azureSubscription: 'Azure subscription 1 (7d136500-033c-49d1-85f8-efa4bab3e586)'
+  #    azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/7d136500-033c-49d1-85f8-efa4bab3e586/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+  #    dockerComposeFile: docker-compose.yaml
+  #    action: 'Push services'
+  - task: AzureRmWebAppDeployment@4
+    displayName: 'Azure App Service Deploy: itechlib'
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: 'Azure subscription 1 (7d136500-033c-49d1-85f8-efa4bab3e586)'
+      appType: 'webAppContainer'
+      WebAppName: 'itechlib'
+      DockerNamespace: 'itechlib.azurecr.io'
+      DockerImageTag: 'latest'
+   

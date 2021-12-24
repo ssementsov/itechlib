@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.config.Oauth2AuthenticationSuccessHandler;
 import by.library.itechlibrary.dto.BookDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -19,6 +20,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
+    private final Oauth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
+
     private final BookRepository bookRepository;
 
     private final BookMapper bookMapper;
@@ -36,16 +39,14 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto saveBook(BookDto bookDto) {
 
+        log.info("Try to set user and save book");
+
         Book book = bookMapper.toBook(bookDto);
-
         setDate(book);
-
-        log.info("Try to save book");
-
-        bookRepository.save(book);
+        setUser(book);
+        book = bookRepository.save(book);
 
         return bookMapper.toBookDto(book);
-
     }
 
     @Override
@@ -57,6 +58,16 @@ public class BookServiceImpl implements BookService {
                 .findById(id).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
 
         return bookMapper.toBookDto(book);
+    }
+
+    @Override
+    public List<BookDto> findByUserId(long id) {
+
+        log.info("Try get books by user id.");
+
+        List<Book> books = bookRepository.findAllByUserId(id);
+
+        return bookMapper.mapBookDtoList(books);
     }
 
     @Override
@@ -76,6 +87,15 @@ public class BookServiceImpl implements BookService {
 
             LocalDate date = LocalDate.now();
             book.setCreateDate(date);
+
+        }
+    }
+
+    private void setUser(Book book) {
+
+        if (book.getUser() == null) {
+
+            book.setUser(oauth2AuthenticationSuccessHandler.getCurrentUser());
 
         }
     }

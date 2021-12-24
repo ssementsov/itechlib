@@ -29,8 +29,10 @@ databaseChangeLog:
                   type: VARCHAR(100)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: google_email
                   type: VARCHAR(100)
                   constraints:
                     nullable: true
+                    unique: true

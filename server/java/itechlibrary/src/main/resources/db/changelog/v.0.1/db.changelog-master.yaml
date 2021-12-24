@@ -3,7 +3,7 @@ databaseChangeLog:
       file: db.changelog-user.yaml
       relativeToChangelogFile: true
   - include:
-      file: db.changelog-book-status-category-language.yaml
+      file: db.changelog-book-status-category-language-user.yaml
       relativeToChangelogFile: true
   - include:
       file: db.changelog-add-data.yaml

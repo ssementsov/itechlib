@@ -1,10 +1,11 @@
+import { language } from "../../../common/constants/language-constants";
 export const languages = [
   {
-    value: "RUSSIAN",
+    value: language.russian,
     label: "Russian",
   },
   {
-    value: "ENGLISH",
+    value: language.english,
     label: "English",
   },
 ];
