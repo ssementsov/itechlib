@@ -39,6 +39,7 @@ public class BookServiceImpl implements BookService {
         return bookMapper.mapBookDtoList(books);
     }
 
+    @Transactional
     @Override
     public BookDto saveBook(BookDto bookDto) {
 
@@ -74,12 +75,6 @@ public class BookServiceImpl implements BookService {
         List<Book> books = bookRepository.findAllByOwnerId(id);
 
         return bookMapper.mapBookDtoList(books);
-    }
-
-    public BookDto setReader(BookDto bookDto, long readerId) {
-
-
-        return bookDto;
     }
 
     @Transactional

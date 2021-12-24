@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
         log.info("Try to check corp email.");
 
         User user = checkCorporateEmail(emailCheckerDto.getCorpEmail());
-        String googleEmail = user.getGoogleEmail();
+        String googleEmail = emailCheckerDto.getGoogleEmail();
 
         log.info("Try to check and set google email.");
 
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
     private void checkAndSetGoogleEmail(User user, String googleEmail) {
 
-        if (user.getGoogleEmail().isEmpty()) {
+        if (user.getGoogleEmail() == null) {
 
             user.setGoogleEmail(googleEmail);
 

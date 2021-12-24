@@ -43,7 +43,7 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY)
     private Status status;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private User owner;
 

@@ -101,7 +101,7 @@ public class BookingServiceImpl implements BookingService {
 
         checkFinishDate(booking.getStartDate(), newFinishDate);
         booking.setFinishDate(newFinishDate);
-        bookingRepository.save(booking);
+        booking = bookingRepository.save(booking);
 
         return bookingMapper.toBookingDto(booking);
     }

@@ -14,8 +14,6 @@ public interface BookService {
 
     List<BookDto> findByUserId(long id);
 
-    BookDto setReader(BookDto bookDto, long readerId);
-
     void remove(long id);
 
 }
