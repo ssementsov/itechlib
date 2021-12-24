@@ -6,18 +6,18 @@ import BookDetails from "../../components/book/book-details";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
-import { useState, useEffect } from "react";
-import api from "../../api/books";
+import { useState, useEffect, useCallback } from "react";
 import { withSnackbar } from "notistack";
+import { apiBooks } from "../../api/books/books";
 
 function BookPreviewPage({ initialeBook, enqueueSnackbar }) {
   const router = useRouter();
   const [book, setBook] = useState(initialeBook);
   const id = router.query.id;
 
-  useEffect(() => {
-    api
-      .get(`/api/books/${id}`)
+  const fetchBook = useCallback(() => {
+    apiBooks
+      .getSingle(id)
       .then(function (res) {
         setBook(res.data);
       })
@@ -26,7 +26,11 @@ function BookPreviewPage({ initialeBook, enqueueSnackbar }) {
           variant: "error",
         });
       });
-  }, [enqueueSnackbar, id, router.query]);
+  }, [enqueueSnackbar, id]);
+
+  useEffect(() => {
+    fetchBook();
+  }, [fetchBook]);
 
   return (
     <>
@@ -70,7 +74,7 @@ function BookPreviewPage({ initialeBook, enqueueSnackbar }) {
               />
             </Grid>
             <Grid item lg={8} md={9} xs={12}>
-              <BookDetails book={book} />
+              <BookDetails fetchBook={fetchBook} book={book} />
             </Grid>
           </Grid>
         </Container>
@@ -86,9 +90,9 @@ BookPreviewPage.getLayout = (page) => {
 export default withSnackbar(BookPreviewPage);
 
 export async function getServerSideProps({ params }) {
-  const res = await api.get(`/api/books/${params.id}`);
-
+  const res = await apiBooks.getSingle(params.id);
   const initialeBook = await res.data;
+
   if (!initialeBook) {
     return {
       notFound: true,

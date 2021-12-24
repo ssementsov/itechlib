@@ -1,20 +1,37 @@
 import Head from 'next/head'
 import { Box, Container, Typography } from '@mui/material'
-import { BooksListResults } from '../components/booksTable/books-list-results'
-import { BooksListToolbar } from '../components/booksTable/books-list-toolbar'
+import { BooksListResults } from '../components/books-list/books-list-results'
+import { BooksListToolbar } from '../components/books-list/books-list-toolbar'
 import { DashboardLayout } from '../components/dashboard-layout'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { withSnackbar } from 'notistack'
 import { status } from '../common/constants/status-constants'
-import api from '../api/books'
+import { Book } from '../models/book-model'
+import { apiBooks } from '../api/books/books'
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false)
-  const [books, setBooks] = useState()
+  const [books, setBooks] = useState([])
+  const [search, setSearch] = useState('')
+  const [startSearch, setStartSearch] = useState(false)
+
+  const searchedBooks = useMemo(() => {
+    if (search.length > 1) {
+      setStartSearch(true)
+      return books.filter((book) => {
+        return (
+          book.author.toLowerCase().includes(search.toLowerCase()) ||
+          book.title.toLowerCase().includes(search.toLowerCase())
+        )
+      })
+    }
+    return books
+  }, [books, search])
+
   useEffect(() => {
-    api
-      .get('/api/books')
-      .then(function (res) {
+    apiBooks
+      .getAll()
+      .then((res) => {
         setBooks(res.data)
         setIsLoaded(true)
       })
@@ -25,10 +42,9 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       })
   }, [enqueueSnackbar])
 
-  const createBook = async (values) => {
-    let id = books.length ? books[books.length - 1].id + 1 : 1
-    let idCategory = values.category === 'Professional' ? 1 : 2
-    let idLanguage = values.language === 'English' ? 1 : 2
+  const createBook = (values) => {
+    let idCategory = values.category === 'PROFESSIONAL' ? 1 : 2
+    let idLanguage = values.language === 'ENGLISH' ? 1 : 2
     let idStatus
     switch (values.status) {
       case status.notAvailable:
@@ -40,33 +56,27 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       default:
         idStatus = 1
     }
-    const newBook = {
-      author: values.author,
-      title: values.title,
-      description: values.description,
-      link: values.link,
-      category: {
-        id: idCategory,
-        name: values.category,
-      },
-      id: id,
-      language: {
-        id: idLanguage,
-        name: values.language,
-      },
-      status: {
-        id: idStatus,
-        name: values.status,
-      },
-    }
-    await api
-      .post('/api/books', newBook)
+    const newBook = new Book(
+      0,
+      values.title,
+      values.author,
+      idCategory,
+      values.category,
+      idLanguage,
+      values.language,
+      values.link,
+      idStatus,
+      values.status,
+      values.description
+    )
+
+    apiBooks
+      .post(newBook)
       .then(function (res) {
-        console.log(res)
         enqueueSnackbar('Your book has been added successfully!', {
           variant: 'success',
         })
-        const newBooksList = [newBook, ...books]
+        const newBooksList = [res.data, ...books]
         setBooks(newBooksList)
         setIsLoaded(true)
       })
@@ -98,9 +108,16 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
           }}
         >
           <Container maxWidth={false}>
-            <BooksListToolbar createBook={createBook} />
+            <BooksListToolbar
+              search={search}
+              setSearch={setSearch}
+              createBook={createBook}
+            />
             <Box sx={{ mt: 3 }}>
-              <BooksListResults books={books} />
+              <BooksListResults
+                books={searchedBooks}
+                startSearch={startSearch}
+              />
             </Box>
           </Container>
         </Box>

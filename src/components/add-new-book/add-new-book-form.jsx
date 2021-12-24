@@ -1,9 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Box, Button, MenuItem, TextField, Typography } from "@mui/material";
 import { categories } from "./datas-for-form-options/categories";
 import { languages } from "./datas-for-form-options/languages";
 import { statuses } from "./datas-for-form-options/statuses";
-import HiddenForm from "./HiddenForm";
+import HiddenForm from "./hidden-form";
 import { status } from "../../common/constants/status-constants";
 
 const createOptions = (option) => {
@@ -134,6 +135,12 @@ const AddNewBookForm = ({ formik, title, buttonName }) => {
       </Box>
     </form>
   );
+};
+
+AddNewBookForm.propTypes = {
+  formik: PropTypes.object,
+  buttonName: PropTypes.string,
+  title: PropTypes.string,
 };
 
 export default AddNewBookForm;

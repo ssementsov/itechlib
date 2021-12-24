@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import {
   Box,
   Button,
@@ -11,60 +12,98 @@ import {
   TableBody,
   TableCell,
   TableRow,
-} from '@mui/material'
-import { titles } from './../../common/constants/titles-constants'
-import { styled } from '@mui/material/styles'
-import { withSnackbar } from 'notistack'
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
-import { db } from '../../../firebase'
-import { useRouter } from 'next/router'
-import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
-import CustomModal from './../custom-modal'
-import api from '../../api/books'
+} from "@mui/material";
+import { titles } from "./../../common/constants/titles-constants";
+import { styled } from "@mui/material/styles";
+import { withSnackbar } from "notistack";
+import { useRouter } from "next/router";
+import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import CustomModal from "./../custom-modal";
+import { status } from "../../common/constants/status-constants";
+import { language } from "../../common/constants/language-constants";
+import { category } from "../../common/constants/category-constants";
+import { typeModal } from "../../common/constants/modal-type-constants";
+import { Book } from "../../models/book-model";
+import { apiBooks } from "../../api/books/books";
 
 function toLowerCaseExeptFirstLetter(string) {
-  return string[0] + string.slice(1).toLowerCase()
+  return string[0] + string.slice(1).toLowerCase();
 }
 
 const TblCell = styled(TableCell)(() => ({
-  textAlign: 'left',
-  cursor: 'auto',
-  borderBottom: '1px solid #E7E8EF',
-  borderTop: '1px solid #E7E8EF',
-  padding: '5px 35px',
-}))
+  textAlign: "left",
+  cursor: "auto",
+  borderBottom: "1px solid #E7E8EF",
+  borderTop: "1px solid #E7E8EF",
+  padding: "5px 35px",
+}));
 
-const BookDetails = ({ book, enqueueSnackbar }) => {
-  const router = useRouter()
+const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
+  const router = useRouter();
 
-  const deleteBook = async () => {
-    try {
-      await api.delete(`/api/books/${book.id}`)
-      router.replace(MAIN_CATALOGUE_PATH)
-      enqueueSnackbar('Your book has been deleted successfully!', {
-        variant: 'success',
-      })
-    } catch (e) {
-      enqueueSnackbar('Something went wrong... Please retry.', {
-        variant: 'error',
-      })
+  const deleteBook = () => {
+    if (book.status.name === status.available) {
+      try {
+        apiBooks.remove(book.id);
+        router.replace(MAIN_CATALOGUE_PATH);
+        enqueueSnackbar("Your book has been deleted successfully!", {
+          variant: "success",
+        });
+      } catch {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
+      }
+    } else {
+      enqueueSnackbar(
+        "You can only delete books which are currently in “Available” status",
+        {
+          variant: "error",
+        }
+      );
     }
-  }
+  };
 
-  const editBook = async (body) => {
+  const editBook = (values) => {
     try {
-      const docRef = doc(db, 'books', book.idBook)
-      const bookUpdated = { ...body, timestamp: serverTimestamp() }
-      await updateDoc(docRef, bookUpdated)
-      enqueueSnackbar('Your book has been updated successfully!', {
-        variant: 'success',
-      })
+      let idCategory = values.category === category.professional ? 1 : 2;
+      let idLanguage = values.language === language.english ? 1 : 2;
+      let idStatus;
+      switch (values.status) {
+        case status.notAvailable:
+          idStatus = 2;
+          break;
+        case status.inUse:
+          idStatus = 3;
+          break;
+        default:
+          idStatus = 1;
+      }
+      const editBook = new Book(
+        values.id,
+        values.title,
+        values.author,
+        idCategory,
+        values.category,
+        idLanguage,
+        values.language,
+        values.link,
+        idStatus,
+        values.status,
+        values.description
+      );
+      apiBooks.put(editBook).then(() => {
+        fetchBook();
+      });
+      enqueueSnackbar("Your book has been updated successfully!", {
+        variant: "success",
+      });
     } catch (e) {
-      enqueueSnackbar('Something went wrong... Please retry.', {
-        variant: 'error',
-      })
+      enqueueSnackbar("Something went wrong... Please retry.", {
+        variant: "error",
+      });
     }
-  }
+  };
 
   return (
     <Card>
@@ -72,9 +111,9 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
         title={book.title}
         action={
           <>
-            <CustomModal whatModal={'delete book'} deleteBook={deleteBook} />
+            <CustomModal type={typeModal.delete} deleteBook={deleteBook} />
             <CustomModal
-              whatModal={'edit book'}
+              type={typeModal.edit}
               editBook={editBook}
               book={book}
             />
@@ -115,7 +154,7 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
                       target="_blank"
                       rel="noopener"
                     >
-                      {'Open site'}
+                      {"Open site"}
                     </Link>
                   </TblCell>
                 </TableRow>
@@ -128,7 +167,7 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
                       size="small"
                       readOnly
                       sx={{
-                        marginLeft: '-3px',
+                        marginLeft: "-3px",
                       }}
                     />
                   </TblCell>
@@ -150,8 +189,8 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
       </CardContent>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
+          display: "flex",
+          justifyContent: "flex-end",
           p: 2,
         }}
       >
@@ -160,7 +199,30 @@ const BookDetails = ({ book, enqueueSnackbar }) => {
         </Button>
       </Box>
     </Card>
-  )
-}
+  );
+};
 
-export default withSnackbar(BookDetails)
+BookDetails.propTypes = {
+  fetchBook: PropTypes.func,
+  book: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    category: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    language: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    description: PropTypes.string,
+    link: PropTypes.string,
+    status: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  }),
+};
+
+export default withSnackbar(BookDetails);
