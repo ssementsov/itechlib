@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.entity.User;
@@ -7,6 +8,8 @@ import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongGoogleEmailException;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.repository.UserRepository;
+import by.library.itechlibrary.service.ConfirmationDataService;
+import by.library.itechlibrary.service.MailNotificationService;
 import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
+
+    private final MailNotificationService mailNotificationService;
+
+    private final ConfirmationDataService confirmationDataService;
 
     @Override
     @Transactional
@@ -61,6 +68,10 @@ public class UserServiceImpl implements UserService {
         if (user.getGoogleEmail() == null) {
 
             user.setGoogleEmail(googleEmail);
+
+            user.setConfirmationData(confirmationDataService.create());
+
+            mailNotificationService.sent(null);
 
         } else if (!user.getGoogleEmail().equals(googleEmail)) {
 

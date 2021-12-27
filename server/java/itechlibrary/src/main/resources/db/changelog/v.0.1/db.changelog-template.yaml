@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 26122021-add-template
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: template
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subject
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(3000)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 26122021-add-column-id-template-to-mail-notification
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: mail_notification
+            columns:
+              - column:
+                  name: template_id
+                  type: BIGINT
+
+  - changeSet:
+      id:  26122021-add-ForeignKeyConstraint-template-to-mail-notification
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: template_id
+            baseTableName: mail_notification
+            constraintName: fk_mail_notification_template
+            referencedColumnNames: id
+            referencedTableName: template

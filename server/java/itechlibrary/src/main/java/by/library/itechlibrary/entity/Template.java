@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(schema = "public", name = "user")
+@Table(name = "template")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class Template {
 
     @Id
     @Column(name = "id")
@@ -22,16 +22,7 @@ public class User {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "surname")
-    private String surname;
-
-    @Column(name = "corp_email", unique = true)
-    private String corpEmail;
-
-    @Column(name = "google_email", unique = false)
-    private String googleEmail;
-
-    @OneToOne
-    private ConfirmationData confirmationData;
+    @Column(name = "text")
+    private String text;
 
 }

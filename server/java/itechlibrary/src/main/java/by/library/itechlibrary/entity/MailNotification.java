@@ -31,6 +31,10 @@ public class MailNotification {
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
+    @JoinColumn(name = "template_id")
+    private Template template;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private User user;
 
