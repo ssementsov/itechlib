@@ -39,3 +39,7 @@ spring:
       auth: true
       starttls.enable: true
       ssl.trust: smtp.gmail.com
+
+template:
+  confirm-link: http://{HOST}/api/users/confirm/google?userId={USER_ID}&code={CONFIRMATION_CODE}
+  host: localhost:8089

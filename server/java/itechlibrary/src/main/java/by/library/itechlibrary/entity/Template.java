@@ -22,6 +22,9 @@ public class Template {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "subject")
+    private String subject;
+
     @Column(name = "text")
     private String text;
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/users")
@@ -46,5 +47,14 @@ public class UserController {
     public List<UserDto> getConfirmedUsers() {
 
         return userService.getConfirmedUsers();
+    }
+
+    @GetMapping("/confirm/google")
+    @ApiOperation("check emails and connect two emails")
+    @ResponseStatus(HttpStatus.OK)
+    public void checkCorporateAndGoogleEmails(@RequestParam("userId") long userId, @RequestParam("code") UUID code) {
+
+        userService.confirmedGoogleEmail(userId, code);
+
     }
 }

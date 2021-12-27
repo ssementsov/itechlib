@@ -5,6 +5,7 @@ import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.exeption_handler.exception.WrongConfirmationCodeException;
 import by.library.itechlibrary.exeption_handler.exception.WrongGoogleEmailException;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.repository.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getConfirmedUsers(){
+    public List<UserDto> getConfirmedUsers() {
 
         log.info("Try to find users where google email is exist.");
 
@@ -63,6 +65,25 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException("The corporate email was not found."));
     }
 
+    @Transactional
+    @Override
+    public void confirmedGoogleEmail(long userId, UUID code) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("The user was not found by id = " + userId));
+
+        if (user.getConfirmationData().getCode().toString().equals(code.toString())) {
+
+            user.getConfirmationData().setActivated(true);
+
+        } else {
+
+            throw new WrongConfirmationCodeException("Confirmation code = " + code.toString() +
+                    " has been wrong.");
+
+        }
+    }
+
     private void checkAndSetGoogleEmail(User user, String googleEmail) {
 
         if (user.getGoogleEmail() == null) {
@@ -71,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
             user.setConfirmationData(confirmationDataService.create());
 
-            mailNotificationService.sent(null);
+            mailNotificationService.sent(user, MailTemplateConstant.MAIL_CONFIRMATION);
 
         } else if (!user.getGoogleEmail().equals(googleEmail)) {
 

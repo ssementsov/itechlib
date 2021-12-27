@@ -53,6 +53,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(WrongConfirmationCodeException.class)
+    public ResponseEntity<IncorrectData> handleException(WrongConfirmationCodeException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
     private IncorrectData incorrectDataFilling(Exception exception) {
 
        IncorrectData incorrectData = new IncorrectData();
