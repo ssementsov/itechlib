@@ -7,7 +7,9 @@ import { useState, useEffect, useMemo } from 'react'
 import { withSnackbar } from 'notistack'
 import { status } from '../common/constants/status-constants'
 import { Book } from '../models/book-model'
-import { apiBooks } from '../api/books/books'
+import { apiBooks } from '../api/books'
+import { category } from './../common/constants/category-constants'
+import { language } from './../common/constants/language-constants'
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -43,8 +45,8 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   }, [enqueueSnackbar])
 
   const createBook = (values) => {
-    let idCategory = values.category === 'PROFESSIONAL' ? 1 : 2
-    let idLanguage = values.language === 'ENGLISH' ? 1 : 2
+    let idCategory = values.category === category.professional ? 1 : 2
+    let idLanguage = values.language === language.english ? 1 : 2
     let idStatus
     switch (values.status) {
       case status.notAvailable:

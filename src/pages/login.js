@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { GoogleLogin } from "react-google-login";
 import { MAIN_CATALOGUE_PATH } from "../common/constants/route-constants";
@@ -8,18 +7,9 @@ import { MAIN_CATALOGUE_PATH } from "../common/constants/route-constants";
 const Login = () => {
   const router = useRouter();
 
-  const responseGoogle = (response) => {
-    let userId = JSON.stringify(response.googleId);
-    localStorage.setItem("UserId", userId);
+  const responseGoogle = () => {
     router.replace(MAIN_CATALOGUE_PATH);
   };
-
-  useEffect(() => {
-    let userId = localStorage.getItem("UserId");
-    if (userId) {
-      router.replace(MAIN_CATALOGUE_PATH);
-    }
-  });
 
   return (
     <>

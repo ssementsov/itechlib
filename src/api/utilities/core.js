@@ -14,9 +14,27 @@ export class ApiCore {
       };
     }
 
+    if (options.getGoogle) {
+      this.getGoogle = (params) => {
+        return apiProvider.getGoogle(options.url, options.id3, params);
+      };
+    }
+
     if (options.post) {
       this.post = (model) => {
         return apiProvider.post(options.url, model);
+      };
+    }
+
+    if (options.postCreds) {
+      this.postCreds = (model) => {
+        return apiProvider.postCreds(options.url, options.id2, model);
+      };
+    }
+
+    if (options.postCorp) {
+      this.postCorp = (model) => {
+        return apiProvider.postCorp(options.url, options.id, model);
       };
     }
 

@@ -1,6 +1,6 @@
-import { ApiCore } from "./utilities/core";
+import { ApiCore } from './utilities/core'
 
-const urlBooks = "books";
+const urlBooks = 'books'
 
 export const apiBooks = new ApiCore({
   getAll: true,
@@ -9,4 +9,4 @@ export const apiBooks = new ApiCore({
   put: true,
   remove: true,
   url: urlBooks,
-});
+})

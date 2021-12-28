@@ -1,29 +1,25 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useFormik } from "formik";
+import { GoogleLogin } from "react-google-login";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import {
-  LOGIN_PATH,
-  MAIN_CATALOGUE_PATH,
-} from "../common/constants/route-constants";
+import { apiUsers } from "../api/users";
+import { withSnackbar } from "notistack";
+import jwt_decode from "jwt-decode";
+import { ROOT_PATH, LOGIN_PATH } from "../common/constants/route-constants";
 
-const Register = () => {
-  const router = useRouter();
+const Register = ({ enqueueSnackbar }) => {
+  let router = useRouter();
+  const [disabledGoogle, setDisabledGoogle] = useState(true);
+  const [disabledCorp, setDisabledCorp] = useState(false);
 
   function validate(value) {
-    let arrOfEmail = [
-      "misha.mishin@itechart-group.com",
-      "ivan.ivanov@itechart-group.com",
-      "andrei.andreev@itechart-group.com",
-    ];
     let error = {};
     if (!value.email) {
       error.email = "Email is required";
     } else if (!/^[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
       error.email = "Please enter correct iTechArt email";
-    } else if (!arrOfEmail.includes(value.email)) {
-      error.email = "Your email is not registered yet";
     }
     return error;
   }
@@ -32,16 +28,61 @@ const Register = () => {
       email: "",
     },
     validate,
-    onSubmit: () => {
-      router.push(LOGIN_PATH);
+    onSubmit: (value) => {
+      apiUsers
+        .postCorp(value.email)
+        .then(() => {
+          setDisabledCorp(true);
+          setDisabledGoogle(false);
+          localStorage.setItem("corpEmail", value.email);
+        })
+        .catch(() => {
+          enqueueSnackbar("Your corporate email is not registered.", {
+            variant: "error",
+          });
+        });
     },
   });
+
+  const responseGoogle = (res) => {
+    let token = res.tokenId;
+    const responsePayload = jwt_decode(token);
+    let googleEmail = responsePayload.email;
+    let corpEmail = localStorage.getItem("corpEmail");
+
+    apiUsers
+      .postCreds({
+        corpEmail: corpEmail,
+        googleEmail: googleEmail,
+      })
+      .then((res) => {
+        console.log(res);
+        setDisabledGoogle(true);
+        enqueueSnackbar(
+          "A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.",
+          {
+            variant: "success",
+          }
+        );
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   useEffect(() => {
-    let userId = localStorage.getItem("UserId");
-    if (userId) {
-      router.replace(MAIN_CATALOGUE_PATH);
+    if (router.asPath !== ROOT_PATH) {
+      apiUsers
+        .getGoogle(router.query)
+        .then(() => router.replace(LOGIN_PATH))
+        .catch(() => {
+          enqueueSnackbar("Something went wrong... Please retry.", {
+            variant: "error",
+          });
+        });
     }
-  });
+  }, [enqueueSnackbar, router, router.query]);
+
   return (
     <>
       <Head>
@@ -68,14 +109,15 @@ const Register = () => {
             <Box
               sx={{
                 mt: 3,
-                mb: 6,
+                mb: 3,
               }}
             >
               <Typography color="textPrimary" variant="h4" textAlign="center">
-                Please enter Your iTechArt email
+                Sign up
               </Typography>
             </Box>
             <TextField
+              disabled={disabledCorp}
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
@@ -90,8 +132,8 @@ const Register = () => {
             />
             <Box
               sx={{
-                mt: 1,
-                mb: 6,
+                mt: 3,
+                mb: 2,
               }}
             >
               <Button
@@ -102,14 +144,39 @@ const Register = () => {
                 type="submit"
                 variant="contained"
               >
-                Submit
+                Confirm corporate email
               </Button>
             </Box>
           </form>
+          <Box
+            sx={{
+              mt: 1,
+              mb: 6,
+            }}
+          >
+            <GoogleLogin
+              clientId={process.env.GOOGLE_CLIENT_ID}
+              render={(renderProps) => (
+                <Button
+                  fullWidth
+                  color="error"
+                  onClick={renderProps.onClick}
+                  disabled={disabledGoogle}
+                  size="large"
+                  variant="contained"
+                >
+                  Confirm Google email
+                </Button>
+              )}
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
+          </Box>
         </Container>
       </Box>
     </>
   );
 };
 
-export default Register;
+export default withSnackbar(Register);
