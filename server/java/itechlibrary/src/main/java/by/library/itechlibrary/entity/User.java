@@ -31,6 +31,9 @@ public class User {
     @Column(name = "google_email", unique = false)
     private String googleEmail;
 
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="confirmation_id")
     private ConfirmationData confirmationData;
