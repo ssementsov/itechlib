@@ -24,28 +24,31 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     private String host;
 
     @Override
-    public void fillTemplate(User user, Template template) {
+    public String fillTemplate(User user, Template template) {
 
         String templateText = template.getText();
 
-        if(templateText.contains(MailTemplateConstant.CONFIRMATION_LINK)){
+        if (templateText.contains(MailTemplateConstant.CONFIRMATION_LINK)) {
 
-            templateText = templateText.replace(MailTemplateConstant.CONFIRMATION_LINK,  confirmLink);
+            templateText = templateText.replace(MailTemplateConstant.CONFIRMATION_LINK, confirmLink);
 
-        }else if(templateText.contains(MailTemplateConstant.USER_ID)){
+        }
+        if (templateText.contains(MailTemplateConstant.USER_ID)) {
 
-            templateText = templateText.replace(MailTemplateConstant.USER_ID,  String.valueOf(user.getId()));
+            templateText = templateText.replace(MailTemplateConstant.USER_ID, String.valueOf(user.getId()));
 
-        }else if(templateText.contains(MailTemplateConstant.HOST)){
+        }
+        if (templateText.contains(MailTemplateConstant.HOST)) {
 
-            templateText = templateText.replace(MailTemplateConstant.HOST,  host);
+            templateText = templateText.replace(MailTemplateConstant.HOST, host);
 
-        }else if(templateText.contains(MailTemplateConstant.CONFIRMATION_CODE)){
+        }
+        if (templateText.contains(MailTemplateConstant.CONFIRMATION_CODE)) {
 
-            templateText = templateText.replace(MailTemplateConstant.CONFIRMATION_CODE,  user.getConfirmationData().getCode().toString());
+            templateText = templateText.replace(MailTemplateConstant.CONFIRMATION_CODE, user.getConfirmationData().getCode().toString());
 
         }
 
-        template.setText(templateText);
+        return templateText;
     }
 }

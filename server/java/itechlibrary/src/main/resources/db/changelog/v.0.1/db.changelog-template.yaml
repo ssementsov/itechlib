@@ -21,12 +21,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: subject
-                  type: VARCHAR(100)
+                  type: VARCHAR(500)
                   constraints:
                     nullable: false
               - column:
                   name: text
-                  type: VARCHAR(3000)
+                  type: TEXT
                   constraints:
                     nullable: false
 

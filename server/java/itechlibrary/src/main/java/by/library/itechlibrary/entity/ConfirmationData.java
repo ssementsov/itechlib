@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name = "confirmation_data")
+@Table(name = "confirmation_data", schema = "public")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

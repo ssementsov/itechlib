@@ -1,10 +1,10 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.entity.ConfirmationData;
 import by.library.itechlibrary.entity.MailNotification;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.repository.MailNotificationRepository;
 import by.library.itechlibrary.repository.TemplateRepository;
 import by.library.itechlibrary.service.ConfirmationDataService;
 import by.library.itechlibrary.service.MailNotificationService;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -34,6 +35,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     private final MailTemplateService mailTemplateService;
 
+    private final MailNotificationRepository mailNotificationRepository;
+
     private final ConfirmationDataService confirmationDataService;
 
     @Value("${spring.mail.username}")
@@ -47,9 +50,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         Template template = templateRepository.findByName(templateName)
                 .orElseThrow(() -> new NotFoundException("Template has not found by name " + templateName));
 
-        user.setConfirmationData(confirmationDataService.create());
-        mailTemplateService.fillTemplate(user, template);
-        MailNotification notification = getMailNotification(user, template);
+        String text = mailTemplateService.fillTemplate(user, template);
+        MailNotification notification = getMailNotification(user, template, text);
+        mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         setDataMimeMessage(user, notification, mimeMessage);
 
@@ -57,7 +60,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     }
 
     @SneakyThrows
-    private void setDataMimeMessage(User user, MailNotification notification, MimeMessage mimeMessage){
+    private void setDataMimeMessage(User user, MailNotification notification, MimeMessage mimeMessage) {
 
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
         helper.setText(notification.getText(), true);
@@ -67,14 +70,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     }
 
-    private MailNotification getMailNotification(User user, Template template){
+    private MailNotification getMailNotification(User user, Template template, String text) {
 
         MailNotification notification = new MailNotification();
         notification.setFrom(fromMail);
+        notification.setTo(user.getGoogleEmail());
         notification.setSubject(template.getSubject());
         notification.setTemplate(template);
-        notification.setText(template.getText());
+        notification.setText(text);
         notification.setUser(user);
+        notification.setDate(LocalDateTime.now());
 
         return notification;
     }

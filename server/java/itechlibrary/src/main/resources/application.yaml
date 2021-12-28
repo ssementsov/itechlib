@@ -17,6 +17,9 @@ spring:
       ddl-auto: none
     show-sql: true
     open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -42,4 +45,4 @@ spring:
 
 template:
   confirm-link: http://{HOST}/api/users/confirm/google?userId={USER_ID}&code={CONFIRMATION_CODE}
-  host: localhost:8089
+  host: localhost:3000
