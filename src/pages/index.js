@@ -55,8 +55,7 @@ const Register = ({ enqueueSnackbar }) => {
         corpEmail: corpEmail,
         googleEmail: googleEmail,
       })
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setDisabledGoogle(true);
         enqueueSnackbar(
           "A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.",
@@ -65,13 +64,15 @@ const Register = ({ enqueueSnackbar }) => {
           }
         );
       })
-      .catch((e) => {
-        console.log(e);
+      .catch(() => {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
       });
   };
 
   useEffect(() => {
-    if (router.asPath !== ROOT_PATH) {
+    if (router.asPath !== ROOT_PATH && router.query.userId) {
       apiUsers
         .getGoogle(router.query)
         .then(() => router.replace(LOGIN_PATH))
