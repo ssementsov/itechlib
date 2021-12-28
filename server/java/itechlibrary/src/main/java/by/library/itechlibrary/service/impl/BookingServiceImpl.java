@@ -9,6 +9,7 @@ import by.library.itechlibrary.exeption_handler.exception.WrongDtoDataException;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.service.BookingService;
+import by.library.itechlibrary.service.MailNotificationService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

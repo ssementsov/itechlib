@@ -11,3 +11,12 @@ databaseChangeLog:
   - include:
       file: db.changelog-add-data.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-mail-notification.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-confirmation-data-column-to-user.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-template.yaml
+      relativeToChangelogFile: true

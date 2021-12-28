@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 25122021-add-confirmation-data
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: confirmation_data
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: code
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_activated
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 25122021-add-column-id-confirmation-to-user
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: confirmation_id
+                  type: BIGINT
+
+  - changeSet:
+      id:  25122021-add-ForeignKeyConstraint-user-to-confirmation-data
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: confirmation_id
+            baseTableName: user
+            constraintName: fk_user_confirmation
+            referencedColumnNames: id
+            referencedTableName: confirmation_data

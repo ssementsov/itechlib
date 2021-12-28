@@ -14,4 +14,6 @@ public interface UserService {
 
     List<UserDto> getConfirmedUsers();
 
+    void confirmedGoogleEmail(long userId, UUID code);
+
 }

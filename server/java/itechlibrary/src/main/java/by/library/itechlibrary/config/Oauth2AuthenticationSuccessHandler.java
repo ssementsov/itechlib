@@ -1,6 +1,7 @@
 package by.library.itechlibrary.config;
 
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.exeption_handler.exception.NotActivatedUserException;
 import by.library.itechlibrary.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.security.core.Authentication;
@@ -52,8 +53,12 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
         } else {
 
             this.currentUser = userOptional.get();
-            this.redirectStrategy.sendRedirect(request, response, "/books");
 
+            if (currentUser.getConfirmationData().isActivated()) {
+
+                this.redirectStrategy.sendRedirect(request, response, "/books");
+
+            } else throw new NotActivatedUserException("User has not been activated");
         }
     }
 
