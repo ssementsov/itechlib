@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: db.changelog-add-data-template.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-column-is-active-to-user.yaml
+      relativeToChangelogFile: true
