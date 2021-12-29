@@ -79,7 +79,7 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 response.setHeader(HttpHeaders.AUTHORIZATION, token);
 
-                //redirectStrategy.sendRedirect(request, response, "http://seasonvar.ru/serial-15615--Boruto_Novoe_Pokolenie-0-sezon.html");
+                redirectStrategy.sendRedirect(request, response, "http://localhost:3000/");
 
             } else throw new NotActivatedUserException("User has not been activated");
         }
