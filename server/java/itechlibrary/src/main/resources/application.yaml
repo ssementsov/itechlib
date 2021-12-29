@@ -46,3 +46,6 @@ spring:
 template:
   confirm-link: http://{HOST}/api/users/confirm/google?userId={USER_ID}&code={CONFIRMATION_CODE}
   host: localhost:3000
+
+jwt:
+  secret: 8b4f7dd2-9884-4b96-af62-66e25441390e
