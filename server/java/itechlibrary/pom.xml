@@ -19,6 +19,7 @@
         <mapstruct.version>1.5.0.Beta1</mapstruct.version>
         <mapstruct-lombok.version>0.2.0</mapstruct-lombok.version>
         <commons-validator.version>1.7</commons-validator.version>
+        <jjwt.version>0.9.1</jjwt.version>
         <spring-security-oauth2-autoconfigure.version>2.6.1</spring-security-oauth2-autoconfigure.version>
     </properties>
     <dependencies>
@@ -139,7 +140,7 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <version>${jjwt.version}</version>
         </dependency>
 
     </dependencies>
