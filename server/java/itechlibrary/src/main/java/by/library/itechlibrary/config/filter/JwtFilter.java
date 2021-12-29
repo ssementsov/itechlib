@@ -4,6 +4,7 @@ import by.library.itechlibrary.config.JwtProvider;
 import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -18,8 +19,9 @@ import java.io.IOException;
 
 import static io.jsonwebtoken.lang.Strings.hasText;
 
-@Component
 @RequiredArgsConstructor
+@Slf4j
+@Component
 public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
@@ -31,6 +33,8 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
+
+        log.info("jwt filter action for getting token.");
 
         String token = getTokenFromRequest((HttpServletRequest) servletRequest);
 

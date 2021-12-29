@@ -1,8 +1,8 @@
 package by.library.itechlibrary.config;
 
 
+import by.library.itechlibrary.config.filter.JwtFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -10,15 +10,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationSuccessHandler oauth2authSuccessHandler;
+
+    private final JwtFilter jwtFilter;
 
     private static final String[] SWAGGER_WHITELIST = {
             "/swagger-resources/**",
@@ -27,9 +27,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs",
     };
 
-    public WebSecurityConfig(@Qualifier("oauth2authSuccessHandler") AuthenticationSuccessHandler oauth2authSuccessHandler) {
+    public WebSecurityConfig(@Qualifier("oauth2authSuccessHandler") AuthenticationSuccessHandler oauth2authSuccessHandler,
+                             JwtFilter jwtFilter) {
 
         this.oauth2authSuccessHandler = oauth2authSuccessHandler;
+        this.jwtFilter = jwtFilter;
 
     }
 
@@ -42,13 +44,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/js/**", "/error**", "/users/check/**", "/users/confirm/**").permitAll()
+                .antMatchers("/", "/login**", "/js/**", "/error**", "/users/check/**", "/users/confirm/**", "/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                .csrf().disable()
                 .oauth2Login()
-                .successHandler(oauth2authSuccessHandler);
+                .successHandler(oauth2authSuccessHandler)
+                .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
 
     }
 
