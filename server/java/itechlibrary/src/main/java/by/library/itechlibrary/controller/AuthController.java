@@ -23,5 +23,4 @@ public class AuthController {
         return jwtProvider.generateToken(corpEmail);
 
     }
-
 }

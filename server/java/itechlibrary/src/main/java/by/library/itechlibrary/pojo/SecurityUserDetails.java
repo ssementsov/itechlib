@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+
 public class SecurityUserDetails implements UserDetails {
 
 
@@ -53,7 +54,7 @@ public class SecurityUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return corpEmail;
     }
 
     @Override
@@ -74,5 +75,15 @@ public class SecurityUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "SecurityUserDetails{" +
+                "id=" + id +
+                ", corpEmail='" + corpEmail + '\'' +
+                ", googleEmail='" + googleEmail + '\'' +
+                ", isActive=" + isActive +
+                '}';
     }
 }

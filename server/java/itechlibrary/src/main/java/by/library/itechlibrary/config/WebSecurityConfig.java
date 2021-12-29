@@ -2,13 +2,18 @@ package by.library.itechlibrary.config;
 
 
 import by.library.itechlibrary.config.filter.JwtFilter;
+import by.library.itechlibrary.exeption_handler.SecurityAuthenticationFailureHandler;
+import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,6 +25,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtFilter jwtFilter;
 
+    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
+
     private static final String[] SWAGGER_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui.html",
@@ -28,10 +35,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     };
 
     public WebSecurityConfig(@Qualifier("oauth2authSuccessHandler") AuthenticationSuccessHandler oauth2authSuccessHandler,
-                             JwtFilter jwtFilter) {
+                             JwtFilter jwtFilter, SecurityUserDetailsServiceImpl securityUserDetailsService) {
 
         this.oauth2authSuccessHandler = oauth2authSuccessHandler;
         this.jwtFilter = jwtFilter;
+        this.securityUserDetailsService = securityUserDetailsService;
 
     }
 
@@ -39,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -48,11 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                .oauth2Login()
-                .successHandler(oauth2authSuccessHandler)
-                .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .oauth2Login().successHandler(oauth2authSuccessHandler).failureHandler(authenticationFailureHandler()).permitAll();
 
     }
 
@@ -61,5 +66,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         web.ignoring().antMatchers(SWAGGER_WHITELIST);
 
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new
+                DaoAuthenticationProvider();
+
+        daoAuthenticationProvider.setUserDetailsService(securityUserDetailsService);
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new SecurityAuthenticationFailureHandler();
     }
 }

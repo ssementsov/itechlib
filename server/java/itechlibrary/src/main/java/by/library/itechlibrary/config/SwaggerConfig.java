@@ -28,7 +28,7 @@ public class SwaggerConfig {
     @Bean
     public SecurityConfiguration security() {
 
-        return new SecurityConfiguration(null, null, null, "Internship", "Bearer", ApiKeyVehicle.HEADER, "Authorization", ",");
+        return new SecurityConfiguration(null, null, null, "ITechLib", "Bearer", ApiKeyVehicle.HEADER, "Authorization", ",");
     }
 
     private SecurityContext securityContext() {

@@ -72,13 +72,14 @@ public class Oauth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
                 String token = jwtProvider.generateToken(currentUser.getCorpEmail());
 
-                SecurityUserDetails securityUserDetails = (SecurityUserDetails) securityUserDetailsService.loadUserByUsername(currentUser.getCorpEmail());
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null);
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                SecurityUserDetails securityUserDetails = (SecurityUserDetails) securityUserDetailsService
+                        .loadUserByUsername(currentUser.getCorpEmail());
 
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null, null);
+                SecurityContextHolder.getContext().setAuthentication(auth);
                 response.setHeader(HttpHeaders.AUTHORIZATION, token);
 
-                this.redirectStrategy.sendRedirect(request, response, "/books");
+                //redirectStrategy.sendRedirect(request, response, "http://seasonvar.ru/serial-15615--Boruto_Novoe_Pokolenie-0-sezon.html");
 
             } else throw new NotActivatedUserException("User has not been activated");
         }

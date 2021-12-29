@@ -42,7 +42,7 @@ public class JwtFilter extends GenericFilterBean {
 
             String userCorpEmail = jwtProvider.getLoginFromToken(token);
             SecurityUserDetails securityUserDetails = (SecurityUserDetails) securityUserDetailsService.loadUserByUsername(userCorpEmail);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null);
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null, null);
             SecurityContextHolder.getContext().setAuthentication(auth);
 
         }
