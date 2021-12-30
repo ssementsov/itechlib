@@ -28,6 +28,7 @@ public class AuthController {
 
         OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
         String email = authenticationToken.getPrincipal().getAttributes().get("email").toString();
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + email );
 
         return email;
 
