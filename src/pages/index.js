@@ -76,8 +76,7 @@ const Register = ({ enqueueSnackbar }) => {
     if (router.asPath !== ROOT_PATH && router.query.userId) {
       apiUsers
         .getGoogle(router.query)
-        .then((r) => {
-          console.log(r)
+        .then(() => {
           router.replace(LOGIN_PATH)
         })
         .catch(() => {

@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import { GoogleLogin } from 'react-google-login'
 import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants'
+import { apiUsers } from '../api/users'
 
 const Login = () => {
   const router = useRouter()
@@ -12,6 +13,11 @@ const Login = () => {
     let token = res.accessToken
     localStorage.setItem('token', token)
     router.replace(MAIN_CATALOGUE_PATH)
+
+    apiUsers
+      .getAuth()
+      .then((res) => console.log(res))
+      .catch((e) => console.log(e))
   }
 
   return (

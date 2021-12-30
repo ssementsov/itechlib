@@ -19,6 +19,11 @@ export class ApiCore {
         return apiProvider.getGoogle(options.url, options.id3, params)
       }
     }
+    if (options.getAuth) {
+      this.getAuth = () => {
+        return apiProvider.getAuth(options.id4)
+      }
+    }
 
     if (options.post) {
       this.post = (model) => {
