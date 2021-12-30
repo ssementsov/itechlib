@@ -57,7 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
-                .oauth2Login().successHandler(oauth2authSuccessHandler).failureHandler(authenticationFailureHandler()).permitAll();
+                .oauth2Login().successHandler(oauth2authSuccessHandler)
+                .failureHandler(authenticationFailureHandler()).permitAll();
 
     }
 
