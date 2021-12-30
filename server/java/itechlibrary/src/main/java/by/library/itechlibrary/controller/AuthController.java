@@ -23,7 +23,7 @@ public class AuthController {
 
     }
 
-    @GetMapping
+    @PostMapping
     public String auth(@RequestBody Authentication authentication) {
 
         OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
