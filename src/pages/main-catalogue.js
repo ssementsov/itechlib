@@ -31,8 +31,9 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   }, [books, search])
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
     apiBooks
-      .getAll()
+      .getAll(token)
       .then((res) => {
         setBooks(res.data)
         setIsLoaded(true)

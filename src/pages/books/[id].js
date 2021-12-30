@@ -90,7 +90,8 @@ BookPreviewPage.getLayout = (page) => {
 export default withSnackbar(BookPreviewPage)
 
 export async function getServerSideProps({ params }) {
-  const res = await apiBooks.getSingle(params.id)
+  const token = localStorage.getItem('token')
+  const res = await apiBooks.getSingle(params.id, token)
   const initialeBook = await res.data
 
   if (!initialeBook) {
