@@ -15,13 +15,13 @@ public class AuthController {
 
     private final JwtProvider jwtProvider;
 
-
-    @PostMapping
-    public String getToken(@RequestBody String corpEmail) {
-
-        return jwtProvider.generateToken(corpEmail);
-
-    }
+//
+//    @PostMapping
+//    public String getToken(@RequestBody String corpEmail) {
+//
+//        return jwtProvider.generateToken(corpEmail);
+//
+//    }
 
     @PostMapping
     public String auth(@RequestBody Authentication authentication) {
