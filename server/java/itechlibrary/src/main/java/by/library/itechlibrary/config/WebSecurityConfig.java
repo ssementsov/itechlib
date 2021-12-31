@@ -21,8 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final AuthenticationSuccessHandler oauth2authSuccessHandler;
-
     private final JwtFilter jwtFilter;
 
     private final SecurityUserDetailsServiceImpl securityUserDetailsService;
@@ -34,10 +32,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs",
     };
 
-    public WebSecurityConfig(@Qualifier("oauth2authSuccessHandler") AuthenticationSuccessHandler oauth2authSuccessHandler,
-                             JwtFilter jwtFilter, SecurityUserDetailsServiceImpl securityUserDetailsService) {
+    public WebSecurityConfig(JwtFilter jwtFilter, SecurityUserDetailsServiceImpl securityUserDetailsService) {
 
-        this.oauth2authSuccessHandler = oauth2authSuccessHandler;
         this.jwtFilter = jwtFilter;
         this.securityUserDetailsService = securityUserDetailsService;
 
@@ -55,8 +51,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/js/**", "/error**", "/users/check/**", "/users/confirm/**", "/auth/**").permitAll()
                 .anyRequest().authenticated()
-                .and().logout().logoutSuccessUrl("/").permitAll();
-                //.and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 //                .and()
 //                .oauth2Login().successHandler(oauth2authSuccessHandler)
 //                .failureHandler(authenticationFailureHandler()).permitAll();

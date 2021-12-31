@@ -22,7 +22,7 @@ import static io.jsonwebtoken.lang.Strings.hasText;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class JwtFilter  {
+public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
 
@@ -30,7 +30,7 @@ public class JwtFilter  {
 
     private final SecurityUserDetailsServiceImpl  securityUserDetailsService;
 
-//    @Override
+    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
 

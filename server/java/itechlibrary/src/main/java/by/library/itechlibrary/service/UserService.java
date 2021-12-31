@@ -10,7 +10,7 @@ public interface UserService {
 
     void checkEmails(EmailCheckerDto emailCheckerDto);
 
-    User checkCorporateEmail(String email);
+    User getUserCorporateEmail(String email);
 
     List<UserDto> getConfirmedUsers();
 
