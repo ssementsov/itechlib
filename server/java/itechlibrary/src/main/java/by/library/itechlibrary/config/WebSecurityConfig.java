@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .httpBasic().disable()
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -55,10 +55,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/js/**", "/error**", "/users/check/**", "/users/confirm/**", "/auth/**").permitAll()
                 .anyRequest().authenticated()
-                .and().logout().logoutSuccessUrl("/").permitAll()
-                .and()
-                .oauth2Login().successHandler(oauth2authSuccessHandler)
-                .failureHandler(authenticationFailureHandler()).permitAll();
+                .and().logout().logoutSuccessUrl("/").permitAll();
+                //.and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//                .and()
+//                .oauth2Login().successHandler(oauth2authSuccessHandler)
+//                .failureHandler(authenticationFailureHandler()).permitAll();
 
     }
 

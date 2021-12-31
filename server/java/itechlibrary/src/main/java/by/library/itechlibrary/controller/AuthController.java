@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/auth")
 @Api(tags = "Authorization controller")
@@ -24,13 +26,11 @@ public class AuthController {
 //    }
 
     @PostMapping
-    public String auth(@RequestBody Authentication authentication) {
+    public String auth(HttpServletRequest httpServletRequest) {
 
-        OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
-        String email = authenticationToken.getPrincipal().getAttributes().get("email").toString();
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + email );
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        return email;
+        return "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OK!!!!!!!!!!!!!!!!!!";
 
     }
 }
