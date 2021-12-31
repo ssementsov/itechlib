@@ -20,8 +20,8 @@ const getGoogle = (resource, id3, params) => {
   })
 }
 
-const getAuth = (id4) => {
-  return axios.get(`${BASE_URL}/${id4}`)
+const postAuth = (id4, bodyGoogle) => {
+  return axios.post(`${BASE_URL}/${id4}`, bodyGoogle)
 }
 
 const post = (resource, model) => {
@@ -50,7 +50,7 @@ export const apiProvider = {
   getAll,
   getSingle,
   getGoogle,
-  getAuth,
+  postAuth,
   post,
   postCreds,
   postCorp,

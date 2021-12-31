@@ -8,7 +8,7 @@ const urlAuth = 'auth'
 
 export const apiUsers = new ApiCore({
   getGoogle: true,
-  getAuth: true,
+  postAuth: true,
   post: true,
   postCreds: true,
   postCorp: true,

@@ -19,9 +19,9 @@ export class ApiCore {
         return apiProvider.getGoogle(options.url, options.id3, params)
       }
     }
-    if (options.getAuth) {
-      this.getAuth = () => {
-        return apiProvider.getAuth(options.id4)
+    if (options.postAuth) {
+      this.postAuth = (bodyGoogle) => {
+        return apiProvider.postAuth(options.id4, bodyGoogle)
       }
     }
 
