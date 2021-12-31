@@ -9,13 +9,14 @@ const Login = () => {
   const router = useRouter()
 
   const responseGoogle = (res) => {
-    let token = res.accessToken
-    localStorage.setItem('token', token)
     router.replace(MAIN_CATALOGUE_PATH)
 
     apiUsers
       .postAuth(res)
-      .then((res) => console.log(res))
+      .then((res) => {
+        let token = res.data
+        localStorage.setItem('token', token)
+      })
       .catch((e) => console.log(e))
   }
 

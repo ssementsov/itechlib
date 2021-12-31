@@ -32,6 +32,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
+    console.log(token)
     apiBooks
       .getAll(token)
       .then((res) => {
