@@ -2,28 +2,30 @@ package by.library.itechlibrary.config;
 
 
 import by.library.itechlibrary.config.filter.JwtFilter;
-import by.library.itechlibrary.exeption_handler.SecurityAuthenticationFailureHandler;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandler;
+import org.springframework.security.web.firewall.RequestRejectedHandler;
 
-@EnableWebSecurity
+
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtFilter jwtFilter;
 
     private final SecurityUserDetailsServiceImpl securityUserDetailsService;
+
 
     private static final String[] SWAGGER_WHITELIST = {
             "/swagger-resources/**",
@@ -43,21 +45,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .cors()
                 .and()
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/js/**", "/error**", "/users/check/**", "/users/confirm/**", "/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
-                .and().addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//                .and()
-//                .oauth2Login().successHandler(oauth2authSuccessHandler)
-//                .failureHandler(authenticationFailureHandler()).permitAll();
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().headers()
+                .defaultsDisabled()
+                .cacheControl();
+
+
+        http
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     }
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -67,16 +72,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new
-                DaoAuthenticationProvider();
-
-        daoAuthenticationProvider.setUserDetailsService(securityUserDetailsService);
-        return daoAuthenticationProvider;
+    RequestRejectedHandler requestRejectedHandler() {
+        return new HttpStatusRequestRejectedHandler();
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new SecurityAuthenticationFailureHandler();
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

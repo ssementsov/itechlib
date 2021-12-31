@@ -45,7 +45,15 @@ public class AuthController {
     @PostMapping
     public String auth(@RequestBody AuthDto authJSON) {
 
-        Optional<User> userOptional = userRepository.findByGoogleEmail(authJSON.getEmail());
+        Optional<User> userOptional;
+
+       if(authJSON.getEmail() != null) {
+
+            userOptional = userRepository.findByGoogleEmail(authJSON.getEmail());
+
+       }else{
+           throw new NotFoundException("Email field is empty");
+       }
 
         if (userOptional.isEmpty()) {
 
