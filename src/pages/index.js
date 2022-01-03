@@ -57,6 +57,7 @@ const Register = ({ enqueueSnackbar }) => {
       })
       .then(() => {
         setDisabledGoogle(true)
+        localStorage.setItem('googleEmail', googleEmail)
         localStorage.removeItem('corpEmail')
         enqueueSnackbar(
           'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
@@ -125,7 +126,7 @@ const Register = ({ enqueueSnackbar }) => {
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
+              label="Please enter Your corporate email here"
               margin="normal"
               name="email"
               onBlur={formik.handleBlur}

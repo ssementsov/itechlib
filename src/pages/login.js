@@ -1,23 +1,37 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { Box, Button, Container, Grid, Typography } from '@mui/material'
 import { GoogleLogin } from 'react-google-login'
 import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants'
 import { apiUsers } from '../api/users'
+import { useTheme } from '@mui/material/styles'
+import { withSnackbar } from 'notistack'
 
-const Login = () => {
+const Login = ({ enqueueSnackbar }) => {
+  let theme = useTheme()
   const router = useRouter()
+  const [loggedIn, setLoggedIn] = useState(true)
 
   const responseGoogle = (res) => {
-    router.replace(MAIN_CATALOGUE_PATH)
-
-    apiUsers
-      .postAuth(res)
-      .then((res) => {
-        let token = res.data
-        localStorage.setItem('token', token)
-      })
-      .catch((e) => console.log(e))
+    let googleEmail = localStorage.getItem('googleEmail')
+    if (res.profileObj.email === googleEmail) {
+      apiUsers
+        .postAuth(res)
+        .then((res) => {
+          let token = res.data
+          localStorage.setItem('token', token)
+          router.replace(MAIN_CATALOGUE_PATH)
+          setLoggedIn(true)
+        })
+        .catch(function () {
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
+          })
+        })
+    } else {
+      setLoggedIn(false)
+    }
   }
 
   return (
@@ -50,10 +64,18 @@ const Login = () => {
               }}
             >
               <Typography color="textPrimary" variant="h4">
-                Proceed with
+                Log in with Google account
               </Typography>
-              <Typography color="textPrimary" variant="h4">
-                Your Google account
+              <Typography
+                color={loggedIn ? 'textPrimary' : theme.palette.error.main}
+                variant="body1"
+                sx={{
+                  mt: 5,
+                }}
+              >
+                {loggedIn
+                  ? 'Your Google account has been confirmed successfully'
+                  : 'Please select Google account which You provided on sign up'}
               </Typography>
             </Box>
             <Grid
@@ -76,7 +98,7 @@ const Login = () => {
                       size="large"
                       variant="contained"
                     >
-                      Login with Google
+                      Log in with Google
                     </Button>
                   )}
                   onSuccess={responseGoogle}
@@ -92,4 +114,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default withSnackbar(Login)

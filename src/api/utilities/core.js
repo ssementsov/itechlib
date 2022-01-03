@@ -26,8 +26,8 @@ export class ApiCore {
     }
 
     if (options.post) {
-      this.post = (model) => {
-        return apiProvider.post(options.url, model)
+      this.post = (model, token) => {
+        return apiProvider.post(options.url, model, token)
       }
     }
 
@@ -44,14 +44,14 @@ export class ApiCore {
     }
 
     if (options.put) {
-      this.put = (model) => {
-        return apiProvider.put(options.url, model)
+      this.put = (model, token) => {
+        return apiProvider.put(options.url, model, token)
       }
     }
 
     if (options.remove) {
-      this.remove = (id) => {
-        return apiProvider.remove(options.url, id)
+      this.remove = (id, token) => {
+        return apiProvider.remove(options.url, id, token)
       }
     }
   }
