@@ -1,66 +1,68 @@
-import React from "react";
-import { useRouter } from "next/router";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import { AppBar, Avatar, Box, IconButton, Toolbar } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
-import Logout from "@mui/icons-material/Logout";
-import { GoogleLogout } from "react-google-login";
-import { LOGIN_PATH } from "../common/constants/route-constants";
+import React from 'react'
+import { useRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import { styled } from '@mui/material/styles'
+import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Divider from '@mui/material/Divider'
+import Logout from '@mui/icons-material/Logout'
+import { GoogleLogout } from 'react-google-login'
+import { LOGIN_PATH } from '../common/constants/route-constants'
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3],
-}));
+}))
 
 const styleForMenu = {
   elevation: 0,
   sx: {
-    width: "150px",
-    overflow: "visible",
-    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+    width: '150px',
+    overflow: 'visible',
+    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
     mt: 1.5,
-    "& .MuiAvatar-root": {
+    '& .MuiAvatar-root': {
       width: 32,
       height: 32,
       ml: -0.5,
       mr: 1,
     },
-    "&:before": {
+    '&:before': {
       content: '""',
-      display: "block",
-      position: "absolute",
+      display: 'block',
+      position: 'absolute',
       top: 0,
       right: 14,
       width: 10,
       height: 10,
-      bgcolor: "background.paper",
-      transform: "translateY(-50%) rotate(45deg)",
+      bgcolor: 'background.paper',
+      transform: 'translateY(-50%) rotate(45deg)',
       zIndex: 0,
     },
   },
-};
+}
 
 export const DashboardNavbar = (props) => {
-  const router = useRouter();
-  const { onSidebarOpen, ...other } = props;
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const router = useRouter()
+  const { onSidebarOpen, ...other } = props
+  const [anchorEl, setAnchorEl] = React.useState(null)
+  const open = Boolean(anchorEl)
+  const avatar = localStorage.getItem('avatar')
+
   const handleHover = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const handleLogout = () => {
-    localStorage.removeItem("UserId");
-    router.replace(LOGIN_PATH);
-  };
+    localStorage.removeItem('token')
+    router.replace(LOGIN_PATH)
+  }
 
   return (
     <>
@@ -70,7 +72,7 @@ export const DashboardNavbar = (props) => {
             lg: 280,
           },
           width: {
-            lg: "calc(100% - 280px)",
+            lg: 'calc(100% - 280px)',
           },
         }}
         {...other}
@@ -87,16 +89,17 @@ export const DashboardNavbar = (props) => {
             onClick={onSidebarOpen}
             sx={{
               display: {
-                xs: "inline-flex",
-                lg: "none",
+                xs: 'inline-flex',
+                lg: 'none',
               },
             }}
           >
             <MenuIcon fontSize="small" />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
-          <IconButton onMouseEnter={handleHover} size="small" sx={{ ml: 2 }}>
+          <IconButton onClick={handleHover} size="small" sx={{ ml: 2 }}>
             <Avatar
+              src={avatar}
               sx={{
                 height: 40,
                 width: 40,
@@ -110,11 +113,11 @@ export const DashboardNavbar = (props) => {
             onClose={handleClose}
             onClick={handleClose}
             PaperProps={{ ...styleForMenu }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
             <MenuItem>
-              <Avatar /> Profile
+              <Avatar src={avatar} /> Profile
             </MenuItem>
             <Divider />
             <GoogleLogout
@@ -136,9 +139,9 @@ export const DashboardNavbar = (props) => {
         </Toolbar>
       </DashboardNavbarRoot>
     </>
-  );
-};
+  )
+}
 
 DashboardNavbar.propTypes = {
   onSidebarOpen: PropTypes.func,
-};
+}

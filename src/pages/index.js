@@ -1,16 +1,16 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useFormik } from 'formik'
 import { GoogleLogin } from 'react-google-login'
 import { Box, Button, Container, TextField, Typography } from '@mui/material'
 import { apiUsers } from '../api/users'
 import { withSnackbar } from 'notistack'
 import jwt_decode from 'jwt-decode'
-import { ROOT_PATH, LOGIN_PATH } from '../common/constants/route-constants'
+import { LOGIN_PATH } from '../common/constants/route-constants'
 
 const Register = ({ enqueueSnackbar }) => {
-  let router = useRouter()
+  const router = useRouter()
   const [disabledGoogle, setDisabledGoogle] = useState(true)
   const [disabledCorp, setDisabledCorp] = useState(false)
 
@@ -35,6 +35,12 @@ const Register = ({ enqueueSnackbar }) => {
           setDisabledCorp(true)
           setDisabledGoogle(false)
           localStorage.setItem('corpEmail', value.email)
+          enqueueSnackbar(
+            'Your corporate email was confirmed successfully. You can proceed with your Google account.',
+            {
+              variant: 'success',
+            }
+          )
         })
         .catch(() => {
           enqueueSnackbar('Your corporate email is not registered.', {
@@ -55,16 +61,19 @@ const Register = ({ enqueueSnackbar }) => {
         corpEmail: corpEmail,
         googleEmail: googleEmail,
       })
-      .then(() => {
-        setDisabledGoogle(true)
+      .then((res) => {
         localStorage.setItem('googleEmail', googleEmail)
-        localStorage.removeItem('corpEmail')
-        enqueueSnackbar(
-          'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
-          {
-            variant: 'success',
-          }
-        )
+        if (res.data === process.env.CONFIRMATION_MAIL_WAS_SENT) {
+          setDisabledGoogle(true)
+          enqueueSnackbar(
+            'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
+            {
+              variant: 'success',
+            }
+          )
+        } else {
+          router.replace(LOGIN_PATH)
+        }
       })
       .catch(() => {
         enqueueSnackbar('Something went wrong... Please retry.', {
@@ -72,21 +81,6 @@ const Register = ({ enqueueSnackbar }) => {
         })
       })
   }
-
-  useEffect(() => {
-    if (router.asPath !== ROOT_PATH && router.query.userId) {
-      apiUsers
-        .getGoogle(router.query)
-        .then(() => {
-          router.replace(LOGIN_PATH)
-        })
-        .catch(() => {
-          enqueueSnackbar('Something went wrong... Please retry.', {
-            variant: 'error',
-          })
-        })
-    }
-  }, [enqueueSnackbar, router, router.query])
 
   return (
     <>
