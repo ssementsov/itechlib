@@ -9,13 +9,12 @@ import java.util.Collection;
 
 public class SecurityUserDetails implements UserDetails {
 
-
     private long id;
     private String corpEmail;
     private String googleEmail;
     private boolean isActive;
 
-    public static SecurityUserDetails fromUserEntityToCustomUserDetails(User user) {
+    public static SecurityUserDetails fromUserToUserDetails(User user) {
 
         SecurityUserDetails scUser = new SecurityUserDetails();
         scUser.id = user.getId();

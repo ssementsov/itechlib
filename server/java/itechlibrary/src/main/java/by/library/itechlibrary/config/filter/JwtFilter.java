@@ -1,12 +1,9 @@
 package by.library.itechlibrary.config.filter;
 
 import by.library.itechlibrary.config.JwtProvider;
-import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -36,17 +33,10 @@ public class JwtFilter extends OncePerRequestFilter {
         log.info("jwt filter action for getting token.");
 
         String token = getTokenFromRequest(request);
-
-        if (token != null && jwtProvider.validateToken(token)) {
-
-            String userCorpEmail = jwtProvider.getLoginFromToken(token);
-            SecurityUserDetails securityUserDetails = (SecurityUserDetails) securityUserDetailsService.loadUserByUsername(userCorpEmail);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null, null);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-        }
+        checkTokenAndSetUserDetailsToSecurityContext(token);
 
         filterChain.doFilter(request, response);
+
     }
 
 
@@ -62,5 +52,15 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         return null;
+    }
+
+    private void checkTokenAndSetUserDetailsToSecurityContext(String token){
+
+        if (token != null && jwtProvider.validateToken(token)) {
+
+            String userCorpEmail = jwtProvider.getLoginFromToken(token);
+            securityUserDetailsService.setUserDetailsToContext(userCorpEmail);
+
+        }
     }
 }

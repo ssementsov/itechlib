@@ -24,10 +24,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtFilter jwtFilter;
 
-    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
-
 
     private static final String[] SWAGGER_WHITELIST = {
+
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
@@ -37,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public WebSecurityConfig(JwtFilter jwtFilter, SecurityUserDetailsServiceImpl securityUserDetailsService) {
 
         this.jwtFilter = jwtFilter;
-        this.securityUserDetailsService = securityUserDetailsService;
 
     }
 
@@ -65,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
 
         web.ignoring().antMatchers(SWAGGER_WHITELIST);
 
@@ -73,12 +71,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     RequestRejectedHandler requestRejectedHandler() {
+
         return new HttpStatusRequestRejectedHandler();
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
+
         return super.authenticationManagerBean();
     }
 }

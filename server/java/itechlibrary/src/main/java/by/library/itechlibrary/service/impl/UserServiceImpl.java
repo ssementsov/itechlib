@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.MailConfirmationConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void checkEmails(EmailCheckerDto emailCheckerDto) {
+    public String checkEmails(EmailCheckerDto emailCheckerDto) {
 
         log.info("Try to check corp email.");
 
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Try to check and set google email.");
 
-        checkAndSetGoogleEmail(user, googleEmail);
+       return checkAndSetGoogleEmail(user, googleEmail);
 
     }
 
@@ -84,20 +85,20 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void checkAndSetGoogleEmail(User user, String googleEmail) {
+    private String checkAndSetGoogleEmail(User user, String googleEmail) {
 
-        if (user.getGoogleEmail() == null) {
+        if (user.getGoogleEmail() == null || (user.getConfirmationData() != null && !user.getConfirmationData().isActivated())) {
 
             user.setGoogleEmail(googleEmail);
-
             user.setConfirmationData(confirmationDataService.create());
-
             mailNotificationService.sent(user, MailTemplateConstant.MAIL_CONFIRMATION);
+
+            return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_SENT;
 
         } else if (!user.getGoogleEmail().equals(googleEmail)) {
 
             throw new WrongGoogleEmailException("This User already has a different google address.");
 
-        }
+        }else return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_NOT_SENT;
     }
 }

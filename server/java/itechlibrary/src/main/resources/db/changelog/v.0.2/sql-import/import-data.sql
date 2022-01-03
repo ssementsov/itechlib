@@ -42,7 +42,7 @@ VALUES ('MAIL_CONFIRMATION_TEMPLATE', 'Confirmation of registration ITechLib', '
                                                                 <tr>
                                                                     <td align="center"><span
                                                                             style="background: #ffffff;"><a
-                                                                                href="http://{HOST}?userId={USER_ID}&code={CONFIRMATION_CODE}"
+                                                                                href="http://{HOST}/login?userId={USER_ID}&code={CONFIRMATION_CODE}"
                                                                                 target="_blank"
                                                                                 style="background: #ffffff; border-color: #ffffff;">Confirm</a></span>
                                                                     </td>
