@@ -19,6 +19,4 @@ class BookControllerTest {
     @MockBean
     private BookService bookService;
 
-
-
 }

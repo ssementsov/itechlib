@@ -8,7 +8,7 @@ import java.util.*;
 
 public interface UserService {
 
-    void checkEmails(EmailCheckerDto emailCheckerDto);
+    String checkEmails(EmailCheckerDto emailCheckerDto);
 
     User getUserCorporateEmail(String email);
 
