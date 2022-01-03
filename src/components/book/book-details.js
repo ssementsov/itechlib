@@ -40,11 +40,12 @@ const TblCell = styled(TableCell)(() => ({
 
 const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
   const router = useRouter()
+  const token = localStorage.getItem('token')
 
   const deleteBook = () => {
     if (book.status.name === status.available) {
       try {
-        apiBooks.remove(book.id)
+        apiBooks.remove(book.id, token)
         router.replace(MAIN_CATALOGUE_PATH)
         enqueueSnackbar('Your book has been deleted successfully!', {
           variant: 'success',
@@ -92,7 +93,7 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
         values.status,
         values.description
       )
-      apiBooks.put(editBook).then(() => {
+      apiBooks.put(editBook, token).then(() => {
         fetchBook()
       })
       enqueueSnackbar('Your book has been updated successfully!', {

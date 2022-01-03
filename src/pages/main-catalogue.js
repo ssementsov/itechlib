@@ -31,8 +31,9 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   }, [books, search])
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
     apiBooks
-      .getAll()
+      .getAll(token)
       .then((res) => {
         setBooks(res.data)
         setIsLoaded(true)
@@ -48,6 +49,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
     let idCategory = values.category === category.professional ? 1 : 2
     let idLanguage = values.language === language.english ? 1 : 2
     let idStatus
+    const token = localStorage.getItem('token')
     switch (values.status) {
       case status.notAvailable:
         idStatus = 2
@@ -73,7 +75,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
     )
 
     apiBooks
-      .post(newBook)
+      .post(newBook, token)
       .then(function (res) {
         enqueueSnackbar('Your book has been added successfully!', {
           variant: 'success',

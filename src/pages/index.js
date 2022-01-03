@@ -1,54 +1,54 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { useFormik } from "formik";
-import { GoogleLogin } from "react-google-login";
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { apiUsers } from "../api/users";
-import { withSnackbar } from "notistack";
-import jwt_decode from "jwt-decode";
-import { ROOT_PATH, LOGIN_PATH } from "../common/constants/route-constants";
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
+import { useFormik } from 'formik'
+import { GoogleLogin } from 'react-google-login'
+import { Box, Button, Container, TextField, Typography } from '@mui/material'
+import { apiUsers } from '../api/users'
+import { withSnackbar } from 'notistack'
+import jwt_decode from 'jwt-decode'
+import { ROOT_PATH, LOGIN_PATH } from '../common/constants/route-constants'
 
 const Register = ({ enqueueSnackbar }) => {
-  let router = useRouter();
-  const [disabledGoogle, setDisabledGoogle] = useState(true);
-  const [disabledCorp, setDisabledCorp] = useState(false);
+  let router = useRouter()
+  const [disabledGoogle, setDisabledGoogle] = useState(true)
+  const [disabledCorp, setDisabledCorp] = useState(false)
 
   function validate(value) {
-    let error = {};
+    let error = {}
     if (!value.email) {
-      error.email = "Email is required";
+      error.email = 'Email is required'
     } else if (!/^[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
-      error.email = "Please enter correct iTechArt email";
+      error.email = 'Please enter correct iTechArt email'
     }
-    return error;
+    return error
   }
   const formik = useFormik({
     initialValues: {
-      email: "",
+      email: '',
     },
     validate,
     onSubmit: (value) => {
       apiUsers
         .postCorp(value.email)
         .then(() => {
-          setDisabledCorp(true);
-          setDisabledGoogle(false);
-          localStorage.setItem("corpEmail", value.email);
+          setDisabledCorp(true)
+          setDisabledGoogle(false)
+          localStorage.setItem('corpEmail', value.email)
         })
         .catch(() => {
-          enqueueSnackbar("Your corporate email is not registered.", {
-            variant: "error",
-          });
-        });
+          enqueueSnackbar('Your corporate email is not registered.', {
+            variant: 'error',
+          })
+        })
     },
-  });
+  })
 
   const responseGoogle = (res) => {
-    let token = res.tokenId;
-    const responsePayload = jwt_decode(token);
-    let googleEmail = responsePayload.email;
-    let corpEmail = localStorage.getItem("corpEmail");
+    let token = res.tokenId
+    const responsePayload = jwt_decode(token)
+    let googleEmail = responsePayload.email
+    let corpEmail = localStorage.getItem('corpEmail')
 
     apiUsers
       .postCreds({
@@ -56,33 +56,37 @@ const Register = ({ enqueueSnackbar }) => {
         googleEmail: googleEmail,
       })
       .then(() => {
-        setDisabledGoogle(true);
+        setDisabledGoogle(true)
+        localStorage.setItem('googleEmail', googleEmail)
+        localStorage.removeItem('corpEmail')
         enqueueSnackbar(
-          "A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.",
+          'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
           {
-            variant: "success",
+            variant: 'success',
           }
-        );
+        )
       })
       .catch(() => {
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        });
-      });
-  };
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        })
+      })
+  }
 
   useEffect(() => {
     if (router.asPath !== ROOT_PATH && router.query.userId) {
       apiUsers
         .getGoogle(router.query)
-        .then(() => router.replace(LOGIN_PATH))
+        .then(() => {
+          router.replace(LOGIN_PATH)
+        })
         .catch(() => {
-          enqueueSnackbar("Something went wrong... Please retry.", {
-            variant: "error",
-          });
-        });
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
+          })
+        })
     }
-  }, [enqueueSnackbar, router, router.query]);
+  }, [enqueueSnackbar, router, router.query])
 
   return (
     <>
@@ -92,18 +96,18 @@ const Register = ({ enqueueSnackbar }) => {
       <Box
         component="main"
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           flexGrow: 1,
-          minHeight: "100%",
+          minHeight: '100%',
         }}
       >
         <Container
           maxWidth="sm"
           sx={{
-            border: "1px solid #838E9F",
-            boxShadow: "2px 2px 4px #838E9F",
-            borderRadius: "25px",
+            border: '1px solid #838E9F',
+            boxShadow: '2px 2px 4px #838E9F',
+            borderRadius: '25px',
           }}
         >
           <form onSubmit={formik.handleSubmit}>
@@ -122,7 +126,7 @@ const Register = ({ enqueueSnackbar }) => {
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
+              label="Please enter Your corporate email here"
               margin="normal"
               name="email"
               onBlur={formik.handleBlur}
@@ -171,13 +175,13 @@ const Register = ({ enqueueSnackbar }) => {
               )}
               onSuccess={responseGoogle}
               onFailure={responseGoogle}
-              cookiePolicy={"single_host_origin"}
+              cookiePolicy={'single_host_origin'}
             />
           </Box>
         </Container>
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default withSnackbar(Register);
+export default withSnackbar(Register)

@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Try to check corp email.");
 
-        User user = checkCorporateEmail(emailCheckerDto.getCorpEmail());
+        User user = getUserCorporateEmail(emailCheckerDto.getCorpEmail());
         String googleEmail = emailCheckerDto.getGoogleEmail();
 
         log.info("Try to check and set google email.");
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User checkCorporateEmail(String email) {
+    public User getUserCorporateEmail(String email) {
 
         return userRepository.findByCorpEmail(email)
                 .orElseThrow(() -> new NotFoundException("The corporate email was not found."));

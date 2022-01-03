@@ -4,13 +4,17 @@ import by.library.itechlibrary.config.Oauth2AuthenticationSuccessHandler;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.BookDto;
 import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.mapper.BookMapper;
+import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
+import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -28,6 +32,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     private final BookMapper bookMapper;
+
+    private final UserService userService;
 
     @Override
     public List<BookDto> findAll() {
@@ -113,7 +119,9 @@ public class BookServiceImpl implements BookService {
 
         if (book.getOwner() == null) {
 
-            book.setOwner(oauth2AuthenticationSuccessHandler.getCurrentUser());
+           SecurityUserDetails securityUserDetails = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            book.setOwner(userService.getUserCorporateEmail(securityUserDetails.getCorpEmail()));
 
         }
     }

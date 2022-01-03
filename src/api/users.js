@@ -1,12 +1,14 @@
-import { ApiCore } from "./utilities/core";
+import { ApiCore } from './utilities/core'
 
-const urlUsers = "users";
-const urlCorp = "check/corp-email";
-const urlCreds = "check";
-const urlConfirm = "confirm/google";
+const urlUsers = 'users'
+const urlCorp = 'check/corp-email'
+const urlCreds = 'check'
+const urlConfirm = 'confirm/google'
+const urlAuth = 'auth'
 
 export const apiUsers = new ApiCore({
   getGoogle: true,
+  postAuth: true,
   post: true,
   postCreds: true,
   postCorp: true,
@@ -14,4 +16,5 @@ export const apiUsers = new ApiCore({
   id: urlCorp,
   id2: urlCreds,
   id3: urlConfirm,
-});
+  id4: urlAuth,
+})

@@ -36,7 +36,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void checkCorporateEmail(@RequestParam("email") String email) {
 
-        userService.checkCorporateEmail(email);
+        userService.getUserCorporateEmail(email);
 
     }
 
