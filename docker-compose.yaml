@@ -19,6 +19,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://itech_library_database:5432/${POSTGRES_DB_NAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      TEMPLATE_HOST: ${TEMPLATE_HOST}
     depends_on:
       - itech_library_database
     networks:
