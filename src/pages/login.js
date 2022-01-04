@@ -1,38 +1,58 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { Box, Button, Container, Grid, Typography } from '@mui/material'
-import { GoogleLogin } from 'react-google-login'
-import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants'
-import { apiUsers } from '../api/users'
-import { useTheme } from '@mui/material/styles'
-import { withSnackbar } from 'notistack'
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { GoogleLogin } from 'react-google-login';
+import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
+import { apiUsers } from '../api/users';
+import { useTheme } from '@mui/material/styles';
+import { withSnackbar } from 'notistack';
+import jwt_decode from 'jwt-decode';
+import { LOGIN_PATH } from '../common/constants/route-constants';
 
 const Login = ({ enqueueSnackbar }) => {
-  let theme = useTheme()
-  const router = useRouter()
-  const [loggedIn, setLoggedIn] = useState(true)
+  let theme = useTheme();
+  const router = useRouter();
+  const [correctEmail, setCorrectEmail] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
 
-  const responseGoogle = (res) => {
-    let googleEmail = localStorage.getItem('googleEmail')
-    if (res.profileObj.email === googleEmail) {
+  const resGoogleHandlerLogin = (resFromGoogle) => {
+    const responsePayload = jwt_decode(resFromGoogle.tokenId);
+    localStorage.setItem('avatar', responsePayload.picture);
+
+    let googleEmail = localStorage.getItem('googleEmail');
+    if (resFromGoogle.profileObj.email === googleEmail) {
       apiUsers
-        .postAuth(res)
+        .postAuth(resFromGoogle)
         .then((res) => {
-          let token = res.data
-          localStorage.setItem('token', token)
-          router.replace(MAIN_CATALOGUE_PATH)
-          setLoggedIn(true)
+          let token = res.data;
+          localStorage.setItem('token', token);
+          router.replace(MAIN_CATALOGUE_PATH);
         })
         .catch(function () {
           enqueueSnackbar('Something went wrong... Please retry.', {
             variant: 'error',
-          })
-        })
+          });
+        });
     } else {
-      setLoggedIn(false)
+      setCorrectEmail(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    if (router.asPath !== LOGIN_PATH && router.query.userId) {
+      apiUsers
+        .getGoogle(router.query)
+        .then(() => {
+          setIsRegistered(true);
+        })
+        .catch(() => {
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
+          });
+        });
+    }
+  }, [enqueueSnackbar, router, router.query]);
 
   return (
     <>
@@ -66,15 +86,26 @@ const Login = ({ enqueueSnackbar }) => {
               <Typography color="textPrimary" variant="h4">
                 Log in with Google account
               </Typography>
+              {isRegistered && (
+                <Typography
+                  color={'textPrimary'}
+                  variant="body1"
+                  sx={{
+                    mt: 5,
+                  }}
+                >
+                  Your Google account has been confirmed successfully
+                </Typography>
+              )}
               <Typography
-                color={loggedIn ? 'textPrimary' : theme.palette.error.main}
+                color={correctEmail ? 'textPrimary' : theme.palette.error.main}
                 variant="body1"
                 sx={{
                   mt: 5,
                 }}
               >
-                {loggedIn
-                  ? 'Your Google account has been confirmed successfully'
+                {correctEmail
+                  ? ''
                   : 'Please select Google account which You provided on sign up'}
               </Typography>
             </Box>
@@ -101,8 +132,8 @@ const Login = ({ enqueueSnackbar }) => {
                       Log in with Google
                     </Button>
                   )}
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
+                  onSuccess={resGoogleHandlerLogin}
+                  onFailure={resGoogleHandlerLogin}
                   cookiePolicy={'single_host_origin'}
                 />
               </Grid>
@@ -111,7 +142,7 @@ const Login = ({ enqueueSnackbar }) => {
         </Container>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default withSnackbar(Login)
+export default withSnackbar(Login);

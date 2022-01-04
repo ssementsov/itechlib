@@ -1,48 +1,48 @@
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { Box, Container, Grid, Card, Button, Typography } from '@mui/material'
-import BookDetails from '../../components/book/book-details'
-import { DashboardLayout } from '../../components/dashboard-layout'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
-import { useState, useEffect, useCallback } from 'react'
-import { withSnackbar } from 'notistack'
-import { apiBooks } from '../../api/books'
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Box, Container, Grid, Card, Button, Typography } from '@mui/material';
+import BookDetails from '../../components/book/book-details';
+import { DashboardLayout } from '../../components/dashboard-layout';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
+import { useState, useEffect, useCallback } from 'react';
+import { withSnackbar } from 'notistack';
+import { apiBooks } from '../../api/books';
 
 function BookPreviewPage({ enqueueSnackbar }) {
-  const router = useRouter()
-  const [book, setBook] = useState([])
-  const [isLoaded, setIsLoaded] = useState(false)
-  const id = router.query.id
+  const router = useRouter();
+  const [book, setBook] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const id = router.query.id;
 
   const fetchBook = useCallback(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     apiBooks
       .getSingle(id, token)
       .then(function (res) {
-        setBook(res.data)
-        setIsLoaded(true)
+        setBook(res.data);
+        setIsLoaded(true);
       })
       .catch(function () {
         enqueueSnackbar('Something went wrong... Please retry.', {
           variant: 'error',
-        })
-      })
-  }, [enqueueSnackbar, id])
+        });
+      });
+  }, [enqueueSnackbar, id]);
 
   useEffect(() => {
     if (router.isReady) {
-      fetchBook()
+      fetchBook();
     }
-  }, [fetchBook, router.isReady])
+  }, [fetchBook, router.isReady]);
 
   if (!isLoaded) {
     return (
       <Typography sx={{ my: 8, mx: 4 }} variant="h4">
         Loading...
       </Typography>
-    )
+    );
   } else {
     return (
       <>
@@ -92,12 +92,12 @@ function BookPreviewPage({ enqueueSnackbar }) {
           </Container>
         </Box>
       </>
-    )
+    );
   }
 }
 
 BookPreviewPage.getLayout = (page) => {
-  return <DashboardLayout>{page}</DashboardLayout>
-}
+  return <DashboardLayout>{page}</DashboardLayout>;
+};
 
-export default withSnackbar(BookPreviewPage)
+export default withSnackbar(BookPreviewPage);
