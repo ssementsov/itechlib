@@ -52,13 +52,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private User checkAndGetUser(Optional<User> userOptional) {
 
-        if (userOptional.isEmpty()) {
+        if (userOptional.isPresent() && userOptional.get().isActive()) {
 
-            throw new NotFoundException("User has not found");
+            return userOptional.get();
 
         } else {
 
-            return userOptional.get();
+            throw new NotFoundException("User has not found");
+
         }
     }
 
