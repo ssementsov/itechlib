@@ -1,5 +1,6 @@
 package by.library.itechlibrary.config;
 
+import by.library.itechlibrary.constant.SwaggerConstant;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,13 +23,14 @@ public class SwaggerConfig {
 
     private ApiKey apiKey() {
 
-        return new ApiKey("Authorization", "Authorization", "header");
+        return new ApiKey(SwaggerConstant.AUTHORIZATION, SwaggerConstant.AUTHORIZATION, SwaggerConstant.HEADER);
     }
 
     @Bean
     public SecurityConfiguration security() {
 
-        return new SecurityConfiguration(null, null, null, "ITechLib", "Bearer", ApiKeyVehicle.HEADER, "Authorization", ",");
+        return new SecurityConfiguration(null, null, null, SwaggerConstant.APP_NAME,
+                SwaggerConstant.API_KEY, ApiKeyVehicle.HEADER, SwaggerConstant.AUTHORIZATION, SwaggerConstant.SCOPE_SEPARATOR);
     }
 
     private SecurityContext securityContext() {
@@ -38,11 +40,13 @@ public class SwaggerConfig {
 
     private List<SecurityReference> defaultAuth() {
 
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope authorizationScope = new AuthorizationScope(SwaggerConstant.AUTHORIZATION_SCOPE,
+                SwaggerConstant.AUTHORIZATION_SCOPE_DESCRIPTION);
+
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
 
-        return Collections.singletonList(new SecurityReference("Authorization", authorizationScopes));
+        return Collections.singletonList(new SecurityReference(SwaggerConstant.AUTHORIZATION, authorizationScopes));
     }
 
     @Bean
