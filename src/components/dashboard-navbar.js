@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { styled } from '@mui/material/styles'
 import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material'
@@ -50,7 +51,7 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props
   const [anchorEl, setAnchorEl] = React.useState(null)
   const open = Boolean(anchorEl)
-  const avatar = localStorage.getItem('avatar')
+  const [avatar, setAvatar] = useState(null)
 
   const handleHover = (event) => {
     setAnchorEl(event.currentTarget)
@@ -63,6 +64,10 @@ export const DashboardNavbar = (props) => {
     localStorage.removeItem('token')
     router.replace(LOGIN_PATH)
   }
+
+  useEffect(() => {
+    setAvatar(localStorage.getItem('avatar'))
+  }, [])
 
   return (
     <>
