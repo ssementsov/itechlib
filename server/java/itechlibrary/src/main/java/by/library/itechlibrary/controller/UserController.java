@@ -3,6 +3,7 @@ package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
+import by.library.itechlibrary.service.SchedulerService;
 import by.library.itechlibrary.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +23,8 @@ public class UserController {
 
     private final UserService userService;
 
+    private final SchedulerService schedulerService;
+
     @PostMapping("/check")
     @ApiOperation("check emails and connect two emails")
     @ResponseStatus(HttpStatus.OK)
@@ -35,6 +38,8 @@ public class UserController {
     @ApiOperation("check corporate email")
     @ResponseStatus(HttpStatus.OK)
     public void checkCorporateEmail(@RequestParam("email") String email) {
+
+        schedulerService.deleteNotActivatedConfirmationData();
 
         userService.getUserCorporateEmail(email);
 
