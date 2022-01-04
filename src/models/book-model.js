@@ -12,22 +12,22 @@ export class Book {
     statusName = '',
     description = ''
   ) {
-    this.id = id
-    this.title = title
-    this.author = author
+    this.id = id;
+    this.title = title;
+    this.author = author;
     this.category = {
       id: categoryId,
       name: categoryName,
-    }
+    };
     this.language = {
       id: languageId,
       name: languageName,
-    }
-    this.link = link
+    };
+    this.link = link;
     this.status = {
       id: statusId,
       name: statusName,
-    }
-    this.description = description
+    };
+    this.description = description;
   }
 }

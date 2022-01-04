@@ -1,22 +1,22 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import { styled } from '@mui/material/styles'
-import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material'
-import MenuIcon from '@mui/icons-material/Menu'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import Divider from '@mui/material/Divider'
-import Logout from '@mui/icons-material/Logout'
-import { GoogleLogout } from 'react-google-login'
-import { LOGIN_PATH } from '../common/constants/route-constants'
+import React from 'react';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
+import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Divider from '@mui/material/Divider';
+import Logout from '@mui/icons-material/Logout';
+import { GoogleLogout } from 'react-google-login';
+import { LOGIN_PATH } from '../common/constants/route-constants';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   boxShadow: theme.shadows[3],
-}))
+}));
 
 const styleForMenu = {
   elevation: 0,
@@ -44,30 +44,30 @@ const styleForMenu = {
       zIndex: 0,
     },
   },
-}
+};
 
 export const DashboardNavbar = (props) => {
-  const router = useRouter()
-  const { onSidebarOpen, ...other } = props
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const open = Boolean(anchorEl)
-  const [avatar, setAvatar] = useState(null)
+  const router = useRouter();
+  const { onSidebarOpen, ...other } = props;
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const [avatar, setAvatar] = useState(null);
 
   const handleHover = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
+    setAnchorEl(event.currentTarget);
+  };
   const handleClose = () => {
-    setAnchorEl(null)
-  }
+    setAnchorEl(null);
+  };
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
-    router.replace(LOGIN_PATH)
-  }
+    localStorage.removeItem('token');
+    router.replace(LOGIN_PATH);
+  };
 
   useEffect(() => {
-    setAvatar(localStorage.getItem('avatar'))
-  }, [])
+    setAvatar(localStorage.getItem('avatar'));
+  }, []);
 
   return (
     <>
@@ -144,9 +144,9 @@ export const DashboardNavbar = (props) => {
         </Toolbar>
       </DashboardNavbarRoot>
     </>
-  )
-}
+  );
+};
 
 DashboardNavbar.propTypes = {
   onSidebarOpen: PropTypes.func,
-}
+};

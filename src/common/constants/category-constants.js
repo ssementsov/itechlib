@@ -1,4 +1,4 @@
 export const category = {
-  professional: "PROFESSIONAL",
-  fiction: "FICTION",
+  professional: 'PROFESSIONAL',
+  fiction: 'FICTION',
 };

@@ -15,10 +15,6 @@
       {
         "maximum": 4
       }
-    ],
-    "jsx-quotes": [
-      1,
-      "prefer-double"
     ]
   },
   "plugins": [

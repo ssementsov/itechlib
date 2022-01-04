@@ -1,58 +1,58 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useState, useEffect } from 'react'
-import { Box, Button, Container, Grid, Typography } from '@mui/material'
-import { GoogleLogin } from 'react-google-login'
-import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants'
-import { apiUsers } from '../api/users'
-import { useTheme } from '@mui/material/styles'
-import { withSnackbar } from 'notistack'
-import jwt_decode from 'jwt-decode'
-import { LOGIN_PATH } from '../common/constants/route-constants'
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { GoogleLogin } from 'react-google-login';
+import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
+import { apiUsers } from '../api/users';
+import { useTheme } from '@mui/material/styles';
+import { withSnackbar } from 'notistack';
+import jwt_decode from 'jwt-decode';
+import { LOGIN_PATH } from '../common/constants/route-constants';
 
 const Login = ({ enqueueSnackbar }) => {
-  let theme = useTheme()
-  const router = useRouter()
-  const [correctEmail, setCorrectEmail] = useState(true)
-  const [isRegistered, setIsRegistered] = useState(false)
+  let theme = useTheme();
+  const router = useRouter();
+  const [correctEmail, setCorrectEmail] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
 
-  const responseGoogle = (resFromGoogle) => {
-    const responsePayload = jwt_decode(resFromGoogle.tokenId)
-    localStorage.setItem('avatar', responsePayload.picture)
+  const resGoogleHandlerLogin = (resFromGoogle) => {
+    const responsePayload = jwt_decode(resFromGoogle.tokenId);
+    localStorage.setItem('avatar', responsePayload.picture);
 
-    let googleEmail = localStorage.getItem('googleEmail')
+    let googleEmail = localStorage.getItem('googleEmail');
     if (resFromGoogle.profileObj.email === googleEmail) {
       apiUsers
         .postAuth(resFromGoogle)
         .then((res) => {
-          let token = res.data
-          localStorage.setItem('token', token)
-          router.replace(MAIN_CATALOGUE_PATH)
+          let token = res.data;
+          localStorage.setItem('token', token);
+          router.replace(MAIN_CATALOGUE_PATH);
         })
         .catch(function () {
           enqueueSnackbar('Something went wrong... Please retry.', {
             variant: 'error',
-          })
-        })
+          });
+        });
     } else {
-      setCorrectEmail(false)
+      setCorrectEmail(false);
     }
-  }
+  };
 
   useEffect(() => {
     if (router.asPath !== LOGIN_PATH && router.query.userId) {
       apiUsers
         .getGoogle(router.query)
         .then(() => {
-          setIsRegistered(true)
+          setIsRegistered(true);
         })
         .catch(() => {
           enqueueSnackbar('Something went wrong... Please retry.', {
             variant: 'error',
-          })
-        })
+          });
+        });
     }
-  }, [enqueueSnackbar, router, router.query])
+  }, [enqueueSnackbar, router, router.query]);
 
   return (
     <>
@@ -132,8 +132,8 @@ const Login = ({ enqueueSnackbar }) => {
                       Log in with Google
                     </Button>
                   )}
-                  onSuccess={responseGoogle}
-                  onFailure={responseGoogle}
+                  onSuccess={resGoogleHandlerLogin}
+                  onFailure={resGoogleHandlerLogin}
                   cookiePolicy={'single_host_origin'}
                 />
               </Grid>
@@ -142,7 +142,7 @@ const Login = ({ enqueueSnackbar }) => {
         </Container>
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default withSnackbar(Login)
+export default withSnackbar(Login);

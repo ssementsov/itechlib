@@ -7,4 +7,4 @@ export const titles = {
   link: 'Link to external website',
   rating: 'Rating',
   status: 'Status',
-}
+};

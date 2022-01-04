@@ -1,12 +1,12 @@
-import { useRouter } from "next/router";
-import { useFormik } from "formik";
-import PropTypes from "prop-types";
-import * as Yup from "yup";
-import { Box, Container } from "@mui/material";
-import { CloseIcon } from "../../icons/close-icon";
-import AddNewBookForm from "./add-new-book-form";
-import { status } from "../../common/constants/status-constants";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { useRouter } from 'next/router';
+import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import { Box, Container } from '@mui/material';
+import { CloseIcon } from '../../icons/close-icon';
+import AddNewBookForm from './add-new-book-form';
+import { status } from '../../common/constants/status-constants';
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
 
 const AddNewBookFormBox = ({
   handleClose,
@@ -29,20 +29,20 @@ const AddNewBookFormBox = ({
       id: book.id,
       link: book.link,
       status: book.status.name,
-      reader: "",
+      reader: '',
       dateFrom: null,
       dateTo: null,
     };
   } else {
     newBook = {
-      title: "",
-      author: "",
-      category: "",
-      language: "",
-      description: "",
-      link: "",
-      status: "",
-      reader: "",
+      title: '',
+      author: '',
+      category: '',
+      language: '',
+      description: '',
+      link: '',
+      status: '',
+      reader: '',
       dateFrom: null,
       dateTo: null,
     };
@@ -56,16 +56,16 @@ const AddNewBookFormBox = ({
         value.link
       )
     ) {
-      error.link = "Please enter correct link";
+      error.link = 'Please enter correct link';
     } else if (value.status === status.inUse) {
       if (!value.reader) {
-        error.reader = "Reader is required";
+        error.reader = 'Reader is required';
       }
       if (!value.dateFrom) {
-        error.dateFrom = "Date is required";
+        error.dateFrom = 'Date is required';
       }
       if (!value.dateTo) {
-        error.dateTo = "Date is required";
+        error.dateTo = 'Date is required';
       }
     }
 
@@ -76,24 +76,24 @@ const AddNewBookFormBox = ({
     initialValues: newBook,
     validationSchema: Yup.object({
       title: Yup.string()
-        .min(2, "Title must be more than 2 characters")
-        .max(255, "Title must be less than 255 characters")
-        .required("Title is required"),
+        .min(2, 'Title must be more than 2 characters')
+        .max(255, 'Title must be less than 255 characters')
+        .required('Title is required'),
       author: Yup.string()
-        .min(2, "Author must be more than 2 characters")
-        .max(255, "Author must be less than 255 characters")
-        .required("Author is required"),
-      category: Yup.string().required("Category is required"),
-      language: Yup.string().required("Language is required"),
+        .min(2, 'Author must be more than 2 characters')
+        .max(255, 'Author must be less than 255 characters')
+        .required('Author is required'),
+      category: Yup.string().required('Category is required'),
+      language: Yup.string().required('Language is required'),
       description: Yup.string()
-        .min(10, "Description must be more than 10 characters")
-        .max(100, "Description must be less than 100 characters")
-        .required("Description is required"),
-      status: Yup.string().required("Status is required"),
+        .min(10, 'Description must be more than 10 characters')
+        .max(100, 'Description must be less than 100 characters')
+        .required('Description is required'),
+      status: Yup.string().required('Status is required'),
     }),
     validate,
     onSubmit: async (values) => {
-      if ("id" in values) {
+      if ('id' in values) {
         await editBook(values);
         handleClose();
       } else {
@@ -109,25 +109,25 @@ const AddNewBookFormBox = ({
       <Box
         component="main"
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           flexGrow: 1,
-          minHeight: "100%",
+          minHeight: '100%',
         }}
       >
         <Container maxWidth="sm">
           <Box
             sx={{
-              position: "absolute",
+              position: 'absolute',
               right: 22,
               top: 22,
-              cursor: "pointer",
+              cursor: 'pointer',
             }}
           >
             <CloseIcon
               onClick={handleClose}
               sx={{
-                justifySelf: "flex-end",
+                justifySelf: 'flex-end',
               }}
             />
           </Box>

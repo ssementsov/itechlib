@@ -1,11 +1,11 @@
-import { category } from "../../../common/constants/category-constants";
+import { category } from '../../../common/constants/category-constants';
 export const categories = [
   {
     value: category.professional,
-    label: "Professional",
+    label: 'Professional',
   },
   {
     value: category.fiction,
-    label: "Fiction",
+    label: 'Fiction',
   },
 ];
