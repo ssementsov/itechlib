@@ -2,7 +2,6 @@ package by.library.itechlibrary.config;
 
 
 import by.library.itechlibrary.config.filter.JwtFilter;
-import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs",
     };
 
-    public WebSecurityConfig(JwtFilter jwtFilter, SecurityUserDetailsServiceImpl securityUserDetailsService) {
+    public WebSecurityConfig(JwtFilter jwtFilter) {
 
         this.jwtFilter = jwtFilter;
 
