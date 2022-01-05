@@ -9,12 +9,14 @@ import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongConfirmationCodeException;
 import by.library.itechlibrary.exeption_handler.exception.WrongGoogleEmailException;
 import by.library.itechlibrary.mapper.UserMapper;
+import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.repository.UserRepository;
 import by.library.itechlibrary.service.ConfirmationDataService;
 import by.library.itechlibrary.service.MailNotificationService;
 import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Try to check corp email.");
 
-        User user = getUserCorporateEmail(emailCheckerDto.getCorpEmail());
+        User user = getUserByCorporateEmail(emailCheckerDto.getCorpEmail());
         String googleEmail = emailCheckerDto.getGoogleEmail();
 
         log.info("Try to check and set google email.");
@@ -60,10 +62,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserCorporateEmail(String email) {
+    public User getUserByCorporateEmail(String email) {
 
-        return userRepository.findByCorpEmail(email)
-                .orElseThrow(() -> new NotFoundException("The corporate email was not found."));
+        return findUserByCorpEmail(email);
     }
 
     @Transactional
@@ -83,6 +84,22 @@ public class UserServiceImpl implements UserService {
                     " has been wrong.");
 
         }
+    }
+
+    @Override
+    public User getCurrentUser(){
+
+        SecurityUserDetails securityUserDetails = (SecurityUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+
+      return findUserByCorpEmail(securityUserDetails.getCorpEmail());
+    }
+
+
+    private User findUserByCorpEmail(String corpEmail){
+
+        return userRepository.findByCorpEmail(corpEmail)
+                .orElseThrow(() -> new NotFoundException("The corporate email was not found."));
     }
 
     private String checkAndSetGoogleEmail(User user, String googleEmail) {

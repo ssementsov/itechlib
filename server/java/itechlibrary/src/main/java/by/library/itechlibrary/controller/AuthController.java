@@ -17,6 +17,7 @@ public class AuthController {
 
     private final AuthenticationService authenticationService;
 
+
     @PostMapping
     public String auth(@RequestBody AuthDto authDto) {
 

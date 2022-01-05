@@ -41,7 +41,7 @@ public class UserController {
 
         schedulerService.deleteNotActivatedConfirmationData();
 
-        userService.getUserCorporateEmail(email);
+        userService.getUserByCorporateEmail(email);
 
     }
 
