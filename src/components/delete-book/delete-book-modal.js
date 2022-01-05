@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { Box, Button, Typography } from "@mui/material";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Box, Button, Typography } from '@mui/material';
 
 const DeleteBookModal = ({ handleClose, deleteBook }) => {
   const deleteAndClose = () => {
@@ -30,10 +30,10 @@ const DeleteBookModal = ({ handleClose, deleteBook }) => {
           fullWidth
           size="large"
           sx={{
-            my: "20px",
-            borderWidth: "1px",
-            borderStyle: "solid",
-            borderColor: "primary",
+            my: '20px',
+            borderWidth: '1px',
+            borderStyle: 'solid',
+            borderColor: 'primary',
           }}
         >
           Cancel

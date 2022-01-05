@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { GoogleLogin } from 'react-google-login';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
@@ -19,7 +19,7 @@ const Register = ({ enqueueSnackbar }) => {
     if (!value.email) {
       error.email = 'Email is required';
     } else if (!/^[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
-      error.email = 'Please enter correct iTechArt email';
+      error.email = 'Please enter correct corporate email';
     }
     return error;
   }
@@ -81,6 +81,14 @@ const Register = ({ enqueueSnackbar }) => {
         });
       });
   };
+
+  useEffect(() => {
+    let token = localStorage.getItem('token');
+    let corpEmail = localStorage.getItem('corpEmail');
+    if (!token && corpEmail) {
+      router.push(LOGIN_PATH);
+    }
+  }, [router]);
 
   return (
     <>

@@ -1,11 +1,12 @@
-import * as React from 'react'
-import PropTypes from 'prop-types'
-import { Box, Modal, Button, IconButton } from '@mui/material'
-import AddNewBookFormBox from './add-new-book/add-new-book-form-box'
-import { DeleteIcon } from './../icons/delete-icon'
-import { EditIcon } from './../icons/edit-icon'
-import DeleteBookModal from './delete-book/delete-book-modal'
-import { typeModal } from '../common/constants/modal-type-constants'
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { Box, Modal, Button, IconButton } from '@mui/material';
+import AddNewBookFormBox from './add-new-book/add-new-book-form-box';
+import { DeleteIcon } from './../icons/delete-icon';
+import { EditIcon } from './../icons/edit-icon';
+import DeleteBookModal from './delete-book/delete-book-modal';
+import AssignBookModal from './assign-book/assign-book-modal';
+import { typeModal } from '../common/constants/modal-type-constants';
 
 const style = {
   position: 'absolute',
@@ -25,7 +26,7 @@ const style = {
   '&:focus': {
     outline: 'none',
   },
-}
+};
 
 export default function CustomModal({
   createBook,
@@ -34,14 +35,14 @@ export default function CustomModal({
   editBook,
   book,
 }) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   // eslint-disable-next-line default-case
   switch (type) {
@@ -62,7 +63,7 @@ export default function CustomModal({
             </Box>
           </Modal>
         </div>
-      )
+      );
     case typeModal.delete:
       return (
         <>
@@ -78,7 +79,7 @@ export default function CustomModal({
             </Box>
           </Modal>
         </>
-      )
+      );
     case typeModal.edit:
       return (
         <>
@@ -98,7 +99,25 @@ export default function CustomModal({
             </Box>
           </Modal>
         </>
-      )
+      );
+    case typeModal.assign:
+      return (
+        <>
+          <Button
+            onClick={handleOpen}
+            aria-label="assign"
+            color="primary"
+            variant="contained"
+          >
+            Assign to me
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              <AssignBookModal handleClose={handleClose} />
+            </Box>
+          </Modal>
+        </>
+      );
   }
 }
 
@@ -106,7 +125,12 @@ CustomModal.propTypes = {
   createBook: PropTypes.func,
   editBook: PropTypes.func,
   deleteBook: PropTypes.func,
-  type: PropTypes.oneOf(['ADD BOOK', 'DELETE BOOK', 'EDIT BOOK']),
+  type: PropTypes.oneOf([
+    'ADD BOOK',
+    'DELETE BOOK',
+    'EDIT BOOK',
+    'ASSIGN BOOK',
+  ]),
   book: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,
@@ -126,4 +150,4 @@ CustomModal.propTypes = {
       name: PropTypes.string,
     }),
   }),
-}
+};

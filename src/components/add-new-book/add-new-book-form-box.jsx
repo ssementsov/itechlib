@@ -30,8 +30,8 @@ const AddNewBookFormBox = ({
       link: book.link,
       status: book.status.name,
       reader: '',
-      dateFrom: null,
-      dateTo: null,
+      startDate: null,
+      finishDate: null,
     };
   } else {
     newBook = {
@@ -43,8 +43,8 @@ const AddNewBookFormBox = ({
       link: '',
       status: '',
       reader: '',
-      dateFrom: null,
-      dateTo: null,
+      startDate: null,
+      finishDate: null,
     };
   }
 
@@ -61,11 +61,11 @@ const AddNewBookFormBox = ({
       if (!value.reader) {
         error.reader = 'Reader is required';
       }
-      if (!value.dateFrom) {
-        error.dateFrom = 'Date is required';
+      if (!value.startDate) {
+        error.startDate = 'Date is required';
       }
-      if (!value.dateTo) {
-        error.dateTo = 'Date is required';
+      if (!value.finishDate) {
+        error.finishDate = 'Date is required';
       }
     }
 

@@ -7,10 +7,10 @@ import {
   InputAdornment,
   SvgIcon,
   Typography,
-} from '@mui/material'
-import { Search as SearchIcon } from '../../icons/search'
-import CustomModal from '../custom-modal'
-import { typeModal } from '../../common/constants/modal-type-constants'
+} from '@mui/material';
+import { Search as SearchIcon } from '../../icons/search';
+import CustomModal from '../custom-modal';
+import { typeModal } from '../../common/constants/modal-type-constants';
 
 export const BooksListToolbar = ({ createBook, setSearch, search }) => {
   return (
@@ -59,5 +59,5 @@ export const BooksListToolbar = ({ createBook, setSearch, search }) => {
         </Card>
       </Box>
     </Box>
-  )
-}
+  );
+};

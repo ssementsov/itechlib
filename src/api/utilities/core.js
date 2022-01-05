@@ -2,6 +2,7 @@ import { apiProvider } from './provider';
 
 export class ApiCore {
   constructor(options) {
+    //BOOKS
     if (options.getAll) {
       this.getAll = (token) => {
         return apiProvider.getAll(options.url, token);
@@ -14,32 +15,9 @@ export class ApiCore {
       };
     }
 
-    if (options.getGoogle) {
-      this.getGoogle = (params) => {
-        return apiProvider.getGoogle(options.url, options.id3, params);
-      };
-    }
-    if (options.postAuth) {
-      this.postAuth = (bodyGoogle) => {
-        return apiProvider.postAuth(options.id4, bodyGoogle);
-      };
-    }
-
     if (options.post) {
       this.post = (model, token) => {
         return apiProvider.post(options.url, model, token);
-      };
-    }
-
-    if (options.postCreds) {
-      this.postCreds = (model) => {
-        return apiProvider.postCreds(options.url, options.id2, model);
-      };
-    }
-
-    if (options.postCorp) {
-      this.postCorp = (model) => {
-        return apiProvider.postCorp(options.url, options.id, model);
       };
     }
 
@@ -52,6 +30,30 @@ export class ApiCore {
     if (options.remove) {
       this.remove = (id, token) => {
         return apiProvider.remove(options.url, id, token);
+      };
+    }
+
+    //USER
+    if (options.getGoogle) {
+      this.getGoogle = (params) => {
+        return apiProvider.getGoogle(options.url, options.id3, params);
+      };
+    }
+    if (options.postAuth) {
+      this.postAuth = (bodyGoogle) => {
+        return apiProvider.postAuth(options.id4, bodyGoogle);
+      };
+    }
+
+    if (options.postCreds) {
+      this.postCreds = (model) => {
+        return apiProvider.postCreds(options.url, options.id2, model);
+      };
+    }
+
+    if (options.postCorp) {
+      this.postCorp = (model) => {
+        return apiProvider.postCorp(options.url, options.id, model);
       };
     }
   }

@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -12,22 +11,22 @@ import {
   TableBody,
   TableCell,
   TableRow,
-} from '@mui/material'
-import { titles } from './../../common/constants/titles-constants'
-import { styled } from '@mui/material/styles'
-import { withSnackbar } from 'notistack'
-import { useRouter } from 'next/router'
-import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants'
-import CustomModal from './../custom-modal'
-import { status } from '../../common/constants/status-constants'
-import { language } from '../../common/constants/language-constants'
-import { category } from '../../common/constants/category-constants'
-import { typeModal } from '../../common/constants/modal-type-constants'
-import { Book } from '../../models/book-model'
-import { apiBooks } from '../../api/books'
+} from '@mui/material';
+import { titles } from './../../common/constants/titles-constants';
+import { styled } from '@mui/material/styles';
+import { withSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
+import CustomModal from './../custom-modal';
+import { status } from '../../common/constants/status-constants';
+import { language } from '../../common/constants/language-constants';
+import { category } from '../../common/constants/category-constants';
+import { typeModal } from '../../common/constants/modal-type-constants';
+import { Book } from '../../models/book-model';
+import { apiBooks } from '../../api/books';
 
 function toLowerCaseExeptFirstLetter(string) {
-  return string[0] + string.slice(1).toLowerCase()
+  return string[0] + string.slice(1).toLowerCase();
 }
 
 const TblCell = styled(TableCell)(() => ({
@@ -36,24 +35,25 @@ const TblCell = styled(TableCell)(() => ({
   borderBottom: '1px solid #E7E8EF',
   borderTop: '1px solid #E7E8EF',
   padding: '5px 35px',
-}))
+}));
 
 const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
-  const router = useRouter()
-  const token = localStorage.getItem('token')
+  const router = useRouter();
+  const token = localStorage.getItem('token');
+  const corpEmail = localStorage.getItem('corpEmail');
 
   const deleteBook = () => {
     if (book.status.name === status.available) {
       try {
-        apiBooks.remove(book.id, token)
-        router.replace(MAIN_CATALOGUE_PATH)
+        apiBooks.remove(book.id, token);
+        router.replace(MAIN_CATALOGUE_PATH);
         enqueueSnackbar('Your book has been deleted successfully!', {
           variant: 'success',
-        })
+        });
       } catch {
         enqueueSnackbar('Something went wrong... Please retry.', {
           variant: 'error',
-        })
+        });
       }
     } else {
       enqueueSnackbar(
@@ -61,24 +61,24 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
         {
           variant: 'error',
         }
-      )
+      );
     }
-  }
+  };
 
   const editBook = (values) => {
     try {
-      let idCategory = values.category === category.professional ? 1 : 2
-      let idLanguage = values.language === language.english ? 1 : 2
-      let idStatus
+      let idCategory = values.category === category.professional ? 1 : 2;
+      let idLanguage = values.language === language.english ? 1 : 2;
+      let idStatus;
       switch (values.status) {
         case status.notAvailable:
-          idStatus = 2
-          break
+          idStatus = 2;
+          break;
         case status.inUse:
-          idStatus = 3
-          break
+          idStatus = 3;
+          break;
         default:
-          idStatus = 1
+          idStatus = 1;
       }
       const editBook = new Book(
         values.id,
@@ -92,19 +92,19 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
         idStatus,
         values.status,
         values.description
-      )
+      );
       apiBooks.put(editBook, token).then(() => {
-        fetchBook()
-      })
+        fetchBook();
+      });
       enqueueSnackbar('Your book has been updated successfully!', {
         variant: 'success',
-      })
+      });
     } catch (e) {
       enqueueSnackbar('Something went wrong... Please retry.', {
         variant: 'error',
-      })
+      });
     }
-  }
+  };
 
   return (
     <Card>
@@ -188,20 +188,20 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
           </Grid>
         </Grid>
       </CardContent>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          p: 2,
-        }}
-      >
-        <Button color="primary" variant="contained">
-          Assign to me
-        </Button>
-      </Box>
+      {book.owner.corpEmail !== corpEmail && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            p: 2,
+          }}
+        >
+          <CustomModal type={typeModal.assign} />
+        </Box>
+      )}
     </Card>
-  )
-}
+  );
+};
 
 BookDetails.propTypes = {
   fetchBook: PropTypes.func,
@@ -224,6 +224,6 @@ BookDetails.propTypes = {
       name: PropTypes.string,
     }),
   }),
-}
+};
 
-export default withSnackbar(BookDetails)
+export default withSnackbar(BookDetails);
