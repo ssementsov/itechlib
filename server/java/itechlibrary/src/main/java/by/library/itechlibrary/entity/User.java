@@ -35,7 +35,7 @@ public class User {
     private boolean isActive;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="confirmation_id")
+    @JoinColumn(name="confirmation_id", referencedColumnName = "id")
     private ConfirmationData confirmationData;
 
 }

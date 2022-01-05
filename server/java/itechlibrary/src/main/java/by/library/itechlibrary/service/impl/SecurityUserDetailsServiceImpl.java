@@ -33,6 +33,14 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
 
     }
 
+    public long getCurrentUserId(){
+
+        SecurityUserDetails user = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return user.getId();
+
+    }
+
     private SecurityUserDetails getSecurityUserDetails(String corpEmail){
 
         User userEntity = userRepository.findByCorpEmail(corpEmail)

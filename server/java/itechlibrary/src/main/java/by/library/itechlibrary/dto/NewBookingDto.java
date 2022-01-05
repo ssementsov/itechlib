@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
-public class BookingDto {
+public class NewBookingDto {
 
     private long id;
 
@@ -16,14 +16,7 @@ public class BookingDto {
     @NotNull
     private LocalDate finishDate;
 
-    private short rate;
-
-    private String feedback;
-
     @NotNull
-    private UserDto reader;
-
-    @NotNull
-    private BookDto book;
+    private long bookId;
 
 }

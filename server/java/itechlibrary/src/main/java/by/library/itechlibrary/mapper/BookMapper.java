@@ -5,7 +5,8 @@ import by.library.itechlibrary.entity.Book;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
-import java.util.*;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface BookMapper {
@@ -17,9 +18,9 @@ public interface BookMapper {
     Book toBook(BookDto bookDto);
 
     @IterableMapping(qualifiedByName = "book")
-    List<BookDto> mapBookDtoList (List<Book> books);
+    List<BookDto> mapBookDtoList(List<Book> books);
 
     @IterableMapping(qualifiedByName = "bookDto")
-    List<Book> mapBookList (List<BookDto> bookDtos);
+    List<Book> mapBookList(List<BookDto> bookDtos);
 
 }

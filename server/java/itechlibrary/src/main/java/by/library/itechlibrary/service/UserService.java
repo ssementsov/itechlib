@@ -10,10 +10,12 @@ public interface UserService {
 
     String checkEmails(EmailCheckerDto emailCheckerDto);
 
-    User getUserCorporateEmail(String email);
+    User getUserByCorporateEmail(String email);
 
     List<UserDto> getConfirmedUsers();
 
     void confirmedGoogleEmail(long userId, UUID code);
+
+    User getCurrentUser();
 
 }

@@ -1,9 +1,10 @@
 package by.library.itechlibrary.mapper;
 
-import by.library.itechlibrary.dto.BookingDto;
+import by.library.itechlibrary.dto.NewBookingDto;
 import by.library.itechlibrary.entity.Booking;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
@@ -11,16 +12,18 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
 
+    @Mapping(source = "book.id", target = "bookId")
     @Named(value = "booking")
-    BookingDto toBookingDto(Booking booking);
+    NewBookingDto toNewBookingDto(Booking booking);
 
-    @Named(value = "bookingDto")
-    Booking toBooking(BookingDto bookingDto);
+    @Mapping(source = "bookId", target = "book.id")
+    @Named(value = "newBookingDto")
+    Booking toBooking(NewBookingDto newBookingDto);
 
     @IterableMapping(qualifiedByName = "booking")
-    List<BookingDto> mapBookingDtoList(List<Booking> bookings);
+    List<NewBookingDto> mapNewBookingDtoList(List<Booking> bookings);
 
-    @IterableMapping(qualifiedByName = "bookingDto")
-    List<Booking> mapBookingList(List<BookingDto> bookingDtos);
+    @IterableMapping(qualifiedByName = "newBookingDto")
+    List<Booking> mapBookingList(List<NewBookingDto> newBookingDtos);
 
 }

@@ -29,4 +29,7 @@ public class ConfirmationData {
     @Column(name = "is_activated")
     private boolean isActivated;
 
+    @OneToOne(mappedBy = "confirmationData")
+    private User user;
+
 }

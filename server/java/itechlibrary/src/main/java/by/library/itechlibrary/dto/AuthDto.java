@@ -15,7 +15,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class AuthDto {
 
-
     private String email;
 
     @JsonProperty("vc")
