@@ -8,19 +8,23 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    @EntityGraph(attributePaths = {"book", "reader"})
+    @EntityGraph(attributePaths = { "book.language", "book.category", "book.status", "book.owner", "reader"})
     List<Booking> findAllByReaderId(long readerId);
 
-    @EntityGraph(attributePaths = {"book", "reader"})
+    @EntityGraph(attributePaths = { "book.language", "book.category", "book.status", "book.owner", "reader"})
     List<Booking> findAllByBookId(long bookId);
 
-    @EntityGraph(attributePaths = {"book", "reader"})
+    @EntityGraph(attributePaths = { "book.language", "book.category", "book.status", "book.owner", "reader"})
     @Query("select b from Booking b where b.reader.id = :readerId and" +
             " b.startDate <= :currentDate and b.finishDate >= :currentDate")
     List<Booking> findAllByReaderIdAndCurrentDate(LocalDate currentDate, long readerId);
+
+    @EntityGraph(attributePaths = { "book.language", "book.category", "book.status", "book.owner", "reader"})
+    Optional<Booking> findById(long id);
 
 }

@@ -24,7 +24,7 @@ public class BookingController {
     private final BookingService bookingService;
 
 
-    @GetMapping("/{readerId}")
+    @GetMapping("/readers/{readerId}")
     @ApiOperation("get all reader's bookings")
     @ResponseStatus(HttpStatus.OK)
     public List<BookingResponseDto> getBookingsByReaderId(@PathVariable("readerId") long readerId) {
@@ -40,7 +40,7 @@ public class BookingController {
         return bookingService.findAllCurrentsByReaderId(readerId);
     }
 
-    @GetMapping("/{bookId}")
+    @GetMapping("books/{bookId}")
     @ApiOperation("get all book's bookings")
     @ResponseStatus(HttpStatus.OK)
     public List<BookingResponseDto> getBookingsByBooksId(@PathVariable("bookId") long readerId) {
@@ -73,3 +73,4 @@ public class BookingController {
         return bookingService.updateFinishDate(bookingId, newFinishDate);
     }
 }
+
