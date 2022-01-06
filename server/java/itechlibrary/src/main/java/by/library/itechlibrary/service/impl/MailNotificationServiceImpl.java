@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
@@ -43,6 +44,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private String fromMail;
 
 
+    @Async("threadPoolTaskExecutor")
     @Transactional
     @Override
     public void sent(User user, String templateName) {
@@ -57,6 +59,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         setDataMimeMessage(user, notification, mimeMessage);
 
         emailSender.send(mimeMessage);
+
     }
 
     @SneakyThrows
