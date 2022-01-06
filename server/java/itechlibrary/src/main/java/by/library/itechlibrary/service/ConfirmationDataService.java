@@ -6,4 +6,6 @@ public interface ConfirmationDataService {
 
     ConfirmationData create();
 
+    void deleteById(long id);
+
 }

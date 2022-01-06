@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("Try to check and set google email.");
 
-       return checkAndSetGoogleEmail(user, googleEmail);
+        return checkAndSetGoogleEmail(user, googleEmail);
 
     }
 
@@ -87,16 +87,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getCurrentUser(){
+    public User getCurrentUser() {
 
         SecurityUserDetails securityUserDetails = (SecurityUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
 
-      return findUserByCorpEmail(securityUserDetails.getCorpEmail());
+        return findUserByCorpEmail(securityUserDetails.getCorpEmail());
     }
 
 
-    private User findUserByCorpEmail(String corpEmail){
+    private User findUserByCorpEmail(String corpEmail) {
 
         return userRepository.findByCorpEmail(corpEmail)
                 .orElseThrow(() -> new NotFoundException("The corporate email was not found."));
@@ -106,8 +106,9 @@ public class UserServiceImpl implements UserService {
 
         if (user.getGoogleEmail() == null || (user.getConfirmationData() != null && !user.getConfirmationData().isActivated())) {
 
-            user.setGoogleEmail(googleEmail);
+            checkAndDeleteOldConfirmationData(user);
             user.setConfirmationData(confirmationDataService.create());
+            user.setGoogleEmail(googleEmail);
             mailNotificationService.sent(user, MailTemplateConstant.MAIL_CONFIRMATION);
 
             return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_SENT;
@@ -116,6 +117,17 @@ public class UserServiceImpl implements UserService {
 
             throw new WrongGoogleEmailException("This User already has a different google address.");
 
-        }else return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_NOT_SENT;
+        } else return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_NOT_SENT;
+    }
+
+    private void checkAndDeleteOldConfirmationData(User user){
+
+        if (user.getConfirmationData() != null && !user.getConfirmationData().isActivated()) {
+
+            long confirmDataId = user.getConfirmationData().getId();
+            user.setConfirmationData(null);
+            confirmationDataService.deleteById(confirmDataId);
+
+        }
     }
 }

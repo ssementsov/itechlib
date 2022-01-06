@@ -39,8 +39,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void checkCorporateEmail(@RequestParam("email") String email) {
 
-        schedulerService.deleteNotActivatedConfirmationData();
-
         userService.getUserByCorporateEmail(email);
 
     }
