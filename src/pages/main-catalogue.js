@@ -16,7 +16,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState('');
   const [startSearch, setStartSearch] = useState(false);
-  console.log(books);
+
   const searchedBooks = useMemo(() => {
     if (search.length > 1) {
       setStartSearch(true);

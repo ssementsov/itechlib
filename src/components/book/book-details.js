@@ -37,7 +37,7 @@ const TblCell = styled(TableCell)(() => ({
   padding: '5px 35px',
 }));
 
-const BookDetails = ({ book, enqueueSnackbar, updateInfo, fetchBook }) => {
+const BookDetails = ({ book, enqueueSnackbar, updateInfo }) => {
   const router = useRouter();
   const token = localStorage.getItem('token');
   const corpEmail = localStorage.getItem('corpEmail');
@@ -202,7 +202,6 @@ const BookDetails = ({ book, enqueueSnackbar, updateInfo, fetchBook }) => {
             type={typeModal.assign}
             book={book}
             updateInfo={updateInfo}
-            fetchBook={fetchBook}
           />
         </Box>
       )}
@@ -211,7 +210,7 @@ const BookDetails = ({ book, enqueueSnackbar, updateInfo, fetchBook }) => {
 };
 
 BookDetails.propTypes = {
-  fetchBook: PropTypes.func,
+  updateInfo: PropTypes.func,
   book: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,

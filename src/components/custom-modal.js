@@ -35,7 +35,6 @@ export default function CustomModal({
   editBook,
   book,
   updateInfo,
-  fetchBook,
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -119,7 +118,6 @@ export default function CustomModal({
                 handleClose={handleClose}
                 book={book}
                 updateInfo={updateInfo}
-                fetchBook={fetchBook}
               />
             </Box>
           </Modal>
@@ -129,6 +127,7 @@ export default function CustomModal({
 }
 
 CustomModal.propTypes = {
+  updateInfo: PropTypes.func,
   createBook: PropTypes.func,
   editBook: PropTypes.func,
   deleteBook: PropTypes.func,

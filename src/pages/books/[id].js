@@ -6,7 +6,7 @@ import BookDetails from '../../components/book/book-details';
 import { DashboardLayout } from '../../components/dashboard-layout';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { withSnackbar } from 'notistack';
 import { apiBooks } from '../../api/books';
 
@@ -20,26 +20,22 @@ function BookPreviewPage({ enqueueSnackbar }) {
     setBook(newInfo);
   };
 
-  const fetchBook = useCallback(() => {
-    const token = localStorage.getItem('token');
-    apiBooks
-      .getSingle(id, token)
-      .then(function (res) {
-        setBook(res.data);
-        setIsLoaded(true);
-      })
-      .catch(function () {
-        enqueueSnackbar('Something went wrong... Please retry.', {
-          variant: 'error',
-        });
-      });
-  }, [enqueueSnackbar, id]);
-
   useEffect(() => {
     if (router.isReady) {
-      fetchBook();
+      const token = localStorage.getItem('token');
+      apiBooks
+        .getSingle(id, token)
+        .then(function (res) {
+          setBook(res.data);
+          setIsLoaded(true);
+        })
+        .catch(function () {
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
+          });
+        });
     }
-  }, [fetchBook, router.isReady]);
+  }, [enqueueSnackbar, id, router.isReady]);
 
   if (!isLoaded) {
     return (
@@ -90,11 +86,7 @@ function BookPreviewPage({ enqueueSnackbar }) {
                 />
               </Grid>
               <Grid item lg={8} md={9} xs={12}>
-                <BookDetails
-                  fetchBook={fetchBook}
-                  updateInfo={updateInfo}
-                  book={book}
-                />
+                <BookDetails updateInfo={updateInfo} book={book} />
               </Grid>
             </Grid>
           </Container>

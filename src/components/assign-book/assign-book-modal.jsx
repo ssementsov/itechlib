@@ -29,7 +29,6 @@ const AssignBookModal = ({
   handleClose,
   book,
   updateInfo,
-  fetchBook,
 }) => {
   const maxDate = add(new Date(), {
     months: 1,
@@ -61,8 +60,7 @@ const AssignBookModal = ({
     apiBookings
       .postBooking(booking, token)
       .then((res) => {
-        console.log(res);
-        fetchBook();
+        updateInfo(res.data.book);
         enqueueSnackbar('The book was assigned to you successfully!', {
           variant: 'success',
         });
@@ -155,6 +153,7 @@ const AssignBookModal = ({
 };
 
 AssignBookModal.propTypes = {
+  updateInfo: PropTypes.func,
   handleClose: PropTypes.func,
   book: PropTypes.shape({
     id: PropTypes.number,
