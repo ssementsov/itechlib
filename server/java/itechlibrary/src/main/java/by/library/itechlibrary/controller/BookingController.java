@@ -1,6 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.NewBookingDto;
+import by.library.itechlibrary.dto.booking.NewBookingDto;
+import by.library.itechlibrary.dto.booking.NewBookingResponseDto;
 import by.library.itechlibrary.service.BookingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,7 +59,7 @@ public class BookingController {
     @PostMapping
     @ApiOperation("create new booking")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewBookingDto addBook(@Valid @RequestBody NewBookingDto newBookingDto) {
+    public NewBookingResponseDto addBook(@Valid @RequestBody NewBookingDto newBookingDto) {
 
         return bookingService.saveBooking(newBookingDto);
     }

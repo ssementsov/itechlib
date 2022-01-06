@@ -1,6 +1,7 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.dto.NewBookingDto;
+import by.library.itechlibrary.dto.booking.NewBookingDto;
+import by.library.itechlibrary.dto.booking.NewBookingResponseDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface BookingService {
 
     List<NewBookingDto> findAllByBookId(long id);
 
-    NewBookingDto saveBooking(NewBookingDto newBookingDto);
+    NewBookingResponseDto saveBooking(NewBookingDto newBookingDto);
 
     NewBookingDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 

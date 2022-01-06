@@ -2,7 +2,8 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.NewBookingDto;
+import by.library.itechlibrary.dto.booking.NewBookingDto;
+import by.library.itechlibrary.dto.booking.NewBookingResponseDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Status;
@@ -55,7 +56,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public NewBookingDto saveBooking(NewBookingDto newBookingDto) {
+    public NewBookingResponseDto saveBooking(NewBookingDto newBookingDto) {
 
         if (newBookingDto.getId() == 0) {
 
@@ -67,7 +68,8 @@ public class BookingServiceImpl implements BookingService {
             setBookAndChangeStatus(booking, StatusConstant.IN_USE_STATUS);
 
             booking = bookingRepository.save(booking);
-            return bookingMapper.toNewBookingDto(booking);
+
+            return bookingMapper.toNewBookingResponseDto(booking);
 
         } else {
 
