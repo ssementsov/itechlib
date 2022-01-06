@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
-public class NewBookingDto {
+public class BookingDto {
 
     private long id;
 
