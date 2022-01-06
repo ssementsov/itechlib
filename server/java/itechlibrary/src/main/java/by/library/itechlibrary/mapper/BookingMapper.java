@@ -1,6 +1,7 @@
 package by.library.itechlibrary.mapper;
 
-import by.library.itechlibrary.dto.NewBookingDto;
+import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Booking;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -14,16 +15,30 @@ public interface BookingMapper {
 
     @Mapping(source = "book.id", target = "bookId")
     @Named(value = "booking")
-    NewBookingDto toNewBookingDto(Booking booking);
+    BookingDto toBookingDtoFromBooking(Booking booking);
 
     @Mapping(source = "bookId", target = "book.id")
-    @Named(value = "newBookingDto")
-    Booking toBooking(NewBookingDto newBookingDto);
+    @Named(value = "BookingDto")
+    Booking toBookingFromBookingDto(BookingDto bookingDto);
 
     @IterableMapping(qualifiedByName = "booking")
-    List<NewBookingDto> mapNewBookingDtoList(List<Booking> bookings);
+    List<BookingDto> mapBookingDtoListBookings(List<Booking> bookings);
 
-    @IterableMapping(qualifiedByName = "newBookingDto")
-    List<Booking> mapBookingList(List<NewBookingDto> newBookingDtos);
+    @IterableMapping(qualifiedByName = "BookingDto")
+    List<Booking> mapBookingListFromBookingDtoList(List<BookingDto> bookingDtos);
+
+
+
+    @Named(value = "booking1")
+    BookingResponseDto toNewBookingResponseDto(Booking booking);
+
+    @Named(value = "newBookingResponseDto")
+    Booking toBookingFromBookingResponseDto(BookingResponseDto bookingResponseDto);
+
+    @IterableMapping(qualifiedByName = "booking1")
+    List<BookingResponseDto> mapBookingResponseDtoList(List<Booking> bookings);
+
+    @IterableMapping(qualifiedByName = "newBookingResponseDto")
+    List<Booking> mapBookingDtoListFromBookingResponseDtoList(List<BookingResponseDto> bookingResponseDtos);
 
 }

@@ -2,7 +2,8 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.NewBookingDto;
+import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Status;
@@ -44,30 +45,31 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<NewBookingDto> findAllByReaderId(long id) {
+    public List<BookingResponseDto> findAllByReaderId(long id) {
 
         log.info("Try to find bookings by reader id = {}.", id);
 
         List<Booking> bookings = bookingRepository.findAllByReaderId(id);
 
-        return bookingMapper.mapNewBookingDtoList(bookings);
+        return bookingMapper.mapBookingResponseDtoList(bookings);
     }
 
     @Transactional
     @Override
-    public NewBookingDto saveBooking(NewBookingDto newBookingDto) {
+    public BookingResponseDto saveBooking(BookingDto bookingDto) {
 
-        if (newBookingDto.getId() == 0) {
+        if (bookingDto.getId() == 0) {
 
             log.info("Try to map bookingDto and save booking.");
 
-            Booking booking = bookingMapper.toBooking(newBookingDto);
+            Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             checkAndSetDates(booking);
             setCurrentUser(booking);
             setBookAndChangeStatus(booking, StatusConstant.IN_USE_STATUS);
 
             booking = bookingRepository.save(booking);
-            return bookingMapper.toNewBookingDto(booking);
+
+            return bookingMapper.toNewBookingResponseDto(booking);
 
         } else {
 
@@ -78,40 +80,40 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<NewBookingDto> findAllByBookId(long id) {
+    public List<BookingResponseDto> findAllByBookId(long id) {
 
         log.info("Try to find bookings by book id = {}.", id);
 
         List<Booking> bookings = bookingRepository.findAllByBookId(id);
 
-        return bookingMapper.mapNewBookingDtoList(bookings);
+        return bookingMapper.mapBookingResponseDtoList(bookings);
     }
 
     @Override
-    public List<NewBookingDto> findAllCurrentsByReaderId(long id) {
+    public List<BookingResponseDto> findAllCurrentsByReaderId(long id) {
 
         log.info("Try to find current bookings by reader id = {}.", id);
 
         List<Booking> bookings = bookingRepository
                 .findAllByReaderIdAndCurrentDate(LocalDate.now(), id);
 
-        return bookingMapper.mapNewBookingDtoList(bookings);
+        return bookingMapper.mapBookingResponseDtoList(bookings);
     }
 
     @Override
-    public NewBookingDto findById(long id) {
+    public BookingResponseDto findById(long id) {
 
         log.info("Try to find booking by id = {}.", id);
 
         Booking booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("The booking was not find."));
 
-        return bookingMapper.toNewBookingDto(booking);
+        return bookingMapper.toNewBookingResponseDto(booking);
     }
 
     @Transactional
     @Override
-    public NewBookingDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
+    public BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
 
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("The booking was not find by id = " + bookingId));
@@ -120,7 +122,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setFinishDate(newFinishDate);
         booking = bookingRepository.save(booking);
 
-        return bookingMapper.toNewBookingDto(booking);
+        return bookingMapper.toNewBookingResponseDto(booking);
     }
 
     private void checkAndSetDates(Booking booking) {
