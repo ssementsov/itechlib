@@ -1,6 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.NewBookingDto;
+import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.service.BookingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,7 +27,7 @@ public class BookingController {
     @GetMapping("/{readerId}")
     @ApiOperation("get all reader's bookings")
     @ResponseStatus(HttpStatus.OK)
-    public List<NewBookingDto> getBookingsByReaderId(@PathVariable("readerId") long readerId) {
+    public List<BookingResponseDto> getBookingsByReaderId(@PathVariable("readerId") long readerId) {
 
         return bookingService.findAllByReaderId(readerId);
     }
@@ -34,7 +35,7 @@ public class BookingController {
     @GetMapping("/{readerId}/current")
     @ApiOperation("get all reader's current bookings")
     @ResponseStatus(HttpStatus.OK)
-    public List<NewBookingDto> getCurrentBookingsByReaderId(@PathVariable("readerId") long readerId) {
+    public List<BookingResponseDto> getCurrentBookingsByReaderId(@PathVariable("readerId") long readerId) {
 
         return bookingService.findAllCurrentsByReaderId(readerId);
     }
@@ -42,7 +43,7 @@ public class BookingController {
     @GetMapping("/{bookId}")
     @ApiOperation("get all book's bookings")
     @ResponseStatus(HttpStatus.OK)
-    public List<NewBookingDto> getBookingsByBooksId(@PathVariable("bookId") long readerId) {
+    public List<BookingResponseDto> getBookingsByBooksId(@PathVariable("bookId") long readerId) {
 
         return bookingService.findAllByBookId(readerId);
     }
@@ -50,7 +51,7 @@ public class BookingController {
     @GetMapping("/{id}")
     @ApiOperation("get booking by id")
     @ResponseStatus(HttpStatus.OK)
-    public NewBookingDto getBookingById(@PathVariable("id") long id) {
+    public BookingResponseDto getBookingById(@PathVariable("id") long id) {
 
         return bookingService.findById(id);
     }
@@ -58,16 +59,16 @@ public class BookingController {
     @PostMapping
     @ApiOperation("create new booking")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewBookingDto addBook(@Valid @RequestBody NewBookingDto newBookingDto) {
+    public BookingResponseDto addBook(@Valid @RequestBody BookingDto bookingDto) {
 
-        return bookingService.saveBooking(newBookingDto);
+        return bookingService.saveBooking(bookingDto);
     }
 
     @PutMapping("/update-finish-date")
     @ApiOperation("update booking")
     @ResponseStatus(HttpStatus.OK)
-    public NewBookingDto updateBook(@RequestParam("bookingId") long bookingId,
-                                    @RequestParam("newFinishDate") LocalDate newFinishDate) {
+    public BookingResponseDto updateBookingFinishDate(@RequestParam("bookingId") long bookingId,
+                                                      @RequestParam("newFinishDate") LocalDate newFinishDate) {
 
         return bookingService.updateFinishDate(bookingId, newFinishDate);
     }
