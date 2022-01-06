@@ -16,6 +16,10 @@ function BookPreviewPage({ enqueueSnackbar }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const id = router.query.id;
 
+  const updateInfo = (newInfo) => {
+    setBook(newInfo);
+  };
+
   const fetchBook = useCallback(() => {
     const token = localStorage.getItem('token');
     apiBooks
@@ -86,7 +90,11 @@ function BookPreviewPage({ enqueueSnackbar }) {
                 />
               </Grid>
               <Grid item lg={8} md={9} xs={12}>
-                <BookDetails fetchBook={fetchBook} book={book} />
+                <BookDetails
+                  fetchBook={fetchBook}
+                  updateInfo={updateInfo}
+                  book={book}
+                />
               </Grid>
             </Grid>
           </Container>

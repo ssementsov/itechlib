@@ -56,5 +56,12 @@ export class ApiCore {
         return apiProvider.postCorp(options.url, options.id, model);
       };
     }
+
+    //BOOKINGS
+    if (options.postBooking) {
+      this.postBooking = (model, token) => {
+        return apiProvider.postBooking(options.url, model, token);
+      };
+    }
   }
 }

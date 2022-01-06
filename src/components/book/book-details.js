@@ -37,7 +37,7 @@ const TblCell = styled(TableCell)(() => ({
   padding: '5px 35px',
 }));
 
-const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
+const BookDetails = ({ book, enqueueSnackbar, updateInfo, fetchBook }) => {
   const router = useRouter();
   const token = localStorage.getItem('token');
   const corpEmail = localStorage.getItem('corpEmail');
@@ -93,8 +93,8 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
         values.status,
         values.description
       );
-      apiBooks.put(editBook, token).then(() => {
-        fetchBook();
+      apiBooks.put(editBook, token).then((res) => {
+        updateInfo(res.data);
       });
       enqueueSnackbar('Your book has been updated successfully!', {
         variant: 'success',
@@ -111,14 +111,16 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
       <CardHeader
         title={book.title}
         action={
-          <>
-            <CustomModal type={typeModal.delete} deleteBook={deleteBook} />
-            <CustomModal
-              type={typeModal.edit}
-              editBook={editBook}
-              book={book}
-            />
-          </>
+          book.owner.corpEmail === corpEmail && (
+            <>
+              <CustomModal type={typeModal.delete} deleteBook={deleteBook} />
+              <CustomModal
+                type={typeModal.edit}
+                editBook={editBook}
+                book={book}
+              />
+            </>
+          )
         }
       />
       <CardContent
@@ -196,7 +198,12 @@ const BookDetails = ({ book, enqueueSnackbar, fetchBook }) => {
             p: 2,
           }}
         >
-          <CustomModal type={typeModal.assign} />
+          <CustomModal
+            type={typeModal.assign}
+            book={book}
+            updateInfo={updateInfo}
+            fetchBook={fetchBook}
+          />
         </Box>
       )}
     </Card>

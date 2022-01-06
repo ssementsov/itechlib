@@ -34,6 +34,8 @@ export default function CustomModal({
   deleteBook,
   editBook,
   book,
+  updateInfo,
+  fetchBook,
 }) {
   const [open, setOpen] = React.useState(false);
 
@@ -113,7 +115,12 @@ export default function CustomModal({
           </Button>
           <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
-              <AssignBookModal handleClose={handleClose} />
+              <AssignBookModal
+                handleClose={handleClose}
+                book={book}
+                updateInfo={updateInfo}
+                fetchBook={fetchBook}
+              />
             </Box>
           </Modal>
         </>

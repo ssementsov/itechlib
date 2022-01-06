@@ -5,6 +5,9 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DatePicker from '@mui/lab/DatePicker';
 import { add } from 'date-fns';
+import { Booking } from './../../models/booking-model';
+import { apiBookings } from './../../api/bookings';
+import { withSnackbar } from 'notistack';
 
 const BoxForDate = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -21,7 +24,13 @@ const BoxForDate = styled(Box)(({ theme }) => ({
   },
 }));
 
-const AssignBookModal = ({ handleClose }) => {
+const AssignBookModal = ({
+  enqueueSnackbar,
+  handleClose,
+  book,
+  updateInfo,
+  fetchBook,
+}) => {
   const maxDate = add(new Date(), {
     months: 1,
   });
@@ -31,7 +40,6 @@ const AssignBookModal = ({ handleClose }) => {
     if (!value.finishDate) {
       error.finishDate = 'Date is required';
     }
-
     return error;
   }
 
@@ -47,9 +55,25 @@ const AssignBookModal = ({ handleClose }) => {
     },
   });
 
-  const assign = (v) => {
-    console.log(v);
+  const assign = ({ startDate, finishDate }) => {
+    const booking = new Booking(0, book.id, startDate, finishDate);
+    const token = localStorage.getItem('token');
+    apiBookings
+      .postBooking(booking, token)
+      .then((res) => {
+        console.log(res);
+        fetchBook();
+        enqueueSnackbar('The book was assigned to you successfully!', {
+          variant: 'success',
+        });
+      })
+      .catch(() => {
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        });
+      });
   };
+
   return (
     <>
       <Box sx={{ my: 3 }}>
@@ -132,7 +156,25 @@ const AssignBookModal = ({ handleClose }) => {
 
 AssignBookModal.propTypes = {
   handleClose: PropTypes.func,
-  deleteBook: PropTypes.func,
+  book: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    author: PropTypes.string,
+    category: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    language: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+    description: PropTypes.string,
+    link: PropTypes.string,
+    status: PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  }),
 };
 
-export default AssignBookModal;
+export default withSnackbar(AssignBookModal);

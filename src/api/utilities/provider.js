@@ -54,14 +54,22 @@ const postCorp = async (resource, id2, model) => {
   });
 };
 
+//BOOKINGS
+const postBooking = (resource, model, token) => {
+  return axios.post(`${BASE_URL}/${resource}`, model, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 export const apiProvider = {
   getAll,
   getSingle,
-  getGoogle,
-  postAuth,
   post,
-  postCreds,
-  postCorp,
   put,
   remove,
+  getGoogle,
+  postAuth,
+  postCreds,
+  postCorp,
+  postBooking,
 };
