@@ -28,10 +28,11 @@ public interface BookingMapper {
     List<Booking> mapBookingListFromBookingDtoList(List<BookingDto> bookingDtos);
 
 
-
+    @Mapping(source = "reader.id", target = "readerId")
     @Named(value = "booking1")
     BookingResponseDto toNewBookingResponseDto(Booking booking);
 
+    @Mapping(source = "readerId", target = "reader.id")
     @Named(value = "newBookingResponseDto")
     Booking toBookingFromBookingResponseDto(BookingResponseDto bookingResponseDto);
 

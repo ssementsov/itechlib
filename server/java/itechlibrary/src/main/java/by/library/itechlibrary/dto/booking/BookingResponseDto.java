@@ -20,4 +20,6 @@ public class BookingResponseDto {
     @NotNull
     private BookDto book;
 
+    private long readerId;
+
 }
