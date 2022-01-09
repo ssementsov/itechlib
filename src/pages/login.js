@@ -25,8 +25,8 @@ const Login = ({ enqueueSnackbar }) => {
       apiUsers
         .postAuth(resFromGoogle)
         .then((res) => {
-          let token = res.data;
-          localStorage.setItem('token', token);
+          localStorage.setItem('userId', res.data.userId);
+          localStorage.setItem('token', res.data.token);
           router.replace(MAIN_CATALOGUE_PATH);
         })
         .catch(function () {

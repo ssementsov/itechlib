@@ -37,7 +37,7 @@ const TblCell = styled(TableCell)(() => ({
   padding: '5px 35px',
 }));
 
-const BookDetails = ({ book, enqueueSnackbar, updateInfo }) => {
+const BookDetails = ({ book, enqueueSnackbar, updateInfo, isAssigned }) => {
   const router = useRouter();
   const token = localStorage.getItem('token');
   const corpEmail = localStorage.getItem('corpEmail');
@@ -199,7 +199,7 @@ const BookDetails = ({ book, enqueueSnackbar, updateInfo }) => {
           }}
         >
           <CustomModal
-            type={typeModal.assign}
+            type={isAssigned ? typeModal.return : typeModal.assign}
             book={book}
             updateInfo={updateInfo}
           />

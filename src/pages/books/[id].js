@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import { withSnackbar } from 'notistack';
 import { apiBooks } from '../../api/books';
 
-function BookPreviewPage({ enqueueSnackbar }) {
+function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const router = useRouter();
   const [book, setBook] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,6 +22,10 @@ function BookPreviewPage({ enqueueSnackbar }) {
 
   useEffect(() => {
     if (router.isReady) {
+      const assigned = localStorage.getItem('assigned');
+      if (assigned) {
+        assignHandler(true);
+      }
       const token = localStorage.getItem('token');
       apiBooks
         .getSingle(id, token)
@@ -35,7 +39,7 @@ function BookPreviewPage({ enqueueSnackbar }) {
           });
         });
     }
-  }, [enqueueSnackbar, id, router.isReady]);
+  }, [assignHandler, enqueueSnackbar, id, router.isReady]);
 
   if (!isLoaded) {
     return (
@@ -86,7 +90,11 @@ function BookPreviewPage({ enqueueSnackbar }) {
                 />
               </Grid>
               <Grid item lg={8} md={9} xs={12}>
-                <BookDetails updateInfo={updateInfo} book={book} />
+                <BookDetails
+                  updateInfo={updateInfo}
+                  book={book}
+                  isAssigned={isAssigned}
+                />
               </Grid>
             </Grid>
           </Container>

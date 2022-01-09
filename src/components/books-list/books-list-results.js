@@ -1,4 +1,4 @@
-import PerfectScrollbar from "react-perfect-scrollbar";
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Box,
   Card,
@@ -9,16 +9,48 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import { titles } from "../../common/constants/titles-constants";
-import router from "next/router";
-import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
+} from '@mui/material';
+import { titles } from '../../common/constants/titles-constants';
+import router from 'next/router';
+import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
+import { apiBookings } from './../../api/bookings';
+import { withSnackbar } from 'notistack';
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
 }
 
-export const BooksListResults = ({ books, startSearch }) => {
+const BooksListResults = ({
+  enqueueSnackbar,
+  books,
+  startSearch,
+  assignHandler,
+}) => {
+  const handleOpenPreviewPage = (bookId) => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    apiBookings
+      .getCurrentBookingsOfReader(userId, token)
+      .then((res) => {
+        for (let booking of res.data) {
+          if (booking.book.id === bookId) {
+            localStorage.setItem('assigned', true);
+            assignHandler(true);
+            break;
+          } else {
+            localStorage.removeItem('assigned');
+            assignHandler(false);
+          }
+        }
+        router.push(`${BOOK_PREVIEW_PAGE_PATH}/${bookId}`);
+      })
+      .catch(() =>
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        })
+      );
+  };
+
   return (
     <Card>
       <PerfectScrollbar>
@@ -40,9 +72,7 @@ export const BooksListResults = ({ books, startSearch }) => {
                 books.map((book) => {
                   return (
                     <TableRow
-                      onClick={() =>
-                        router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}`)
-                      }
+                      onClick={() => handleOpenPreviewPage(book.id)}
                       key={book.id}
                       hover
                     >
@@ -73,11 +103,11 @@ export const BooksListResults = ({ books, startSearch }) => {
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Typography
-                      sx={{ textAlign: "center", color: "action.active" }}
+                      sx={{ textAlign: 'center', color: 'action.active' }}
                     >
                       {startSearch
-                        ? "No books found"
-                        : "No books have been added yet!"}
+                        ? 'No books found'
+                        : 'No books have been added yet!'}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -89,3 +119,5 @@ export const BooksListResults = ({ books, startSearch }) => {
     </Card>
   );
 };
+
+export default withSnackbar(BooksListResults);

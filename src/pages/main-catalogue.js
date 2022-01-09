@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { Box, Container, Typography } from '@mui/material';
-import { BooksListResults } from '../components/books-list/books-list-results';
+import BooksListResults from '../components/books-list/books-list-results';
 import { BooksListToolbar } from '../components/books-list/books-list-toolbar';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { useState, useEffect, useMemo } from 'react';
@@ -11,7 +11,7 @@ import { apiBooks } from '../api/books';
 import { category } from './../common/constants/category-constants';
 import { language } from './../common/constants/language-constants';
 
-const MainCatalogue = ({ enqueueSnackbar }) => {
+const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState('');
@@ -121,6 +121,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
               <BooksListResults
                 books={searchedBooks}
                 startSearch={startSearch}
+                assignHandler={assignHandler}
               />
             </Box>
           </Container>

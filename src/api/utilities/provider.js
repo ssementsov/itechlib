@@ -61,6 +61,12 @@ const postBooking = (resource, model, token) => {
   });
 };
 
+const getCurrentBookingsOfReader = (resource, urlCurrent, id, token) => {
+  return axios.get(`${BASE_URL}/${resource}/${id}/${urlCurrent}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 export const apiProvider = {
   getAll,
   getSingle,
@@ -72,4 +78,5 @@ export const apiProvider = {
   postCreds,
   postCorp,
   postBooking,
+  getCurrentBookingsOfReader,
 };

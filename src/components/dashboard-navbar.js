@@ -62,6 +62,7 @@ export const DashboardNavbar = (props) => {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     router.replace(LOGIN_PATH);
   };
 

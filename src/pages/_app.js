@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useState } from 'react';
 import { CacheProvider } from '@emotion/react';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -15,6 +16,10 @@ const App = (props) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
+  const [isAssigned, setIsAssigned] = useState(false);
+  const assignHandler = (assigned) => {
+    setIsAssigned(assigned);
+  };
 
   return (
     <CacheProvider value={emotionCache}>
@@ -34,7 +39,13 @@ const App = (props) => {
             TransitionComponent={Slide}
           >
             <CssBaseline />
-            {getLayout(<Component {...pageProps} />)}
+            {getLayout(
+              <Component
+                isAssigned={isAssigned}
+                assignHandler={assignHandler}
+                {...pageProps}
+              />
+            )}
           </SnackbarProvider>
         </ThemeProvider>
       </LocalizationProvider>

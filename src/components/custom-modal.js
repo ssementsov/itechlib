@@ -6,7 +6,9 @@ import { DeleteIcon } from './../icons/delete-icon';
 import { EditIcon } from './../icons/edit-icon';
 import DeleteBookModal from './delete-book/delete-book-modal';
 import AssignBookModal from './assign-book/assign-book-modal';
+import ReturnBookModal from './return-book/return-book-modal';
 import { typeModal } from '../common/constants/modal-type-constants';
+import { status } from './../common/constants/status-constants';
 
 const style = {
   position: 'absolute',
@@ -109,12 +111,35 @@ export default function CustomModal({
             aria-label="assign"
             color="primary"
             variant="contained"
+            disabled={book.status.name !== status.available ? true : false}
           >
             Assign to me
           </Button>
           <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
               <AssignBookModal
+                handleClose={handleClose}
+                book={book}
+                updateInfo={updateInfo}
+              />
+            </Box>
+          </Modal>
+        </>
+      );
+    case typeModal.return:
+      return (
+        <>
+          <Button
+            onClick={handleOpen}
+            aria-label="assign"
+            color="primary"
+            variant="contained"
+          >
+            Return the book
+          </Button>
+          <Modal open={open} onClose={handleClose}>
+            <Box sx={style}>
+              <ReturnBookModal
                 handleClose={handleClose}
                 book={book}
                 updateInfo={updateInfo}
@@ -136,6 +161,7 @@ CustomModal.propTypes = {
     'DELETE BOOK',
     'EDIT BOOK',
     'ASSIGN BOOK',
+    'RETURN BOOK',
   ]),
   book: PropTypes.shape({
     id: PropTypes.number,
