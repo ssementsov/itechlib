@@ -19,4 +19,6 @@ public class BookingDto {
     @NotNull
     private long bookId;
 
+    private boolean isActive;
+
 }
