@@ -77,6 +77,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NecessaryConditionException.class)
+    public ResponseEntity<IncorrectData> handleException(NecessaryConditionException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotActiveBookingException.class)
+    public ResponseEntity<IncorrectData> handleException(NotActiveBookingException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
     private IncorrectData incorrectDataFilling(Exception exception) {
 
        IncorrectData incorrectData = new IncorrectData();

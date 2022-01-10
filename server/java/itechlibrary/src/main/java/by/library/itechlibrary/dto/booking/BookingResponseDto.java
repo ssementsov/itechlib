@@ -22,4 +22,6 @@ public class BookingResponseDto {
 
     private long readerId;
 
+    private boolean isActive;
+
 }

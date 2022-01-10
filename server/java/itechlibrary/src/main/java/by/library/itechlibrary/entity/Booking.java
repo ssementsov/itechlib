@@ -31,6 +31,9 @@ public class Booking {
     @Column(name = "feedback")
     private String feedback;
 
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "user_id")
     private User reader;

@@ -4,14 +4,12 @@ import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Status;
 import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.exeption_handler.exception.BookingBookException;
-import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
-import by.library.itechlibrary.exeption_handler.exception.WrongDateException;
-import by.library.itechlibrary.exeption_handler.exception.WrongDtoDataException;
+import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.repository.BookingRepository;
@@ -105,8 +103,7 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Try to find booking by id = {}.", id);
 
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("The booking was not find."));
+        Booking booking = findBookingById(id);
 
         return bookingMapper.toNewBookingResponseDto(booking);
     }
@@ -115,15 +112,56 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
 
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("The booking was not find by id = " + bookingId));
-
+        Booking booking = findBookingById(bookingId);
         checkFinishDate(booking.getStartDate(), newFinishDate);
         booking.setFinishDate(newFinishDate);
         booking = bookingRepository.save(booking);
 
         return bookingMapper.toNewBookingResponseDto(booking);
     }
+
+    @Transactional
+    @Override
+    public void returnBooking(ReviewDto reviewDto, long id) {
+
+        Booking booking = findBookingById(id);
+
+        if (booking.isActive()) {
+
+            booking.getBook().setStatus(StatusConstant.AVAILABLE_STATUS);
+            booking.setActive(false);
+            setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
+            bookingRepository.save(booking);
+
+        }else{
+
+            throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
+
+        }
+    }
+
+    private void setReviewInfo(Booking booking, Short rate, String feedback) {
+
+        if (rate != null && rate != 0) {
+
+            booking.setRate(rate);
+
+        }
+
+        if (feedback != null && !feedback.equals("")) {
+
+            booking.setFeedback(feedback);
+
+        }
+    }
+
+    private Booking findBookingById(long id) {
+
+        return bookingRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("The booking was not find by id = " + id));
+
+    }
+
 
     private void checkAndSetDates(Booking booking) {
 

@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-add-column-is-active-to-booking.yaml
+      relativeToChangelogFile: true
