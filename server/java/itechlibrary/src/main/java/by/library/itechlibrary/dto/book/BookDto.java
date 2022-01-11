@@ -1,5 +1,9 @@
-package by.library.itechlibrary.dto;
+package by.library.itechlibrary.dto.book;
 
+import by.library.itechlibrary.dto.CategoryDto;
+import by.library.itechlibrary.dto.LanguageDto;
+import by.library.itechlibrary.dto.StatusDto;
+import by.library.itechlibrary.dto.UserDto;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

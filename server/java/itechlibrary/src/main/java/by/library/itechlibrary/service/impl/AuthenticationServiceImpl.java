@@ -2,7 +2,6 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.config.JwtProvider;
 import by.library.itechlibrary.dto.auth.AuthDto;
-import by.library.itechlibrary.dto.auth.AuthResponseDto;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotActivatedUserException;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -30,13 +29,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public AuthResponseDto authenticate(AuthDto authDto) {
+    public String authenticate(AuthDto authDto) {
 
         Optional<User> userOptional = getOptionalUser(authDto);
         User currentUser = checkAndGetUser(userOptional);
 
-
-        return new AuthResponseDto(currentUser.getId(), getToken(currentUser));
+        return getToken(currentUser);
     }
 
 

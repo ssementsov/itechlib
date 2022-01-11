@@ -1,6 +1,6 @@
 package by.library.itechlibrary.dto.booking;
 
-import by.library.itechlibrary.dto.BookDto;
+import by.library.itechlibrary.dto.book.BookDto;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -19,8 +19,6 @@ public class BookingResponseDto {
 
     @NotNull
     private BookDto book;
-
-    private long readerId;
 
     private boolean isActive;
 

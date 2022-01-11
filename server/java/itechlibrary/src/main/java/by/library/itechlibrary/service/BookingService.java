@@ -24,4 +24,6 @@ public interface BookingService {
 
     void returnBooking(ReviewDto reviewDto, long id);
 
+    boolean isReader(long userId, long bookId);
+
 }
