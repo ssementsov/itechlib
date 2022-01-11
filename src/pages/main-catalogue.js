@@ -10,6 +10,7 @@ import { Book } from "../models/book-model";
 import { apiBooks } from "../api/books";
 import { category } from "./../common/constants/category-constants";
 import { language } from "./../common/constants/language-constants";
+import { api } from "../api/utilities/api";
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -32,8 +33,9 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    api.setupAuth(token);
     apiBooks
-      .getAll(token)
+      .getAll()
       .then((res) => {
         setBooks(res.data);
         setIsLoaded(true);
@@ -49,7 +51,6 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
     let idCategory = values.category === category.professional ? 1 : 2;
     let idLanguage = values.language === language.english ? 1 : 2;
     let idStatus;
-    const token = localStorage.getItem("token");
     switch (values.status) {
       case status.notAvailable:
         idStatus = 2;
@@ -75,7 +76,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
     );
 
     apiBooks
-      .post(newBook, token)
+      .post(newBook)
       .then(function (res) {
         enqueueSnackbar("Your book has been added successfully!", {
           variant: "success",

@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { withSnackbar } from "notistack";
 import { apiBooks } from "../../api/books";
 import { apiBookings } from "./../../api/bookings";
+import { api } from "../../api/utilities/api";
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const router = useRouter();
@@ -22,10 +23,12 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    api.setupAuth(token);
+
     if (router.isReady) {
-      const token = localStorage.getItem("token");
       apiBooks
-        .getSingle(id, token)
+        .getSingle(id)
         .then(function (res) {
           setBook(res.data);
           setIsLoaded(true);
@@ -39,10 +42,9 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   }, [assignHandler, enqueueSnackbar, id, router.isReady]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
     const userId = localStorage.getItem("userId");
     apiBookings
-      .getCurrentBookingsOfReader(userId, token)
+      .getCurrentBookingsOfReader(userId)
       .then((res) => {
         for (let booking of res.data) {
           if (booking.book.id === Number(id)) {

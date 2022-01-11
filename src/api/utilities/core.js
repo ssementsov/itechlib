@@ -1,35 +1,35 @@
-import { apiProvider } from './provider';
+import { apiProvider } from "./provider";
 
 export class ApiCore {
   constructor(options) {
     //BOOKS
     if (options.getAll) {
-      this.getAll = (token) => {
-        return apiProvider.getAll(options.url, token);
+      this.getAll = () => {
+        return apiProvider.getAll(options.url);
       };
     }
 
     if (options.getSingle) {
-      this.getSingle = (id, token) => {
-        return apiProvider.getSingle(options.url, id, token);
+      this.getSingle = (id) => {
+        return apiProvider.getSingle(options.url, id);
       };
     }
 
     if (options.post) {
-      this.post = (model, token) => {
-        return apiProvider.post(options.url, model, token);
+      this.post = (model) => {
+        return apiProvider.post(options.url, model);
       };
     }
 
     if (options.put) {
-      this.put = (model, token) => {
-        return apiProvider.put(options.url, model, token);
+      this.put = (model) => {
+        return apiProvider.put(options.url, model);
       };
     }
 
     if (options.remove) {
-      this.remove = (id, token) => {
-        return apiProvider.remove(options.url, id, token);
+      this.remove = (id) => {
+        return apiProvider.remove(options.url, id);
       };
     }
 
@@ -59,18 +59,17 @@ export class ApiCore {
 
     //BOOKINGS
     if (options.postBooking) {
-      this.postBooking = (model, token) => {
-        return apiProvider.postBooking(options.url, model, token);
+      this.postBooking = (model) => {
+        return apiProvider.postBooking(options.url, model);
       };
     }
 
     if (options.getCurrentBookingsOfReader) {
-      this.getCurrentBookingsOfReader = (id, token) => {
+      this.getCurrentBookingsOfReader = (id) => {
         return apiProvider.getCurrentBookingsOfReader(
           options.url,
           options.urlCurrent,
-          id,
-          token
+          id
         );
       };
     }
