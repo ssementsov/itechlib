@@ -1,20 +1,20 @@
-import Head from 'next/head';
-import { Box, Container, Typography } from '@mui/material';
-import BooksListResults from '../components/books-list/books-list-results';
-import { BooksListToolbar } from '../components/books-list/books-list-toolbar';
-import { DashboardLayout } from '../components/dashboard-layout';
-import { useState, useEffect, useMemo } from 'react';
-import { withSnackbar } from 'notistack';
-import { status } from '../common/constants/status-constants';
-import { Book } from '../models/book-model';
-import { apiBooks } from '../api/books';
-import { category } from './../common/constants/category-constants';
-import { language } from './../common/constants/language-constants';
+import Head from "next/head";
+import { Box, Container, Typography } from "@mui/material";
+import BooksListResults from "../components/books-list/books-list-results";
+import { BooksListToolbar } from "../components/books-list/books-list-toolbar";
+import { DashboardLayout } from "../components/dashboard-layout";
+import { useState, useEffect, useMemo } from "react";
+import { withSnackbar } from "notistack";
+import { status } from "../common/constants/status-constants";
+import { Book } from "../models/book-model";
+import { apiBooks } from "../api/books";
+import { category } from "./../common/constants/category-constants";
+import { language } from "./../common/constants/language-constants";
 
-const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
+const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [startSearch, setStartSearch] = useState(false);
 
   const searchedBooks = useMemo(() => {
@@ -31,7 +31,7 @@ const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
   }, [books, search]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     apiBooks
       .getAll(token)
       .then((res) => {
@@ -39,8 +39,8 @@ const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
         setIsLoaded(true);
       })
       .catch(function () {
-        enqueueSnackbar('Something went wrong... Please retry.', {
-          variant: 'error',
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
         });
       });
   }, [enqueueSnackbar]);
@@ -49,7 +49,7 @@ const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
     let idCategory = values.category === category.professional ? 1 : 2;
     let idLanguage = values.language === language.english ? 1 : 2;
     let idStatus;
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     switch (values.status) {
       case status.notAvailable:
         idStatus = 2;
@@ -77,16 +77,16 @@ const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
     apiBooks
       .post(newBook, token)
       .then(function (res) {
-        enqueueSnackbar('Your book has been added successfully!', {
-          variant: 'success',
+        enqueueSnackbar("Your book has been added successfully!", {
+          variant: "success",
         });
         const newBooksList = [res.data, ...books];
         setBooks(newBooksList);
         setIsLoaded(true);
       })
       .catch(function () {
-        enqueueSnackbar('Something went wrong... Please retry.', {
-          variant: 'error',
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
         });
         setIsLoaded(true);
       });
@@ -121,7 +121,6 @@ const MainCatalogue = ({ enqueueSnackbar, assignHandler }) => {
               <BooksListResults
                 books={searchedBooks}
                 startSearch={startSearch}
-                assignHandler={assignHandler}
               />
             </Box>
           </Container>
