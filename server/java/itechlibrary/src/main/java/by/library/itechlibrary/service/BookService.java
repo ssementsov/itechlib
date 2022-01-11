@@ -1,6 +1,7 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.dto.BookDto;
+import by.library.itechlibrary.dto.book.BookAndIsReaderDto;
+import by.library.itechlibrary.dto.book.BookDto;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface BookService {
 
     BookDto saveBook(BookDto bookDto);
 
-    BookDto findById(long id);
+    BookAndIsReaderDto findByIdWithIsReader(long id);
 
     List<BookDto> findByUserId(long id);
 

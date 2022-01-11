@@ -37,8 +37,6 @@ public class BookingServiceImpl implements BookingService {
 
     private final SecurityUserDetailsServiceImpl securityUserDetailsService;
 
-    private final BookService bookService;
-
     private final BookRepository bookRepository;
 
 
@@ -133,10 +131,25 @@ public class BookingServiceImpl implements BookingService {
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
             bookingRepository.save(booking);
 
-        }else{
+        } else {
 
             throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
 
+        }
+    }
+
+    @Override
+    public boolean isReader(long userId, long bookId) {
+
+        log.info("Try to find active booking by book id = {} and user id = {}", bookId, userId);
+
+        if (bookingRepository.findByActiveIsTrueAndReaderIdAndBookId(userId, bookId).isPresent()) {
+
+            return true;
+
+        } else {
+
+            return false;
         }
     }
 

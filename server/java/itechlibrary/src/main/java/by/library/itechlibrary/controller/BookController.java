@@ -1,6 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.BookDto;
+import by.library.itechlibrary.dto.book.BookAndIsReaderDto;
+import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,9 +32,9 @@ public class BookController {
     @GetMapping("/{id}")
     @ApiOperation("get book by id")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto getBookById(@PathVariable("id") long id) {
+    public BookAndIsReaderDto getBookById(@PathVariable("id") long id) {
 
-        return bookService.findById(id);
+        return bookService.findByIdWithIsReader(id);
     }
 
     @GetMapping("/user/{id}")

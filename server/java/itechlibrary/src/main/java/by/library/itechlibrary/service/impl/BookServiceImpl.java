@@ -1,14 +1,15 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.BookDto;
+import by.library.itechlibrary.dto.book.BookAndIsReaderDto;
+import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.entity.Book;
-import by.library.itechlibrary.entity.Status;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.mapper.BookMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
+import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,8 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     private final UserService userService;
+
+    private final BookingService bookingService;
 
     @Override
     public List<BookDto> findAll() {
@@ -57,15 +60,20 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toBookDto(book);
     }
 
+
     @Override
-    public BookDto findById(long id) {
+    public BookAndIsReaderDto findByIdWithIsReader(long id) {
 
-        log.info("Try to find book by id {}", id);
+        Book book = findById(id);
+        long currentUserId = userService.getCurrentUser().getId();
 
-        Book book = bookRepository
-                .findById(id).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+        log.info("Try to map book to bookAndIsReaderDto");
 
-        return bookMapper.toBookDto(book);
+        BookAndIsReaderDto bookAndIsReaderDto = bookMapper.toBookAndIsReaderDto(book);
+        boolean isReader = bookingService.isReader(currentUserId, id);
+        bookAndIsReaderDto.setReader(isReader);
+
+        return bookAndIsReaderDto;
     }
 
     @Override
@@ -82,8 +90,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void remove(long id) {
 
-        Book book = bookRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+        Book book = findById(id);
 
         log.info("Try to delete book by id {}", id);
 
@@ -117,5 +124,15 @@ public class BookServiceImpl implements BookService {
             book.setOwner(userService.getCurrentUser());
 
         }
+    }
+
+    private Book findById(long id) {
+
+        log.info("Try to find book by id {}", id);
+
+        return bookRepository
+                .findById(id).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+
+
     }
 }
