@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Box, Button, IconButton, Modal, Typography } from "@mui/material";
-import { DeleteIcon } from "../../icons/delete-icon";
+import { Box, Button, Modal, Typography } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -23,27 +22,15 @@ const style = {
   },
 };
 
-const DeleteBookModal = ({ deleteBook }) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+const DeleteBookModal = ({ deleteBook, isOpenDelete, toggleDelete }) => {
   const deleteAndClose = () => {
     deleteBook();
-    handleClose();
+    toggleDelete();
   };
 
   return (
     <>
-      <IconButton onClick={handleOpen} aria-label="delete">
-        <DeleteIcon fontSize="small" />
-      </IconButton>
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={isOpenDelete} onClose={toggleDelete}>
         <Box sx={style}>
           <Box sx={{ my: 3 }}>
             <Typography color="textPrimary" variant="h4" textAlign="center">
@@ -62,7 +49,7 @@ const DeleteBookModal = ({ deleteBook }) => {
               Yes
             </Button>
             <Button
-              onClick={handleClose}
+              onClick={toggleDelete}
               fullWidth
               size="large"
               sx={{
@@ -83,6 +70,8 @@ const DeleteBookModal = ({ deleteBook }) => {
 
 DeleteBookModal.propTypes = {
   deleteBook: PropTypes.func,
+  isOpenDelete: PropTypes.bool,
+  toggleDelete: PropTypes.func,
 };
 
 export default DeleteBookModal;

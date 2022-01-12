@@ -29,7 +29,6 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
       apiBooks
         .getSingle(id)
         .then((res) => {
-          console.log(res.data.reader);
           res.data.reader ? assignHandler(true) : assignHandler(false);
           setBook(res.data);
           setIsLoaded(true);

@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -15,6 +16,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { EditIcon } from "../../icons/edit-icon";
+import { DeleteIcon } from "./../../icons/delete-icon";
 import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
 import { withSnackbar } from "notistack";
@@ -30,6 +32,7 @@ import { category } from "../../common/constants/category-constants";
 import { typeModal } from "../../common/constants/modal-type-constants";
 import { Book } from "../../models/book-model";
 import { apiBooks } from "../../api/books";
+import { useBoolean } from "../../utils/boolean-hook";
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
@@ -46,13 +49,11 @@ const TblCell = styled(TableCell)(() => ({
 const BookDetails = ({ book, enqueueSnackbar, updateInfo, isAssigned }) => {
   const router = useRouter();
   const corpEmail = localStorage.getItem("corpEmail");
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [isOpenAddEdit, toggleAddEdit] = useBoolean();
+  const [isOpenDelete, toggleDelete] = useBoolean();
+  const [isOpenAssign, toggleAssign] = useBoolean();
+  const [isOpenReturn, toggleReturn] = useBoolean();
+  let isOwner = book.owner.corpEmail === corpEmail;
 
   const deleteBook = () => {
     if (book.status.name === status.available) {
@@ -119,110 +120,145 @@ const BookDetails = ({ book, enqueueSnackbar, updateInfo, isAssigned }) => {
   };
 
   return (
-    <Card>
-      <CardHeader
-        title={book.title}
-        action={
-          book.owner.corpEmail === corpEmail && (
-            <>
-              <DeleteBookModal deleteBook={deleteBook} />
-              <IconButton onClick={handleOpen} aria-label="edit">
-                <EditIcon fontSize="small" />
-              </IconButton>
-              <AddOrEditBookModal
-                open={open}
-                handleClose={handleClose}
-                type={typeModal.edit}
-                editBook={editBook}
-                book={book}
-              />
-            </>
-          )
-        }
+    <>
+      <AddOrEditBookModal
+        isOpenAddEdit={isOpenAddEdit}
+        toggleAddEdit={toggleAddEdit}
+        type={typeModal.edit}
+        editBook={editBook}
+        book={book}
       />
-      <CardContent
-        sx={{
-          p: 0,
-        }}
-      >
-        <Grid container spacing={3}>
-          <Grid item md={12} xs={12}>
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TblCell>{titles.author}</TblCell>
-                  <TblCell>{book.author}</TblCell>
-                </TableRow>
-                <TableRow>
-                  <TblCell>{titles.category}</TblCell>
-                  <TblCell>
-                    {toLowerCaseExeptFirstLetter(book.category.name)}
-                  </TblCell>
-                </TableRow>
-                <TableRow>
-                  <TblCell>{titles.language}</TblCell>
-                  <TblCell>
-                    {toLowerCaseExeptFirstLetter(book.language.name)}
-                  </TblCell>
-                </TableRow>
-                <TableRow>
-                  <TblCell>{titles.link}</TblCell>
-                  <TblCell>
-                    <Link
-                      href={book.link}
-                      underline="hover"
-                      target="_blank"
-                      rel="noopener"
-                    >
-                      {"Open site"}
-                    </Link>
-                  </TblCell>
-                </TableRow>
-                <TableRow>
-                  <TblCell>{titles.rating}</TblCell>
-                  <TblCell>
-                    <Rating
-                      name="read-only"
-                      value={book.rating}
-                      size="small"
-                      readOnly
-                      sx={{
-                        marginLeft: "-3px",
-                      }}
-                    />
-                  </TblCell>
-                </TableRow>
-                <TableRow>
-                  <TblCell>{titles.status}</TblCell>
-                  <TblCell>
-                    {toLowerCaseExeptFirstLetter(book.status.name)}
-                  </TblCell>
-                </TableRow>
-                <TableRow>
-                  <TblCell>{titles.description}</TblCell>
-                  <TblCell>{book.description}</TblCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Grid>
-        </Grid>
-      </CardContent>
-      {book.owner.corpEmail !== corpEmail && (
-        <Box
+      <DeleteBookModal
+        deleteBook={deleteBook}
+        isOpenDelete={isOpenDelete}
+        toggleDelete={toggleDelete}
+      />
+      <AssignBookModal
+        book={book}
+        updateInfo={updateInfo}
+        isOpenAssign={isOpenAssign}
+        toggleAssign={toggleAssign}
+      />
+      <ReturnBookModal
+        isOpenReturn={isOpenReturn}
+        toggleReturn={toggleReturn}
+      />
+
+      <Card>
+        <CardHeader
+          title={book.title}
+          action={
+            isOwner && (
+              <>
+                <IconButton onClick={toggleDelete} aria-label="delete">
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+                <IconButton onClick={toggleAddEdit} aria-label="edit">
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </>
+            )
+          }
+        />
+        <CardContent
           sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            p: 2,
+            p: 0,
           }}
         >
-          {isAssigned ? (
-            <ReturnBookModal />
-          ) : (
-            <AssignBookModal book={book} updateInfo={updateInfo} />
-          )}
-        </Box>
-      )}
-    </Card>
+          <Grid container spacing={3}>
+            <Grid item md={12} xs={12}>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TblCell>{titles.author}</TblCell>
+                    <TblCell>{book.author}</TblCell>
+                  </TableRow>
+                  <TableRow>
+                    <TblCell>{titles.category}</TblCell>
+                    <TblCell>
+                      {toLowerCaseExeptFirstLetter(book.category.name)}
+                    </TblCell>
+                  </TableRow>
+                  <TableRow>
+                    <TblCell>{titles.language}</TblCell>
+                    <TblCell>
+                      {toLowerCaseExeptFirstLetter(book.language.name)}
+                    </TblCell>
+                  </TableRow>
+                  <TableRow>
+                    <TblCell>{titles.link}</TblCell>
+                    <TblCell>
+                      <Link
+                        href={book.link}
+                        underline="hover"
+                        target="_blank"
+                        rel="noopener"
+                      >
+                        {"Open site"}
+                      </Link>
+                    </TblCell>
+                  </TableRow>
+                  <TableRow>
+                    <TblCell>{titles.rating}</TblCell>
+                    <TblCell>
+                      <Rating
+                        name="read-only"
+                        value={book.rating}
+                        size="small"
+                        readOnly
+                        sx={{
+                          marginLeft: "-3px",
+                        }}
+                      />
+                    </TblCell>
+                  </TableRow>
+                  <TableRow>
+                    <TblCell>{titles.status}</TblCell>
+                    <TblCell>
+                      {toLowerCaseExeptFirstLetter(book.status.name)}
+                    </TblCell>
+                  </TableRow>
+                  <TableRow>
+                    <TblCell>{titles.description}</TblCell>
+                    <TblCell>{book.description}</TblCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </Grid>
+          </Grid>
+        </CardContent>
+        {!isOwner && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              p: 2,
+            }}
+          >
+            {isAssigned ? (
+              <Button
+                onClick={toggleReturn}
+                aria-label="assign"
+                color="primary"
+                variant="contained"
+              >
+                Return the book
+              </Button>
+            ) : (
+              <Button
+                onClick={toggleAssign}
+                aria-label="assign"
+                color="primary"
+                variant="contained"
+                disabled={book.status.name !== status.available ? true : false}
+              >
+                Assign to me
+              </Button>
+            )}
+          </Box>
+        )}
+      </Card>
+    </>
   );
 };
 

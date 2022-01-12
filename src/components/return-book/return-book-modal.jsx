@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { withSnackbar } from "notistack";
+import PropTypes from "prop-types";
 
 const style = {
   position: "absolute",
@@ -31,37 +32,20 @@ const style = {
   },
 };
 
-const ReturnBookModal = () => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+const ReturnBookModal = ({ isOpenReturn, toggleReturn }) => {
   const formik = useFormik({
     initialValues: {
       rating: 0,
       feedback: "",
     },
     onSubmit: async () => {
-      handleClose();
+      toggleReturn();
     },
   });
 
   return (
     <>
-      <Button
-        onClick={handleOpen}
-        aria-label="assign"
-        color="primary"
-        variant="contained"
-      >
-        Return the book
-      </Button>
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={isOpenReturn} onClose={toggleReturn}>
         <Box sx={style}>
           <Box sx={{ my: 3 }}>
             <Typography color="textPrimary" variant="h4" textAlign="center">
@@ -125,7 +109,7 @@ const ReturnBookModal = () => {
                 Submit
               </Button>
               <Button
-                onClick={handleClose}
+                onClick={toggleReturn}
                 fullWidth
                 size="large"
                 sx={{
@@ -143,6 +127,10 @@ const ReturnBookModal = () => {
       </Modal>
     </>
   );
+};
+
+ReturnBookModal.propTypes = {
+  isOpenReturn: PropTypes.bool,
 };
 
 export default withSnackbar(ReturnBookModal);

@@ -29,19 +29,19 @@ export default function AddOrEditBookModal({
   type,
   editBook,
   book,
-  open,
-  handleClose,
+  isOpenAddEdit,
+  toggleAddEdit,
 }) {
   return (
     <>
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={isOpenAddEdit} onClose={toggleAddEdit}>
         <Box sx={style}>
           <AddEditBookFormBox
             title={
               type === typeModal.add ? "Add New Book" : "Edit Book Information"
             }
             buttonName={type === typeModal.add ? "Add" : "Save"}
-            handleClose={handleClose}
+            toggleAddEdit={toggleAddEdit}
             createBook={createBook}
             editBook={type === typeModal.add ? null : editBook}
             book={type === typeModal.add ? null : book}
@@ -54,6 +54,6 @@ export default function AddOrEditBookModal({
 
 AddOrEditBookModal.propTypes = {
   type: PropTypes.oneOf(["ADD BOOK", "EDIT BOOK"]),
-  open: PropTypes.bool,
-  handleClose: PropTypes.func,
+  isOpenAddEdit: PropTypes.bool,
+  toggleAddEdit: PropTypes.func,
 };

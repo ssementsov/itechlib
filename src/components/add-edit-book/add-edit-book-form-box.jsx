@@ -9,7 +9,7 @@ import { status } from "../../common/constants/status-constants";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 
 const AddEditBookFormBox = ({
-  handleClose,
+  toggleAddEdit,
   createBook,
   editBook,
   title,
@@ -95,10 +95,10 @@ const AddEditBookFormBox = ({
     onSubmit: async (values) => {
       if ("id" in values) {
         await editBook(values);
-        handleClose();
+        toggleAddEdit();
       } else {
         await createBook(values);
-        handleClose();
+        toggleAddEdit();
         router.push(MAIN_CATALOGUE_PATH);
       }
     },
@@ -125,7 +125,7 @@ const AddEditBookFormBox = ({
             }}
           >
             <CloseIcon
-              onClick={handleClose}
+              onClick={toggleAddEdit}
               sx={{
                 justifySelf: "flex-end",
               }}
@@ -143,7 +143,7 @@ const AddEditBookFormBox = ({
 };
 
 AddEditBookFormBox.propTypes = {
-  handleClose: PropTypes.func,
+  toggleAddEdit: PropTypes.func,
   createBook: PropTypes.func,
   editBook: PropTypes.func,
   title: PropTypes.string,
