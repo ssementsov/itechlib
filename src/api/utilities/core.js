@@ -63,15 +63,5 @@ export class ApiCore {
         return apiProvider.postBooking(options.url, model);
       };
     }
-
-    if (options.getCurrentBookingsOfReader) {
-      this.getCurrentBookingsOfReader = (id) => {
-        return apiProvider.getCurrentBookingsOfReader(
-          options.url,
-          options.urlCurrent,
-          id
-        );
-      };
-    }
   }
 }

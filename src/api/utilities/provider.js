@@ -47,10 +47,6 @@ const postBooking = (resource, model) => {
   return api.Client.post(`/${resource}`, model);
 };
 
-const getCurrentBookingsOfReader = (resource, urlCurrent, id) => {
-  return api.Client.get(`/${resource}/${id}/${urlCurrent}`);
-};
-
 export const apiProvider = {
   getAll,
   getSingle,
@@ -62,5 +58,4 @@ export const apiProvider = {
   postCreds,
   postCorp,
   postBooking,
-  getCurrentBookingsOfReader,
 };

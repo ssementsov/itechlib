@@ -9,7 +9,6 @@ import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import { useState, useEffect } from "react";
 import { withSnackbar } from "notistack";
 import { apiBooks } from "../../api/books";
-import { apiBookings } from "./../../api/bookings";
 import { api } from "../../api/utilities/api";
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
@@ -29,38 +28,19 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
     if (router.isReady) {
       apiBooks
         .getSingle(id)
-        .then(function (res) {
+        .then((res) => {
+          console.log(res.data.reader);
+          res.data.reader ? assignHandler(true) : assignHandler(false);
           setBook(res.data);
           setIsLoaded(true);
         })
-        .catch(function () {
+        .catch(() => {
           enqueueSnackbar("Something went wrong... Please retry.", {
             variant: "error",
           });
         });
     }
   }, [assignHandler, enqueueSnackbar, id, router.isReady]);
-
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    apiBookings
-      .getCurrentBookingsOfReader(userId)
-      .then((res) => {
-        for (let booking of res.data) {
-          if (booking.book.id === Number(id)) {
-            assignHandler(true);
-            break;
-          } else {
-            assignHandler(false);
-          }
-        }
-      })
-      .catch(() =>
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        })
-      );
-  }, [assignHandler, enqueueSnackbar, id]);
 
   if (!isLoaded) {
     return (

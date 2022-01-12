@@ -26,13 +26,11 @@ const Login = ({ enqueueSnackbar }) => {
       apiUsers
         .postAuth(resFromGoogle)
         .then((res) => {
-          localStorage.setItem("userId", res.data.userId);
-          localStorage.setItem("token", res.data.token);
-          api.setupAuth(res.data.token);
+          localStorage.setItem("token", res.data);
+          api.setupAuth(res.data);
           router.replace(MAIN_CATALOGUE_PATH);
         })
-        .catch(function (err) {
-          console.log(err);
+        .catch(() => {
           enqueueSnackbar("Something went wrong... Please retry.", {
             variant: "error",
           });
