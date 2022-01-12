@@ -30,4 +30,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b where b.reader.id = :readerId and" +
             " b.book.id = :bookId and b.isActive = true")
     Optional<Booking> findByActiveIsTrueAndReaderIdAndBookId(long readerId, long bookId);
+
+    @EntityGraph(attributePaths = { "book.language", "book.category", "book.status", "book.owner", "reader"})
+    @Query("select b from Booking b where b.book.id = :bookId and b.isActive = true")
+    Optional<Booking> findByBookIdAndActiveIsTrue(long bookId);
+
+
+
 }

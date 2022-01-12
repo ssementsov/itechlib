@@ -16,6 +16,8 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllByBookId(long id);
 
+    BookingResponseDto findCurrentByBookId(long bookId);
+
     BookingResponseDto saveBooking(BookingDto bookingDto);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);

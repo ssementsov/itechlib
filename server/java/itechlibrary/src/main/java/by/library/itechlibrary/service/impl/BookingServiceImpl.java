@@ -13,7 +13,6 @@ import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.repository.BookingRepository;
-import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +82,17 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = bookingRepository.findAllByBookId(id);
 
         return bookingMapper.mapBookingResponseDtoList(bookings);
+    }
+
+    @Override
+    public BookingResponseDto findCurrentByBookId(long bookId) {
+
+        log.info("Try to find current booking by book id = {}.", bookId);
+
+        Booking currentBooking = bookingRepository.findByBookIdAndActiveIsTrue(bookId)
+                .orElseThrow(() -> new NotFoundException("Not found active booking by book id = " + bookId));
+
+        return bookingMapper.toNewBookingResponseDto(currentBooking);
     }
 
     @Override

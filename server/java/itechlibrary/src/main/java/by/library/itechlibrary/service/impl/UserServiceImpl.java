@@ -2,11 +2,13 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.MailConfirmationConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
+import by.library.itechlibrary.constant.ValidationPatternConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongConfirmationCodeException;
+import by.library.itechlibrary.exeption_handler.exception.WrongCorpEmailFormatException;
 import by.library.itechlibrary.exeption_handler.exception.WrongGoogleEmailException;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.pojo.SecurityUserDetails;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final MailNotificationService mailNotificationService;
 
     private final ConfirmationDataService confirmationDataService;
+
 
     @Override
     @Transactional
@@ -95,11 +99,23 @@ public class UserServiceImpl implements UserService {
         return findUserByCorpEmail(securityUserDetails.getCorpEmail());
     }
 
-
     private User findUserByCorpEmail(String corpEmail) {
+
+        validateCorpEmail(corpEmail);
 
         return userRepository.findByCorpEmail(corpEmail)
                 .orElseThrow(() -> new NotFoundException("The corporate email was not found."));
+    }
+
+    private void validateCorpEmail(String email) {
+
+        Matcher matcher = ValidationPatternConstant.VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+
+        if (!matcher.find()) {
+
+            throw new WrongCorpEmailFormatException("Wrong format of corp email = " + email);
+
+        }
     }
 
     private String checkAndSetGoogleEmail(User user, String googleEmail) {
@@ -120,7 +136,7 @@ public class UserServiceImpl implements UserService {
         } else return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_NOT_SENT;
     }
 
-    private void checkAndDeleteOldConfirmationData(User user){
+    private void checkAndDeleteOldConfirmationData(User user) {
 
         if (user.getConfirmationData() != null && !user.getConfirmationData().isActivated()) {
 
