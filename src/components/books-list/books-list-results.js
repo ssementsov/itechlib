@@ -13,12 +13,13 @@ import {
 import { titles } from "../../common/constants/titles-constants";
 import router from "next/router";
 import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
+import { withSnackbar } from "notistack";
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
 }
 
-export const BooksListResults = ({ books, startSearch }) => {
+const BooksListResults = ({ books, startSearch }) => {
   return (
     <Card>
       <PerfectScrollbar>
@@ -89,3 +90,5 @@ export const BooksListResults = ({ books, startSearch }) => {
     </Card>
   );
 };
+
+export default withSnackbar(BooksListResults);

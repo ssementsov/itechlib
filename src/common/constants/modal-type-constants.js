@@ -2,4 +2,6 @@ export const typeModal = {
   add: 'ADD BOOK',
   delete: 'DELETE BOOK',
   edit: 'EDIT BOOK',
+  assign: 'ASSIGN BOOK',
+  return: 'RETURN BOOK',
 };

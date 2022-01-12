@@ -4,4 +4,4 @@ module.exports = {
       '712390560273-hsd5cnnq6anhfh7d2vk5ibavmabpj5sv.apps.googleusercontent.com',
     NEXT_PUBLIC_BOOKS_ENDPOINT: 'http://localhost:8089/api',
   },
-}
+};

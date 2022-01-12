@@ -1,19 +1,39 @@
-import { apiProvider } from './provider';
+import { apiProvider } from "./provider";
 
 export class ApiCore {
   constructor(options) {
+    //BOOKS
     if (options.getAll) {
-      this.getAll = (token) => {
-        return apiProvider.getAll(options.url, token);
+      this.getAll = () => {
+        return apiProvider.getAll(options.url);
       };
     }
 
     if (options.getSingle) {
-      this.getSingle = (id, token) => {
-        return apiProvider.getSingle(options.url, id, token);
+      this.getSingle = (id) => {
+        return apiProvider.getSingle(options.url, id);
       };
     }
 
+    if (options.post) {
+      this.post = (model) => {
+        return apiProvider.post(options.url, model);
+      };
+    }
+
+    if (options.put) {
+      this.put = (model) => {
+        return apiProvider.put(options.url, model);
+      };
+    }
+
+    if (options.remove) {
+      this.remove = (id) => {
+        return apiProvider.remove(options.url, id);
+      };
+    }
+
+    //USER
     if (options.getGoogle) {
       this.getGoogle = (params) => {
         return apiProvider.getGoogle(options.url, options.id3, params);
@@ -22,12 +42,6 @@ export class ApiCore {
     if (options.postAuth) {
       this.postAuth = (bodyGoogle) => {
         return apiProvider.postAuth(options.id4, bodyGoogle);
-      };
-    }
-
-    if (options.post) {
-      this.post = (model, token) => {
-        return apiProvider.post(options.url, model, token);
       };
     }
 
@@ -43,15 +57,20 @@ export class ApiCore {
       };
     }
 
-    if (options.put) {
-      this.put = (model, token) => {
-        return apiProvider.put(options.url, model, token);
+    //BOOKINGS
+    if (options.postBooking) {
+      this.postBooking = (model) => {
+        return apiProvider.postBooking(options.url, model);
       };
     }
 
-    if (options.remove) {
-      this.remove = (id, token) => {
-        return apiProvider.remove(options.url, id, token);
+    if (options.getCurrentBookingsOfReader) {
+      this.getCurrentBookingsOfReader = (id) => {
+        return apiProvider.getCurrentBookingsOfReader(
+          options.url,
+          options.urlCurrent,
+          id
+        );
       };
     }
   }

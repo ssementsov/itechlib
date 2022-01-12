@@ -1,65 +1,66 @@
-import axios from 'axios';
+import { api } from "./api";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BOOKS_ENDPOINT;
-
-const getAll = (resource, token) => {
-  return axios.get(`${BASE_URL}/${resource}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+//BOOKS
+const getAll = (resource) => {
+  return api.Client.get(`/${resource}`);
 };
 
-const getSingle = (resource, id, token) => {
-  return axios.get(`${BASE_URL}/${resource}/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+const getSingle = (resource, id) => {
+  return api.Client.get(`/${resource}/${id}`);
 };
 
+const post = (resource, model) => {
+  return api.Client.post(`/${resource}`, model);
+};
+
+const put = (resource, model) => {
+  return api.Client.put(`/${resource}`, model);
+};
+
+const remove = (resource, id) => {
+  return api.Client.delete(`/${resource}/${id}`);
+};
+
+//USER
 const getGoogle = (resource, id3, params) => {
-  return axios.get(`${BASE_URL}/${resource}/${id3}`, {
+  return api.Client.get(`/${resource}/${id3}`, {
     params: params,
   });
 };
 
 const postAuth = (id4, bodyGoogle) => {
-  return axios.post(`${BASE_URL}/${id4}`, bodyGoogle);
-};
-
-const post = (resource, model, token) => {
-  return axios.post(`${BASE_URL}/${resource}`, model, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  return api.Client.post(`/${id4}`, bodyGoogle);
 };
 
 const postCreds = async (resource, id, model) => {
-  return axios.post(`${BASE_URL}/${resource}/${id}`, model);
+  return api.Client.post(`/${resource}/${id}`, model);
 };
 
 const postCorp = async (resource, id2, model) => {
-  return axios.post(`${BASE_URL}/${resource}/${id2}`, null, {
+  return api.Client.post(`/${resource}/${id2}`, null, {
     params: { email: model },
   });
 };
 
-const put = (resource, model, token) => {
-  return axios.put(`${BASE_URL}/${resource}`, model, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+//BOOKINGS
+const postBooking = (resource, model) => {
+  return api.Client.post(`/${resource}`, model);
 };
 
-const remove = (resource, id, token) => {
-  return axios.delete(`${BASE_URL}/${resource}/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+const getCurrentBookingsOfReader = (resource, urlCurrent, id) => {
+  return api.Client.get(`/${resource}/${id}/${urlCurrent}`);
 };
 
 export const apiProvider = {
   getAll,
   getSingle,
-  getGoogle,
-  postAuth,
   post,
-  postCreds,
-  postCorp,
   put,
   remove,
+  getGoogle,
+  postAuth,
+  postCreds,
+  postCorp,
+  postBooking,
+  getCurrentBookingsOfReader,
 };
