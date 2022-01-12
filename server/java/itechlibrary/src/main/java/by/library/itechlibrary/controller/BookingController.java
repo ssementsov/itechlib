@@ -44,9 +44,17 @@ public class BookingController {
     @GetMapping("books/{bookId}")
     @ApiOperation("get all book's bookings")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookingResponseDto> getBookingsByBooksId(@PathVariable("bookId") long readerId) {
+    public List<BookingResponseDto> getBookingsByBooksId(@PathVariable("bookId") long bookId) {
 
-        return bookingService.findAllByBookId(readerId);
+        return bookingService.findAllByBookId(bookId);
+    }
+
+    @GetMapping
+    @ApiOperation("get current booking by book id.")
+    @ResponseStatus(HttpStatus.OK)
+    public BookingResponseDto getActiveBookingByBookId(@RequestParam("bookId") long bookId) {
+
+        return bookingService.findCurrentByBookId(bookId);
     }
 
     @GetMapping("/{id}")
@@ -56,6 +64,7 @@ public class BookingController {
 
         return bookingService.findById(id);
     }
+
 
     @PostMapping
     @ApiOperation("create new booking")
