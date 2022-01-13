@@ -50,7 +50,12 @@ const AssignBookModal = ({
   updateInfo,
   isOpenAssign,
   toggleAssign,
+  assignHandler,
 }) => {
+  const initValue = {
+    startDate: new Date(),
+    finishDate: null,
+  };
   const maxDate = add(new Date(), {
     months: 1,
   });
@@ -64,12 +69,12 @@ const AssignBookModal = ({
   }
 
   const formik = useFormik({
-    initialValues: {
-      startDate: new Date(),
-      finishDate: null,
-    },
+    initialValues: initValue,
     validate,
-    onSubmit: async (values) => {
+    onSubmit: async (values, actions) => {
+      actions.resetForm({
+        values: initValue,
+      });
       assign(values);
       toggleAssign();
     },
@@ -81,6 +86,7 @@ const AssignBookModal = ({
       .postBooking(booking)
       .then((res) => {
         updateInfo(res.data.book);
+        assignHandler(true);
         enqueueSnackbar("The book was assigned to you successfully!", {
           variant: "success",
         });

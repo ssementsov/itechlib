@@ -63,5 +63,22 @@ export class ApiCore {
         return apiProvider.postBooking(options.url, model);
       };
     }
+
+    if (options.getBooking) {
+      this.getBooking = (params) => {
+        return apiProvider.getBooking(options.url, params);
+      };
+    }
+
+    if (options.cancelBooking) {
+      this.cancelBooking = (id, feedback) => {
+        return apiProvider.cancelBooking(
+          options.url,
+          options.urlCancelBooking,
+          id,
+          feedback
+        );
+      };
+    }
   }
 }

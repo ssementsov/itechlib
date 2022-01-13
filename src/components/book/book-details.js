@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -33,6 +33,7 @@ import { typeModal } from "../../common/constants/modal-type-constants";
 import { Book } from "../../models/book-model";
 import { apiBooks } from "../../api/books";
 import { useBoolean } from "../../utils/boolean-hook";
+import { apiBookings } from "./../../api/bookings";
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
@@ -46,28 +47,51 @@ const TblCell = styled(TableCell)(() => ({
   padding: "5px 35px",
 }));
 
-const BookDetails = ({ book, enqueueSnackbar, updateInfo, isAssigned }) => {
+const BookDetails = ({
+  book,
+  enqueueSnackbar,
+  updateInfo,
+  isAssigned,
+  assignHandler,
+}) => {
   const router = useRouter();
   const corpEmail = localStorage.getItem("corpEmail");
+  let isOwner = book.owner.corpEmail === corpEmail;
   const [isOpenAddEdit, toggleAddEdit] = useBoolean();
   const [isOpenDelete, toggleDelete] = useBoolean();
   const [isOpenAssign, toggleAssign] = useBoolean();
   const [isOpenReturn, toggleReturn] = useBoolean();
-  let isOwner = book.owner.corpEmail === corpEmail;
 
+  useEffect(() => {
+    if (isAssigned) {
+      let bookId = {
+        bookId: Number(router.query.id),
+      };
+      apiBookings
+        .getBooking(bookId)
+        .then((res) => {
+          localStorage.setItem("bookingId", res.data.id);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isAssigned, router.query.id]);
   const deleteBook = () => {
     if (book.status.name === status.available) {
-      try {
-        apiBooks.remove(book.id);
-        router.replace(MAIN_CATALOGUE_PATH);
-        enqueueSnackbar("Your book has been deleted successfully!", {
-          variant: "success",
+      apiBooks
+        .remove(book.id)
+        .then(() => {
+          router.replace(MAIN_CATALOGUE_PATH);
+          enqueueSnackbar("Your book has been deleted successfully!", {
+            variant: "success",
+          });
+        })
+        .catch(() => {
+          enqueueSnackbar("Something went wrong... Please retry.", {
+            variant: "error",
+          });
         });
-      } catch {
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        });
-      }
     } else {
       enqueueSnackbar(
         "You can only delete books which are currently in “Available” status",
@@ -138,10 +162,12 @@ const BookDetails = ({ book, enqueueSnackbar, updateInfo, isAssigned }) => {
         updateInfo={updateInfo}
         isOpenAssign={isOpenAssign}
         toggleAssign={toggleAssign}
+        assignHandler={assignHandler}
       />
       <ReturnBookModal
         isOpenReturn={isOpenReturn}
         toggleReturn={toggleReturn}
+        assignHandler={assignHandler}
       />
 
       <Card>

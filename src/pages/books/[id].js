@@ -29,8 +29,9 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
       apiBooks
         .getSingle(id)
         .then((res) => {
+          console.log(res);
           res.data.reader ? assignHandler(true) : assignHandler(false);
-          setBook(res.data);
+          updateInfo(res.data);
           setIsLoaded(true);
         })
         .catch(() => {
@@ -39,7 +40,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
           });
         });
     }
-  }, [assignHandler, enqueueSnackbar, id, router.isReady]);
+  }, [isAssigned, assignHandler, enqueueSnackbar, id, router.isReady]);
 
   if (!isLoaded) {
     return (
@@ -94,6 +95,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
                   updateInfo={updateInfo}
                   book={book}
                   isAssigned={isAssigned}
+                  assignHandler={assignHandler}
                 />
               </Grid>
             </Grid>
