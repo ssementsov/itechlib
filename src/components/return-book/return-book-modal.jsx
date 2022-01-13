@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import React, { useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import {
   Box,
   Button,
@@ -9,28 +9,28 @@ import {
   Rating,
   TextField,
   Typography,
-} from "@mui/material";
-import { withSnackbar } from "notistack";
-import PropTypes from "prop-types";
-import { apiBookings } from "../../api/bookings";
+} from '@mui/material';
+import { withSnackbar } from 'notistack';
+import PropTypes from 'prop-types';
+import { apiBookings } from '../../api/bookings';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  border: "1px solid #838E9F",
-  boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.35)",
-  borderRadius: "25px",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '1px solid #838E9F',
+  boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.35)',
+  borderRadius: '25px',
   pt: 2,
   px: 4,
   pb: 3,
   maxWidth: 580,
-  overflowY: "auto",
-  maxHeight: "95vh",
-  "&:focus": {
-    outline: "none",
+  overflowY: 'auto',
+  maxHeight: '95vh',
+  '&:focus': {
+    outline: 'none',
   },
 };
 
@@ -44,7 +44,7 @@ const ReturnBookModal = ({
   const [isDisabledSkip, setIsDisabledSkip] = useState(false);
   const initValue = {
     rate: 0,
-    feedback: "",
+    feedback: '',
   };
 
   const handleClose = () => {
@@ -67,7 +67,7 @@ const ReturnBookModal = ({
   };
 
   const cancelBooking = (body) => {
-    let bookingId = localStorage.getItem("bookingId");
+    let bookingId = localStorage.getItem('bookingId');
     apiBookings
       .cancelBooking(bookingId, body)
       .then(() => {
@@ -75,16 +75,16 @@ const ReturnBookModal = ({
         assignHandler(false);
         enqueueSnackbar(
           !body.feedback && !body.rate
-            ? "Your book was returned successfully!"
-            : "Thank You for feedback. Read on!",
+            ? 'Your book was returned successfully!'
+            : 'Thank you for feedback. Read on!',
           {
-            variant: "success",
+            variant: 'success',
           }
         );
       })
       .catch(() => {
-        enqueueSnackbar("Something went wrong. Please retry.", {
-          variant: "error",
+        enqueueSnackbar('Something went wrong. Please retry.', {
+          variant: 'error',
         });
       });
   };
@@ -93,14 +93,14 @@ const ReturnBookModal = ({
     initialValues: initValue,
     validationSchema: Yup.object({
       feedback: Yup.string()
-        .min(10, "Feedback must be more than 10 symbols")
-        .max(150, "Feedback must be less than 150 symbols"),
+        .min(10, 'Feedback must be more than 10 symbols')
+        .max(150, 'Feedback must be less than 150 symbols'),
     }),
     onSubmit: async (values, actions) => {
       actions.resetForm({
         values: initValue,
       });
-      cancelBooking({ feedback: values.feedback, rate: Number(values.rate) });
+      cancelBooking({ feedback: values.feedback, rate: values.rate });
     },
   });
 
@@ -114,7 +114,7 @@ const ReturnBookModal = ({
             </Typography>
           </Box>
           <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ mt: "50px" }}>
+            <Box sx={{ mt: '50px' }}>
               <FormControlLabel
                 label="Please rate the book"
                 labelPlacement="start"
@@ -181,10 +181,10 @@ const ReturnBookModal = ({
                 size="large"
                 type="submit"
                 sx={{
-                  my: "20px",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                  borderColor: "primary",
+                  my: '20px',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'primary',
                 }}
               >
                 Skip
