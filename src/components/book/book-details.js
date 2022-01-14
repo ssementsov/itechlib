@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import PropTypes from "prop-types";
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Button,
@@ -14,37 +14,37 @@ import {
   TableBody,
   TableCell,
   TableRow,
-} from "@mui/material";
-import { EditIcon } from "../../icons/edit-icon";
-import { DeleteIcon } from "./../../icons/delete-icon";
-import { titles } from "./../../common/constants/titles-constants";
-import { styled } from "@mui/material/styles";
-import { withSnackbar } from "notistack";
-import { useRouter } from "next/router";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
-import ReturnBookModal from "../return-book/return-book-modal";
-import AssignBookModal from "../assign-book/assign-book-modal";
-import DeleteBookModal from "./../delete-book/delete-book-modal";
-import AddOrEditBookModal from "../add-or-edit-book-modal";
-import { status } from "../../common/constants/status-constants";
-import { language } from "../../common/constants/language-constants";
-import { category } from "../../common/constants/category-constants";
-import { typeModal } from "../../common/constants/modal-type-constants";
-import { Book } from "../../models/book-model";
-import { apiBooks } from "../../api/books";
-import { useBoolean } from "../../utils/boolean-hook";
-import { apiBookings } from "./../../api/bookings";
+} from '@mui/material';
+import { EditIcon } from '../../icons/edit-icon';
+import { DeleteIcon } from './../../icons/delete-icon';
+import { titles } from './../../common/constants/titles-constants';
+import { styled } from '@mui/material/styles';
+import { withSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
+import ReturnBookModal from '../return-book/return-book-modal';
+import AssignBookModal from '../assign-book/assign-book-modal';
+import DeleteBookModal from './../delete-book/delete-book-modal';
+import AddOrEditBookModal from '../add-or-edit-book-modal';
+import { status } from '../../common/constants/status-constants';
+import { language } from '../../common/constants/language-constants';
+import { category } from '../../common/constants/category-constants';
+import { typeModal } from '../../common/constants/modal-type-constants';
+import { Book } from '../../models/book-model';
+import { apiBooks } from '../../api/books';
+import { useBoolean } from '../../utils/boolean-hook';
+import { apiBookings } from './../../api/bookings';
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
 }
 
 const TblCell = styled(TableCell)(() => ({
-  textAlign: "left",
-  cursor: "auto",
-  borderBottom: "1px solid #E7E8EF",
-  borderTop: "1px solid #E7E8EF",
-  padding: "5px 35px",
+  textAlign: 'left',
+  cursor: 'auto',
+  borderBottom: '1px solid #E7E8EF',
+  borderTop: '1px solid #E7E8EF',
+  padding: '5px 35px',
 }));
 
 const BookDetails = ({
@@ -55,7 +55,7 @@ const BookDetails = ({
   assignHandler,
 }) => {
   const router = useRouter();
-  const corpEmail = localStorage.getItem("corpEmail");
+  const corpEmail = localStorage.getItem('corpEmail');
   let isOwner = book.owner.corpEmail === corpEmail;
   const [isOpenAddEdit, toggleAddEdit] = useBoolean();
   const [isOpenDelete, toggleDelete] = useBoolean();
@@ -67,14 +67,9 @@ const BookDetails = ({
       let bookId = {
         bookId: Number(router.query.id),
       };
-      apiBookings
-        .getBooking(bookId)
-        .then((res) => {
-          localStorage.setItem("bookingId", res.data.id);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      apiBookings.getBooking(bookId).then((res) => {
+        localStorage.setItem('bookingId', res.data.id);
+      });
     }
   }, [isAssigned, router.query.id]);
   const deleteBook = () => {
@@ -83,20 +78,20 @@ const BookDetails = ({
         .remove(book.id)
         .then(() => {
           router.replace(MAIN_CATALOGUE_PATH);
-          enqueueSnackbar("Your book has been deleted successfully!", {
-            variant: "success",
+          enqueueSnackbar('Your book has been deleted successfully!', {
+            variant: 'success',
           });
         })
         .catch(() => {
-          enqueueSnackbar("Something went wrong... Please retry.", {
-            variant: "error",
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
           });
         });
     } else {
       enqueueSnackbar(
-        "You can only delete books which are currently in “Available” status",
+        'You can only delete books which are currently in “Available” status',
         {
-          variant: "error",
+          variant: 'error',
         }
       );
     }
@@ -133,12 +128,12 @@ const BookDetails = ({
       apiBooks.put(editBook).then((res) => {
         updateInfo(res.data);
       });
-      enqueueSnackbar("Your book has been updated successfully!", {
-        variant: "success",
+      enqueueSnackbar('Your book has been updated successfully!', {
+        variant: 'success',
       });
     } catch (e) {
-      enqueueSnackbar("Something went wrong... Please retry.", {
-        variant: "error",
+      enqueueSnackbar('Something went wrong... Please retry.', {
+        variant: 'error',
       });
     }
   };
@@ -220,7 +215,7 @@ const BookDetails = ({
                         target="_blank"
                         rel="noopener"
                       >
-                        {"Open site"}
+                        {'Open site'}
                       </Link>
                     </TblCell>
                   </TableRow>
@@ -233,7 +228,7 @@ const BookDetails = ({
                         size="small"
                         readOnly
                         sx={{
-                          marginLeft: "-3px",
+                          marginLeft: '-3px',
                         }}
                       />
                     </TblCell>
@@ -256,8 +251,8 @@ const BookDetails = ({
         {!isOwner && (
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "flex-end",
+              display: 'flex',
+              justifyContent: 'flex-end',
               p: 2,
             }}
           >

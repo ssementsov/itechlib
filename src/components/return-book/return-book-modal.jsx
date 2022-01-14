@@ -42,6 +42,7 @@ const ReturnBookModal = ({
 }) => {
   const [isDisabledSubmit, setIsDisabledSubmit] = useState(true);
   const [isDisabledSkip, setIsDisabledSkip] = useState(false);
+  const [value, setValue] = useState(1);
   const initValue = {
     rate: 0,
     feedback: '',
@@ -56,7 +57,7 @@ const ReturnBookModal = ({
 
   const handleChange = (e) => {
     formik.handleChange(e);
-    let value = e.target.value;
+    setValue(e.target.value);
     if (value) {
       setIsDisabledSubmit(false);
       setIsDisabledSkip(true);
@@ -122,24 +123,15 @@ const ReturnBookModal = ({
                   ml: 0,
                 }}
                 control={
-                  <>
-                    <input
-                      name="rate"
-                      type="number"
-                      value={formik.values.rate}
-                      hidden
-                      readOnly
-                    />
-                    <Rating
-                      name="rate"
-                      value={Number(formik.values.rate)}
-                      size="middle"
-                      onChange={handleChange}
-                      sx={{
-                        ml: 5,
-                      }}
-                    />
-                  </>
+                  <Rating
+                    name="rate"
+                    value={Number(formik.values.rate)}
+                    size="middle"
+                    onChange={handleChange}
+                    sx={{
+                      ml: 5,
+                    }}
+                  />
                 }
               />
             </Box>
@@ -199,6 +191,8 @@ const ReturnBookModal = ({
 
 ReturnBookModal.propTypes = {
   isOpenReturn: PropTypes.bool,
+  toggleReturn: PropTypes.func,
+  assignHandler: PropTypes.func,
 };
 
 export default withSnackbar(ReturnBookModal);
