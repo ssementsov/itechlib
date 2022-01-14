@@ -42,7 +42,6 @@ const ReturnBookModal = ({
 }) => {
   const [isDisabledSubmit, setIsDisabledSubmit] = useState(true);
   const [isDisabledSkip, setIsDisabledSkip] = useState(false);
-  const [value, setValue] = useState(1);
   const initValue = {
     rate: 0,
     feedback: '',
@@ -57,7 +56,7 @@ const ReturnBookModal = ({
 
   const handleChange = (e) => {
     formik.handleChange(e);
-    setValue(e.target.value);
+    let value = e.target.value;
     if (value) {
       setIsDisabledSubmit(false);
       setIsDisabledSkip(true);
