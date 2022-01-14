@@ -1,15 +1,15 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import { GoogleLogin } from "react-google-login";
-import { MAIN_CATALOGUE_PATH } from "../common/constants/route-constants";
-import { apiUsers } from "../api/users";
-import { useTheme } from "@mui/material/styles";
-import { withSnackbar } from "notistack";
-import jwt_decode from "jwt-decode";
-import { LOGIN_PATH } from "../common/constants/route-constants";
-import { api } from "../api/utilities/api";
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { GoogleLogin } from 'react-google-login';
+import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
+import { registrationUserAPI } from '../api/registration-api';
+import { useTheme } from '@mui/material/styles';
+import { withSnackbar } from 'notistack';
+import jwt_decode from 'jwt-decode';
+import { LOGIN_PATH } from '../common/constants/route-constants';
+import { api } from '../api/api';
 
 const Login = ({ enqueueSnackbar }) => {
   let theme = useTheme();
@@ -19,20 +19,20 @@ const Login = ({ enqueueSnackbar }) => {
 
   const resGoogleHandlerLogin = (resFromGoogle) => {
     const responsePayload = jwt_decode(resFromGoogle.tokenId);
-    localStorage.setItem("avatar", responsePayload.picture);
+    localStorage.setItem('avatar', responsePayload.picture);
 
-    let googleEmail = localStorage.getItem("googleEmail");
+    let googleEmail = localStorage.getItem('googleEmail');
     if (resFromGoogle.profileObj.email === googleEmail) {
-      apiUsers
-        .postAuth(resFromGoogle)
+      registrationUserAPI
+        .auth(resFromGoogle)
         .then((res) => {
-          localStorage.setItem("token", res.data);
+          localStorage.setItem('token', res.data);
           api.setupAuth(res.data);
           router.replace(MAIN_CATALOGUE_PATH);
         })
         .catch(() => {
-          enqueueSnackbar("Something went wrong... Please retry.", {
-            variant: "error",
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
           });
         });
     } else {
@@ -42,14 +42,14 @@ const Login = ({ enqueueSnackbar }) => {
 
   useEffect(() => {
     if (router.asPath !== LOGIN_PATH && router.query.userId) {
-      apiUsers
-        .getGoogle(router.query)
+      registrationUserAPI
+        .confirmRegistration(router.query)
         .then(() => {
           setIsRegistered(true);
         })
         .catch(() => {
-          enqueueSnackbar("Something went wrong... Please retry.", {
-            variant: "error",
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
           });
         });
     }
@@ -63,25 +63,25 @@ const Login = ({ enqueueSnackbar }) => {
       <Box
         component="main"
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           flexGrow: 1,
-          minHeight: "100%",
+          minHeight: '100%',
         }}
       >
         <Container
           maxWidth="sm"
           sx={{
-            border: "1px solid #838E9F",
-            boxShadow: "2px 2px 4px #838E9F",
-            borderRadius: "25px",
+            border: '1px solid #838E9F',
+            boxShadow: '2px 2px 4px #838E9F',
+            borderRadius: '25px',
           }}
         >
           <form>
             <Box
               sx={{
                 my: 4,
-                textAlign: "center",
+                textAlign: 'center',
               }}
             >
               <Typography color="textPrimary" variant="h4">
@@ -89,7 +89,7 @@ const Login = ({ enqueueSnackbar }) => {
               </Typography>
               {isRegistered && (
                 <Typography
-                  color={"textPrimary"}
+                  color={'textPrimary'}
                   variant="body1"
                   sx={{
                     mt: 5,
@@ -99,15 +99,15 @@ const Login = ({ enqueueSnackbar }) => {
                 </Typography>
               )}
               <Typography
-                color={correctEmail ? "textPrimary" : theme.palette.error.main}
+                color={correctEmail ? 'textPrimary' : theme.palette.error.main}
                 variant="body1"
                 sx={{
                   mt: 5,
                 }}
               >
                 {correctEmail
-                  ? ""
-                  : "Please select Google account which You provided on sign up"}
+                  ? ''
+                  : 'Please select Google account which You provided on sign up'}
               </Typography>
             </Box>
             <Grid
@@ -135,7 +135,7 @@ const Login = ({ enqueueSnackbar }) => {
                   )}
                   onSuccess={resGoogleHandlerLogin}
                   onFailure={resGoogleHandlerLogin}
-                  cookiePolicy={"single_host_origin"}
+                  cookiePolicy={'single_host_origin'}
                 />
               </Grid>
             </Grid>

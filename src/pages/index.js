@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { GoogleLogin } from 'react-google-login';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
-import { apiUsers } from '../api/users';
+import { registrationUserAPI } from '../api/registration-api';
 import { withSnackbar } from 'notistack';
 import jwt_decode from 'jwt-decode';
 import {
@@ -32,8 +32,8 @@ const Register = ({ enqueueSnackbar }) => {
     },
     validate,
     onSubmit: (value) => {
-      apiUsers
-        .postCorp(value.email)
+      registrationUserAPI
+        .checkCorpEmail(value.email)
         .then(() => {
           setDisabledCorp(true);
           setDisabledGoogle(false);
@@ -59,8 +59,8 @@ const Register = ({ enqueueSnackbar }) => {
     let googleEmail = responsePayload.email;
     let corpEmail = localStorage.getItem('corpEmail');
 
-    apiUsers
-      .postCreds({
+    registrationUserAPI
+      .connectTwoEmails({
         corpEmail: corpEmail,
         googleEmail: googleEmail,
       })

@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { withSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
-import { apiBookings } from '../../api/bookings';
+import { actionsWithBookingsAPI } from '../../api/bookings-api';
 
 const style = {
   position: 'absolute',
@@ -69,7 +69,7 @@ const ReturnBookModal = ({
 
   const cancelBooking = (body) => {
     let bookingId = localStorage.getItem('bookingId');
-    apiBookings
+    actionsWithBookingsAPI
       .cancelBooking(bookingId, body)
       .then(() => {
         toggleReturn();

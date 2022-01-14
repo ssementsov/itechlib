@@ -1,46 +1,46 @@
-import React from "react";
-import { useFormik } from "formik";
-import PropTypes from "prop-types";
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import DatePicker from "@mui/lab/DatePicker";
-import { add } from "date-fns";
-import { Booking } from "../../models/booking-model";
-import { apiBookings } from "../../api/bookings";
-import { withSnackbar } from "notistack";
+import React from 'react';
+import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
+import { Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import DatePicker from '@mui/lab/DatePicker';
+import { add } from 'date-fns';
+import { Booking } from '../../models/booking-model';
+import { actionsWithBookingsAPI } from '../../api/bookings-api';
+import { withSnackbar } from 'notistack';
 
 const BoxForDate = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
+  display: 'flex',
+  justifyContent: 'space-between',
   mt: 1,
-  [theme.breakpoints.down("md")]: {
-    justifyContent: "center",
-    alignItems: "space-between",
-    flexWrap: "wrap",
-    "& .MuiTextField-root": {
-      width: "100%",
-      marginTop: "10px",
+  [theme.breakpoints.down('md')]: {
+    justifyContent: 'center',
+    alignItems: 'space-between',
+    flexWrap: 'wrap',
+    '& .MuiTextField-root': {
+      width: '100%',
+      marginTop: '10px',
     },
   },
 }));
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  bgcolor: "background.paper",
-  border: "1px solid #838E9F",
-  boxShadow: "2px 2px 4px rgba(0, 0, 0, 0.35)",
-  borderRadius: "25px",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  bgcolor: 'background.paper',
+  border: '1px solid #838E9F',
+  boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.35)',
+  borderRadius: '25px',
   pt: 2,
   px: 4,
   pb: 3,
   maxWidth: 580,
-  overflowY: "auto",
-  maxHeight: "95vh",
-  "&:focus": {
-    outline: "none",
+  overflowY: 'auto',
+  maxHeight: '95vh',
+  '&:focus': {
+    outline: 'none',
   },
 };
 
@@ -63,7 +63,7 @@ const AssignBookModal = ({
   function validate(value) {
     let error = {};
     if (!value.finishDate) {
-      error.finishDate = "Date is required";
+      error.finishDate = 'Date is required';
     }
     return error;
   }
@@ -82,18 +82,18 @@ const AssignBookModal = ({
 
   const assign = ({ startDate, finishDate }) => {
     const booking = new Booking(true, 0, book.id, startDate, finishDate);
-    apiBookings
-      .postBooking(booking)
+    actionsWithBookingsAPI
+      .createNewBooking(booking)
       .then((res) => {
         updateInfo(res.data.book);
         assignHandler(true);
-        enqueueSnackbar("The book was assigned to you successfully!", {
-          variant: "success",
+        enqueueSnackbar('The book was assigned to you successfully!', {
+          variant: 'success',
         });
       })
       .catch(() => {
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
         });
       });
   };
@@ -113,14 +113,14 @@ const AssignBookModal = ({
                 disabled
                 name="startDate"
                 onChange={(value) => {
-                  formik.setFieldValue("startDate", value);
+                  formik.setFieldValue('startDate', value);
                 }}
                 value={formik.values.startDate}
                 label="from"
                 renderInput={(params) => (
                   <TextField
                     sx={{
-                      width: "200px",
+                      width: '200px',
                     }}
                     {...params}
                   />
@@ -131,7 +131,7 @@ const AssignBookModal = ({
                 maxDate={maxDate}
                 name="finishDate"
                 onChange={(value) => {
-                  formik.setFieldValue("finishDate", value);
+                  formik.setFieldValue('finishDate', value);
                 }}
                 value={formik.values.finishDate}
                 label="till"
@@ -144,7 +144,7 @@ const AssignBookModal = ({
                       formik.touched.finishDate && formik.errors.finishDate
                     }
                     sx={{
-                      width: "200px",
+                      width: '200px',
                     }}
                     {...params}
                   />
@@ -166,10 +166,10 @@ const AssignBookModal = ({
                 fullWidth
                 size="large"
                 sx={{
-                  my: "20px",
-                  borderWidth: "1px",
-                  borderStyle: "solid",
-                  borderColor: "primary",
+                  my: '20px',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  borderColor: 'primary',
                 }}
               >
                 Cancel

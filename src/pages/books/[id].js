@@ -8,8 +8,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
 import { useState, useEffect } from 'react';
 import { withSnackbar } from 'notistack';
-import { apiBooks } from '../../api/books';
-import { api } from '../../api/utilities/api';
+import { actionsWithBooksAPI } from './../../api/books-api';
+import { api } from '../../api/api';
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const router = useRouter();
@@ -26,8 +26,8 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
     api.setupAuth(token);
 
     if (router.isReady) {
-      apiBooks
-        .getSingle(id)
+      actionsWithBooksAPI
+        .getInfoAboutBook(id)
         .then((res) => {
           res.data.reader ? assignHandler(true) : assignHandler(false);
           updateInfo(res.data);

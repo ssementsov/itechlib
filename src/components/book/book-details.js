@@ -31,9 +31,9 @@ import { language } from '../../common/constants/language-constants';
 import { category } from '../../common/constants/category-constants';
 import { typeModal } from '../../common/constants/modal-type-constants';
 import { Book } from '../../models/book-model';
-import { apiBooks } from '../../api/books';
+import { actionsWithBooksAPI } from '../../api/books-api';
 import { useBoolean } from '../../utils/boolean-hook';
-import { apiBookings } from './../../api/bookings';
+import { actionsWithBookingsAPI } from './../../api/bookings-api';
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
@@ -67,15 +67,15 @@ const BookDetails = ({
       let bookId = {
         bookId: Number(router.query.id),
       };
-      apiBookings.getBooking(bookId).then((res) => {
+      actionsWithBookingsAPI.getCurrentBookingOfBook(bookId).then((res) => {
         localStorage.setItem('bookingId', res.data.id);
       });
     }
   }, [isAssigned, router.query.id]);
   const deleteBook = () => {
     if (book.status.name === status.available) {
-      apiBooks
-        .remove(book.id)
+      actionsWithBooksAPI
+        .removeBookFromLibrary(book.id)
         .then(() => {
           router.replace(MAIN_CATALOGUE_PATH);
           enqueueSnackbar('Your book has been deleted successfully!', {
@@ -125,7 +125,7 @@ const BookDetails = ({
         values.status,
         values.description
       );
-      apiBooks.put(editBook).then((res) => {
+      actionsWithBooksAPI.changeInfoAboutBook(editBook).then((res) => {
         updateInfo(res.data);
       });
       enqueueSnackbar('Your book has been updated successfully!', {
