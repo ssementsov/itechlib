@@ -28,4 +28,6 @@ public interface BookingService {
 
     boolean isReader(long userId, long bookId);
 
+    void disableCurrentBooking(long bookId);
+
 }
