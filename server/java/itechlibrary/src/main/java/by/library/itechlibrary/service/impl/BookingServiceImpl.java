@@ -19,9 +19,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Data
@@ -87,10 +89,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto findCurrentByBookId(long bookId) {
 
-        log.info("Try to find current booking by book id = {}.", bookId);
-
-        Booking currentBooking = bookingRepository.findByBookIdAndActiveIsTrue(bookId)
-                .orElseThrow(() -> new NotFoundException("Not found active booking by book id = " + bookId));
+        Booking currentBooking = findByBookingId(bookId);
 
         return bookingMapper.toNewBookingResponseDto(currentBooking);
     }
@@ -161,6 +160,29 @@ public class BookingServiceImpl implements BookingService {
 
             return false;
         }
+    }
+
+    @Transactional
+    @Override
+    public void disableCurrentBooking(long bookId) {
+
+        Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
+
+        if(bookingOptional.isPresent()){
+
+            Booking booking = bookingOptional.get();
+            booking.setActive(false);
+
+        }
+    }
+
+    private Booking findByBookingId(long bookId) {
+
+        log.info("Try to find current booking by book id = {}.", bookId);
+
+        return bookingRepository.findByBookIdAndActiveIsTrue(bookId)
+                .orElseThrow(() -> new NotFoundException("Not found active booking by book id = " + bookId));
+
     }
 
     private void setReviewInfo(Booking booking, Short rate, String feedback) {

@@ -61,6 +61,14 @@ public class BookController {
         return bookService.saveBook(bookDto);
     }
 
+    @PutMapping("/status/update")
+    @ApiOperation("update book status by owner")
+    @ResponseStatus(HttpStatus.OK)
+    public BookDto updateStatusByOwner(@RequestParam("status") String status, @RequestParam("bookId") long bookId) {
+
+        return bookService.updateStatus(status, bookId);
+    }
+
     @DeleteMapping("/{id}")
     @ApiOperation("delete book by id")
     @ResponseStatus(HttpStatus.OK)

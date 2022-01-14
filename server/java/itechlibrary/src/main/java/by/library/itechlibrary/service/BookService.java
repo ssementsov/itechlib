@@ -15,6 +15,8 @@ public interface BookService {
 
     List<BookDto> findByUserId(long id);
 
+    BookDto updateStatus(String status, long bookId);
+
     void remove(long id);
 
 }
