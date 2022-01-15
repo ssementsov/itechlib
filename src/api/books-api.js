@@ -1,20 +1,20 @@
 import { api } from './api';
-import { booksEntityEndpoint } from '../common/constants/api-constants';
+import { EntityTypes } from '../common/constants/api-constants';
 
-export const actionsWithBooksAPI = {
+export const BooksAPI = {
   getAllBooks() {
-    return api.Client.get(`/${booksEntityEndpoint.resource}`);
+    return api.Client.get(`/${EntityTypes.books}`);
   },
-  getInfoAboutBook(id) {
-    return api.Client.get(`/${booksEntityEndpoint.resource}/${id}`);
+  getBookInfo(id) {
+    return api.Client.get(`/${EntityTypes.books}/${id}`);
   },
-  addBookToLibrery(model) {
-    return api.Client.post(`/${booksEntityEndpoint.resource}`, model);
+  addBook(model) {
+    return api.Client.post(`/${EntityTypes.books}`, model);
   },
-  changeInfoAboutBook(model) {
-    return api.Client.put(`/${booksEntityEndpoint.resource}`, model);
+  changeBookInfo(model) {
+    return api.Client.put(`/${EntityTypes.books}`, model);
   },
-  removeBookFromLibrary(id) {
-    return api.Client.delete(`/${booksEntityEndpoint.resource}/${id}`);
+  removeBook(id) {
+    return api.Client.delete(`/${EntityTypes.books}/${id}`);
   },
 };

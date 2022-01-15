@@ -22,18 +22,18 @@ import { styled } from '@mui/material/styles';
 import { withSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
-import ReturnBookModal from '../return-book/return-book-modal';
-import AssignBookModal from '../assign-book/assign-book-modal';
-import DeleteBookModal from './../delete-book/delete-book-modal';
-import AddOrEditBookModal from '../add-or-edit-book-modal';
+import ReturnBookModal from '../book/return-book/return-book-modal';
+import AssignBookModal from '../book/assign-book/assign-book-modal';
+import DeleteBookModal from '../book/delete-book/delete-book-modal';
+import EditBookModal from '../book/add-edit-book/edit-book-modal';
 import { status } from '../../common/constants/status-constants';
 import { language } from '../../common/constants/language-constants';
 import { category } from '../../common/constants/category-constants';
-import { typeModal } from '../../common/constants/modal-type-constants';
 import { Book } from '../../models/book-model';
-import { actionsWithBooksAPI } from '../../api/books-api';
+import { Booking } from './../../models/booking-model';
+import { BooksAPI } from '../../api/books-api';
+import { BookingsAPI } from './../../api/bookings-api';
 import { useBoolean } from '../../utils/boolean-hook';
-import { actionsWithBookingsAPI } from './../../api/bookings-api';
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
@@ -50,32 +50,36 @@ const TblCell = styled(TableCell)(() => ({
 const BookDetails = ({
   book,
   enqueueSnackbar,
-  updateInfo,
+  onUpdate,
   isAssigned,
   assignHandler,
 }) => {
   const router = useRouter();
   const corpEmail = localStorage.getItem('corpEmail');
   let isOwner = book.owner.corpEmail === corpEmail;
-  const [isOpenAddEdit, toggleAddEdit] = useBoolean();
-  const [isOpenDelete, toggleDelete] = useBoolean();
-  const [isOpenAssign, toggleAssign] = useBoolean();
-  const [isOpenReturn, toggleReturn] = useBoolean();
+  const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
+    useBoolean();
+  const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
+    useBoolean();
+  const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] =
+    useBoolean();
+  const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] =
+    useBoolean();
 
   useEffect(() => {
     if (isAssigned) {
       let bookId = {
         bookId: Number(router.query.id),
       };
-      actionsWithBookingsAPI.getCurrentBookingOfBook(bookId).then((res) => {
+      BookingsAPI.getCurrentBooking(bookId).then((res) => {
         localStorage.setItem('bookingId', res.data.id);
       });
     }
   }, [isAssigned, router.query.id]);
+
   const deleteBook = () => {
     if (book.status.name === status.available) {
-      actionsWithBooksAPI
-        .removeBookFromLibrary(book.id)
+      BooksAPI.removeBook(book.id)
         .then(() => {
           router.replace(MAIN_CATALOGUE_PATH);
           enqueueSnackbar('Your book has been deleted successfully!', {
@@ -125,8 +129,9 @@ const BookDetails = ({
         values.status,
         values.description
       );
-      actionsWithBooksAPI.changeInfoAboutBook(editBook).then((res) => {
-        updateInfo(res.data);
+      BooksAPI.changeBookInfo(editBook).then((res) => {
+        setEditButtonClose();
+        onUpdate(res.data);
       });
       enqueueSnackbar('Your book has been updated successfully!', {
         variant: 'success',
@@ -138,31 +143,68 @@ const BookDetails = ({
     }
   };
 
+  const assignBook = ({ startDate, finishDate }) => {
+    const booking = new Booking(true, 0, book.id, startDate, finishDate);
+    BookingsAPI.createBooking(booking)
+      .then((res) => {
+        onUpdate(res.data.book);
+        setAssignButtonClose();
+        assignHandler(true);
+        enqueueSnackbar('The book was assigned to you successfully!', {
+          variant: 'success',
+        });
+      })
+      .catch(() => {
+        enqueueSnackbar('Something went wrong... Please retry.', {
+          variant: 'error',
+        });
+      });
+  };
+
+  const returnBook = (body) => {
+    let bookingId = localStorage.getItem('bookingId');
+    BookingsAPI.cancelBooking(bookingId, body)
+      .then(() => {
+        setReturnButtonClose();
+        assignHandler(false);
+        enqueueSnackbar(
+          !body.feedback && !body.rate
+            ? 'Your book was returned successfully!'
+            : 'Thank you for feedback. Read on!',
+          {
+            variant: 'success',
+          }
+        );
+      })
+      .catch(() => {
+        enqueueSnackbar('Something went wrong. Please retry.', {
+          variant: 'error',
+        });
+      });
+  };
+
   return (
     <>
-      <AddOrEditBookModal
-        isOpenAddEdit={isOpenAddEdit}
-        toggleAddEdit={toggleAddEdit}
-        type={typeModal.edit}
-        editBook={editBook}
+      <EditBookModal
+        open={isEditButtonOpen}
+        setClose={setEditButtonClose}
+        onEdit={editBook}
         book={book}
       />
       <DeleteBookModal
-        deleteBook={deleteBook}
-        isOpenDelete={isOpenDelete}
-        toggleDelete={toggleDelete}
+        onDelete={deleteBook}
+        open={isDeleteButtonOpen}
+        setClose={setDeleteButtonClose}
       />
       <AssignBookModal
-        book={book}
-        updateInfo={updateInfo}
-        isOpenAssign={isOpenAssign}
-        toggleAssign={toggleAssign}
-        assignHandler={assignHandler}
+        onAssign={assignBook}
+        open={isAssignButtonOpen}
+        setClose={setAssignButtonClose}
       />
       <ReturnBookModal
-        isOpenReturn={isOpenReturn}
-        toggleReturn={toggleReturn}
-        assignHandler={assignHandler}
+        open={isReturnButtonOpen}
+        setClose={setReturnButtonClose}
+        onReturn={returnBook}
       />
 
       <Card>
@@ -171,10 +213,10 @@ const BookDetails = ({
           action={
             isOwner && (
               <>
-                <IconButton onClick={toggleDelete} aria-label="delete">
+                <IconButton onClick={setDeleteButtonOpen} aria-label="delete">
                   <DeleteIcon fontSize="small" />
                 </IconButton>
-                <IconButton onClick={toggleAddEdit} aria-label="edit">
+                <IconButton onClick={setEditButtonOpen} aria-label="edit">
                   <EditIcon fontSize="small" />
                 </IconButton>
               </>
@@ -258,7 +300,7 @@ const BookDetails = ({
           >
             {isAssigned ? (
               <Button
-                onClick={toggleReturn}
+                onClick={setReturnButtonOpen}
                 aria-label="assign"
                 color="primary"
                 variant="contained"
@@ -267,7 +309,7 @@ const BookDetails = ({
               </Button>
             ) : (
               <Button
-                onClick={toggleAssign}
+                onClick={setAssignButtonOpen}
                 aria-label="assign"
                 color="primary"
                 variant="contained"

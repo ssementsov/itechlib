@@ -1,19 +1,16 @@
 import { api } from './api';
-import { bookingsEntityEndpont } from '../common/constants/api-constants';
+import { EntityTypes } from '../common/constants/api-constants';
 
-export const actionsWithBookingsAPI = {
-  createNewBooking(model) {
-    return api.Client.post(`/${bookingsEntityEndpont.resource}`, model);
+export const BookingsAPI = {
+  createBooking(model) {
+    return api.Client.post(`/${EntityTypes.bookings}`, model);
   },
-  getCurrentBookingOfBook(params) {
-    return api.Client.get(`/${bookingsEntityEndpont.resource}`, {
+  getCurrentBooking(params) {
+    return api.Client.get(`/${EntityTypes.bookings}`, {
       params: params,
     });
   },
   cancelBooking(id, feedback) {
-    return api.Client.post(
-      `/${bookingsEntityEndpont.resource}/${id}/${bookingsEntityEndpont.urlCancelBooking}`,
-      feedback
-    );
+    return api.Client.post(`/${EntityTypes.bookings}/${id}/return`, feedback);
   },
 };

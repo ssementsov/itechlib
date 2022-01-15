@@ -1,22 +1,27 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Box, Container, Typography } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
-import { BooksListToolbar } from '../components/books-list/books-list-toolbar';
+import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { useState, useEffect, useMemo } from 'react';
 import { withSnackbar } from 'notistack';
 import { status } from '../common/constants/status-constants';
 import { Book } from '../models/book-model';
-import { actionsWithBooksAPI } from '../api/books-api';
+import { BooksAPI } from '../api/books-api';
 import { category } from './../common/constants/category-constants';
 import { language } from './../common/constants/language-constants';
 import { api } from '../api/api';
+import { useBoolean } from './../utils/boolean-hook';
+import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
 
 const MainCatalogue = ({ enqueueSnackbar }) => {
+  const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState('');
   const [startSearch, setStartSearch] = useState(false);
+  const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
 
   const searchedBooks = useMemo(() => {
     if (search.length > 1) {
@@ -34,8 +39,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     api.setupAuth(token);
-    actionsWithBooksAPI
-      .getAllBooks()
+    BooksAPI.getAllBooks()
       .then((res) => {
         setBooks(res.data);
         setIsLoaded(true);
@@ -75,9 +79,10 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
       values.description
     );
 
-    actionsWithBooksAPI
-      .addBookToLibrery(newBook)
+    BooksAPI.addBook(newBook)
       .then(function (res) {
+        setAddButtonClose();
+        router.push(MAIN_CATALOGUE_PATH);
         enqueueSnackbar('Your book has been added successfully!', {
           variant: 'success',
         });
@@ -116,7 +121,10 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
             <BooksListToolbar
               search={search}
               setSearch={setSearch}
-              createBook={createBook}
+              onCreate={createBook}
+              open={isAddButtonOpen}
+              setOpen={setAddButtonOpen}
+              setClose={setAddButtonClose}
             />
             <Box sx={{ mt: 3 }}>
               <BooksListResults

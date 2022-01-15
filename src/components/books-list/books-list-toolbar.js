@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Box,
   Button,
@@ -8,40 +9,33 @@ import {
   InputAdornment,
   SvgIcon,
   Typography,
-} from "@mui/material";
-import { Search as SearchIcon } from "../../icons/search";
-import AddOrEditBookModal from "../add-or-edit-book-modal";
-import { typeModal } from "../../common/constants/modal-type-constants";
-import { useBoolean } from "../../utils/boolean-hook";
+} from '@mui/material';
+import { Search as SearchIcon } from '../../icons/search';
+import AddBookModal from './../book/add-edit-book/add-book-modal';
 
-export const BooksListToolbar = ({ createBook, setSearch, search }) => {
-  const [isOpenAddEdit, toggleAddEdit] = useBoolean();
+const BooksListToolbar = (props) => {
+  const { onCreate, setSearch, search, open, setOpen, setClose } = props;
 
   return (
     <Box>
       <Box
         sx={{
-          alignItems: "center",
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
+          alignItems: 'center',
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
           m: -1,
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
           Main catalogue
         </Typography>
-        <Box sx={{ m: 1, display: "flex" }}>
+        <Box sx={{ m: 1, display: 'flex' }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>
-          <Button onClick={toggleAddEdit} color="primary" variant="contained">
+          <Button onClick={setOpen} color="primary" variant="contained">
             Add a book
           </Button>
-          <AddOrEditBookModal
-            type={typeModal.add}
-            createBook={createBook}
-            isOpenAddEdit={isOpenAddEdit}
-            toggleAddEdit={toggleAddEdit}
-          />
+          <AddBookModal onCreate={onCreate} open={open} setClose={setClose} />
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
@@ -73,3 +67,14 @@ export const BooksListToolbar = ({ createBook, setSearch, search }) => {
     </Box>
   );
 };
+
+BooksListToolbar.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setClose: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  setSearch: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
+  setOpen: PropTypes.func.isRequired,
+};
+
+export default BooksListToolbar;

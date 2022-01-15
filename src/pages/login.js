@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { GoogleLogin } from 'react-google-login';
 import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
-import { registrationUserAPI } from '../api/registration-api';
+import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
 import { withSnackbar } from 'notistack';
 import jwt_decode from 'jwt-decode';
@@ -23,8 +23,7 @@ const Login = ({ enqueueSnackbar }) => {
 
     let googleEmail = localStorage.getItem('googleEmail');
     if (resFromGoogle.profileObj.email === googleEmail) {
-      registrationUserAPI
-        .auth(resFromGoogle)
+      UserAPI.auth(resFromGoogle)
         .then((res) => {
           localStorage.setItem('token', res.data);
           api.setupAuth(res.data);
@@ -42,8 +41,7 @@ const Login = ({ enqueueSnackbar }) => {
 
   useEffect(() => {
     if (router.asPath !== LOGIN_PATH && router.query.userId) {
-      registrationUserAPI
-        .confirmRegistration(router.query)
+      UserAPI.confirmRegistration(router.query)
         .then(() => {
           setIsRegistered(true);
         })

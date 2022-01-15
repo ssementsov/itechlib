@@ -1,22 +1,13 @@
-import { useRouter } from "next/router";
-import { useFormik } from "formik";
-import PropTypes from "prop-types";
-import * as Yup from "yup";
-import { Box, Container } from "@mui/material";
-import { CloseIcon } from "../../icons/close-icon";
-import AddEditBookForm from "./add-edit-book-form";
-import { status } from "../../common/constants/status-constants";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { useFormik } from 'formik';
+import PropTypes from 'prop-types';
+import * as Yup from 'yup';
+import { Box, Container } from '@mui/material';
+import { CloseIcon } from '../../../icons/close-icon';
+import AddEditBookForm from './add-edit-book-form';
+import { status } from '../../../common/constants/status-constants';
 
-const AddEditBookFormBox = ({
-  toggleAddEdit,
-  createBook,
-  editBook,
-  title,
-  buttonName,
-  book,
-}) => {
-  const router = useRouter();
+const AddEditBookFormBox = (props) => {
+  const { setClose, onCreate, onEdit, title, buttonName, book } = props;
   let newBook;
 
   if (book) {
@@ -29,20 +20,20 @@ const AddEditBookFormBox = ({
       id: book.id,
       link: book.link,
       status: book.status.name,
-      reader: "",
+      reader: '',
       startDate: null,
       finishDate: null,
     };
   } else {
     newBook = {
-      title: "",
-      author: "",
-      category: "",
-      language: "",
-      description: "",
-      link: "",
-      status: "",
-      reader: "",
+      title: '',
+      author: '',
+      category: '',
+      language: '',
+      description: '',
+      link: '',
+      status: '',
+      reader: '',
       startDate: null,
       finishDate: null,
     };
@@ -56,16 +47,16 @@ const AddEditBookFormBox = ({
         value.link
       )
     ) {
-      error.link = "Please enter correct link";
+      error.link = 'Please enter correct link';
     } else if (value.status === status.inUse) {
       if (!value.reader) {
-        error.reader = "Reader is required";
+        error.reader = 'Reader is required';
       }
       if (!value.startDate) {
-        error.startDate = "Date is required";
+        error.startDate = 'Date is required';
       }
       if (!value.finishDate) {
-        error.finishDate = "Date is required";
+        error.finishDate = 'Date is required';
       }
     }
 
@@ -76,30 +67,27 @@ const AddEditBookFormBox = ({
     initialValues: newBook,
     validationSchema: Yup.object({
       title: Yup.string()
-        .min(2, "Title must be more than 2 symbols")
-        .max(255, "Title must be less than 255 symbols")
-        .required("Title is required"),
+        .min(2, 'Title must be more than 2 symbols')
+        .max(255, 'Title must be less than 255 symbols')
+        .required('Title is required'),
       author: Yup.string()
-        .min(2, "Author must be more than 2 symbols")
-        .max(255, "Author must be less than 255 symbols")
-        .required("Author is required"),
-      category: Yup.string().required("Category is symbols"),
-      language: Yup.string().required("Language is symbols"),
+        .min(2, 'Author must be more than 2 symbols')
+        .max(255, 'Author must be less than 255 symbols')
+        .required('Author is required'),
+      category: Yup.string().required('Category is symbols'),
+      language: Yup.string().required('Language is symbols'),
       description: Yup.string()
-        .min(10, "Description must be more than 10 symbols")
-        .max(100, "Description must be less than 100 symbols")
-        .required("Description is required"),
-      status: Yup.string().required("Status is required"),
+        .min(10, 'Description must be more than 10 symbols')
+        .max(100, 'Description must be less than 100 symbols')
+        .required('Description is required'),
+      status: Yup.string().required('Status is required'),
     }),
     validate,
     onSubmit: async (values) => {
-      if ("id" in values) {
-        await editBook(values);
-        toggleAddEdit();
+      if ('id' in values) {
+        await onEdit(values);
       } else {
-        await createBook(values);
-        toggleAddEdit();
-        router.push(MAIN_CATALOGUE_PATH);
+        await onCreate(values);
       }
     },
   });
@@ -109,25 +97,25 @@ const AddEditBookFormBox = ({
       <Box
         component="main"
         sx={{
-          alignItems: "center",
-          display: "flex",
+          alignItems: 'center',
+          display: 'flex',
           flexGrow: 1,
-          minHeight: "100%",
+          minHeight: '100%',
         }}
       >
         <Container maxWidth="sm">
           <Box
             sx={{
-              position: "absolute",
+              position: 'absolute',
               right: 22,
               top: 22,
-              cursor: "pointer",
+              cursor: 'pointer',
             }}
           >
             <CloseIcon
-              onClick={toggleAddEdit}
+              onClick={setClose}
               sx={{
-                justifySelf: "flex-end",
+                justifySelf: 'flex-end',
               }}
             />
           </Box>
@@ -143,9 +131,9 @@ const AddEditBookFormBox = ({
 };
 
 AddEditBookFormBox.propTypes = {
-  toggleAddEdit: PropTypes.func,
+  setClose: PropTypes.func,
   createBook: PropTypes.func,
-  editBook: PropTypes.func,
+  onEdit: PropTypes.func,
   title: PropTypes.string,
   buttonName: PropTypes.string,
   book: PropTypes.shape({

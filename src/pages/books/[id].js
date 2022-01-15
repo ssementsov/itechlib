@@ -8,7 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
 import { useState, useEffect } from 'react';
 import { withSnackbar } from 'notistack';
-import { actionsWithBooksAPI } from './../../api/books-api';
+import { BooksAPI } from './../../api/books-api';
 import { api } from '../../api/api';
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
@@ -17,7 +17,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const id = router.query.id;
 
-  const updateInfo = (newInfo) => {
+  const updateBook = (newInfo) => {
     setBook(newInfo);
   };
 
@@ -26,11 +26,10 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
     api.setupAuth(token);
 
     if (router.isReady) {
-      actionsWithBooksAPI
-        .getInfoAboutBook(id)
+      BooksAPI.getBookInfo(id)
         .then((res) => {
           res.data.reader ? assignHandler(true) : assignHandler(false);
-          updateInfo(res.data);
+          updateBook(res.data);
           setIsLoaded(true);
         })
         .catch(() => {
@@ -91,7 +90,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
               </Grid>
               <Grid item lg={8} md={9} xs={12}>
                 <BookDetails
-                  updateInfo={updateInfo}
+                  onUpdate={updateBook}
                   book={book}
                   isAssigned={isAssigned}
                   assignHandler={assignHandler}
