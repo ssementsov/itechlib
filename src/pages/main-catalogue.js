@@ -20,12 +20,12 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [books, setBooks] = useState([]);
   const [search, setSearch] = useState('');
-  const [startSearch, setStartSearch] = useState(false);
+  const [isStartedSearch, setIsStartedSearch] = useState(false);
   const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
 
   const searchedBooks = useMemo(() => {
     if (search.length > 1) {
-      setStartSearch(true);
+      setIsStartedSearch(true);
       return books.filter((book) => {
         return (
           book.author.toLowerCase().includes(search.toLowerCase()) ||
@@ -39,6 +39,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     api.setupAuth(token);
+
     BooksAPI.getAllBooks()
       .then((res) => {
         setBooks(res.data);
@@ -129,7 +130,7 @@ const MainCatalogue = ({ enqueueSnackbar }) => {
             <Box sx={{ mt: 3 }}>
               <BooksListResults
                 books={searchedBooks}
-                startSearch={startSearch}
+                isStartedSearch={isStartedSearch}
               />
             </Box>
           </Container>
