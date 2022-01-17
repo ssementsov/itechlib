@@ -2,6 +2,7 @@ package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import org.springframework.web.bind.annotation.PathVariable;
 

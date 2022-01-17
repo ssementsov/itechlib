@@ -19,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -168,7 +167,7 @@ public class BookingServiceImpl implements BookingService {
 
         Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
 
-        if(bookingOptional.isPresent()){
+        if (bookingOptional.isPresent()) {
 
             Booking booking = bookingOptional.get();
             booking.setActive(false);
