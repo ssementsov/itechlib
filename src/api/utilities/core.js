@@ -64,12 +64,19 @@ export class ApiCore {
       };
     }
 
-    if (options.getCurrentBookingsOfReader) {
-      this.getCurrentBookingsOfReader = (id) => {
-        return apiProvider.getCurrentBookingsOfReader(
+    if (options.getBooking) {
+      this.getBooking = (params) => {
+        return apiProvider.getBooking(options.url, params);
+      };
+    }
+
+    if (options.cancelBooking) {
+      this.cancelBooking = (id, feedback) => {
+        return apiProvider.cancelBooking(
           options.url,
-          options.urlCurrent,
-          id
+          options.urlCancelBooking,
+          id,
+          feedback
         );
       };
     }

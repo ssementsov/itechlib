@@ -1,5 +1,12 @@
 export class Booking {
-  constructor(id = 0, bookId = '', startDate = '', finishDate = '') {
+  constructor(
+    active = true,
+    id = 0,
+    bookId = "",
+    startDate = "",
+    finishDate = ""
+  ) {
+    this.active = active;
     this.id = id;
     this.bookId = bookId;
     this.startDate = startDate;

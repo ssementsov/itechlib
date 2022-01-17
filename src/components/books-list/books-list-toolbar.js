@@ -12,16 +12,11 @@ import {
 import { Search as SearchIcon } from "../../icons/search";
 import AddOrEditBookModal from "../add-or-edit-book-modal";
 import { typeModal } from "../../common/constants/modal-type-constants";
+import { useBoolean } from "../../utils/boolean-hook";
 
 export const BooksListToolbar = ({ createBook, setSearch, search }) => {
-  const [open, setOpen] = React.useState(false);
+  const [isOpenAddEdit, toggleAddEdit] = useBoolean();
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   return (
     <Box>
       <Box
@@ -38,14 +33,14 @@ export const BooksListToolbar = ({ createBook, setSearch, search }) => {
         </Typography>
         <Box sx={{ m: 1, display: "flex" }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>
-          <Button onClick={handleOpen} color="primary" variant="contained">
+          <Button onClick={toggleAddEdit} color="primary" variant="contained">
             Add a book
           </Button>
           <AddOrEditBookModal
             type={typeModal.add}
             createBook={createBook}
-            open={open}
-            handleClose={handleClose}
+            isOpenAddEdit={isOpenAddEdit}
+            toggleAddEdit={toggleAddEdit}
           />
         </Box>
       </Box>

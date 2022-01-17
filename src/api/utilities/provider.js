@@ -47,8 +47,13 @@ const postBooking = (resource, model) => {
   return api.Client.post(`/${resource}`, model);
 };
 
-const getCurrentBookingsOfReader = (resource, urlCurrent, id) => {
-  return api.Client.get(`/${resource}/${id}/${urlCurrent}`);
+const getBooking = (resource, params) => {
+  return api.Client.get(`/${resource}`, {
+    params: params,
+  });
+};
+const cancelBooking = (resource, urlCancelBooking, id, feedback) => {
+  return api.Client.post(`/${resource}/${id}/${urlCancelBooking}`, feedback);
 };
 
 export const apiProvider = {
@@ -62,5 +67,6 @@ export const apiProvider = {
   postCreds,
   postCorp,
   postBooking,
-  getCurrentBookingsOfReader,
+  getBooking,
+  cancelBooking,
 };

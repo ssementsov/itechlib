@@ -6,7 +6,6 @@ import { styled } from "@mui/material/styles";
 import DatePicker from "@mui/lab/DatePicker";
 import { add } from "date-fns";
 import { Booking } from "../../models/booking-model";
-import { status } from "../../common/constants/status-constants";
 import { apiBookings } from "../../api/bookings";
 import { withSnackbar } from "notistack";
 
@@ -45,16 +44,18 @@ const style = {
   },
 };
 
-const AssignBookModal = ({ enqueueSnackbar, book, updateInfo }) => {
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
+const AssignBookModal = ({
+  enqueueSnackbar,
+  book,
+  updateInfo,
+  isOpenAssign,
+  toggleAssign,
+  assignHandler,
+}) => {
+  const initValue = {
+    startDate: new Date(),
+    finishDate: null,
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   const maxDate = add(new Date(), {
     months: 1,
   });
@@ -68,23 +69,24 @@ const AssignBookModal = ({ enqueueSnackbar, book, updateInfo }) => {
   }
 
   const formik = useFormik({
-    initialValues: {
-      startDate: new Date(),
-      finishDate: null,
-    },
+    initialValues: initValue,
     validate,
-    onSubmit: async (values) => {
+    onSubmit: async (values, actions) => {
+      actions.resetForm({
+        values: initValue,
+      });
       assign(values);
-      handleClose();
+      toggleAssign();
     },
   });
 
   const assign = ({ startDate, finishDate }) => {
-    const booking = new Booking(0, book.id, startDate, finishDate);
+    const booking = new Booking(true, 0, book.id, startDate, finishDate);
     apiBookings
       .postBooking(booking)
       .then((res) => {
         updateInfo(res.data.book);
+        assignHandler(true);
         enqueueSnackbar("The book was assigned to you successfully!", {
           variant: "success",
         });
@@ -98,16 +100,7 @@ const AssignBookModal = ({ enqueueSnackbar, book, updateInfo }) => {
 
   return (
     <>
-      <Button
-        onClick={handleOpen}
-        aria-label="assign"
-        color="primary"
-        variant="contained"
-        disabled={book.status.name !== status.available ? true : false}
-      >
-        Assign to me
-      </Button>
-      <Modal open={open} onClose={handleClose}>
+      <Modal open={isOpenAssign} onClose={toggleAssign}>
         <Box sx={style}>
           <Box sx={{ my: 3 }}>
             <Typography color="textPrimary" variant="h4" textAlign="center">
@@ -169,7 +162,7 @@ const AssignBookModal = ({ enqueueSnackbar, book, updateInfo }) => {
                 Ok
               </Button>
               <Button
-                onClick={handleClose}
+                onClick={toggleAssign}
                 fullWidth
                 size="large"
                 sx={{
@@ -191,6 +184,8 @@ const AssignBookModal = ({ enqueueSnackbar, book, updateInfo }) => {
 
 AssignBookModal.propTypes = {
   updateInfo: PropTypes.func,
+  isOpenAssign: PropTypes.bool,
+  toggleAssign: PropTypes.func,
   book: PropTypes.shape({
     id: PropTypes.number,
     title: PropTypes.string,

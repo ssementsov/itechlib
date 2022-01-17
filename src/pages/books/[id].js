@@ -1,16 +1,15 @@
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Box, Container, Grid, Card, Button, Typography } from "@mui/material";
-import BookDetails from "../../components/book/book-details";
-import { DashboardLayout } from "../../components/dashboard-layout";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
-import { useState, useEffect } from "react";
-import { withSnackbar } from "notistack";
-import { apiBooks } from "../../api/books";
-import { apiBookings } from "./../../api/bookings";
-import { api } from "../../api/utilities/api";
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { Box, Container, Grid, Card, Button, Typography } from '@mui/material';
+import BookDetails from '../../components/book/book-details';
+import { DashboardLayout } from '../../components/dashboard-layout';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { MAIN_CATALOGUE_PATH } from '../../common/constants/route-constants';
+import { useState, useEffect } from 'react';
+import { withSnackbar } from 'notistack';
+import { apiBooks } from '../../api/books';
+import { api } from '../../api/utilities/api';
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const router = useRouter();
@@ -23,44 +22,24 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     api.setupAuth(token);
 
     if (router.isReady) {
       apiBooks
         .getSingle(id)
-        .then(function (res) {
-          setBook(res.data);
+        .then((res) => {
+          res.data.reader ? assignHandler(true) : assignHandler(false);
+          updateInfo(res.data);
           setIsLoaded(true);
         })
-        .catch(function () {
-          enqueueSnackbar("Something went wrong... Please retry.", {
-            variant: "error",
+        .catch(() => {
+          enqueueSnackbar('Something went wrong... Please retry.', {
+            variant: 'error',
           });
         });
     }
-  }, [assignHandler, enqueueSnackbar, id, router.isReady]);
-
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    apiBookings
-      .getCurrentBookingsOfReader(userId)
-      .then((res) => {
-        for (let booking of res.data) {
-          if (booking.book.id === Number(id)) {
-            assignHandler(true);
-            break;
-          } else {
-            assignHandler(false);
-          }
-        }
-      })
-      .catch(() =>
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        })
-      );
-  }, [assignHandler, enqueueSnackbar, id]);
+  }, [isAssigned, assignHandler, enqueueSnackbar, id, router.isReady]);
 
   if (!isLoaded) {
     return (
@@ -103,10 +82,10 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
               <Grid item lg={3} md={3} xs={12}>
                 <Card
                   sx={{
-                    background: "white",
-                    margin: "0 auto",
-                    width: "250px",
-                    height: "258px",
+                    background: 'white',
+                    margin: '0 auto',
+                    width: '250px',
+                    height: '258px',
                   }}
                 />
               </Grid>
@@ -115,6 +94,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
                   updateInfo={updateInfo}
                   book={book}
                   isAssigned={isAssigned}
+                  assignHandler={assignHandler}
                 />
               </Grid>
             </Grid>

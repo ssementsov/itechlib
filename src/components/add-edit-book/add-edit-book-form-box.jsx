@@ -9,7 +9,7 @@ import { status } from "../../common/constants/status-constants";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 
 const AddEditBookFormBox = ({
-  handleClose,
+  toggleAddEdit,
   createBook,
   editBook,
   title,
@@ -76,18 +76,18 @@ const AddEditBookFormBox = ({
     initialValues: newBook,
     validationSchema: Yup.object({
       title: Yup.string()
-        .min(2, "Title must be more than 2 characters")
-        .max(255, "Title must be less than 255 characters")
+        .min(2, "Title must be more than 2 symbols")
+        .max(255, "Title must be less than 255 symbols")
         .required("Title is required"),
       author: Yup.string()
-        .min(2, "Author must be more than 2 characters")
-        .max(255, "Author must be less than 255 characters")
+        .min(2, "Author must be more than 2 symbols")
+        .max(255, "Author must be less than 255 symbols")
         .required("Author is required"),
-      category: Yup.string().required("Category is required"),
-      language: Yup.string().required("Language is required"),
+      category: Yup.string().required("Category is symbols"),
+      language: Yup.string().required("Language is symbols"),
       description: Yup.string()
-        .min(10, "Description must be more than 10 characters")
-        .max(100, "Description must be less than 100 characters")
+        .min(10, "Description must be more than 10 symbols")
+        .max(100, "Description must be less than 100 symbols")
         .required("Description is required"),
       status: Yup.string().required("Status is required"),
     }),
@@ -95,10 +95,10 @@ const AddEditBookFormBox = ({
     onSubmit: async (values) => {
       if ("id" in values) {
         await editBook(values);
-        handleClose();
+        toggleAddEdit();
       } else {
         await createBook(values);
-        handleClose();
+        toggleAddEdit();
         router.push(MAIN_CATALOGUE_PATH);
       }
     },
@@ -125,7 +125,7 @@ const AddEditBookFormBox = ({
             }}
           >
             <CloseIcon
-              onClick={handleClose}
+              onClick={toggleAddEdit}
               sx={{
                 justifySelf: "flex-end",
               }}
@@ -143,7 +143,7 @@ const AddEditBookFormBox = ({
 };
 
 AddEditBookFormBox.propTypes = {
-  handleClose: PropTypes.func,
+  toggleAddEdit: PropTypes.func,
   createBook: PropTypes.func,
   editBook: PropTypes.func,
   title: PropTypes.string,
