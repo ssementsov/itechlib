@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.*;
 
 @Entity
 @Table(name = "book")
@@ -46,5 +47,8 @@ public class Book {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH,CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private User owner;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "book")
+    private List<Booking> bookings;
 
 }
