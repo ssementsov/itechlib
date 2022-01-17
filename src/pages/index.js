@@ -1,16 +1,16 @@
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import { GoogleLogin } from 'react-google-login';
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
-import { apiUsers } from '../api/users';
-import { withSnackbar } from 'notistack';
-import jwt_decode from 'jwt-decode';
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
+import { useFormik } from "formik";
+import { GoogleLogin } from "react-google-login";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { UserAPI } from "../api/user-api";
+import { withSnackbar } from "notistack";
+import jwt_decode from "jwt-decode";
 import {
   LOGIN_PATH,
   MAIN_CATALOGUE_PATH,
-} from '../common/constants/route-constants';
+} from "../common/constants/route-constants";
 
 const Register = ({ enqueueSnackbar }) => {
   const router = useRouter();
@@ -20,34 +20,33 @@ const Register = ({ enqueueSnackbar }) => {
   function validate(value) {
     let error = {};
     if (!value.email) {
-      error.email = 'Email is required';
+      error.email = "Email is required";
     } else if (!/^[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
-      error.email = 'Please enter correct corporate email';
+      error.email = "Please enter correct corporate email";
     }
     return error;
   }
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: "",
     },
     validate,
     onSubmit: (value) => {
-      apiUsers
-        .postCorp(value.email)
+      UserAPI.checkCorpEmail(value.email)
         .then(() => {
           setDisabledCorp(true);
           setDisabledGoogle(false);
-          localStorage.setItem('corpEmail', value.email);
+          localStorage.setItem("corpEmail", value.email);
           enqueueSnackbar(
-            'Your corporate email was confirmed successfully. You can proceed with your Google account.',
+            "Your corporate email was confirmed successfully. You can proceed with your Google account.",
             {
-              variant: 'success',
+              variant: "success",
             }
           );
         })
         .catch(() => {
-          enqueueSnackbar('Your corporate email is not registered.', {
-            variant: 'error',
+          enqueueSnackbar("Your corporate email is not registered.", {
+            variant: "error",
           });
         });
     },
@@ -57,21 +56,20 @@ const Register = ({ enqueueSnackbar }) => {
     let token = res.tokenId;
     const responsePayload = jwt_decode(token);
     let googleEmail = responsePayload.email;
-    let corpEmail = localStorage.getItem('corpEmail');
+    let corpEmail = localStorage.getItem("corpEmail");
 
-    apiUsers
-      .postCreds({
-        corpEmail: corpEmail,
-        googleEmail: googleEmail,
-      })
+    UserAPI.connectGoogleEmail({
+      corpEmail: corpEmail,
+      googleEmail: googleEmail,
+    })
       .then((res) => {
-        localStorage.setItem('googleEmail', googleEmail);
-        if (res.data === 'CONFIRMATION_MAIL_WAS_SENT') {
+        localStorage.setItem("googleEmail", googleEmail);
+        if (res.data === "CONFIRMATION_MAIL_WAS_SENT") {
           setDisabledGoogle(true);
           enqueueSnackbar(
-            'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
+            "A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.",
             {
-              variant: 'success',
+              variant: "success",
             }
           );
         } else {
@@ -79,15 +77,15 @@ const Register = ({ enqueueSnackbar }) => {
         }
       })
       .catch(() => {
-        enqueueSnackbar('Something went wrong... Please retry.', {
-          variant: 'error',
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
         });
       });
   };
 
   useEffect(() => {
-    let token = localStorage.getItem('token');
-    let corpEmail = localStorage.getItem('corpEmail');
+    let token = localStorage.getItem("token");
+    let corpEmail = localStorage.getItem("corpEmail");
     if (!token && corpEmail) {
       router.push(LOGIN_PATH);
     }
@@ -104,18 +102,18 @@ const Register = ({ enqueueSnackbar }) => {
       <Box
         component="main"
         sx={{
-          alignItems: 'center',
-          display: 'flex',
+          alignItems: "center",
+          display: "flex",
           flexGrow: 1,
-          minHeight: '100%',
+          minHeight: "100%",
         }}
       >
         <Container
           maxWidth="sm"
           sx={{
-            border: '1px solid #838E9F',
-            boxShadow: '2px 2px 4px #838E9F',
-            borderRadius: '25px',
+            border: "1px solid #838E9F",
+            boxShadow: "2px 2px 4px #838E9F",
+            borderRadius: "25px",
           }}
         >
           <form onSubmit={formik.handleSubmit}>
@@ -183,7 +181,7 @@ const Register = ({ enqueueSnackbar }) => {
               )}
               onSuccess={resGoogleHandlerRegister}
               onFailure={resGoogleHandlerRegister}
-              cookiePolicy={'single_host_origin'}
+              cookiePolicy={"single_host_origin"}
             />
           </Box>
         </Container>

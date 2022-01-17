@@ -1,22 +1,13 @@
-import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import PropTypes from "prop-types";
 import * as Yup from "yup";
 import { Box, Container } from "@mui/material";
-import { CloseIcon } from "../../icons/close-icon";
+import { CloseIcon } from "../../../icons/close-icon";
 import AddEditBookForm from "./add-edit-book-form";
-import { status } from "../../common/constants/status-constants";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
+import { status } from "../../../common/constants/status-constants";
 
-const AddEditBookFormBox = ({
-  toggleAddEdit,
-  createBook,
-  editBook,
-  title,
-  buttonName,
-  book,
-}) => {
-  const router = useRouter();
+const AddEditBookFormBox = (props) => {
+  const { setClose, onCreate, onEdit, title, buttonName, book } = props;
   let newBook;
 
   if (book) {
@@ -94,12 +85,9 @@ const AddEditBookFormBox = ({
     validate,
     onSubmit: async (values) => {
       if ("id" in values) {
-        await editBook(values);
-        toggleAddEdit();
+        await onEdit(values);
       } else {
-        await createBook(values);
-        toggleAddEdit();
-        router.push(MAIN_CATALOGUE_PATH);
+        await onCreate(values);
       }
     },
   });
@@ -125,7 +113,7 @@ const AddEditBookFormBox = ({
             }}
           >
             <CloseIcon
-              onClick={toggleAddEdit}
+              onClick={setClose}
               sx={{
                 justifySelf: "flex-end",
               }}
@@ -143,9 +131,9 @@ const AddEditBookFormBox = ({
 };
 
 AddEditBookFormBox.propTypes = {
-  toggleAddEdit: PropTypes.func,
+  setClose: PropTypes.func,
   createBook: PropTypes.func,
-  editBook: PropTypes.func,
+  onEdit: PropTypes.func,
   title: PropTypes.string,
   buttonName: PropTypes.string,
   book: PropTypes.shape({
