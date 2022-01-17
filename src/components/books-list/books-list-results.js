@@ -1,4 +1,4 @@
-import PerfectScrollbar from "react-perfect-scrollbar";
+import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Box,
   Card,
@@ -9,17 +9,17 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import { titles } from "../../common/constants/titles-constants";
-import router from "next/router";
-import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
-import { withSnackbar } from "notistack";
+} from '@mui/material';
+import { titles } from '../../common/constants/titles-constants';
+import router from 'next/router';
+import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
+import { withSnackbar } from 'notistack';
 
 function toLowerCaseExeptFirstLetter(string) {
   return string[0] + string.slice(1).toLowerCase();
 }
 
-const BooksListResults = ({ books, startSearch }) => {
+const BooksListResults = ({ books, isStartedSearch }) => {
   return (
     <Card>
       <PerfectScrollbar>
@@ -74,11 +74,11 @@ const BooksListResults = ({ books, startSearch }) => {
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Typography
-                      sx={{ textAlign: "center", color: "action.active" }}
+                      sx={{ textAlign: 'center', color: 'action.active' }}
                     >
-                      {startSearch
-                        ? "No books found"
-                        : "No books have been added yet!"}
+                      {isStartedSearch
+                        ? 'No books found'
+                        : 'No books have been added yet!'}
                     </Typography>
                   </TableCell>
                 </TableRow>

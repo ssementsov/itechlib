@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Box,
   Button,
@@ -10,18 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Search as SearchIcon } from "../../icons/search";
-import AddOrEditBookModal from "../add-or-edit-book-modal";
-import { typeModal } from "../../common/constants/modal-type-constants";
+import AddBookModal from "./../book/add-edit-book/add-book-modal";
 
-export const BooksListToolbar = ({ createBook, setSearch, search }) => {
-  const [open, setOpen] = React.useState(false);
+const BooksListToolbar = (props) => {
+  const { onCreate, setSearch, search, open, setOpen, setClose } = props;
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
   return (
     <Box>
       <Box
@@ -38,15 +32,10 @@ export const BooksListToolbar = ({ createBook, setSearch, search }) => {
         </Typography>
         <Box sx={{ m: 1, display: "flex" }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>
-          <Button onClick={handleOpen} color="primary" variant="contained">
+          <Button onClick={setOpen} color="primary" variant="contained">
             Add a book
           </Button>
-          <AddOrEditBookModal
-            type={typeModal.add}
-            createBook={createBook}
-            open={open}
-            handleClose={handleClose}
-          />
+          <AddBookModal onCreate={onCreate} open={open} setClose={setClose} />
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
@@ -78,3 +67,14 @@ export const BooksListToolbar = ({ createBook, setSearch, search }) => {
     </Box>
   );
 };
+
+BooksListToolbar.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setClose: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  setSearch: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
+  setOpen: PropTypes.func.isRequired,
+};
+
+export default BooksListToolbar;

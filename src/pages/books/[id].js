@@ -8,9 +8,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import { useState, useEffect } from "react";
 import { withSnackbar } from "notistack";
-import { apiBooks } from "../../api/books";
-import { apiBookings } from "./../../api/bookings";
-import { api } from "../../api/utilities/api";
+import { BooksAPI } from "./../../api/books-api";
+import { api } from "../../api/api";
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const router = useRouter();
@@ -18,7 +17,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const id = router.query.id;
 
-  const updateInfo = (newInfo) => {
+  const updateBook = (newInfo) => {
     setBook(newInfo);
   };
 
@@ -27,40 +26,19 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
     api.setupAuth(token);
 
     if (router.isReady) {
-      apiBooks
-        .getSingle(id)
-        .then(function (res) {
-          setBook(res.data);
+      BooksAPI.getBookInfo(id)
+        .then((res) => {
+          res.data.reader ? assignHandler(true) : assignHandler(false);
+          updateBook(res.data);
           setIsLoaded(true);
         })
-        .catch(function () {
+        .catch(() => {
           enqueueSnackbar("Something went wrong... Please retry.", {
             variant: "error",
           });
         });
     }
-  }, [assignHandler, enqueueSnackbar, id, router.isReady]);
-
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    apiBookings
-      .getCurrentBookingsOfReader(userId)
-      .then((res) => {
-        for (let booking of res.data) {
-          if (booking.book.id === Number(id)) {
-            assignHandler(true);
-            break;
-          } else {
-            assignHandler(false);
-          }
-        }
-      })
-      .catch(() =>
-        enqueueSnackbar("Something went wrong... Please retry.", {
-          variant: "error",
-        })
-      );
-  }, [assignHandler, enqueueSnackbar, id]);
+  }, [isAssigned, assignHandler, enqueueSnackbar, id, router.isReady]);
 
   if (!isLoaded) {
     return (
@@ -112,9 +90,10 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
               </Grid>
               <Grid item lg={8} md={9} xs={12}>
                 <BookDetails
-                  updateInfo={updateInfo}
+                  onUpdate={updateBook}
                   book={book}
                   isAssigned={isAssigned}
+                  assignHandler={assignHandler}
                 />
               </Grid>
             </Grid>

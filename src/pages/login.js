@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import { GoogleLogin } from "react-google-login";
 import { MAIN_CATALOGUE_PATH } from "../common/constants/route-constants";
-import { apiUsers } from "../api/users";
+import { UserAPI } from "../api/user-api";
 import { useTheme } from "@mui/material/styles";
 import { withSnackbar } from "notistack";
 import jwt_decode from "jwt-decode";
 import { LOGIN_PATH } from "../common/constants/route-constants";
-import { api } from "../api/utilities/api";
+import { api } from "../api/api";
 
 const Login = ({ enqueueSnackbar }) => {
   let theme = useTheme();
@@ -23,16 +23,13 @@ const Login = ({ enqueueSnackbar }) => {
 
     let googleEmail = localStorage.getItem("googleEmail");
     if (resFromGoogle.profileObj.email === googleEmail) {
-      apiUsers
-        .postAuth(resFromGoogle)
+      UserAPI.auth(resFromGoogle)
         .then((res) => {
-          localStorage.setItem("userId", res.data.userId);
-          localStorage.setItem("token", res.data.token);
-          api.setupAuth(res.data.token);
+          localStorage.setItem("token", res.data);
+          api.setupAuth(res.data);
           router.replace(MAIN_CATALOGUE_PATH);
         })
-        .catch(function (err) {
-          console.log(err);
+        .catch(() => {
           enqueueSnackbar("Something went wrong... Please retry.", {
             variant: "error",
           });
@@ -44,8 +41,7 @@ const Login = ({ enqueueSnackbar }) => {
 
   useEffect(() => {
     if (router.asPath !== LOGIN_PATH && router.query.userId) {
-      apiUsers
-        .getGoogle(router.query)
+      UserAPI.confirmRegistration(router.query)
         .then(() => {
           setIsRegistered(true);
         })
