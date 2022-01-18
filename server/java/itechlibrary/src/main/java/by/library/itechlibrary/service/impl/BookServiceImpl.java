@@ -78,11 +78,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findByUserId(long id) {
+    public List<BookDto> findOwnersBook() {
 
         log.info("Try get books by user id.");
 
-        List<Book> books = bookRepository.findAllByOwnerId(id);
+        long ownerId = userService.getCurrentUser().getId();
+
+        List<Book> books = bookRepository.findAllByOwnerId(ownerId);
 
         return bookMapper.mapBookDtoList(books);
     }
