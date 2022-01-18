@@ -16,6 +16,7 @@ const Register = ({ enqueueSnackbar }) => {
   const router = useRouter();
   const [disabledGoogle, setDisabledGoogle] = useState(true);
   const [disabledCorp, setDisabledCorp] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   function validate(value) {
     let error = {};
@@ -87,12 +88,17 @@ const Register = ({ enqueueSnackbar }) => {
     let token = localStorage.getItem("token");
     let corpEmail = localStorage.getItem("corpEmail");
     if (!token && corpEmail) {
-      router.push(LOGIN_PATH);
-    }
-    if (token) {
-      router.push(MAIN_CATALOGUE_PATH);
+      router.replace(LOGIN_PATH);
+    } else if (token) {
+      router.replace(MAIN_CATALOGUE_PATH);
+    } else {
+      setLoaded(true);
     }
   }, [router]);
+
+  if (!loaded) {
+    return <div></div>;
+  }
 
   return (
     <>
