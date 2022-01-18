@@ -13,7 +13,7 @@ public interface BookService {
 
     BookAndIsReaderDto findByIdWithIsReader(long id);
 
-    List<BookDto> findByUserId(long id);
+    List<BookDto> findOwnersBook();
 
     BookDto updateStatus(String status, long bookId);
 
