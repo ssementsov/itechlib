@@ -8,7 +8,7 @@ import { UserAPI } from "../api/user-api";
 import { useTheme } from "@mui/material/styles";
 import { withSnackbar } from "notistack";
 import jwt_decode from "jwt-decode";
-import { LOGIN_PATH } from "../common/constants/route-constants";
+import { LOGIN_PATH, ROOT_PATH } from "../common/constants/route-constants";
 import { api } from "../api/api";
 
 const Login = ({ enqueueSnackbar }) => {
@@ -16,6 +16,7 @@ const Login = ({ enqueueSnackbar }) => {
   const router = useRouter();
   const [correctEmail, setCorrectEmail] = useState(true);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const resGoogleHandlerLogin = (resFromGoogle) => {
     const responsePayload = jwt_decode(resFromGoogle.tokenId);
@@ -52,6 +53,22 @@ const Login = ({ enqueueSnackbar }) => {
         });
     }
   }, [enqueueSnackbar, router, router.query]);
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    let corpEmail = localStorage.getItem("corpEmail");
+    if (!token && !corpEmail) {
+      router.replace(ROOT_PATH);
+    } else if (token) {
+      router.replace(MAIN_CATALOGUE_PATH);
+    } else {
+      setLoaded(true);
+    }
+  }, [router]);
+
+  if (!loaded) {
+    return <div></div>;
+  }
 
   return (
     <>

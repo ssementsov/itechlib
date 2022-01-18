@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DashboardNavbar } from "./dashboard-navbar";
@@ -7,6 +7,7 @@ import { DashboardSidebar } from "./dashboard-sidebar";
 import {
   MAIN_CATALOGUE_PATH,
   LOGIN_PATH,
+  ROOT_PATH,
 } from "../common/constants/route-constants";
 
 const DashboardLayoutRoot = styled("div")(({ theme }) => ({
@@ -21,18 +22,22 @@ const DashboardLayoutRoot = styled("div")(({ theme }) => ({
 
 export const DashboardLayout = (props) => {
   const { children } = props;
+  const router = useRouter();
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const { pathname } = Router;
-    if (pathname === MAIN_CATALOGUE_PATH && !token) {
-      Router.replace(LOGIN_PATH);
+    let corpEmail = localStorage.getItem("corpEmail");
+    const { pathname } = router;
+    if (pathname === MAIN_CATALOGUE_PATH && !token && !corpEmail) {
+      router.replace(ROOT_PATH);
+    } else if (pathname === MAIN_CATALOGUE_PATH && !token) {
+      router.replace(LOGIN_PATH);
     } else {
       setLoaded(true);
     }
-  }, []);
+  }, [router]);
 
   if (!loaded) {
     return <div></div>;
