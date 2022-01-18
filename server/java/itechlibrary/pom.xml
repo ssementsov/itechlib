@@ -21,6 +21,7 @@
         <commons-validator.version>1.7</commons-validator.version>
         <jjwt.version>0.9.1</jjwt.version>
         <spring-security-oauth2-autoconfigure.version>2.6.1</spring-security-oauth2-autoconfigure.version>
+        <commons-math3.version>3.6.1</commons-math3.version>
     </properties>
     <dependencies>
 
@@ -141,6 +142,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>${commons-math3.version}</version>
         </dependency>
 
     </dependencies>

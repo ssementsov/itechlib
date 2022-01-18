@@ -35,6 +35,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b where b.book.id = :bookId and b.isActive = true")
     Optional<Booking> findByBookIdAndActiveIsTrue(long bookId);
 
+    @Query("select b.rate from Booking b where b.book.id = :bookId and b.rate <> 0")
+    List<Short> getRatesByBookId(Long bookId);
+
 
 
 }
