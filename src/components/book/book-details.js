@@ -34,10 +34,8 @@ import { Booking } from "./../../models/booking-model";
 import { BooksAPI } from "../../api/books-api";
 import { BookingsAPI } from "./../../api/bookings-api";
 import { useBoolean } from "../../utils/boolean-hook";
-
-function toLowerCaseExeptFirstLetter(string) {
-  return string[0] + string.slice(1).toLowerCase();
-}
+import { calculateRate } from "./../../utils/functions/calculate-rate";
+import { toLowerCaseExeptFirstLetter } from "../../utils/functions/transform-words";
 
 const TblCell = styled(TableCell)(() => ({
   textAlign: "left",
@@ -177,6 +175,7 @@ const BookDetails = ({
     let bookingId = localStorage.getItem("bookingId");
     BookingsAPI.cancelBooking(bookingId, body)
       .then(() => {
+        localStorage.removeItem("bookingId");
         setReturnButtonClose();
         assignHandler(false);
         enqueueSnackbar(
@@ -274,11 +273,12 @@ const BookDetails = ({
                     </TblCell>
                   </TableRow>
                   <TableRow>
-                    <TblCell>{titles.rating}</TblCell>
+                    <TblCell>{titles.rate}</TblCell>
                     <TblCell>
                       <Rating
+                        precision={0.5}
                         name="read-only"
-                        value={book.rating}
+                        value={calculateRate(book.rate)}
                         size="small"
                         readOnly
                         sx={{
