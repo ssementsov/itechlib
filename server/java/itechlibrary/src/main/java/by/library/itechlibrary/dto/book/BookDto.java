@@ -24,6 +24,8 @@ public class BookDto {
     @NotNull
     private String author;
 
+    private double rate;
+
     @NotNull
     private LanguageDto language;
 
