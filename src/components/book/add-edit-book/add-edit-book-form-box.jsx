@@ -7,7 +7,7 @@ import AddEditBookForm from "./add-edit-book-form";
 import { status } from "../../../common/constants/status-constants";
 
 const AddEditBookFormBox = (props) => {
-  const { setClose, onCreate, onEdit, title, buttonName, book } = props;
+  const { onClose, onCreate, onEdit, title, buttonName, book } = props;
   let newBook;
 
   if (book) {
@@ -113,7 +113,7 @@ const AddEditBookFormBox = (props) => {
             }}
           >
             <CloseIcon
-              onClick={setClose}
+              onClick={onClose}
               sx={{
                 justifySelf: "flex-end",
               }}
@@ -131,7 +131,7 @@ const AddEditBookFormBox = (props) => {
 };
 
 AddEditBookFormBox.propTypes = {
-  setClose: PropTypes.func,
+  onClose: PropTypes.func,
   createBook: PropTypes.func,
   onEdit: PropTypes.func,
   title: PropTypes.string,

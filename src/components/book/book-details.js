@@ -199,23 +199,23 @@ const BookDetails = ({
     <>
       <EditBookModal
         open={isEditButtonOpen}
-        setClose={setEditButtonClose}
+        onClose={setEditButtonClose}
         onEdit={editBook}
         book={book}
       />
       <DeleteBookModal
         onDelete={deleteBook}
         open={isDeleteButtonOpen}
-        setClose={setDeleteButtonClose}
+        onClose={setDeleteButtonClose}
       />
       <AssignBookModal
         onAssign={assignBook}
         open={isAssignButtonOpen}
-        setClose={setAssignButtonClose}
+        onClose={setAssignButtonClose}
       />
       <ReturnBookModal
         open={isReturnButtonOpen}
-        setClose={setReturnButtonClose}
+        onClose={setReturnButtonClose}
         onReturn={returnBook}
       />
 
@@ -302,36 +302,42 @@ const BookDetails = ({
             </Grid>
           </Grid>
         </CardContent>
-        {!isOwner && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              p: 2,
-            }}
-          >
-            {isAssigned ? (
-              <Button
-                onClick={setReturnButtonOpen}
-                aria-label="assign"
-                color="primary"
-                variant="contained"
-              >
-                Return the book
-              </Button>
-            ) : (
-              <Button
-                onClick={setAssignButtonOpen}
-                aria-label="assign"
-                color="primary"
-                variant="contained"
-                disabled={book.status.name !== status.available ? true : false}
-              >
-                Assign to me
-              </Button>
-            )}
-          </Box>
-        )}
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 2,
+          }}
+        >
+          <Button sx={{ mr: 1 }}>View feedback</Button>
+          {!isOwner && (
+            <>
+              {isAssigned ? (
+                <Button
+                  onClick={setReturnButtonOpen}
+                  aria-label="assign"
+                  color="primary"
+                  variant="contained"
+                >
+                  Return the book
+                </Button>
+              ) : (
+                <Button
+                  onClick={setAssignButtonOpen}
+                  aria-label="assign"
+                  color="primary"
+                  variant="contained"
+                  disabled={
+                    book.status.name !== status.available ? true : false
+                  }
+                >
+                  Assign to me
+                </Button>
+              )}
+            </>
+          )}
+        </Box>
       </Card>
     </>
   );
