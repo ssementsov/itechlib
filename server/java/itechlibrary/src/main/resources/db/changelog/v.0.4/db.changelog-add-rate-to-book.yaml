@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17012022-add-column-rate-to-book
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: book
+            columns:
+              - column:
+                  name: rate
+                  type: DECIMAL
