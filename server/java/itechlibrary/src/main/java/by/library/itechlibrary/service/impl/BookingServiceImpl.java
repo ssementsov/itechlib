@@ -17,10 +17,12 @@ import by.library.itechlibrary.service.BookingService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -77,11 +79,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingResponseDto> findAllByBookId(long id) {
+    public List<BookingResponseDto> findAllByBookId(long bookId) {
 
-        log.info("Try to find bookings by book id = {}.", id);
+        log.info("Try to find bookings by book id = {}.", bookId);
 
-        List<Booking> bookings = bookingRepository.findAllByBookId(id);
+        List<Booking> bookings = bookingRepository.findAllByBookId(bookId);
 
         return bookingMapper.mapBookingResponseDtoList(bookings);
     }
@@ -140,6 +142,7 @@ public class BookingServiceImpl implements BookingService {
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
             bookingRepository.save(booking);
 
+
         } else {
 
             throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
@@ -168,7 +171,7 @@ public class BookingServiceImpl implements BookingService {
 
         Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
 
-        if(bookingOptional.isPresent()){
+        if (bookingOptional.isPresent()) {
 
             Booking booking = bookingOptional.get();
             booking.setActive(false);
@@ -187,9 +190,10 @@ public class BookingServiceImpl implements BookingService {
 
     private void setReviewInfo(Booking booking, Short rate, String feedback) {
 
-        if (rate != null && rate != 0) {
+        if (rate != null) {
 
             booking.setRate(rate);
+            recountingBookRate(booking);
 
         }
 
@@ -198,6 +202,18 @@ public class BookingServiceImpl implements BookingService {
             booking.setFeedback(feedback);
 
         }
+    }
+
+    private void recountingBookRate(Booking booking) {
+
+        List<Short> rateList = bookingRepository.getRatesByBookId(booking.getBook().getId());
+
+        int sumOfRate = rateList.stream().mapToInt(a -> a).sum();
+        int countOfRates = rateList.size();
+        double bookRate = (double) sumOfRate / countOfRates;
+        double bookRateRounded = Precision.round(bookRate, 1);
+        booking.getBook().setRate(bookRateRounded);
+
     }
 
     private Booking findBookingById(long id) {

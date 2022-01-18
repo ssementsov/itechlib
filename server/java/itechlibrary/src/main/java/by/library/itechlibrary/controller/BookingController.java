@@ -2,8 +2,10 @@ package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.service.BookingService;
+import by.library.itechlibrary.service.FeedbackService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
+
+    private final FeedbackService feedbackService;
 
 
     @GetMapping("/readers/{readerId}")
@@ -86,10 +90,18 @@ public class BookingController {
     @PostMapping("/{id}/return")
     @ApiOperation("return book, make current booking not active")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBook(@RequestBody ReviewDto reviewDto, @PathVariable("id") long bookingId) {
+    public void returnBookSetReview(@RequestBody ReviewDto reviewDto, @PathVariable("id") long bookingId) {
 
         bookingService.returnBooking(reviewDto, bookingId);
 
+    }
+
+    @GetMapping("/feedback")
+    @ApiOperation("get feedback list by book id")
+    @ResponseStatus(HttpStatus.OK)
+    public List<FeedbackResponseDto> getFeedbackListByBookId(@RequestParam("bookId") long bookId) {
+
+        return feedbackService.getFeedbackResponses(bookId);
     }
 }
 

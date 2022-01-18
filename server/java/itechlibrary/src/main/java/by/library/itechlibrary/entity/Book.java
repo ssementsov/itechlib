@@ -35,6 +35,9 @@ public class Book {
     @Column(name = "add_date", updatable = false)
     private LocalDate createDate;
 
+    @Column(name = "rate")
+    private double rate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Language language;
 
