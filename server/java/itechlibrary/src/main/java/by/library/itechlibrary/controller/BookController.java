@@ -37,12 +37,12 @@ public class BookController {
         return bookService.findByIdWithIsReader(id);
     }
 
-    @GetMapping("/user/{id}")
-    @ApiOperation("get book by owner id")
+    @GetMapping("/user/")
+    @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookDto> getBooksByUserId(@PathVariable("id") long id) {
+    public List<BookDto> getBooksByUserId() {
 
-        return bookService.findByUserId(id);
+        return bookService.findOwnersBook();
     }
 
     @PostMapping
