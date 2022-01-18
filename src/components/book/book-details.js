@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { EditIcon } from "../../icons/edit-icon";
 import { DeleteIcon } from "./../../icons/delete-icon";
@@ -275,16 +276,20 @@ const BookDetails = ({
                   <TableRow>
                     <TblCell>{titles.rate}</TblCell>
                     <TblCell>
-                      <Rating
-                        precision={0.5}
-                        name="read-only"
-                        value={calculateRate(book.rate)}
-                        size="small"
-                        readOnly
-                        sx={{
-                          marginLeft: "-3px",
-                        }}
-                      />
+                      <Tooltip title={book.rate} placement="right">
+                        <span>
+                          <Rating
+                            precision={0.5}
+                            name="read-only"
+                            value={calculateRate(book.rate)}
+                            size="small"
+                            readOnly
+                            sx={{
+                              ml: "-3px",
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
                     </TblCell>
                   </TableRow>
                   <TableRow>

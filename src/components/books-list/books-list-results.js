@@ -9,6 +9,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import { titles } from "../../common/constants/titles-constants";
 import router from "next/router";
@@ -54,13 +55,17 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                       </TableCell>
                       <TableCell>{book.description}</TableCell>
                       <TableCell>
-                        <Rating
-                          precision={0.5}
-                          name="read-only"
-                          value={calculateRate(book.rate)}
-                          size="small"
-                          readOnly
-                        />
+                        <Tooltip title={book.rate} placement="right">
+                          <span>
+                            <Rating
+                              precision={0.5}
+                              name="read-only"
+                              value={calculateRate(book.rate)}
+                              size="small"
+                              readOnly
+                            />
+                          </span>
+                        </Tooltip>
                       </TableCell>
                       <TableCell>
                         {toLowerCaseExeptFirstLetter(book.status.name)}
