@@ -22,7 +22,6 @@ import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
 import { withSnackbar } from "notistack";
 import { useRouter } from "next/router";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import ReturnBookModal from "../book/return-book/return-book-modal";
 import AssignBookModal from "../book/assign-book/assign-book-modal";
 import DeleteBookModal from "../book/delete-book/delete-book-modal";
@@ -92,7 +91,7 @@ const BookDetails = ({
     if (book.status.name === status.available) {
       BooksAPI.removeBook(book.id)
         .then(() => {
-          router.replace(MAIN_CATALOGUE_PATH);
+          router.back();
           enqueueSnackbar("Your book has been deleted successfully!", {
             variant: "success",
           });
