@@ -87,7 +87,7 @@ const ReturnBookModal = (props) => {
             control={
               <Rating
                 name="rate"
-                value={Number(formik.values.rate)}
+                value={formik.values.rate}
                 size="middle"
                 onChange={handleChangeRate}
                 sx={{

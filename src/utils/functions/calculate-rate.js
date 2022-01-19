@@ -3,7 +3,7 @@ export const calculateRate = (rate) => {
     let rateStr = rate.toString();
     let numAfterComa = rateStr.slice(2);
     let numBeforeComa = rateStr.slice(0, 1);
-    if (numAfterComa > 5) {
+    if (numAfterComa > 4) {
       return rate;
     } else {
       return Number(numBeforeComa);
