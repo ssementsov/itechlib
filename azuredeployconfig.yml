@@ -1,0 +1,66 @@
+version: '3.9'
+
+volumes:
+  itech-lib-data:
+
+networks:
+  lib-network:
+
+services:
+
+  library_service_application:
+    container_name: itechlib2021_library_service_application
+    restart: always
+    build:
+      context: ./server/java/itechlibrary/
+    ports:
+      - "8089:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://itech_library_database:5432/itech_lib
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_USERNAME: postgres
+      TEMPLATE_HOST: https://itechlib.azurewebsites.net  
+    depends_on:
+      - itech_library_database
+    networks:
+      - lib-network
+
+
+  itech_library_database:
+    container_name: postgres
+    restart: always
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    volumes:
+      - itech-lib-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: postgres
+      POSTGRES_DB: 13
+    networks:
+      - lib-network
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "80:5050"
+    networks:
+      - lib-network
+ 
+  node:
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    restart: always  
+    ports:
+      - "3000:3000"
+    container_name: itechlib2021_node
+    networks:
+      - lib-network
