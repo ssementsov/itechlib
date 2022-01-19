@@ -1,4 +1,4 @@
-import PerfectScrollbar from 'react-perfect-scrollbar';
+import PerfectScrollbar from "react-perfect-scrollbar";
 import {
   Box,
   Card,
@@ -9,15 +9,13 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material';
-import { titles } from '../../common/constants/titles-constants';
-import router from 'next/router';
-import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
-import { withSnackbar } from 'notistack';
-
-function toLowerCaseExeptFirstLetter(string) {
-  return string[0] + string.slice(1).toLowerCase();
-}
+  Tooltip,
+} from "@mui/material";
+import { titles } from "../../common/constants/titles-constants";
+import router from "next/router";
+import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
+import { calculateRate } from "./../../utils/functions/calculate-rate";
+import { toLowerCaseExeptFirstLetter } from "./../../utils/functions/transform-words";
 
 const BooksListResults = ({ books, isStartedSearch }) => {
   return (
@@ -32,7 +30,7 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                 <TableCell>{titles.category}</TableCell>
                 <TableCell>{titles.language}</TableCell>
                 <TableCell>{titles.description}</TableCell>
-                <TableCell>{titles.rating}</TableCell>
+                <TableCell>{titles.rate}</TableCell>
                 <TableCell>{titles.status}</TableCell>
               </TableRow>
             </TableHead>
@@ -57,12 +55,17 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                       </TableCell>
                       <TableCell>{book.description}</TableCell>
                       <TableCell>
-                        <Rating
-                          name="read-only"
-                          value={book.rating}
-                          size="small"
-                          readOnly
-                        />
+                        <Tooltip title={book.rate} placement="right">
+                          <span>
+                            <Rating
+                              precision={0.5}
+                              name="read-only"
+                              value={calculateRate(book.rate)}
+                              size="small"
+                              readOnly
+                            />
+                          </span>
+                        </Tooltip>
                       </TableCell>
                       <TableCell>
                         {toLowerCaseExeptFirstLetter(book.status.name)}
@@ -74,11 +77,11 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Typography
-                      sx={{ textAlign: 'center', color: 'action.active' }}
+                      sx={{ textAlign: "center", color: "action.active" }}
                     >
                       {isStartedSearch
-                        ? 'No books found'
-                        : 'No books have been added yet!'}
+                        ? "No books found"
+                        : "No books have been added yet!"}
                     </Typography>
                   </TableCell>
                 </TableRow>
@@ -91,4 +94,4 @@ const BooksListResults = ({ books, isStartedSearch }) => {
   );
 };
 
-export default withSnackbar(BooksListResults);
+export default BooksListResults;

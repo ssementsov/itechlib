@@ -1,14 +1,14 @@
-import Head from 'next/head';
-import { useState, useCallback } from 'react';
-import { CacheProvider } from '@emotion/react';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { CssBaseline } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { createEmotionCache } from '../utils/create-emotion-cache';
-import { theme } from '../theme';
-import { SnackbarProvider } from 'notistack';
-import { Slide } from '@mui/material';
+import Head from "next/head";
+import { useState, useCallback } from "react";
+import { CacheProvider } from "@emotion/react";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { createEmotionCache } from "../utils/create-emotion-cache";
+import { theme } from "../theme";
+import { SnackbarProvider } from "notistack";
+import { Slide } from "@mui/material";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -33,8 +33,8 @@ const App = (props) => {
             maxSnack={3}
             hideIconVariant
             anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
+              vertical: "top",
+              horizontal: "center",
             }}
             TransitionComponent={Slide}
           >

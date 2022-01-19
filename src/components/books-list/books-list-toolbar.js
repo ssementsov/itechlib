@@ -14,7 +14,7 @@ import { Search as SearchIcon } from "../../icons/search";
 import AddBookModal from "./../book/add-edit-book/add-book-modal";
 
 const BooksListToolbar = (props) => {
-  const { onCreate, setSearch, search, open, setOpen, setClose } = props;
+  const { onCreate, setSearch, search, open, setOpen, onClose } = props;
 
   return (
     <Box>
@@ -35,7 +35,7 @@ const BooksListToolbar = (props) => {
           <Button onClick={setOpen} color="primary" variant="contained">
             Add a book
           </Button>
-          <AddBookModal onCreate={onCreate} open={open} setClose={setClose} />
+          <AddBookModal onCreate={onCreate} open={open} onClose={onClose} />
         </Box>
       </Box>
       <Box sx={{ mt: 3 }}>
@@ -70,7 +70,7 @@ const BooksListToolbar = (props) => {
 
 BooksListToolbar.propTypes = {
   open: PropTypes.bool.isRequired,
-  setClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   onCreate: PropTypes.func.isRequired,
   setSearch: PropTypes.func.isRequired,
   search: PropTypes.string.isRequired,

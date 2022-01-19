@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  Tooltip,
 } from "@mui/material";
 import { EditIcon } from "../../icons/edit-icon";
 import { DeleteIcon } from "./../../icons/delete-icon";
@@ -34,10 +35,8 @@ import { Booking } from "./../../models/booking-model";
 import { BooksAPI } from "../../api/books-api";
 import { BookingsAPI } from "./../../api/bookings-api";
 import { useBoolean } from "../../utils/boolean-hook";
-
-function toLowerCaseExeptFirstLetter(string) {
-  return string[0] + string.slice(1).toLowerCase();
-}
+import { calculateRate } from "./../../utils/functions/calculate-rate";
+import { toLowerCaseExeptFirstLetter } from "../../utils/functions/transform-words";
 
 const TblCell = styled(TableCell)(() => ({
   textAlign: "left",
@@ -177,6 +176,7 @@ const BookDetails = ({
     let bookingId = localStorage.getItem("bookingId");
     BookingsAPI.cancelBooking(bookingId, body)
       .then(() => {
+        localStorage.removeItem("bookingId");
         setReturnButtonClose();
         assignHandler(false);
         enqueueSnackbar(
@@ -199,23 +199,23 @@ const BookDetails = ({
     <>
       <EditBookModal
         open={isEditButtonOpen}
-        setClose={setEditButtonClose}
+        onClose={setEditButtonClose}
         onEdit={editBook}
         book={book}
       />
       <DeleteBookModal
         onDelete={deleteBook}
         open={isDeleteButtonOpen}
-        setClose={setDeleteButtonClose}
+        onClose={setDeleteButtonClose}
       />
       <AssignBookModal
         onAssign={assignBook}
         open={isAssignButtonOpen}
-        setClose={setAssignButtonClose}
+        onClose={setAssignButtonClose}
       />
       <ReturnBookModal
         open={isReturnButtonOpen}
-        setClose={setReturnButtonClose}
+        onClose={setReturnButtonClose}
         onReturn={returnBook}
       />
 
@@ -274,17 +274,22 @@ const BookDetails = ({
                     </TblCell>
                   </TableRow>
                   <TableRow>
-                    <TblCell>{titles.rating}</TblCell>
+                    <TblCell>{titles.rate}</TblCell>
                     <TblCell>
-                      <Rating
-                        name="read-only"
-                        value={book.rating}
-                        size="small"
-                        readOnly
-                        sx={{
-                          marginLeft: "-3px",
-                        }}
-                      />
+                      <Tooltip title={book.rate} placement="right">
+                        <span>
+                          <Rating
+                            precision={0.5}
+                            name="read-only"
+                            value={calculateRate(book.rate)}
+                            size="small"
+                            readOnly
+                            sx={{
+                              ml: "-3px",
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
                     </TblCell>
                   </TableRow>
                   <TableRow>
@@ -302,36 +307,42 @@ const BookDetails = ({
             </Grid>
           </Grid>
         </CardContent>
-        {!isOwner && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              p: 2,
-            }}
-          >
-            {isAssigned ? (
-              <Button
-                onClick={setReturnButtonOpen}
-                aria-label="assign"
-                color="primary"
-                variant="contained"
-              >
-                Return the book
-              </Button>
-            ) : (
-              <Button
-                onClick={setAssignButtonOpen}
-                aria-label="assign"
-                color="primary"
-                variant="contained"
-                disabled={book.status.name !== status.available ? true : false}
-              >
-                Assign to me
-              </Button>
-            )}
-          </Box>
-        )}
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            p: 2,
+          }}
+        >
+          <Button sx={{ mr: 1 }}>View feedback</Button>
+          {!isOwner && (
+            <>
+              {isAssigned ? (
+                <Button
+                  onClick={setReturnButtonOpen}
+                  aria-label="assign"
+                  color="primary"
+                  variant="contained"
+                >
+                  Return the book
+                </Button>
+              ) : (
+                <Button
+                  onClick={setAssignButtonOpen}
+                  aria-label="assign"
+                  color="primary"
+                  variant="contained"
+                  disabled={
+                    book.status.name !== status.available ? true : false
+                  }
+                >
+                  Assign to me
+                </Button>
+              )}
+            </>
+          )}
+        </Box>
       </Card>
     </>
   );
