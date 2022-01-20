@@ -37,35 +37,41 @@ const BooksCatalogue = (props) => {
     return books;
   }, [books, search]);
 
-  const createBook = (values) => {
-    let idCategory = values.category === category.professional ? 1 : 2;
-    let idLanguage = values.language === language.english ? 1 : 2;
+  const createBook = (newBook) => {
+    let idCategory =
+      newBook.category === category.professional.name
+        ? category.professional.id
+        : category.fiction.id;
+    let idLanguage =
+      newBook.language === language.english
+        ? language.english.id
+        : language.russian.id;
     let idStatus;
-    switch (values.status) {
-      case status.notAvailable:
-        idStatus = 2;
+    switch (newBook.status) {
+      case status.notAvailable.name:
+        idStatus = status.notAvailable.id;
         break;
       case status.inUse:
-        idStatus = 3;
+        idStatus = status.inUse.id;
         break;
       default:
-        idStatus = 1;
+        idStatus = status.available.id;
     }
-    const newBook = new Book(
+    const createdBook = new Book(
       0,
-      values.title,
-      values.author,
+      newBook.title,
+      newBook.author,
       idCategory,
-      values.category,
+      newBook.category,
       idLanguage,
-      values.language,
-      values.link,
+      newBook.language,
+      newBook.link,
       idStatus,
-      values.status,
-      values.description
+      newBook.status,
+      newBook.description
     );
 
-    BooksAPI.addBook(newBook)
+    BooksAPI.addBook(createdBook)
       .then((res) => {
         setAddButtonClose();
         enqueueSnackbar("Your book has been added successfully!", {
@@ -73,13 +79,13 @@ const BooksCatalogue = (props) => {
         });
         const newBooksList = [res.data, ...books];
         onUpdateBooks(newBooksList);
-        onUpdateLoadingStatus();
+        onUpdateLoadingStatus(true);
       })
       .catch(() => {
         enqueueSnackbar("Something went wrong... Please retry.", {
           variant: "error",
         });
-        onUpdateLoadingStatus();
+        onUpdateLoadingStatus(true);
       });
   };
 

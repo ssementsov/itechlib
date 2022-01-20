@@ -1,15 +1,15 @@
-import { status } from '../../../../common/constants/status-constants';
+import { status } from "../../../../common/constants/status-constants";
 export const statuses = [
   {
-    value: status.available,
-    label: 'Available',
+    value: status.available.name,
+    label: "Available",
   },
   {
-    value: status.notAvailable,
-    label: 'Not available',
+    value: status.notAvailable.name,
+    label: "Not available",
   },
   {
-    value: status.inUse,
-    label: 'In use',
+    value: status.inUse.name,
+    label: "In use",
   },
 ];

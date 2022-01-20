@@ -1,4 +1,10 @@
 export const language = {
-  english: 'ENGLISH',
-  russian: 'RUSSIAN',
+  english: {
+    name: "ENGLISH",
+    id: 1,
+  },
+  russian: {
+    name: "RUSSIAN",
+    id: 2,
+  },
 };

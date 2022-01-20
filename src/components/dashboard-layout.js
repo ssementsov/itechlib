@@ -4,11 +4,7 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { DashboardNavbar } from "./dashboard-navbar";
 import { DashboardSidebar } from "./dashboard-sidebar";
-import {
-  MAIN_CATALOGUE_PATH,
-  LOGIN_PATH,
-  ROOT_PATH,
-} from "../common/constants/route-constants";
+import { LOGIN_PATH, ROOT_PATH } from "../common/constants/route-constants";
 
 const DashboardLayoutRoot = styled("div")(({ theme }) => ({
   display: "flex",
@@ -29,10 +25,9 @@ export const DashboardLayout = (props) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     let corpEmail = localStorage.getItem("corpEmail");
-    const { pathname } = router;
-    if (pathname === MAIN_CATALOGUE_PATH && !token && !corpEmail) {
+    if (!token && !corpEmail) {
       router.replace(ROOT_PATH);
-    } else if (pathname === MAIN_CATALOGUE_PATH && !token) {
+    } else if (!token) {
       router.replace(LOGIN_PATH);
     } else {
       setLoaded(true);
