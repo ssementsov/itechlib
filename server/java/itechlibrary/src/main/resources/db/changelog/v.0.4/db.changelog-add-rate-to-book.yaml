@@ -9,3 +9,4 @@ databaseChangeLog:
               - column:
                   name: rate
                   type: DECIMAL
+                  defaultValueNumeric:  '0.0'
