@@ -1,5 +1,5 @@
-import { api } from './api';
-import { EntityTypes } from '../common/constants/api-constants';
+import { api } from "./api";
+import { EntityTypes } from "../common/constants/api-constants";
 
 export const BooksAPI = {
   getAllBooks() {
@@ -16,5 +16,8 @@ export const BooksAPI = {
   },
   removeBook(id) {
     return api.Client.delete(`/${EntityTypes.books}/${id}`);
+  },
+  getOwnerBooks() {
+    return api.Client.get(`/${EntityTypes.books}/user/`);
   },
 };

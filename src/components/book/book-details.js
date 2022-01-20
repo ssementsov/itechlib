@@ -22,7 +22,6 @@ import { titles } from "./../../common/constants/titles-constants";
 import { styled } from "@mui/material/styles";
 import { withSnackbar } from "notistack";
 import { useRouter } from "next/router";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import ReturnBookModal from "../book/return-book/return-book-modal";
 import AssignBookModal from "../book/assign-book/assign-book-modal";
 import DeleteBookModal from "../book/delete-book/delete-book-modal";
@@ -92,7 +91,7 @@ const BookDetails = ({
     if (book.status.name === status.available) {
       BooksAPI.removeBook(book.id)
         .then(() => {
-          router.replace(MAIN_CATALOGUE_PATH);
+          router.back();
           enqueueSnackbar("Your book has been deleted successfully!", {
             variant: "success",
           });
@@ -112,46 +111,52 @@ const BookDetails = ({
     }
   };
 
-  const editBook = (values) => {
-    try {
-      let idCategory = values.category === category.professional ? 1 : 2;
-      let idLanguage = values.language === language.english ? 1 : 2;
-      let idStatus;
-      switch (values.status) {
-        case status.notAvailable:
-          idStatus = 2;
-          break;
-        case status.inUse:
-          idStatus = 3;
-          break;
-        default:
-          idStatus = 1;
-      }
-      const editBook = new Book(
-        values.id,
-        values.title,
-        values.author,
-        idCategory,
-        values.category,
-        idLanguage,
-        values.language,
-        values.link,
-        idStatus,
-        values.status,
-        values.description
-      );
-      BooksAPI.changeBookInfo(editBook).then((res) => {
+  const editBook = (newBook) => {
+    let idCategory =
+      newBook.category === category.professional.name
+        ? category.professional.id
+        : category.fiction.id;
+    let idLanguage =
+      newBook.language === language.english
+        ? language.english.id
+        : language.russian.id;
+    let idStatus;
+    switch (newBook.status) {
+      case status.notAvailable.name:
+        idStatus = status.notAvailable.id;
+        break;
+      case status.inUse:
+        idStatus = status.inUse.id;
+        break;
+      default:
+        idStatus = status.available.id;
+    }
+    const editedBook = new Book(
+      newBook.id,
+      newBook.title,
+      newBook.author,
+      idCategory,
+      newBook.category,
+      idLanguage,
+      newBook.language,
+      newBook.link,
+      idStatus,
+      newBook.status,
+      newBook.description
+    );
+    BooksAPI.changeBookInfo(editedBook)
+      .then((res) => {
         setEditButtonClose();
         onUpdate(res.data);
+        enqueueSnackbar("Your book has been updated successfully!", {
+          variant: "success",
+        });
+      })
+      .catch(() => {
+        enqueueSnackbar("Something went wrong... Please retry.", {
+          variant: "error",
+        });
       });
-      enqueueSnackbar("Your book has been updated successfully!", {
-        variant: "success",
-      });
-    } catch (e) {
-      enqueueSnackbar("Something went wrong... Please retry.", {
-        variant: "error",
-      });
-    }
   };
 
   const assignBook = ({ startDate, finishDate }) => {

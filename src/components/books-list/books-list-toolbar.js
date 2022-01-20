@@ -14,7 +14,7 @@ import { Search as SearchIcon } from "../../icons/search";
 import AddBookModal from "./../book/add-edit-book/add-book-modal";
 
 const BooksListToolbar = (props) => {
-  const { onCreate, setSearch, search, open, setOpen, onClose } = props;
+  const { onCreate, setSearch, search, open, setOpen, onClose, title } = props;
 
   return (
     <Box>
@@ -28,7 +28,7 @@ const BooksListToolbar = (props) => {
         }}
       >
         <Typography sx={{ m: 1 }} variant="h4">
-          Main catalogue
+          {title}
         </Typography>
         <Box sx={{ m: 1, display: "flex" }}>
           <Button sx={{ mr: 1 }}>Suggest a book</Button>

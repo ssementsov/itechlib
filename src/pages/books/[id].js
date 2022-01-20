@@ -1,11 +1,9 @@
 import Head from "next/head";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { Box, Container, Grid, Card, Button, Typography } from "@mui/material";
 import BookDetails from "../../components/book/book-details";
 import { DashboardLayout } from "../../components/dashboard-layout";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { MAIN_CATALOGUE_PATH } from "../../common/constants/route-constants";
 import { useState, useEffect } from "react";
 import { withSnackbar } from "notistack";
 import { BooksAPI } from "./../../api/books-api";
@@ -60,17 +58,16 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
             pb: 8,
           }}
         >
-          <Link href={MAIN_CATALOGUE_PATH} passHref>
-            <Button
-              component="a"
-              startIcon={<ArrowBackIcon fontSize="small" />}
-              sx={{
-                ml: 2,
-              }}
-            >
-              Back to main catalogue
-            </Button>
-          </Link>
+          <Button
+            onClick={() => router.back()}
+            component="a"
+            startIcon={<ArrowBackIcon fontSize="small" />}
+            sx={{
+              ml: 2,
+            }}
+          >
+            Back
+          </Button>
           <Container
             maxWidth="lg"
             sx={{

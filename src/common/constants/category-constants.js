@@ -1,4 +1,10 @@
 export const category = {
-  professional: 'PROFESSIONAL',
-  fiction: 'FICTION',
+  professional: {
+    name: "PROFESSIONAL",
+    id: 1,
+  },
+  fiction: {
+    name: "FICTION",
+    id: 2,
+  },
 };
