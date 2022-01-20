@@ -30,8 +30,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: feedback
-                  type: VARCHAR(2048)
+                  name: feedback_id
+                  type: BIGINT
                   constraints:
                     nullable: true
               - column:
@@ -42,6 +42,32 @@ databaseChangeLog:
               - column:
                   name: book_id
                   type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 23122021-add-feedback
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: feedback
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: text
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date
+                  type: DATE
                   constraints:
                     nullable: false
 
@@ -67,3 +93,15 @@ databaseChangeLog:
             constraintName: fk_booking_book
             referencedColumnNames: id
             referencedTableName: book
+
+
+  - changeSet:
+      id:  23122021-add-ForeignKeyConstraint-feedback-to-booking
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: feedback_id
+            baseTableName: booking
+            constraintName: fk_booking_feedback
+            referencedColumnNames: id
+            referencedTableName: feedback
