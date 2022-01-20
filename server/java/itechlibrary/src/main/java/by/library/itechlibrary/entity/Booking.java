@@ -28,11 +28,12 @@ public class Booking {
     @Column(name = "rate")
     private short rate;
 
-    @Column(name = "feedback")
-    private String feedback;
-
     @Column(name = "is_active")
     private boolean isActive;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "feedback_id", referencedColumnName = "id")
+    private Feedback feedback;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "user_id")

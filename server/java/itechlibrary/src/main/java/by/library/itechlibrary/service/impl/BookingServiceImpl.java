@@ -5,10 +5,7 @@ import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
-import by.library.itechlibrary.entity.Book;
-import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.Status;
-import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
@@ -21,8 +18,6 @@ import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -65,7 +60,6 @@ public class BookingServiceImpl implements BookingService {
             checkAndSetDates(booking);
             setCurrentUser(booking);
             setBookAndChangeStatus(booking, StatusConstant.IN_USE_STATUS);
-
             booking = bookingRepository.save(booking);
 
             return bookingMapper.toNewBookingResponseDto(booking);
@@ -142,7 +136,6 @@ public class BookingServiceImpl implements BookingService {
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
             bookingRepository.save(booking);
 
-
         } else {
 
             throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
@@ -188,7 +181,7 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private void setReviewInfo(Booking booking, Short rate, String feedback) {
+    private void setReviewInfo(Booking booking, Short rate, String feedbackText) {
 
         if (rate != null) {
 
@@ -197,8 +190,11 @@ public class BookingServiceImpl implements BookingService {
 
         }
 
-        if (feedback != null && !feedback.equals("")) {
+        if (feedbackText != null && !feedbackText.equals("")) {
 
+            Feedback feedback = new Feedback();
+            feedback.setText(feedbackText);
+            feedback.setDate(LocalDate.now());
             booking.setFeedback(feedback);
 
         }
@@ -207,7 +203,6 @@ public class BookingServiceImpl implements BookingService {
     private void recountingBookRate(Booking booking) {
 
         List<Short> rateList = bookingRepository.getRatesByBookId(booking.getBook().getId());
-
         int sumOfRate = rateList.stream().mapToInt(a -> a).sum();
         int countOfRates = rateList.size();
         double bookRate = (double) sumOfRate / countOfRates;
@@ -220,7 +215,6 @@ public class BookingServiceImpl implements BookingService {
 
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("The booking was not find by id = " + id));
-
     }
 
 
