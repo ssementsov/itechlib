@@ -11,8 +11,7 @@ services:
   library_service_application:
     container_name: itechlib2021_library_service_application
     restart: always
-    build:
-      context: ./server/java/itechlibrary/
+    image: itechlib.azurecr.io/itechlib2021_library_service_application
     ports:
       - "8089:8080"
     environment:
@@ -55,9 +54,7 @@ services:
       - lib-network
  
   node:
-    build: 
-      context: . 
-      dockerfile: Dockerfile
+    image: itechlib.azurecr.io/itechlib2021_node
     restart: always  
     ports:
       - "3000:3000"
