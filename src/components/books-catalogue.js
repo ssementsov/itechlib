@@ -11,6 +11,7 @@ import { category } from "../common/constants/category-constants";
 import { language } from "../common/constants/language-constants";
 import { useBoolean } from "../utils/boolean-hook";
 import { PropTypes } from "prop-types";
+import { useErrorNotice } from "../utils/error-notice-hook";
 
 const BooksCatalogue = (props) => {
    const {
@@ -23,6 +24,7 @@ const BooksCatalogue = (props) => {
    const [search, setSearch] = useState("");
    const [isStartedSearch, setIsStartedSearch] = useState(false);
    const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
+   const [setMainError] = useErrorNotice();
 
    const searchedBooks = useMemo(() => {
       if (search.length > 1) {
@@ -82,9 +84,7 @@ const BooksCatalogue = (props) => {
             onUpdateLoadingStatus(true);
          })
          .catch(() => {
-            enqueueSnackbar("Something went wrong... Please retry.", {
-               variant: "error",
-            });
+            setMainError();
             onUpdateLoadingStatus(true);
          });
    };

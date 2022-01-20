@@ -40,6 +40,7 @@ import {
    BOOK_PREVIEW_PAGE_PATH,
    FEEDBACKS_PATH,
 } from "../../common/constants/route-constants";
+import { useErrorNotice } from "../../utils/error-notice-hook";
 
 const TblCell = styled(TableCell)(() => ({
    textAlign: "left",
@@ -59,6 +60,7 @@ const BookDetails = ({
    const router = useRouter();
    const corpEmail = localStorage.getItem("corpEmail");
    let isOwner = book.owner.corpEmail === corpEmail;
+   const [setMainError] = useErrorNotice();
    const [
       isEditButtonOpen,
       setEditButtonOpen,
@@ -101,9 +103,7 @@ const BookDetails = ({
                });
             })
             .catch(() => {
-               enqueueSnackbar("Something went wrong... Please retry.", {
-                  variant: "error",
-               });
+               setMainError();
             });
       } else {
          enqueueSnackbar(
@@ -157,9 +157,7 @@ const BookDetails = ({
             });
          })
          .catch(() => {
-            enqueueSnackbar("Something went wrong... Please retry.", {
-               variant: "error",
-            });
+            setMainError();
          });
    };
 
@@ -175,9 +173,7 @@ const BookDetails = ({
             });
          })
          .catch(() => {
-            enqueueSnackbar("Something went wrong... Please retry.", {
-               variant: "error",
-            });
+            setMainError();
          });
    };
 
@@ -198,9 +194,7 @@ const BookDetails = ({
             );
          })
          .catch(() => {
-            enqueueSnackbar("Something went wrong. Please retry.", {
-               variant: "error",
-            });
+            setMainError();
          });
    };
 

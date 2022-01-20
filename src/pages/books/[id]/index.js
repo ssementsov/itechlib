@@ -8,11 +8,13 @@ import { useState, useEffect } from "react";
 import { withSnackbar } from "notistack";
 import { BooksAPI } from "../../../api/books-api";
 import { api } from "../../../api/api";
+import { useErrorNotice } from "./../../../utils/error-notice-hook";
 
 function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
    const router = useRouter();
    const [book, setBook] = useState([]);
    const [isLoaded, setIsLoaded] = useState(false);
+   const [setMainError] = useErrorNotice();
    const id = router.query.id;
 
    const updateBook = (newInfo) => {
@@ -31,12 +33,17 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
                setIsLoaded(true);
             })
             .catch(() => {
-               enqueueSnackbar("Something went wrong... Please retry.", {
-                  variant: "error",
-               });
+               setMainError();
             });
       }
-   }, [isAssigned, assignHandler, enqueueSnackbar, id, router.isReady]);
+   }, [
+      isAssigned,
+      assignHandler,
+      enqueueSnackbar,
+      id,
+      router.isReady,
+      setMainError,
+   ]);
 
    if (!isLoaded) {
       return (
