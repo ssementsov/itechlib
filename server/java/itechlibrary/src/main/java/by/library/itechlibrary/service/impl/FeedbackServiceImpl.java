@@ -1,7 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
-import by.library.itechlibrary.entity.feedback.Feedback;
+import by.library.itechlibrary.entity.Feedback;
 import by.library.itechlibrary.repository.FeedbackRepository;
 import by.library.itechlibrary.service.FeedbackService;
 import lombok.Data;
@@ -20,7 +20,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
 
-
     @Override
     public List<FeedbackResponseDto> getFeedbackResponses(long bookId) {
 
@@ -37,8 +36,11 @@ public class FeedbackServiceImpl implements FeedbackService {
         for (Feedback f : feedbackList) {
 
             FeedbackResponseDto feedbackResponseDto = new FeedbackResponseDto();
-            feedbackResponseDto.setFeedback(f.getFeedback());
-            feedbackResponseDto.setUserFullName(f.getUserInfo().getName() + " " + f.getUserInfo().getSurname());
+            feedbackResponseDto.setFeedback(f.getText());
+            feedbackResponseDto.setUserFullName(f.getBooking().getReader().getName() +
+                   " " + f.getBooking().getReader().getSurname());
+            feedbackResponseDto.setDate(f.getDate());
+            feedbackResponseDto.setId(f.getId());
             feedbackResponseDtos.add(feedbackResponseDto);
 
         }
