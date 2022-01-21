@@ -1,7 +1,9 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.FileValidationConstant;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.exeption_handler.exception.UploadFileException;
+import by.library.itechlibrary.exeption_handler.exception.WrongExtensionFormatException;
 import by.library.itechlibrary.repository.FileInfoRepository;
 import by.library.itechlibrary.service.FileInfoService;
 import liquibase.util.file.FilenameUtils;
@@ -30,6 +32,8 @@ public class FileInfoServiceImpl implements FileInfoService {
         String originalFileName = multipartFile.getOriginalFilename();
         String extension = getExtension(originalFileName);
         String fileName = getFileName(originalFileName);
+
+        validateFileExtension(extension);
 
         FileInfo fileInfo = new FileInfo();
         fileInfo.setDate(LocalDate.now());
@@ -68,5 +72,14 @@ public class FileInfoServiceImpl implements FileInfoService {
     private String getExtension(String fileName){
 
         return FilenameUtils.getExtension(fileName);
+    }
+
+    private void validateFileExtension(String extension){
+
+        if(!FileValidationConstant.IMAGE_VALID_EXTENSION_LIST.contains(extension)){
+
+            throw new WrongExtensionFormatException("File has wrong extension!");
+
+        }
     }
 }
