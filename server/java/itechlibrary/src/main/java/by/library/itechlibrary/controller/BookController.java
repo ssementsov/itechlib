@@ -1,6 +1,6 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.book.BookAndIsReaderDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,9 +33,9 @@ public class BookController {
     @GetMapping("/{id}")
     @ApiOperation("get book by id")
     @ResponseStatus(HttpStatus.OK)
-    public BookAndIsReaderDto getBookById(@PathVariable("id") long id) {
+    public FullBookDto getBookById(@PathVariable("id") long id) {
 
-        return bookService.findByIdWithIsReader(id);
+        return bookService.findByIdFullVersion(id);
     }
 
     @GetMapping("/user/")
@@ -75,5 +76,15 @@ public class BookController {
     public void removeBook(@PathVariable long id) {
 
         bookService.remove(id);
+    }
+
+    @PostMapping(path = "/attach-photo")
+    @ApiOperation("attach photo to book")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addPhotoBook(@RequestPart(value = "file") final MultipartFile multipartFile,
+                             @RequestPart(name = "bookId") long bookId) {
+
+        bookService.attachFile(multipartFile, bookId);
+
     }
 }

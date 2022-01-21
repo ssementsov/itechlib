@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: db.changelog-add-rate-to-book.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-file-info.yaml
+      relativeToChangelogFile: true

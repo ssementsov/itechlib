@@ -1,20 +1,24 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.book.BookAndIsReaderDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
 import by.library.itechlibrary.mapper.BookMapper;
 import by.library.itechlibrary.repository.BookRepository;
+import by.library.itechlibrary.repository.FileInfoRepository;
 import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
+import by.library.itechlibrary.service.FileInfoService;
 import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
@@ -34,6 +38,11 @@ public class BookServiceImpl implements BookService {
 
     private final BookingService bookingService;
 
+    private final FileInfoService fileInfoService;
+
+    private final FileInfoRepository fileInfoRepository;
+
+
     @Override
     public List<BookDto> findAll() {
 
@@ -44,7 +53,6 @@ public class BookServiceImpl implements BookService {
         return bookMapper.mapBookDtoList(books);
     }
 
-    @Transactional
     @Override
     public BookDto saveBook(BookDto bookDto) {
 
@@ -63,18 +71,18 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public BookAndIsReaderDto findByIdWithIsReader(long id) {
+    public FullBookDto findByIdFullVersion(long id) {
 
         Book book = findById(id);
         long currentUserId = userService.getCurrentUser().getId();
 
         log.info("Try to map book to bookAndIsReaderDto");
 
-        BookAndIsReaderDto bookAndIsReaderDto = bookMapper.toBookAndIsReaderDto(book);
+        FullBookDto fullBookDto = bookMapper.toFullBookDto(book);
         boolean isReader = bookingService.isReader(currentUserId, id);
-        bookAndIsReaderDto.setReader(isReader);
+        fullBookDto.setReader(isReader);
 
-        return bookAndIsReaderDto;
+        return fullBookDto;
     }
 
     @Override
@@ -106,6 +114,18 @@ public class BookServiceImpl implements BookService {
             throw new WrongBookStatusException("You can't delete book with status IN USE.");
 
         }
+    }
+
+    @Transactional
+    @Override
+    public void attachFile(MultipartFile multipartFile, long bookId) {
+
+        log.info("Try to find book by id");
+
+        Book book = findById(bookId);
+        FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
+        book.setFileInfo(fileInfo);
+
     }
 
     @Transactional
