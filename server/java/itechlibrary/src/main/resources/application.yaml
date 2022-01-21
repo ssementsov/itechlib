@@ -43,6 +43,11 @@ spring:
       starttls.enable: true
       ssl.trust: smtp.gmail.com
 
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 1500MB
+
 template:
   confirm-link: http://{HOST}/api/users/confirm/google?userId={USER_ID}&code={CONFIRMATION_CODE}
   host: ${TEMPLATE_HOST}
