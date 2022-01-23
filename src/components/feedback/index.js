@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Box, Grid, Divider, Typography } from '@mui/material';
 import { format } from 'date-fns';
 
@@ -45,5 +46,11 @@ function Feedback(props) {
         </Box>
     );
 }
+
+Feedback.propTypes = {
+    author: PropTypes.string,
+    text: PropTypes.string,
+    date: PropTypes.string,
+};
 
 export default Feedback;

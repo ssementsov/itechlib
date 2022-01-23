@@ -1,20 +1,20 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { PropTypes } from 'prop-types';
 import { Box, Container, Grid, Card, Button, Typography } from '@mui/material';
 import BookDetails from '../../../components/book/book-details';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState, useEffect } from 'react';
-import { withSnackbar } from 'notistack';
 import { BooksAPI } from '../../../api/books-api';
 import { api } from '../../../api/api';
-import { useErrorNotice } from './../../../utils/error-notice-hook';
+import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
 
-function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
+function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
     const [book, setBook] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [setMainError] = useErrorNotice();
+    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
     const id = router.query.id;
 
     const updateBook = (newInfo) => {
@@ -35,7 +35,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
                     setIsLoaded(true);
                 })
                 .catch(() => {
-                    setMainError();
+                    defaultErrorSnackbar();
                 });
         }
     }, [
@@ -44,7 +44,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
         enqueueSnackbar,
         id,
         router.isReady,
-        setMainError,
+        defaultErrorSnackbar,
     ]);
 
     if (!isLoaded) {
@@ -114,4 +114,9 @@ BookPreviewPage.getLayout = (page) => {
     return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export default withSnackbar(BookPreviewPage);
+BookPreviewPage.propTypes = {
+    isAssigned: PropTypes.bool,
+    assignHandler: PropTypes.func,
+};
+
+export default BookPreviewPage;

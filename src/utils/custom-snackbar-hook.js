@@ -1,14 +1,14 @@
 import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 
-export const useErrorNotice = () => {
+export const useCustomSnackbar = () => {
     const { enqueueSnackbar } = useSnackbar();
 
-    const setMainError = useCallback(() => {
+    const defaultErrorSnackbar = useCallback(() => {
         enqueueSnackbar('Something went wrong... Please retry.', {
             variant: 'error',
         });
     }, [enqueueSnackbar]);
 
-    return [setMainError];
+    return [enqueueSnackbar, defaultErrorSnackbar];
 };

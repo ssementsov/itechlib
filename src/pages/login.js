@@ -6,19 +6,18 @@ import { GoogleLogin } from 'react-google-login';
 import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
 import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
-import { withSnackbar } from 'notistack';
 import jwt_decode from 'jwt-decode';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { api } from '../api/api';
-import { useErrorNotice } from '../utils/error-notice-hook';
+import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
-const Login = ({ enqueueSnackbar }) => {
+const Login = () => {
     let theme = useTheme();
     const router = useRouter();
     const [correctEmail, setCorrectEmail] = useState(true);
     const [isRegistered, setIsRegistered] = useState(false);
     const [loaded, setLoaded] = useState(false);
-    const [setMainError] = useErrorNotice();
+    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
 
     const resGoogleHandlerLogin = (resFromGoogle) => {
         const responsePayload = jwt_decode(resFromGoogle.tokenId);
@@ -33,7 +32,7 @@ const Login = ({ enqueueSnackbar }) => {
                     router.replace(MAIN_CATALOGUE_PATH);
                 })
                 .catch(() => {
-                    setMainError();
+                    defaultErrorSnackbar();
                 });
         } else {
             setCorrectEmail(false);
@@ -47,10 +46,10 @@ const Login = ({ enqueueSnackbar }) => {
                     setIsRegistered(true);
                 })
                 .catch(() => {
-                    setMainError();
+                    defaultErrorSnackbar();
                 });
         }
-    }, [enqueueSnackbar, router, router.query, setMainError]);
+    }, [defaultErrorSnackbar, enqueueSnackbar, router, router.query]);
 
     useEffect(() => {
         let token = localStorage.getItem('token');
@@ -164,4 +163,4 @@ const Login = ({ enqueueSnackbar }) => {
     );
 };
 
-export default withSnackbar(Login);
+export default Login;
