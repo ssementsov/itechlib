@@ -188,7 +188,7 @@ export const theme = createTheme({
         },
         action: {
             active: '#6B7280',
-            activeСategory: 'rgba(255,255,255, 0.08)',
+            activeCategory: 'rgba(255,255,255, 0.08)',
             focus: 'rgba(55, 65, 81, 0.12)',
             hover: 'rgba(55, 65, 81, 0.04)',
             selected: 'rgba(55, 65, 81, 0.08)',

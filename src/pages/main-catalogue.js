@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { BooksAPI } from '../api/books-api';
-import { api } from '../api/api';
 import BooksCatalogue from '../components/books-catalogue';
 import { useErrorNotice } from '../utils/error-notice-hook';
 
@@ -12,9 +11,6 @@ const MainCatalogue = () => {
     const [setMainError] = useErrorNotice();
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        api.setupAuth(token);
-
         BooksAPI.getAllBooks()
             .then((res) => {
                 setBooks(res.data);

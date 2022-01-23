@@ -5,7 +5,6 @@ import { Box, Container, Divider, Button, Typography } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Feedback from '../../../components/feedback';
-import { api } from '../../../api/api';
 import { BookingsAPI } from './../../../api/bookings-api';
 import { theme } from './../../../theme/index';
 
@@ -15,8 +14,6 @@ function FeedbacksPage() {
     const [isLoadedData, setIsLoadedData] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        api.setupAuth(token);
         if (router.isReady) {
             const bookId = router.query.id;
 
