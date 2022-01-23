@@ -20,7 +20,6 @@ import { EditIcon } from '../../icons/edit-icon';
 import { DeleteIcon } from './../../icons/delete-icon';
 import { titles } from './../../common/constants/titles-constants';
 import { styled } from '@mui/material/styles';
-import { withSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
 import AssignBookModal from '../book/assign-book/assign-book-modal';
@@ -40,7 +39,7 @@ import {
     BOOK_PREVIEW_PAGE_PATH,
     FEEDBACKS_PATH,
 } from '../../common/constants/route-constants';
-import { useErrorNotice } from '../../utils/error-notice-hook';
+import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -50,16 +49,12 @@ const TblCell = styled(TableCell)(() => ({
     padding: '5px 35px',
 }));
 
-const BookDetails = ({
-    book,
-    enqueueSnackbar,
-    onUpdate,
-    isAssigned,
-    assignHandler,
-    isOwner,
-}) => {
+const BookDetails = (props) => {
+    const { book, onUpdate, isAssigned, assignHandler } = props;
     const router = useRouter();
-    const [setMainError] = useErrorNotice();
+    const corpEmail = localStorage.getItem('corpEmail');
+    let isOwner = book.owner.corpEmail === corpEmail;
+    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
         useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
@@ -93,7 +88,7 @@ const BookDetails = ({
                     );
                 })
                 .catch(() => {
-                    setMainError();
+                    defaultErrorSnackbar();
                 });
         } else {
             enqueueSnackbar(
@@ -147,7 +142,7 @@ const BookDetails = ({
                 });
             })
             .catch(() => {
-                setMainError();
+                defaultErrorSnackbar();
             });
     };
 
@@ -163,7 +158,7 @@ const BookDetails = ({
                 });
             })
             .catch(() => {
-                setMainError();
+                defaultErrorSnackbar();
             });
     };
 
@@ -184,7 +179,7 @@ const BookDetails = ({
                 );
             })
             .catch(() => {
-                setMainError();
+                defaultErrorSnackbar();
             });
     };
 
@@ -374,7 +369,6 @@ BookDetails.propTypes = {
     isAssigned: PropTypes.bool,
     assignHandler: PropTypes.func,
     onUpdate: PropTypes.func,
-    isOwner: PropTypes.bool,
     book: PropTypes.shape({
         id: PropTypes.number,
         title: PropTypes.string,
@@ -396,4 +390,4 @@ BookDetails.propTypes = {
     }),
 };
 
-export default withSnackbar(BookDetails);
+export default BookDetails;

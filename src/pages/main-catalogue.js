@@ -3,12 +3,12 @@ import { Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { BooksAPI } from '../api/books-api';
 import BooksCatalogue from '../components/books-catalogue';
-import { useErrorNotice } from '../utils/error-notice-hook';
+import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
 const MainCatalogue = () => {
     const [books, setBooks] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [setMainError] = useErrorNotice();
+    const [, defaultErrorSnackbar] = useCustomSnackbar();
 
     useEffect(() => {
         BooksAPI.getAllBooks()
@@ -17,9 +17,9 @@ const MainCatalogue = () => {
                 setIsLoaded(true);
             })
             .catch(function () {
-                setMainError();
+                defaultErrorSnackbar();
             });
-    }, [setMainError]);
+    }, [defaultErrorSnackbar]);
 
     if (!isLoaded) {
         return (

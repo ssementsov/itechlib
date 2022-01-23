@@ -109,6 +109,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UploadFileException.class)
+    public ResponseEntity<IncorrectData> handleException(UploadFileException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WrongExtensionFormatException.class)
+    public ResponseEntity<IncorrectData> handleException(WrongExtensionFormatException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
     private IncorrectData incorrectDataFilling(Exception exception) {
 
        IncorrectData incorrectData = new IncorrectData();

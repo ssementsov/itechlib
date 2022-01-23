@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { withSnackbar } from 'notistack';
 import { Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import BooksCatalogue from '../components/books-catalogue';
 import { BooksAPI } from '../api/books-api';
-import { useErrorNotice } from '../utils/error-notice-hook';
+import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
-const OwnerCatalogue = ({ enqueueSnackbar }) => {
+const OwnerCatalogue = () => {
     const [books, setBooks] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [setMainError] = useErrorNotice();
+    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
 
     const updateBooks = (booksList) => {
         setBooks(booksList);
@@ -26,9 +25,9 @@ const OwnerCatalogue = ({ enqueueSnackbar }) => {
                 setIsLoaded(true);
             })
             .catch(function () {
-                setMainError();
+                defaultErrorSnackbar();
             });
-    }, [enqueueSnackbar, setMainError]);
+    }, [defaultErrorSnackbar, enqueueSnackbar]);
 
     if (!isLoaded) {
         return (
@@ -51,4 +50,4 @@ OwnerCatalogue.getLayout = (page) => {
     return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export default withSnackbar(OwnerCatalogue);
+export default OwnerCatalogue;

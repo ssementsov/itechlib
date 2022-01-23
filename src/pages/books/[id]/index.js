@@ -1,24 +1,24 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { PropTypes } from 'prop-types';
 import { Box, Container, Grid, Card, Button, Typography } from '@mui/material';
 import BookDetails from '../../../components/book/book-details';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useState, useEffect } from 'react';
-import { withSnackbar } from 'notistack';
 import { BooksAPI } from '../../../api/books-api';
-import { useErrorNotice } from './../../../utils/error-notice-hook';
 import { useBoolean } from './../../../utils/boolean-hook';
 import SelectImageModal from '../../../components/book-cover-image/select-image-modal';
 import { extension } from '../../../common/constants/img-extension-constants';
+import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
 
-function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
+function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
     const id = router.query.id;
     const [book, setBook] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
-    const [setMainError] = useErrorNotice();
+    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
     const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] =
         useBoolean();
     const [isUrlBookCover, setIsUrlBookCover] = useState(null);
@@ -72,7 +72,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
                     setIsLoaded(true);
                 })
                 .catch(() => {
-                    setMainError();
+                    defaultErrorSnackbar();
                 });
         }
     }, [
@@ -81,7 +81,7 @@ function BookPreviewPage({ enqueueSnackbar, isAssigned, assignHandler }) {
         enqueueSnackbar,
         id,
         router.isReady,
-        setMainError,
+        defaultErrorSnackbar,
     ]);
 
     if (!isLoaded) {
@@ -172,4 +172,9 @@ BookPreviewPage.getLayout = (page) => {
     return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export default withSnackbar(BookPreviewPage);
+BookPreviewPage.propTypes = {
+    isAssigned: PropTypes.bool,
+    assignHandler: PropTypes.func,
+};
+
+export default BookPreviewPage;

@@ -54,4 +54,8 @@ public class Book {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "book")
     private List<Booking> bookings;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "file_info_id", referencedColumnName = "id")
+    private FileInfo fileInfo;
+
 }
