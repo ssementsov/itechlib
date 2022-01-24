@@ -65,14 +65,14 @@ services:
     networks:
       - lib-network
       
-   nginx:
+  nginx:
     container_name: ${NGINX_CONTAINER}
     restart: always
     build:
       context: ./NGINX/
       dockerfile: Dockerfile
     ports:
-      - $"{NGINX_PORT}:80"
+      - "${NGINX_PORT}:80"
     networks:
       - lib-network
    
