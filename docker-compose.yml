@@ -3,8 +3,8 @@ version: '3.7'
 volumes:
   itech-lib-data:
 
-networks:
-  lib-network:
+#networks:
+#  lib-network:
 
 services:
 
@@ -22,8 +22,10 @@ services:
       TEMPLATE_HOST: ${TEMPLATE_HOST}
     depends_on:
       - itech_library_database
-    networks:
-      - lib-network
+    network_mode: "host"
+    hostname: localhost
+ #networks:
+ #     - lib-network
 
 
   itech_library_database:
@@ -38,8 +40,10 @@ services:
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
       POSTGRES_DB: ${POSTGRES_DB_NAME}
-    networks:
-      - lib-network
+    network_mode: "host"
+    hostname: localhost
+    #networks:
+     # - lib-network
 
 
   pgadmin:
@@ -51,8 +55,10 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
-    networks:
-      - lib-network
+    network_mode: "host"
+    hostname: localhost
+    #networks:
+    #  - lib-network
  
   node:
     build: 
@@ -62,8 +68,10 @@ services:
     ports:
       - 3000:3000
     container_name: node_lib
-    networks:
-      - lib-network
+    network_mode: "host"
+    hostname: localhost
+    #networks:
+     # - lib-network
       
   nginx:
     container_name: ${NGINX_CONTAINER}
@@ -73,6 +81,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "${NGINX_PORT}:80"
-    networks:
-      - lib-network
+    network_mode: "host"
+    hostname: localhost
+    #networks:
+    #  - lib-network
    
