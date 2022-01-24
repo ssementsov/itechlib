@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.7'
 
 volumes:
   itech-lib-data:
@@ -50,10 +50,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - target: 80
-        published: 5050
-        protocol: tcp
-        mode: host
+      - "5050:80"
     networks:
       - lib-network
  
@@ -67,3 +64,15 @@ services:
     container_name: node_lib
     networks:
       - lib-network
+      
+   nginx:
+    container_name: ${NGINX_CONTAINER}
+    restart: always
+    build:
+      context: ./NGINX/
+      dockerfile: Dockerfile
+    ports:
+      - $"{NGINX_PORT}:80"
+    networks:
+      - lib-network
+   
