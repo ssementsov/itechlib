@@ -3,8 +3,8 @@ version: '3.7'
 volumes:
   itech-lib-data:
 
-#networks:
-#  lib-network:
+networks:
+  lib-network:
 
 services:
 
@@ -14,7 +14,10 @@ services:
     build:
       context: ./server/java/itechlibrary/
     ports:
-      - ${LIBRARY_SERVICE_PORT}:8080
+      - target: 8080
+        published: ${LIBRARY_SERVICE_PORT}
+        protocol: tcp
+        mode: host
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://itech_library_database:5432/${POSTGRES_DB_NAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
@@ -22,10 +25,8 @@ services:
       TEMPLATE_HOST: ${TEMPLATE_HOST}
     depends_on:
       - itech_library_database
-    network_mode: "host"
-    hostname: localhost
- #networks:
- #     - lib-network
+    networks:
+      - lib-network
 
 
   itech_library_database:
@@ -33,17 +34,18 @@ services:
     restart: always
     image: postgres:${POSTGRES_DB_VERSION}
     ports:
-      - ${POSTGRES_PORT}:5432
+      - target: 5432
+        published: ${POSTGRES_PORT}
+        protocol: tcp
+        mode: host
     volumes:
       - itech-lib-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
       POSTGRES_DB: ${POSTGRES_DB_NAME}
-    network_mode: "host"
-    hostname: localhost
-    #networks:
-     # - lib-network
+    networks:
+      - lib-network
 
 
   pgadmin:
@@ -54,24 +56,25 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - "5050:80"
-    network_mode: "host"
-    hostname: localhost
-    #networks:
-    #  - lib-network
+      - target: 5050
+        published: 80
+        protocol: tcp
+        mode: host
+    networks:
+      - lib-network
  
   node:
     build: 
       context: . 
       dockerfile: Dockerfile
     restart: always  
-    ports:
-      - 3000:3000
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
     container_name: node_lib
-    network_mode: "host"
-    hostname: localhost
-    #networks:
-     # - lib-network
+    networks:
+      - lib-network
       
   nginx:
     container_name: ${NGINX_CONTAINER}
@@ -80,9 +83,10 @@ services:
       context: ./NGINX/
       dockerfile: Dockerfile
     ports:
-      - "${NGINX_PORT}:80"
-    network_mode: "host"
-    hostname: localhost
-    #networks:
-    #  - lib-network
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    networks:
+     - lib-network
    
