@@ -1,42 +1,45 @@
 import React from "react";
-import { Button, Card, IconButton } from "@mui/material";
+import PropTypes from "prop-types";
+import { Button, IconButton } from "@mui/material";
 import { LightDeleteIcon } from "./../../../icons/light-delete-icon";
+import CustomCard from "./custom-card";
 
 const HiddenBookCoverTools = (props) => {
-   const { onUploadButtonOpen } = props;
+   const { onUploadButtonOpen, visible, isUploaded } = props;
 
    return (
-      <Card
+      <CustomCard
          sx={{
-            left: "50%",
-            marginRight: "-50%",
-            transform: "translate(-50%, 0%)",
-            position: "absolute",
-            display: "flex",
-            justifyContent: "space-between",
-            flexDirection: "column",
-            margin: "0 auto",
+            display: visible && isUploaded ? "block" : "none",
             background: "rgba(0, 0, 0, 0.6)",
-            width: "250px",
-            height: "258px",
          }}
       >
-         <>
+         <div
+            style={{
+               position: "relative",
+               display: "flex",
+               justifyContent: "center",
+               height: "100%",
+            }}
+         >
             <IconButton
                aria-label="delete"
-               sx={{
-                  alignSelf: "self-end",
-               }}
+               sx={{ position: "absolute", top: 0, right: 0 }}
             >
                <LightDeleteIcon fontSize="larg" />
             </IconButton>
             <Button onClick={onUploadButtonOpen} sx={{ mr: 1, color: "white" }}>
                Upload image
             </Button>
-         </>
-         <div></div>
-      </Card>
+         </div>
+      </CustomCard>
    );
+};
+
+HiddenBookCoverTools.propTypes = {
+   onUploadButtonOpen: PropTypes.func.isRequired,
+   visible: PropTypes.bool.isRequired,
+   isUploaded: PropTypes.bool.isRequired,
 };
 
 export default HiddenBookCoverTools;

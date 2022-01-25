@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import { Button } from "@mui/material";
 
@@ -28,6 +29,10 @@ const SelectFileButton = (props) => {
          </Button>
       </label>
    );
+};
+
+SelectFileButton.propTypes = {
+   onSelect: PropTypes.func.isRequired,
 };
 
 export default SelectFileButton;

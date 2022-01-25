@@ -13,6 +13,7 @@ import { useBoolean } from "./../../../utils/boolean-hook";
 import SelectImageModal from "../../../components/book/book-cover-image/select-image-modal";
 import { extension } from "../../../common/constants/img-extension-constants";
 import { useCustomSnackbar } from "./../../../utils/custom-snackbar-hook";
+import styles from "./BookPreviewPage.module.css";
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
    const router = useRouter();
@@ -24,6 +25,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
    const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
    const [isUrlBookCover, setIsUrlBookCover] = useState(null);
    const [isAllowedImage, setIsAllowedImage] = useState(false);
+   const [visible, setVisible, setHidden] = useBoolean();
    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
    const [
       isUploadButtonOpen,
@@ -154,12 +156,11 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                   }}
                >
                   <Grid container spacing={12}>
-                     <Grid item lg={3} md={3} xs={12}>
+                     <Grid item lg={4} md={4} xs={12}>
                         <div
-                           style={{
-                              position: "relative",
-                              height: "230px",
-                           }}
+                           className={styles.bookCoverImage}
+                           onMouseEnter={setVisible}
+                           onMouseLeave={setHidden}
                         >
                            <BookCoverImage
                               book={book}
@@ -167,10 +168,14 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                               isUploaded={isUploadedBookCover}
                               onUploadButtonOpen={setUploadButtonOpen}
                            />
-                           <HiddenBookCoverTools />
+                           <HiddenBookCoverTools
+                              visible={visible}
+                              isUploaded={isUploadedBookCover}
+                              onUploadButtonOpen={setUploadButtonOpen}
+                           />
                         </div>
                      </Grid>
-                     <Grid item lg={8} md={9} xs={12}>
+                     <Grid item lg={8} md={8} xs={12}>
                         <BookDetails
                            onUpdate={setBook}
                            book={book}

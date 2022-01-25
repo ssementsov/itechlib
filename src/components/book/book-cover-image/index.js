@@ -1,24 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Button, Card } from "@mui/material";
+import { Button } from "@mui/material";
+import CustomCard from "./custom-card";
 
 const BookCoverImage = (props) => {
    const { book, isOwner, isUploaded, onUploadButtonOpen } = props;
 
    return (
-      <Card
+      <CustomCard
          sx={{
-            left: "50%",
-            marginRight: "-50%",
-            transform: "translate(-50%, 0%)",
-            position: "absolute",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            margin: "0 auto",
             background: "white",
-            width: "250px",
-            height: "258px",
             backgroundImage: book.fileInfo
                ? `url(data:image/${book.fileInfo.extension};base64,${book.fileInfo.fileData})`
                : "none",
@@ -32,7 +26,7 @@ const BookCoverImage = (props) => {
                Upload image
             </Button>
          )}
-      </Card>
+      </CustomCard>
    );
 };
 
