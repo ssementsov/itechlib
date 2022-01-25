@@ -11,7 +11,6 @@ import { useState, useEffect } from "react";
 import { BooksAPI } from "../../../api/books-api";
 import { useBoolean } from "./../../../utils/boolean-hook";
 import SelectImageModal from "../../../components/book/book-cover-image/select-image-modal";
-import { extension } from "../../../common/constants/img-extension-constants";
 import { useCustomSnackbar } from "./../../../utils/custom-snackbar-hook";
 import styles from "./BookPreviewPage.module.css";
 
@@ -50,16 +49,8 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
 
    const imageSelectedHandler = (e) => {
       const imgFile = e.target.files[0];
-      const imgExtensions = [
-         extension.jpg,
-         extension.jpeg,
-         extension.png,
-         extension.gif,
-      ];
       if (imgFile) {
-         let imgExtension = imgFile.type.slice(6);
-
-         if (imgFile.size > 400000 || !imgExtensions.includes(imgExtension)) {
+         if (imgFile.size > 500000) {
             setIsUrlBookCover(null);
             setIsAllowedImage(true);
             return;

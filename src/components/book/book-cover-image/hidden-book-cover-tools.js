@@ -2,13 +2,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button, IconButton } from "@mui/material";
 import { LightDeleteIcon } from "./../../../icons/light-delete-icon";
-import CustomCard from "./custom-card";
+import StyledCard from "./styled-card";
 
 const HiddenBookCoverTools = (props) => {
    const { onUploadButtonOpen, visible, isUploaded } = props;
 
    return (
-      <CustomCard
+      <StyledCard
          sx={{
             display: visible && isUploaded ? "block" : "none",
             background: "rgba(0, 0, 0, 0.6)",
@@ -32,7 +32,7 @@ const HiddenBookCoverTools = (props) => {
                Upload image
             </Button>
          </div>
-      </CustomCard>
+      </StyledCard>
    );
 };
 

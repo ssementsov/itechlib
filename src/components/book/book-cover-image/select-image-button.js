@@ -12,9 +12,8 @@ const SelectFileButton = (props) => {
    return (
       <label htmlFor="contained-button-file">
          <Input
-            accept="image/*"
+            accept="image/jpeg, image/jpg, image/png, image/gif"
             id="contained-button-file"
-            multiple
             type="file"
             onChange={onSelect}
          />

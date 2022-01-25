@@ -1,7 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Card } from "@mui/material";
 
-const CustomCard = (props) => {
+const StyledCard = (props) => {
+   const { sx, children } = props;
    return (
       <Card
          sx={{
@@ -11,12 +13,17 @@ const CustomCard = (props) => {
             position: "absolute",
             width: "250px",
             height: "258px",
-            ...props.sx,
+            ...sx,
          }}
       >
-         {props.children}
+         {children}
       </Card>
    );
 };
 
-export default CustomCard;
+StyledCard.propTypes = {
+   children: PropTypes.node,
+   sx: PropTypes.object.isRequired,
+};
+
+export default StyledCard;

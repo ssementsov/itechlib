@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@mui/material";
-import CustomCard from "./custom-card";
+import StyledCard from "./styled-card";
 
 const BookCoverImage = (props) => {
    const { book, isOwner, isUploaded, onUploadButtonOpen } = props;
 
    return (
-      <CustomCard
+      <StyledCard
          sx={{
             display: "flex",
             justifyContent: "center",
@@ -26,7 +26,7 @@ const BookCoverImage = (props) => {
                Upload image
             </Button>
          )}
-      </CustomCard>
+      </StyledCard>
    );
 };
 
