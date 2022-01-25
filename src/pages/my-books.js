@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import BooksCatalogue from '../components/books-catalogue';
-import { api } from '../api/api';
 import { BooksAPI } from '../api/books-api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
@@ -20,9 +19,6 @@ const OwnerCatalogue = () => {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        api.setupAuth(token);
-
         BooksAPI.getOwnerBooks()
             .then((res) => {
                 setBooks(res.data);

@@ -1,29 +1,25 @@
-import { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
-import { DashboardLayout } from "../components/dashboard-layout";
-import { BooksAPI } from "../api/books-api";
-import { api } from "../api/api";
-import BooksCatalogue from "../components/books-catalogue";
-import { useCustomSnackbar } from "../utils/custom-snackbar-hook";
+import { useState, useEffect } from 'react';
+import { Typography } from '@mui/material';
+import { DashboardLayout } from '../components/dashboard-layout';
+import { BooksAPI } from '../api/books-api';
+import BooksCatalogue from '../components/books-catalogue';
+import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
 const MainCatalogue = () => {
    const [books, setBooks] = useState([]);
    const [isLoaded, setIsLoaded] = useState(false);
    const [, defaultErrorSnackbar] = useCustomSnackbar();
 
-   useEffect(() => {
-      const token = localStorage.getItem("token");
-      api.setupAuth(token);
-
-      BooksAPI.getAllBooks()
-         .then((res) => {
-            setBooks(res.data);
-            setIsLoaded(true);
-         })
-         .catch(function () {
-            defaultErrorSnackbar();
-         });
-   }, [defaultErrorSnackbar]);
+    useEffect(() => {
+        BooksAPI.getAllBooks()
+            .then((res) => {
+                setBooks(res.data);
+                setIsLoaded(true);
+            })
+            .catch(function () {
+                defaultErrorSnackbar();
+            });
+    }, [defaultErrorSnackbar]);
 
    if (!isLoaded) {
       return (
