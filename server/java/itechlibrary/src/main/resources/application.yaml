@@ -36,7 +36,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: itechlib2021@gmail.com
-    password: Nestor911
+    password: ejxcrthehwivjvac
     protocol: smtp
     properties.mail.smtp:
       auth: true
