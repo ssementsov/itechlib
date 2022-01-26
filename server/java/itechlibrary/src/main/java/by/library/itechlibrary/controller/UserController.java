@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -57,6 +58,24 @@ public class UserController {
     public void checkCorporateAndGoogleEmails(@RequestParam("userId") long userId, @RequestParam("code") UUID code) {
 
         userService.confirmedGoogleEmail(userId, code);
+
+    }
+
+    @PostMapping(path = "/attach-photo")
+    @ApiOperation("attach photo to user")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addPhoto(@RequestPart(value = "file") final MultipartFile multipartFile) {
+
+        userService.attachPhoto(multipartFile);
+
+    }
+
+    @DeleteMapping(path = "/{fileId}/removed-photo")
+    @ApiOperation("removed photo to user by file id")
+    @ResponseStatus(HttpStatus.OK)
+    public void removedPhoto(@PathVariable long fileId) {
+
+        userService.removePhoto(fileId);
 
     }
 }

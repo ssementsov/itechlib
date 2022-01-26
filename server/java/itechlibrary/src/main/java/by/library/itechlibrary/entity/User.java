@@ -40,4 +40,8 @@ public class User {
     @JoinColumn(name="confirmation_id", referencedColumnName = "id")
     private ConfirmationData confirmationData;
 
+//    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
+//    @JoinColumn(name = "file_info_id")
+//    private FileInfo fileInfo;
+
 }

@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -97,6 +98,16 @@ public class UserServiceImpl implements UserService {
                 .getAuthentication().getPrincipal();
 
         return findUserByCorpEmail(securityUserDetails.getCorpEmail());
+    }
+
+    @Override
+    public void attachPhoto(MultipartFile multipartFile) {
+
+    }
+
+    @Override
+    public void removePhoto(long fileId) {
+
     }
 
     private User findUserByCorpEmail(String corpEmail) {

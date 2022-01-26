@@ -3,6 +3,7 @@ package by.library.itechlibrary.service;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -17,5 +18,10 @@ public interface UserService {
     void confirmedGoogleEmail(long userId, UUID code);
 
     User getCurrentUser();
+
+    void attachPhoto(MultipartFile multipartFile);
+
+    void removePhoto(long fileId);
+
 
 }
