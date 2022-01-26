@@ -1,8 +1,8 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -10,7 +10,6 @@ import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusExcepti
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
 import by.library.itechlibrary.mapper.BookMapper;
 import by.library.itechlibrary.repository.BookRepository;
-import by.library.itechlibrary.repository.FileInfoRepository;
 import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FileInfoService;
@@ -40,8 +39,6 @@ public class BookServiceImpl implements BookService {
 
     private final FileInfoService fileInfoService;
 
-    private final FileInfoRepository fileInfoRepository;
-
 
     @Override
     public List<BookDto> findAll() {
@@ -68,7 +65,6 @@ public class BookServiceImpl implements BookService {
 
         return bookMapper.toBookDto(book);
     }
-
 
     @Override
     public FullBookDto findByIdFullVersion(long id) {
@@ -130,7 +126,20 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
+    public void removedAttachFile(long fileId) {
+
+        log.info("Try to removed file.");
+
+        bookRepository.removeFileInfoFromBook(fileId);
+        fileInfoService.removeById(fileId);
+
+    }
+
+    @Transactional
+    @Override
     public BookDto updateStatus(String status, long bookId) {
+
+        log.info("Try to find book.");
 
         Book book = findById(bookId);
 
@@ -149,7 +158,9 @@ public class BookServiceImpl implements BookService {
 
     private void checkCurrentUserIsOwner(long ownerId) {
 
-        if (userService.getCurrentUser().getId() != ownerId){
+        log.info("Try to check by current user.");
+
+        if (userService.getCurrentUser().getId() != ownerId) {
 
             throw new WrongCurrentUserException("Current user is not owner");
         }
