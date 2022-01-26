@@ -187,12 +187,16 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                         isUploaded={isUploadedBookCover}
                                         onUploadButtonOpen={setUploadButtonOpen}
                                     />
-                                    <HiddenBookCoverTools
-                                        visible={visible}
-                                        isUploaded={isUploadedBookCover}
-                                        onUploadButtonOpen={setUploadButtonOpen}
-                                        onOpen={setDeleteButtonOpen}
-                                    />
+                                    {isOwner && (
+                                        <HiddenBookCoverTools
+                                            visible={visible}
+                                            isUploaded={isUploadedBookCover}
+                                            onUploadButtonOpen={
+                                                setUploadButtonOpen
+                                            }
+                                            onOpen={setDeleteButtonOpen}
+                                        />
+                                    )}
                                 </div>
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>
