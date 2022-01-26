@@ -1,7 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +85,15 @@ public class BookController {
                              @RequestPart(name = "bookId") long bookId) {
 
         bookService.attachFile(multipartFile, bookId);
+
+    }
+
+    @DeleteMapping(path = "/{fileId}/removed-photo")
+    @ApiOperation("removed photo to book by file id")
+    @ResponseStatus(HttpStatus.OK)
+    public void removedPhotoBook(@PathVariable long fileId) {
+
+        bookService.removedAttachFile(fileId);
 
     }
 }
