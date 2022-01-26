@@ -1,7 +1,7 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,5 +21,7 @@ public interface BookService {
     void remove(long id);
 
     void attachFile(MultipartFile multipartFile, long bookId);
+
+    void removedAttachFile(long fileId);
 
 }
