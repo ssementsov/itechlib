@@ -1,17 +1,18 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { Box, Container, Grid, Button, Typography } from '@mui/material';
+import { DashboardLayout } from '../../../components/dashboard-layout';
 import BookDetails from '../../../components/book/book-details';
 import BookCoverImage from '../../../components/book/book-cover-image';
 import HiddenBookCoverTools from '../../../components/book/book-cover-image/hidden-book-cover-tools';
-import { DashboardLayout } from '../../../components/dashboard-layout';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useState, useEffect } from 'react';
 import { BooksAPI } from '../../../api/books-api';
 import { useBoolean } from './../../../utils/boolean-hook';
-import SelectImageModal from '../../../components/book/book-cover-image/select-image-modal';
 import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
+import SelectImageModal from '../../../components/book/book-cover-image/select-image-modal';
+import DeleteModal from './../../../components/book/delete-book-or-book-cover/delete-modal';
 import styles from './BookPreviewPage.module.css';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
@@ -28,6 +29,8 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [visible, setVisible, setHidden] = useBoolean();
     const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
     const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] =
+        useBoolean();
+    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
         useBoolean();
 
     const imageUploadHandler = () => {
@@ -60,6 +63,17 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                 setSelectedImage(imgFile);
             }
         }
+    };
+
+    const imageDeletedHandler = () => {
+        let imageId = book.fileInfo.id;
+
+        BooksAPI.deleteBookCover(imageId)
+            .then(() => {
+                setIsUploadedBookCover(false);
+                setDeleteButtonClose();
+            })
+            .catch(() => defaultErrorSnackbar());
     };
 
     const onCloseHandler = () => {
@@ -117,6 +131,13 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     } else {
         return (
             <>
+                <DeleteModal
+                    onDelete={imageDeletedHandler}
+                    open={isDeleteButtonOpen}
+                    onClose={setDeleteButtonClose}
+                    title={'book cover'}
+                />
+
                 <SelectImageModal
                     open={isUploadButtonOpen}
                     onClose={onCloseHandler}
@@ -170,6 +191,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                         visible={visible}
                                         isUploaded={isUploadedBookCover}
                                         onUploadButtonOpen={setUploadButtonOpen}
+                                        onOpen={setDeleteButtonOpen}
                                     />
                                 </div>
                             </Grid>
