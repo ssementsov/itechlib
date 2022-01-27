@@ -1,0 +1,58 @@
+version: '3.7'
+
+volumes:
+  itech-lib-data:
+
+networks:
+  lib-network:
+
+services:
+
+  library_service_application:
+    container_name: ${LIBRARY_SERVICE_CONTAINER}
+    restart: always
+    build:
+      context: ./server/java/itechlibrary/
+    ports:
+      - target: 8080
+        published: ${LIBRARY_SERVICE_PORT}
+        protocol: tcp
+        mode: host
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://itech_library_database:5432/${POSTGRES_DB_NAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      TEMPLATE_HOST: ${TEMPLATE_HOST}
+    depends_on:
+      - itech_library_database
+    networks:
+      - lib-network
+
+  node:
+    build: 
+      context: . 
+      dockerfile: Dockerfile
+    restart: always  
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
+    container_name: node_lib
+    networks:
+      - lib-network
+      
+  nginx:
+    container_name: nginx
+    restart: always
+    build:
+      context: ./NGINX/
+      dockerfile: Dockerfile
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+    networks:
+     - lib-network
+   
