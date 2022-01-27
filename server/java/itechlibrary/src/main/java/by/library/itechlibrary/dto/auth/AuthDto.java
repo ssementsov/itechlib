@@ -18,12 +18,12 @@ public class AuthDto {
 
     private String email;
 
-    @JsonProperty("vc")
-    private TokenDto token;
+    @JsonProperty("accessToken")
+    private String token;
 
 
-    @JsonProperty("yu")
+    @JsonProperty("profileObj")
     private void getEmail(Map<String, String> ya) {
-        email = ya.get("nv");
+        email = ya.get("email");
     }
 }
