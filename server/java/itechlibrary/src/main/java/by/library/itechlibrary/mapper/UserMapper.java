@@ -1,6 +1,7 @@
 package by.library.itechlibrary.mapper;
 
 import by.library.itechlibrary.dto.UserDto;
+import by.library.itechlibrary.dto.UserProfileDto;
 import by.library.itechlibrary.entity.User;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -22,5 +23,8 @@ public interface UserMapper {
 
     @IterableMapping(qualifiedByName = "userDto")
     List<User> mapUserList(List<UserDto> userDtos);
+
+    @Named(value = "userProfile")
+    UserProfileDto mapToUserProfileDto(User user);
 
 }

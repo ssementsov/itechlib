@@ -93,7 +93,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public void removedPhotoBook(@PathVariable long fileId) {
 
-        bookService.removedAttachFile(fileId);
+        bookService.removedAttachedFile(fileId);
 
     }
 }

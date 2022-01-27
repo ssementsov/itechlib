@@ -36,8 +36,12 @@ public class User {
     @Column(name = "is_active")
     private boolean isActive;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="confirmation_id", referencedColumnName = "id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "confirmation_id", referencedColumnName = "id")
     private ConfirmationData confirmationData;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "file_info_id")
+    private FileInfo fileInfo;
 
 }

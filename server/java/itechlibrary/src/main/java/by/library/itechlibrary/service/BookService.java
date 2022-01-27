@@ -22,6 +22,6 @@ public interface BookService {
 
     void attachFile(MultipartFile multipartFile, long bookId);
 
-    void removedAttachFile(long fileId);
+    void removedAttachedFile(long fileId);
 
 }
