@@ -43,7 +43,7 @@ services:
       - lib-network
       
   nginx:
-    container_name: ${NGINX_CONTAINER}
+    container_name: nginx
     restart: always
     build:
       context: ./NGINX/
