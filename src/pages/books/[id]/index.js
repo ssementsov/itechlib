@@ -16,8 +16,8 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [book, setBook] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
-    const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
-    const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
+    const [isUploadedImage, setIsUploadedImage] = useState(false);
+    const [isUpdatedImage, setIsUpdatedImage] = useState(false);
     const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
 
     useEffect(() => {
@@ -37,7 +37,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     setIsLoaded(true);
                     const bookCover = res.data.fileInfo;
                     if (bookCover) {
-                        setIsUploadedBookCover(true);
+                        setIsUploadedImage(true);
                     }
                 })
                 .catch(() => {
@@ -51,8 +51,8 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
         id,
         router.isReady,
         defaultErrorSnackbar,
-        isUploadedBookCover,
-        isUpdatedBookCover,
+        isUploadedImage,
+        isUpdatedImage,
     ]);
 
     if (!isLoaded) {
@@ -93,7 +93,10 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     >
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
-                                <UploadImageCard />
+                                <UploadImageCard
+                                    onUpdateImage={setIsUpdatedImage}
+                                    onUploadImage={setIsUploadedImage}
+                                />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>
                                 <BookDetails

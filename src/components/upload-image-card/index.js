@@ -1,12 +1,21 @@
+import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import SelectImageModal from '../book/book-cover-image/select-image-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import BookCoverImage from '../book/book-cover-image';
 import HiddenBookCoverTools from './../book/book-cover-image/hidden-book-cover-tools';
+import { BooksAPI } from '../../api/books-api';
 import { useBoolean } from '../../utils/boolean-hook';
+import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import styles from './upload-image-card.module.css';
 
-const UploadImageCard = () => {
+const UploadImageCard = ({ onUpdateImage, onUploadImage }) => {
+    const router = useRouter();
+    const id = router.query.id;
     const [visible, setVisible, setHidden] = useBoolean();
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
     const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] =
         useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
@@ -20,8 +29,8 @@ const UploadImageCard = () => {
         BooksAPI.addBookCover(file)
             .then(() => {
                 onCloseHandler();
-                setIsUploadedBookCover(true);
-                setIsUpdatedBookCover(true);
+                onUploadImage(true);
+                onUpdateImage(true);
             })
             .catch(() => {
                 defaultErrorSnackbar();
@@ -49,7 +58,7 @@ const UploadImageCard = () => {
 
         BooksAPI.deleteBookCover(imageId)
             .then(() => {
-                setIsUploadedBookCover(false);
+                onUpdateImage(false);
                 setDeleteButtonClose();
             })
             .catch(() => defaultErrorSnackbar());
@@ -63,7 +72,7 @@ const UploadImageCard = () => {
 
     const onHoverHandler = () => {
         setVisible();
-        setIsUpdatedBookCover(false);
+        onUpdateImage(false);
     };
 
     return (
