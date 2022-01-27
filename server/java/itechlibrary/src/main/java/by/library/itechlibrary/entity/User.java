@@ -37,7 +37,7 @@ public class User {
     private boolean isActive;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name="confirmation_id", referencedColumnName = "id")
+    @JoinColumn(name = "confirmation_id", referencedColumnName = "id")
     private ConfirmationData confirmationData;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
