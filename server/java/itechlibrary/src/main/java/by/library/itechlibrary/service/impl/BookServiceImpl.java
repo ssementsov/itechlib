@@ -39,6 +39,8 @@ public class BookServiceImpl implements BookService {
 
     private final FileInfoService fileInfoService;
 
+    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
+
 
     @Override
     public List<BookDto> findAll() {
@@ -70,7 +72,7 @@ public class BookServiceImpl implements BookService {
     public FullBookDto findByIdFullVersion(long id) {
 
         Book book = findById(id);
-        long currentUserId = userService.getCurrentUser().getId();
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         log.info("Try to map book to bookAndIsReaderDto");
 
@@ -86,7 +88,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try get books by user id.");
 
-        long ownerId = userService.getCurrentUser().getId();
+        long ownerId = securityUserDetailsService.getCurrentUserId();
 
         List<Book> books = bookRepository.findAllByOwnerId(ownerId);
 
@@ -119,6 +121,7 @@ public class BookServiceImpl implements BookService {
         log.info("Try to find book by id");
 
         Book book = findById(bookId);
+        checkCurrentUserIsOwner(book.getOwner().getId());
         FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
         book.setFileInfo(fileInfo);
 
@@ -126,11 +129,16 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public void removedAttachFile(long fileId) {
+    public void removedAttachedFile(long fileId) {
+
+        Book book = bookRepository.findByFileInfoId(fileId)
+                .orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+
+        checkCurrentUserIsOwner(book.getOwner().getId());
 
         log.info("Try to removed file.");
 
-        bookRepository.removeFileInfoFromBook(fileId);
+        book.setFileInfo(null);
         fileInfoService.removeById(fileId);
 
     }
@@ -160,7 +168,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to check by current user.");
 
-        if (userService.getCurrentUser().getId() != ownerId) {
+        if (securityUserDetailsService.getCurrentUserId() != ownerId) {
 
             throw new WrongCurrentUserException("Current user is not owner");
         }
@@ -203,7 +211,9 @@ public class BookServiceImpl implements BookService {
 
         if (book.getOwner() == null) {
 
-            book.setOwner(userService.getCurrentUser());
+            long currentUserId = securityUserDetailsService.getCurrentUserId();
+
+            book.setOwner(userService.getUserById(currentUserId));
 
         }
     }

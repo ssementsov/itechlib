@@ -16,10 +16,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = {"confirmationData"})
     Optional<User> findByGoogleEmail(String email);
 
-    @EntityGraph(attributePaths = {"confirmationData"})
+    @EntityGraph(attributePaths = {"confirmationData", "fileInfo"})
     Optional<User> findByCorpEmail(String email);
 
     @EntityGraph(attributePaths = {"confirmationData"})
     List<User> findAllByGoogleEmailNotNull();
+
+    Optional<User> findByFileInfoId(long fileInfoId);
 
 }

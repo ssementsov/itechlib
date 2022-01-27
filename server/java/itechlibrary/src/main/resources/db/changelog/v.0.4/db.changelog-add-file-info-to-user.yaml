@@ -1,0 +1,23 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 20012022-add-column-file-info-id-to-user
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: file_info_id
+                  type: BIGINT
+
+  - changeSet:
+      id:  20012022-add-ForeignKeyConstraint-file-info-to-user
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: file_info_id
+            baseTableName: user
+            constraintName: fk_user_file_info
+            referencedColumnNames: id
+            referencedTableName: file_info

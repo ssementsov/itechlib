@@ -5,15 +5,15 @@ import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.ValidationPatternConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
+import by.library.itechlibrary.dto.UserProfileDto;
+import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
-import by.library.itechlibrary.exeption_handler.exception.WrongConfirmationCodeException;
-import by.library.itechlibrary.exeption_handler.exception.WrongCorpEmailFormatException;
-import by.library.itechlibrary.exeption_handler.exception.WrongGoogleEmailException;
+import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.repository.UserRepository;
 import by.library.itechlibrary.service.ConfirmationDataService;
+import by.library.itechlibrary.service.FileInfoService;
 import by.library.itechlibrary.service.MailNotificationService;
 import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +39,8 @@ public class UserServiceImpl implements UserService {
     private final MailNotificationService mailNotificationService;
 
     private final ConfirmationDataService confirmationDataService;
+
+    private final FileInfoService fileInfoService;
 
 
     @Override
@@ -92,7 +94,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getCurrentUser() {
+    public User getUserById(long id) {
+
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("The user was not found."));
+    }
+
+    @Override
+    public UserProfileDto getCurrentUserProfileDto() {
+
+        User user = getCurrentUser();
+
+        return userMapper.mapToUserProfileDto(user);
+    }
+
+    @Transactional
+    @Override
+    public void attachPhoto(MultipartFile multipartFile) {
+
+        log.info("Try to attach new photo to current user");
+
+        User user = getCurrentUser();
+        FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
+        user.setFileInfo(fileInfo);
+
+    }
+
+    @Override
+    public void removePhoto(long fileId) {
+
+        log.info("Try to remove photo to current user");
+
+        User currentUser = getCurrentUser();
+
+        User user = userRepository.findByFileInfoId(fileId)
+                .orElseThrow(() -> new NotFoundException("The user was not found."));
+
+        checkIsCurrentUser(user.getId(), currentUser.getId());
+        checkIsCurrentUsersPhoto(user.getFileInfo().getId(), currentUser.getFileInfo().getId());
+
+        user.setFileInfo(null);
+        userRepository.save(user);
+        fileInfoService.removeById(fileId);
+
+    }
+
+    private User getCurrentUser() {
 
         SecurityUserDetails securityUserDetails = (SecurityUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -100,14 +147,23 @@ public class UserServiceImpl implements UserService {
         return findUserByCorpEmail(securityUserDetails.getCorpEmail());
     }
 
-    @Override
-    public void attachPhoto(MultipartFile multipartFile) {
+    private void checkIsCurrentUsersPhoto(long userPhotoId, long currentUserPhotoId) {
+
+        if (userPhotoId != currentUserPhotoId) {
+
+            throw new WrongUserPhotoIdException("wrong photo id for current user.");
+
+        }
 
     }
 
-    @Override
-    public void removePhoto(long fileId) {
+    private void checkIsCurrentUser(long userId, long currentUserId) {
 
+        if (currentUserId != userId) {
+
+            throw new WrongCurrentUserException("Current user is not owner.");
+
+        }
     }
 
     private User findUserByCorpEmail(String corpEmail) {
