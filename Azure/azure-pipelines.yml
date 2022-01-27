@@ -1,0 +1,41 @@
+pool:
+  name: Azure Pipelines
+steps:
+- task: DockerCompose@0
+  displayName: Build
+  inputs:
+    azureSubscription: 'Azure subscription 1 (f8fb46e7-4cee-4c80-9477-c2cab11daf88)'
+    azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/f8fb46e7-4cee-4c80-9477-c2cab11daf88/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+    dockerComposeFile: 'docker-compose.yml'
+    projectName: itechlib2021
+    action: 'Build services'
+
+- task: DockerCompose@0
+  displayName: Push
+  inputs:
+    azureSubscription: 'Azure subscription 1 (f8fb46e7-4cee-4c80-9477-c2cab11daf88)'
+    azureContainerRegistry: '{"loginServer":"itechlib.azurecr.io", "id" : "/subscriptions/f8fb46e7-4cee-4c80-9477-c2cab11daf88/resourceGroups/itechlib/providers/Microsoft.ContainerRegistry/registries/itechlib"}'
+    dockerComposeFile: 'docker-compose.yml'
+    projectName: itechlib2021
+    action: 'Push services'
+    includeLatestTag: true
+
+- task: CopyFilesOverSSH@0
+  displayName: 'Securely copy files to the remote machine'
+  inputs:
+    sshEndpoint: itechlib
+    sourceFolder: Azure
+    targetFolder: /home/azureuser/
+
+- task: SSH@0
+  displayName: 'Run shell inline on remote machine'
+  inputs:
+    sshEndpoint: itechlib
+    runOptions: inline
+    inline: |
+     #!/bin/bash
+     docker-compose down 2> docker-compose.log
+     sleep 20
+     docker image prune -af
+     sleep 20
+     docker-compose --env-file ~/.env up -d --build 2> docker-compose.log
