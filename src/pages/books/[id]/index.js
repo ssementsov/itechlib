@@ -5,15 +5,10 @@ import { PropTypes } from 'prop-types';
 import { Box, Container, Grid, Button, Typography } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import BookDetails from '../../../components/book/book-details';
-import BookCoverImage from '../../../components/book/book-cover-image';
-import HiddenBookCoverTools from '../../../components/book/book-cover-image/hidden-book-cover-tools';
+import UploadImageCard from '../../../components/upload-image-card';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { BooksAPI } from '../../../api/books-api';
-import { useBoolean } from './../../../utils/boolean-hook';
 import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
-import SelectImageModal from '../../../components/book/book-cover-image/select-image-modal';
-import DeleteModal from './../../../components/book/delete-book-or-book-cover/delete-modal';
-import styles from './BookPreviewPage.module.css';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
@@ -21,71 +16,9 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [book, setBook] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
     const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
     const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
-    const [isUrlBookCover, setIsUrlBookCover] = useState(null);
-    const [isAllowedImage, setIsAllowedImage] = useState(false);
-    const [visible, setVisible, setHidden] = useBoolean();
     const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
-    const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] =
-        useBoolean();
-    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
-        useBoolean();
-
-    const imageUploadHandler = () => {
-        const file = new FormData();
-        file.append('bookId', id);
-        file.append('file', selectedImage);
-
-        BooksAPI.addBookCover(file)
-            .then(() => {
-                onCloseHandler();
-                setIsUploadedBookCover(true);
-                setIsUpdatedBookCover(true);
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
-    };
-
-    const imageSelectedHandler = (e) => {
-        const imgFile = e.target.files[0];
-        if (imgFile) {
-            if (imgFile.size > 500000) {
-                setIsUrlBookCover(null);
-                setIsAllowedImage(true);
-                return;
-            } else {
-                let urlImg = URL.createObjectURL(imgFile);
-                setIsUrlBookCover(urlImg);
-                setIsAllowedImage(false);
-                setSelectedImage(imgFile);
-            }
-        }
-    };
-
-    const imageDeletedHandler = () => {
-        let imageId = book.fileInfo.id;
-
-        BooksAPI.deleteBookCover(imageId)
-            .then(() => {
-                setIsUploadedBookCover(false);
-                setDeleteButtonClose();
-            })
-            .catch(() => defaultErrorSnackbar());
-    };
-
-    const onCloseHandler = () => {
-        setUploadButtonClose();
-        setIsUrlBookCover(null);
-        setIsAllowedImage(false);
-    };
-
-    const onHoverHandler = () => {
-        setVisible();
-        setIsUpdatedBookCover(false);
-    };
 
     useEffect(() => {
         const corpEmail = localStorage.getItem('corpEmail');
@@ -131,22 +64,6 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     } else {
         return (
             <>
-                <DeleteModal
-                    onDelete={imageDeletedHandler}
-                    open={isDeleteButtonOpen}
-                    onClose={setDeleteButtonClose}
-                    title={'book cover'}
-                />
-
-                <SelectImageModal
-                    open={isUploadButtonOpen}
-                    onClose={onCloseHandler}
-                    onSelect={imageSelectedHandler}
-                    urlBookCover={isUrlBookCover}
-                    isAllowedImage={isAllowedImage}
-                    onUpload={imageUploadHandler}
-                />
-
                 <Head>
                     <title>Book preview page</title>
                 </Head>
@@ -176,28 +93,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     >
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
-                                <div
-                                    className={styles.bookCoverImage}
-                                    onMouseEnter={onHoverHandler}
-                                    onMouseLeave={setHidden}
-                                >
-                                    <BookCoverImage
-                                        book={book}
-                                        isOwner={isOwner}
-                                        isUploaded={isUploadedBookCover}
-                                        onUploadButtonOpen={setUploadButtonOpen}
-                                    />
-                                    {isOwner && (
-                                        <HiddenBookCoverTools
-                                            visible={visible}
-                                            isUploaded={isUploadedBookCover}
-                                            onUploadButtonOpen={
-                                                setUploadButtonOpen
-                                            }
-                                            onOpen={setDeleteButtonOpen}
-                                        />
-                                    )}
-                                </div>
+                                <UploadImageCard />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>
                                 <BookDetails
