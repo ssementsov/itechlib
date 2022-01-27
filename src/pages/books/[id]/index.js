@@ -16,9 +16,30 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [book, setBook] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
-    const [isUploadedImage, setIsUploadedImage] = useState(false);
-    const [isUpdatedImage, setIsUpdatedImage] = useState(false);
+    const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
+    const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
     const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+
+    const addBookCover = (file, onClose) => {
+        BooksAPI.addBookCover(file)
+            .then(() => {
+                onClose();
+                setIsUploadedBookCover(true);
+                setIsUpdatedBookCover(true);
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
+    };
+
+    const deleteBookCover = (imageId, onDeleteButtonClose) => {
+        BooksAPI.deleteBookCover(imageId)
+            .then(() => {
+                setIsUploadedBookCover(false);
+                onDeleteButtonClose();
+            })
+            .catch(() => defaultErrorSnackbar());
+    };
 
     useEffect(() => {
         const corpEmail = localStorage.getItem('corpEmail');
@@ -37,7 +58,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     setIsLoaded(true);
                     const bookCover = res.data.fileInfo;
                     if (bookCover) {
-                        setIsUploadedImage(true);
+                        setIsUploadedBookCover(true);
                     }
                 })
                 .catch(() => {
@@ -51,8 +72,8 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
         id,
         router.isReady,
         defaultErrorSnackbar,
-        isUploadedImage,
-        isUpdatedImage,
+        isUploadedBookCover,
+        isUpdatedBookCover,
     ]);
 
     if (!isLoaded) {
@@ -94,8 +115,13 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
                                 <UploadImageCard
-                                    onUpdateImage={setIsUpdatedImage}
-                                    onUploadImage={setIsUploadedImage}
+                                    isUploaded={isUploadedBookCover}
+                                    onUpdate={setIsUpdatedBookCover}
+                                    onUpload={setIsUploadedBookCover}
+                                    data={book}
+                                    isOwner={isOwner}
+                                    onAdd={addBookCover}
+                                    onDelete={deleteBookCover}
                                 />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>

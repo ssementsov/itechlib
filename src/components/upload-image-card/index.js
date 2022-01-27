@@ -1,21 +1,22 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { PropTypes } from 'prop-types';
-import SelectImageModal from '../book/book-cover-image/select-image-modal';
+import { Button } from '@mui/material';
+import SelectImageModal from './select-image-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
-import BookCoverImage from '../book/book-cover-image';
-import HiddenBookCoverTools from './../book/book-cover-image/hidden-book-cover-tools';
-import { BooksAPI } from '../../api/books-api';
+import HiddenBookCoverTools from './hidden-book-cover-tools';
 import { useBoolean } from '../../utils/boolean-hook';
-import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import styles from './upload-image-card.module.css';
+import StyledCard from './styled-card';
 
-const UploadImageCard = ({ onUpdateImage, onUploadImage }) => {
+const UploadImageCard = (props) => {
+    const { isUploaded, onUpdate, data, isOwner, onAdd, onDelete } = props;
     const router = useRouter();
     const id = router.query.id;
     const [visible, setVisible, setHidden] = useBoolean();
     const [selectedImage, setSelectedImage] = useState(null);
-    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+    const [isUrlImage, setIsUrlImage] = useState(null);
+    const [isAllowedImage, setIsAllowedImage] = useState(false);
     const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] =
         useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
@@ -25,28 +26,19 @@ const UploadImageCard = ({ onUpdateImage, onUploadImage }) => {
         const file = new FormData();
         file.append('bookId', id);
         file.append('file', selectedImage);
-
-        BooksAPI.addBookCover(file)
-            .then(() => {
-                onCloseHandler();
-                onUploadImage(true);
-                onUpdateImage(true);
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+        onAdd(file, onCloseHandler);
     };
 
     const imageSelectedHandler = (e) => {
         const imgFile = e.target.files[0];
         if (imgFile) {
             if (imgFile.size > 500000) {
-                setIsUrlBookCover(null);
+                setIsUrlImage(null);
                 setIsAllowedImage(true);
                 return;
             } else {
                 let urlImg = URL.createObjectURL(imgFile);
-                setIsUrlBookCover(urlImg);
+                setIsUrlImage(urlImg);
                 setIsAllowedImage(false);
                 setSelectedImage(imgFile);
             }
@@ -54,25 +46,19 @@ const UploadImageCard = ({ onUpdateImage, onUploadImage }) => {
     };
 
     const imageDeletedHandler = () => {
-        let imageId = book.fileInfo.id;
-
-        BooksAPI.deleteBookCover(imageId)
-            .then(() => {
-                onUpdateImage(false);
-                setDeleteButtonClose();
-            })
-            .catch(() => defaultErrorSnackbar());
+        let imageId = data.fileInfo.id;
+        onDelete(imageId, setDeleteButtonClose);
     };
 
     const onCloseHandler = () => {
         setUploadButtonClose();
-        setIsUrlBookCover(null);
+        setIsUrlImage(null);
         setIsAllowedImage(false);
     };
 
     const onHoverHandler = () => {
         setVisible();
-        onUpdateImage(false);
+        onUpdate(false);
     };
 
     return (
@@ -88,26 +74,40 @@ const UploadImageCard = ({ onUpdateImage, onUploadImage }) => {
                 open={isUploadButtonOpen}
                 onClose={onCloseHandler}
                 onSelect={imageSelectedHandler}
-                urlBookCover={isUrlBookCover}
+                urlImage={isUrlImage}
                 isAllowedImage={isAllowedImage}
                 onUpload={imageUploadHandler}
             />
 
             <div
-                className={styles.UploadImageCard}
+                className={styles.uploadImageCard}
                 onMouseEnter={onHoverHandler}
                 onMouseLeave={setHidden}
             >
-                <BookCoverImage
-                    book={book}
-                    isOwner={isOwner}
-                    isUploaded={isUploadedBookCover}
-                    onUploadButtonOpen={setUploadButtonOpen}
-                />
+                <StyledCard
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        background: 'white',
+                        backgroundImage: data.fileInfo
+                            ? `url(data:image/${data.fileInfo.extension};base64,${data.fileInfo.fileData})`
+                            : 'none',
+                        backgroundSize: 'contain',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                    }}
+                >
+                    {isOwner && !isUploaded && (
+                        <Button onClick={setUploadButtonOpen} sx={{ mr: 1 }}>
+                            Upload image
+                        </Button>
+                    )}
+                </StyledCard>
                 {isOwner && (
                     <HiddenBookCoverTools
                         visible={visible}
-                        isUploaded={isUploadedBookCover}
+                        isUploaded={isUploaded}
                         onUploadButtonOpen={setUploadButtonOpen}
                         onOpen={setDeleteButtonOpen}
                     />
@@ -115,6 +115,15 @@ const UploadImageCard = ({ onUpdateImage, onUploadImage }) => {
             </div>
         </>
     );
+};
+
+UploadImageCard.propTypes = {
+    isOwner: PropTypes.bool.isRequired,
+    isUploaded: PropTypes.bool.isRequired,
+    onDelete: PropTypes.func.isRequired,
+    onAdd: PropTypes.func.isRequired,
+    onUpdate: PropTypes.func.isRequired,
+    data: PropTypes.object,
 };
 
 export default UploadImageCard;
