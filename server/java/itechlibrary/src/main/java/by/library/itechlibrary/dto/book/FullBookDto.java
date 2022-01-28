@@ -4,7 +4,7 @@ import by.library.itechlibrary.dto.FileInfoDto;
 import lombok.Data;
 
 @Data
-public class FullBookDto extends BookDto {
+public class FullBookDto extends WithOwnerBookDto {
 
     private boolean isReader;
 
