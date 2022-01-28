@@ -137,7 +137,7 @@ BooksCatalogue.propTypes = {
             name: PropTypes.string,
         }).isRequired,
         rate: PropTypes.number.isRequired,
-        reader: PropTypes.bool.isRequired,
+        reader: PropTypes.bool,
         owner: PropTypes.object,
     }),
     title: PropTypes.string,

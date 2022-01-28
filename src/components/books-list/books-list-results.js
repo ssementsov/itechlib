@@ -12,7 +12,7 @@ import {
     Typography,
     Tooltip,
 } from '@mui/material';
-import { titles } from '../../common/constants/titles-constants';
+import { titles } from '../../common/constants/book-page-titles-constants';
 import router from 'next/router';
 import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
 import { calculateRate } from './../../utils/functions/calculate-rate';

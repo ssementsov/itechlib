@@ -7,10 +7,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
+import ProfileDetails from './../components/profile/profile-details';
 
 function ProfilePage() {
     const router = useRouter();
-    const [user, setUser] = useState([]);
+    const [user, setUser] = useState({});
     const [isOwner, setIsOwner] = useState(false);
     const [isUploadedAvatar, setIsUploadedAvatar] = useState(false);
     const [isUpdatedAvatar, setIsUpdatedAvatar] = useState(false);
@@ -47,8 +48,8 @@ function ProfilePage() {
                     setIsUploadedAvatar(true);
                 }
             })
-            .catch((err) => console.log(err));
-    }, [isUpdatedAvatar, isUploadedAvatar]);
+            .catch(() => defaultErrorSnackbar());
+    }, [defaultErrorSnackbar, isUpdatedAvatar, isUploadedAvatar]);
 
     return (
         <>
@@ -91,7 +92,9 @@ function ProfilePage() {
                                 onDelete={deleteAvatar}
                             />
                         </Grid>
-                        <Grid item lg={8} md={8} xs={12}></Grid>
+                        <Grid item lg={8} md={8} xs={12}>
+                            <ProfileDetails user={user} />
+                        </Grid>
                     </Grid>
                 </Container>
             </Box>
