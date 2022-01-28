@@ -1,7 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
