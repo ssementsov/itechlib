@@ -10,13 +10,13 @@ public interface BookService {
 
     List<BookDto> findAll();
 
-    BookDto saveBook(BookDto bookDto);
+    FullBookDto saveBook(BookDto bookDto);
 
     FullBookDto findByIdFullVersion(long id);
 
     List<BookDto> findOwnersBook();
 
-    BookDto updateStatus(String status, long bookId);
+    FullBookDto updateStatus(String status, long bookId);
 
     void remove(long id);
 
