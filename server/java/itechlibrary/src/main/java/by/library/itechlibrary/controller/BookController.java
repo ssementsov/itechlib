@@ -57,7 +57,7 @@ public class BookController {
     @PutMapping
     @ApiOperation("update book")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto updateBook(@Valid @RequestBody BookDto bookDto) {
+    public FullBookDto updateBook(@Valid @RequestBody BookDto bookDto) {
 
         return bookService.saveBook(bookDto);
     }
@@ -65,7 +65,7 @@ public class BookController {
     @PutMapping("/status/update")
     @ApiOperation("update book status by owner")
     @ResponseStatus(HttpStatus.OK)
-    public BookDto updateStatusByOwner(@RequestParam("status") String status, @RequestParam("bookId") long bookId) {
+    public FullBookDto updateStatusByOwner(@RequestParam("status") String status, @RequestParam("bookId") long bookId) {
 
         return bookService.updateStatus(status, bookId);
     }

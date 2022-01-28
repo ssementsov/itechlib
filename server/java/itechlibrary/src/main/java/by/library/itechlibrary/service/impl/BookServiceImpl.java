@@ -53,7 +53,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto saveBook(BookDto bookDto) {
+    public FullBookDto saveBook(BookDto bookDto) {
 
         log.info("Try to map bookDto to book");
 
@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
         setCurrentUserToOwner(book);
         book = bookRepository.save(book);
 
-        return bookMapper.toBookDto(book);
+        return bookMapper.toFullBookDto(book);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public BookDto updateStatus(String status, long bookId) {
+    public FullBookDto updateStatus(String status, long bookId) {
 
         log.info("Try to find book.");
 
@@ -161,7 +161,7 @@ public class BookServiceImpl implements BookService {
 
         setStatus(book, status);
 
-        return bookMapper.toBookDto(book);
+        return bookMapper.toFullBookDto(book);
     }
 
     private void checkCurrentUserIsOwner(long ownerId) {
