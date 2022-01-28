@@ -1,6 +1,6 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
@@ -25,7 +25,7 @@ public class BookController {
     @GetMapping
     @ApiOperation("get all books")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookDto> getBooks() {
+    public List<WithOwnerBookDto> getBooks() {
 
         return bookService.findAll();
     }
@@ -41,7 +41,7 @@ public class BookController {
     @GetMapping("/user/")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<BookDto> getBooksByUserId() {
+    public List<WithOwnerBookDto> getBooksByUserId() {
 
         return bookService.findOwnersBook();
     }
@@ -49,25 +49,17 @@ public class BookController {
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
-    public BookDto addBook(@Valid @RequestBody BookDto bookDto) {
+    public WithOwnerBookDto addBook(@Valid @RequestBody WithOwnerBookDto withOwnerBookDto) {
 
-        return bookService.saveBook(bookDto);
+        return bookService.save(withOwnerBookDto);
     }
 
     @PutMapping
     @ApiOperation("update book")
     @ResponseStatus(HttpStatus.OK)
-    public FullBookDto updateBook(@Valid @RequestBody BookDto bookDto) {
+    public FullBookDto updateBook(@Valid @RequestBody WithOwnerBookDto withOwnerBookDto) {
 
-        return bookService.saveBook(bookDto);
-    }
-
-    @PutMapping("/status/update")
-    @ApiOperation("update book status by owner")
-    @ResponseStatus(HttpStatus.OK)
-    public FullBookDto updateStatusByOwner(@RequestParam("status") String status, @RequestParam("bookId") long bookId) {
-
-        return bookService.updateStatus(status, bookId);
+        return bookService.update(withOwnerBookDto);
     }
 
     @DeleteMapping("/{id}")

@@ -3,8 +3,10 @@ package by.library.itechlibrary.service.impl;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.Status;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
@@ -43,21 +45,40 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public List<BookDto> findAll() {
+    public List<WithOwnerBookDto> findAll() {
 
         log.info("Try to find all books");
 
         List<Book> books = bookRepository.findAll();
 
-        return bookMapper.mapBookDtoList(books);
+        return bookMapper.mapWithOwnerBookDtoList(books);
+    }
+
+    @Transactional
+    @Override
+    public FullBookDto update(BookDto bookDto) {
+
+        log.info("Try to update book");
+
+        Book book = findById(bookDto.getId());
+        Book updatedBook = bookMapper.toBook(bookDto);
+        updatedBook.setFileInfo(book.getFileInfo());
+        updatedBook.setOwner(book.getOwner());
+        updateStatus(book.getStatus(), updatedBook.getStatus(), updatedBook.getId(), updatedBook.getOwner().getId());
+
+        log.info("Try to save updated book");
+
+        bookRepository.save(updatedBook);
+
+        return bookMapper.toFullBookDto(updatedBook);
     }
 
     @Override
-    public FullBookDto saveBook(BookDto bookDto) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto) {
 
         log.info("Try to map bookDto to book");
 
-        Book book = bookMapper.toBook(bookDto);
+        Book book = bookMapper.toBook(withOwnerBookDto);
 
         log.info("Try to set user and save book");
 
@@ -65,7 +86,7 @@ public class BookServiceImpl implements BookService {
         setCurrentUserToOwner(book);
         book = bookRepository.save(book);
 
-        return bookMapper.toFullBookDto(book);
+        return bookMapper.toWithOwnerBookDto(book);
     }
 
     @Override
@@ -84,7 +105,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDto> findOwnersBook() {
+    public List<WithOwnerBookDto> findOwnersBook() {
 
         log.info("Try get books by user id.");
 
@@ -92,7 +113,7 @@ public class BookServiceImpl implements BookService {
 
         List<Book> books = bookRepository.findAllByOwnerId(ownerId);
 
-        return bookMapper.mapBookDtoList(books);
+        return bookMapper.mapWithOwnerBookDtoList(books);
     }
 
     @Transactional
@@ -143,25 +164,19 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    @Transactional
-    @Override
-    public FullBookDto updateStatus(String status, long bookId) {
+    private void updateStatus(Status oldStatus, Status newStatus, long bookId, long ownerId) {
 
-        log.info("Try to find book.");
+        log.info("Try to check permission for changing status.");
 
-        Book book = findById(bookId);
+        checkCurrentUserIsOwner(ownerId);
 
-        checkCurrentUserIsOwner(book.getOwner().getId());
+        if (oldStatus.getName().equals(StatusConstant.IN_USE) && !newStatus.getName().equals(StatusConstant.IN_USE)) {
 
-        if (book.getStatus().getName().equals(StatusConstant.IN_USE) && !status.equals(StatusConstant.IN_USE)) {
+            log.info("Disable current booking for for changing status from IN USE.");
 
             bookingService.disableCurrentBooking(bookId);
 
         }
-
-        setStatus(book, status);
-
-        return bookMapper.toFullBookDto(book);
     }
 
     private void checkCurrentUserIsOwner(long ownerId) {
