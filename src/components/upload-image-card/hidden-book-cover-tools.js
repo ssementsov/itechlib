@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, IconButton } from '@mui/material';
-import { LightDeleteIcon } from './../../../icons/light-delete-icon';
+import { LightDeleteIcon } from '../../icons/light-delete-icon';
 import StyledCard from './styled-card';
 
 const HiddenBookCoverTools = (props) => {

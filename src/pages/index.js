@@ -17,7 +17,7 @@ const Register = () => {
     const [disabledGoogle, setDisabledGoogle] = useState(true);
     const [disabledCorp, setDisabledCorp] = useState(false);
     const [loaded, setLoaded] = useState(false);
-    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     function validate(value) {
         let error = {};

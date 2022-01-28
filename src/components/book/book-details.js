@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
-import { titles } from './../../common/constants/titles-constants';
+import { titles } from './../../common/constants/book-page-titles-constants';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
@@ -54,7 +54,7 @@ const BookDetails = (props) => {
     const router = useRouter();
     const corpEmail = localStorage.getItem('corpEmail');
     let isOwner = book.owner.corpEmail === corpEmail;
-    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
         useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
@@ -262,14 +262,18 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.link}</TblCell>
                                         <TblCell>
-                                            <Link
-                                                href={book.link}
-                                                underline="hover"
-                                                target="_blank"
-                                                rel="noopener"
-                                            >
-                                                {'Open site'}
-                                            </Link>
+                                            {book.link === '' ? (
+                                                'No link yet'
+                                            ) : (
+                                                <Link
+                                                    href={book.link}
+                                                    underline="hover"
+                                                    target="_blank"
+                                                    rel="noopener"
+                                                >
+                                                    {'Open site'}
+                                                </Link>
+                                            )}
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
@@ -390,7 +394,7 @@ BookDetails.propTypes = {
             name: PropTypes.string,
         }).isRequired,
         rate: PropTypes.number.isRequired,
-        reader: PropTypes.bool.isRequired,
+        reader: PropTypes.bool,
         owner: PropTypes.object,
     }),
 };
