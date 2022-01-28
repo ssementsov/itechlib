@@ -18,7 +18,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [isOwner, setIsOwner] = useState(false);
     const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
     const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
-    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const addBookCover = (file, onClose) => {
         BooksAPI.addBookCover(file)

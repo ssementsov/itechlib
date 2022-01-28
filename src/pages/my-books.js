@@ -8,7 +8,7 @@ import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 const OwnerCatalogue = () => {
     const [books, setBooks] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const updateBooks = (booksList) => {
         setBooks(booksList);

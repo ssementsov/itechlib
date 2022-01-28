@@ -54,7 +54,7 @@ const BookDetails = (props) => {
     const router = useRouter();
     const corpEmail = localStorage.getItem('corpEmail');
     let isOwner = book.owner.corpEmail === corpEmail;
-    const [enqueueSnackbar, defaultErrorSnackbar] = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
         useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
