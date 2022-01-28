@@ -10,7 +10,8 @@ import styles from './upload-image-card.module.css';
 import StyledCard from './styled-card';
 
 const UploadImageCard = (props) => {
-    const { isUploaded, onUpdate, data, isOwner, onAdd, onDelete } = props;
+    const { isUploaded, onUpdate, data, isOwner, onAdd, onDelete, title } =
+        props;
     const router = useRouter();
     const id = router.query.id;
     const [visible, setVisible, setHidden] = useBoolean();
@@ -67,7 +68,7 @@ const UploadImageCard = (props) => {
                 onDelete={imageDeletedHandler}
                 open={isDeleteButtonOpen}
                 onClose={setDeleteButtonClose}
-                title={'book cover'}
+                title={title}
             />
 
             <SelectImageModal
@@ -77,6 +78,7 @@ const UploadImageCard = (props) => {
                 urlImage={isUrlImage}
                 isAllowedImage={isAllowedImage}
                 onUpload={imageUploadHandler}
+                title={title}
             />
 
             <div
@@ -124,6 +126,7 @@ UploadImageCard.propTypes = {
     onAdd: PropTypes.func.isRequired,
     onUpdate: PropTypes.func.isRequired,
     data: PropTypes.object,
+    title: PropTypes.string.isRequired,
 };
 
 export default UploadImageCard;

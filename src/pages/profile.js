@@ -90,6 +90,7 @@ function ProfilePage() {
                                 isOwner={isOwner}
                                 onAdd={addAvatar}
                                 onDelete={deleteAvatar}
+                                title={'avatar'}
                             />
                         </Grid>
                         <Grid item lg={8} md={8} xs={12}>

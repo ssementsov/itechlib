@@ -122,6 +122,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                     isOwner={isOwner}
                                     onAdd={addBookCover}
                                     onDelete={deleteBookCover}
+                                    title={'book cover'}
                                 />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>

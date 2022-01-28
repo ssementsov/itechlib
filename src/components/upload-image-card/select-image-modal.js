@@ -6,14 +6,14 @@ import SelectFileButton from './select-image-button';
 import { theme } from '../../theme/index';
 
 const SelectImageModal = (props) => {
-    const { onClose, open, onSelect, urlImage, isAllowedImage, onUpload } =
+    const { onClose, open, onSelect, urlImage, isAllowedImage, onUpload, title } =
         props;
 
     return (
         <StyledModal open={open} onClose={onClose}>
             <Box sx={{ my: 3 }}>
                 <Typography color="textPrimary" variant="h4" textAlign="center">
-                    Please select image for book cover
+                    Please select image for {title}
                 </Typography>
             </Box>
             <Box sx={{ pb: 2 }}>
@@ -89,6 +89,7 @@ SelectImageModal.propTypes = {
     urlBookCover: PropTypes.string,
     isAllowedImage: PropTypes.bool.isRequired,
     onUpload: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
 };
 
 export default SelectImageModal;
