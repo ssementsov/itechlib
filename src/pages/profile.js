@@ -100,6 +100,10 @@ function ProfilePage() {
                                     onAdd={addAvatar}
                                     onDelete={deleteAvatar}
                                     title={'avatar'}
+                                    description={
+                                        'You can upload an image in JPG, GIF or PNG format.\
+                                    Maximum size 5MB.'
+                                    }
                                 />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>

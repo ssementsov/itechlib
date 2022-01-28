@@ -6,8 +6,16 @@ import SelectFileButton from './select-image-button';
 import { theme } from '../../theme/index';
 
 const SelectImageModal = (props) => {
-    const { onClose, open, onSelect, urlImage, isAllowedImage, onUpload, title } =
-        props;
+    const {
+        onClose,
+        open,
+        onSelect,
+        urlImage,
+        isAllowedImage,
+        onUpload,
+        title,
+        description,
+    } = props;
 
     return (
         <StyledModal open={open} onClose={onClose}>
@@ -57,8 +65,7 @@ const SelectImageModal = (props) => {
                                 mb: '20px',
                             }}
                         >
-                            You can upload an image in JPG, GIF or PNG format.
-                            Maximum size 5MB.
+                            {description}
                         </Typography>
                         <SelectFileButton onSelect={onSelect} />
                     </>
@@ -90,6 +97,7 @@ SelectImageModal.propTypes = {
     isAllowedImage: PropTypes.bool.isRequired,
     onUpload: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
 };
 
 export default SelectImageModal;

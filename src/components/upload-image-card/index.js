@@ -10,8 +10,16 @@ import styles from './upload-image-card.module.css';
 import StyledCard from './styled-card';
 
 const UploadImageCard = (props) => {
-    const { isUploaded, onUpdate, data, isOwner, onAdd, onDelete, title } =
-        props;
+    const {
+        isUploaded,
+        onUpdate,
+        data,
+        isOwner,
+        onAdd,
+        onDelete,
+        title,
+        description,
+    } = props;
     const router = useRouter();
     const id = router.query.id;
     const [visible, setVisible, setHidden] = useBoolean();
@@ -27,13 +35,15 @@ const UploadImageCard = (props) => {
         const file = new FormData();
         file.append('bookId', id);
         file.append('file', selectedImage);
+
         onAdd(file, onCloseHandler);
     };
 
     const imageSelectedHandler = (e) => {
         const imgFile = e.target.files[0];
+        let maxSize = 5242880; //5Mb
         if (imgFile) {
-            if (imgFile.size > 500000) {
+            if (imgFile.size > maxSize) {
                 setIsUrlImage(null);
                 setIsAllowedImage(true);
                 return;
@@ -79,6 +89,7 @@ const UploadImageCard = (props) => {
                 isAllowedImage={isAllowedImage}
                 onUpload={imageUploadHandler}
                 title={title}
+                description={description}
             />
 
             <div
@@ -127,6 +138,7 @@ UploadImageCard.propTypes = {
     onUpdate: PropTypes.func.isRequired,
     data: PropTypes.object,
     title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
 };
 
 export default UploadImageCard;

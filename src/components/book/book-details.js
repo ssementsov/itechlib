@@ -263,7 +263,7 @@ const BookDetails = (props) => {
                                         <TblCell>{titles.link}</TblCell>
                                         <TblCell>
                                             {book.link === '' ? (
-                                                'Open site'
+                                                'No link yet'
                                             ) : (
                                                 <Link
                                                     href={book.link}
