@@ -2,21 +2,22 @@ package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface BookService {
 
-    List<BookDto> findAll();
+    List<WithOwnerBookDto> findAll();
 
-    FullBookDto saveBook(BookDto bookDto);
+    FullBookDto update(BookDto bookDto);
+
+    WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto);
 
     FullBookDto findByIdFullVersion(long id);
 
-    List<BookDto> findOwnersBook();
-
-    FullBookDto updateStatus(String status, long bookId);
+    List<WithOwnerBookDto> findOwnersBook();
 
     void remove(long id);
 

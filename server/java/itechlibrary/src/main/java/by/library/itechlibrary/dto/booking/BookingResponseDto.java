@@ -1,6 +1,6 @@
 package by.library.itechlibrary.dto.booking;
 
-import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -18,7 +18,7 @@ public class BookingResponseDto {
     private LocalDate finishDate;
 
     @NotNull
-    private BookDto book;
+    private WithOwnerBookDto book;
 
     private boolean isActive;
 
