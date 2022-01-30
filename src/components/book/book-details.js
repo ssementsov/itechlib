@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { types } from './../../types/index';
 import {
     Box,
     Button,
@@ -378,29 +379,7 @@ BookDetails.propTypes = {
     isAssigned: PropTypes.bool,
     assignHandler: PropTypes.func,
     onUpdate: PropTypes.func,
-    book: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        title: PropTypes.string.isRequired,
-        author: PropTypes.string.isRequired,
-        fileInfo: PropTypes.object,
-        category: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        language: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        description: PropTypes.string.isRequired,
-        link: PropTypes.string,
-        status: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        rate: PropTypes.number.isRequired,
-        reader: PropTypes.bool,
-        owner: PropTypes.object,
-    }),
+    book: types.bookTypes,
 };
 
 export default BookDetails;

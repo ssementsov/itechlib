@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { types } from '../../types';
 import {
     Card,
     CardContent,
@@ -62,14 +62,7 @@ const ProfileDetails = (props) => {
 };
 
 ProfileDetails.propTypes = {
-    user: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-        surname: PropTypes.string.isRequired,
-        fileInfo: PropTypes.object,
-        corpEmail: PropTypes.string.isRequired,
-        googleEmail: PropTypes.string.isRequired,
-    }),
+    user: types.userTypes,
 };
 
 export default ProfileDetails;

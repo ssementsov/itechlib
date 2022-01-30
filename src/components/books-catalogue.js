@@ -10,6 +10,7 @@ import { category } from '../common/constants/category-constants';
 import { language } from '../common/constants/language-constants';
 import { useBoolean } from '../utils/boolean-hook';
 import { PropTypes } from 'prop-types';
+import { types } from '../types';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
 const BooksCatalogue = (props) => {
@@ -117,29 +118,7 @@ const BooksCatalogue = (props) => {
 };
 
 BooksCatalogue.propTypes = {
-    book: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        title: PropTypes.string.isRequired,
-        author: PropTypes.string.isRequired,
-        fileInfo: PropTypes.object,
-        category: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        language: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        description: PropTypes.string.isRequired,
-        link: PropTypes.string,
-        status: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        rate: PropTypes.number.isRequired,
-        reader: PropTypes.bool,
-        owner: PropTypes.object,
-    }),
+    book: types.bookTypes,
     title: PropTypes.string,
     onUpdateBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,

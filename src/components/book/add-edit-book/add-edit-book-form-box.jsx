@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
+import { types } from '../../../types';
 import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
@@ -136,29 +137,7 @@ AddEditBookFormBox.propTypes = {
     onEdit: PropTypes.func,
     title: PropTypes.string,
     buttonName: PropTypes.string,
-    book: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        title: PropTypes.string.isRequired,
-        author: PropTypes.string.isRequired,
-        fileInfo: PropTypes.object,
-        category: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        language: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        description: PropTypes.string.isRequired,
-        link: PropTypes.string,
-        status: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-        }).isRequired,
-        rate: PropTypes.number.isRequired,
-        reader: PropTypes.bool,
-        owner: PropTypes.object,
-    }),
+    book: types.bookTypes,
 };
 
 export default AddEditBookFormBox;
