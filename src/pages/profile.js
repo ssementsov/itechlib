@@ -8,6 +8,7 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
 import ProfileDetails from './../components/profile/profile-details';
+import { LOGIN_PATH } from '../common/constants/route-constants';
 
 function ProfilePage() {
     const router = useRouter();
@@ -50,8 +51,15 @@ function ProfilePage() {
                     setIsUploadedAvatar(true);
                 }
             })
-            .catch(() => defaultErrorSnackbar());
-    }, [defaultErrorSnackbar, isUpdatedAvatar, isUploadedAvatar]);
+            .catch((err) => {
+                if (err.response.status === 403) {
+                    router.replace(LOGIN_PATH);
+                    localStorage.removeItem('token');
+                } else {
+                    defaultErrorSnackbar();
+                }
+            });
+    }, [defaultErrorSnackbar, isUpdatedAvatar, isUploadedAvatar, router]);
 
     if (!isLoaded) {
         return (
