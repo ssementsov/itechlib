@@ -7,6 +7,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Feedback from '../../../components/feedback';
 import { BookingsAPI } from './../../../api/bookings-api';
 import { theme } from './../../../theme/index';
+import { LOGIN_PATH } from '../../../common/constants/route-constants';
 
 function FeedbacksPage() {
     const router = useRouter();
@@ -17,12 +18,19 @@ function FeedbacksPage() {
         if (router.isReady) {
             const bookId = router.query.id;
 
-            BookingsAPI.getFeedbacks(bookId).then((res) => {
-                setFeedbacks(res.data);
-                setIsLoadedData(true);
-            });
+            BookingsAPI.getFeedbacks(bookId)
+                .then((res) => {
+                    setFeedbacks(res.data);
+                    setIsLoadedData(true);
+                })
+                .catch((err) => {
+                    if (err.response.status === 403) {
+                        router.replace(LOGIN_PATH);
+                        localStorage.removeItem('token');
+                    }
+                });
         }
-    }, [router.isReady, router.query.id]);
+    }, [router, router.isReady, router.query.id]);
 
     if (!isLoadedData) {
         return (

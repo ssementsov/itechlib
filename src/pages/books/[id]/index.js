@@ -9,6 +9,7 @@ import UploadImageCard from '../../../components/upload-image-card';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
+import { LOGIN_PATH } from '../../../common/constants/route-constants';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
@@ -61,8 +62,13 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                         setIsUploadedBookCover(true);
                     }
                 })
-                .catch(() => {
-                    defaultErrorSnackbar();
+                .catch((err) => {
+                    if (err.response.status === 403) {
+                        router.replace(LOGIN_PATH);
+                        localStorage.removeItem('token');
+                    } else {
+                        defaultErrorSnackbar();
+                    }
                 });
         }
     }, [
@@ -74,6 +80,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
         defaultErrorSnackbar,
         isUploadedBookCover,
         isUpdatedBookCover,
+        router,
     ]);
 
     if (!isLoaded) {
