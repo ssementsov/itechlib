@@ -1,8 +1,8 @@
-INSERT INTO status (name)
+INSERT INTO book_status (name)
 VALUES ('AVAILABLE') ON CONFLICT (id) DO NOTHING;
-INSERT INTO status (name)
+INSERT INTO book_status (name)
 VALUES ('NOT AVAILABLE') ON CONFLICT (id) DO NOTHING;
-INSERT INTO status (name)
+INSERT INTO book_status (name)
 VALUES ('IN USE') ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO category (name)

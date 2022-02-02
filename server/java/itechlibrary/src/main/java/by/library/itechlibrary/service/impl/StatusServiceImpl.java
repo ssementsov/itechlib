@@ -1,6 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.entity.Status;
+import by.library.itechlibrary.entity.BookStatus;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.repository.StatusRepository;
 import by.library.itechlibrary.service.StatusService;
@@ -17,14 +17,14 @@ public class StatusServiceImpl implements StatusService {
 
 
     @Override
-    public Status findById(short id) {
+    public BookStatus findById(short id) {
 
         return statusRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("status was not found by id = " + id));
     }
 
     @Override
-    public Status findByName(String name) {
+    public BookStatus findByName(String name) {
         return statusRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException("status was not found by name = " + name));
     }

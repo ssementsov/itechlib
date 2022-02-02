@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02022022-add-user-data-to-suggested-book
+      author: maksim_maevsky
+      changes:
+        sqlFile:
+          dbms:  'postgresql'
+          path:  /db/changelog/v.0.5/sql-import/import-data.sql
+          stripComments:  true

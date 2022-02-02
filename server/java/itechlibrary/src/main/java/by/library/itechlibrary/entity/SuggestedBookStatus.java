@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "status")
+@Table(name = "suggested_book_status")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Status {
+public class SuggestedBookStatus {
 
     @Id
     @Column(name = "id")
@@ -21,4 +21,5 @@ public class Status {
 
     @Column(name = "name")
     private String name;
+
 }

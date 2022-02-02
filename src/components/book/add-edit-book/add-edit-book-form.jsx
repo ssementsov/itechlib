@@ -5,7 +5,7 @@ import { categories } from './datas-for-form-options/categories';
 import { languages } from './datas-for-form-options/languages';
 import { statuses } from './datas-for-form-options/statuses';
 import HiddenForm from './hidden-form';
-import { status } from '../../../common/constants/status-constants';
+import { bookStatus } from '../../../common/constants/bookStatus-constants';
 
 const createOptions = (option) => {
     return (
@@ -111,21 +111,21 @@ const AddEditBookForm = ({ formik, title, buttonName }) => {
                 variant="outlined"
             />
             <TextField
-                error={Boolean(formik.touched.status && formik.errors.status)}
+                error={Boolean(formik.touched.bookStatus && formik.errors.bookStatus)}
                 fullWidth
-                helperText={formik.touched.status && formik.errors.status}
-                name="status"
+                helperText={formik.touched.bookStatus && formik.errors.bookStatus}
+                name="bookStatus"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 margin="dense"
                 label="Status*"
                 select
-                value={formik.values.status}
+                value={formik.values.bookStatus}
                 variant="outlined"
             >
                 {statuses.map(createOptions)}
             </TextField>
-            {formik.values.status === status.inUse.name && (
+            {formik.values.bookStatus === bookStatus.inUse.name && (
                 <HiddenForm formik={formik} createOptions={createOptions} />
             )}
 

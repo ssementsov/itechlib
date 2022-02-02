@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
-@Table(name = "book")
+@Table(name = "suggested_book")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book {
+public class SuggestedBook {
 
     @Id
     @Column(name = "id")
@@ -23,20 +22,14 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "link")
-    private String link;
-
     @Column(name = "author")
     private String author;
 
-    @Column(name = "add_date", updatable = false)
-    private LocalDate createDate;
+    @Column(name = "comment")
+    private String comment;
 
-    @Column(name = "rate")
-    private double rate;
+    @Column(name = "creation_date", updatable = false)
+    private LocalDate createDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
     private Language language;
@@ -45,17 +38,10 @@ public class Book {
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
-    private BookStatus status;
+    private SuggestedBookStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
-    private User owner;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "book")
-    private List<Booking> bookings;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "file_info_id", referencedColumnName = "id")
-    private FileInfo fileInfo;
+    private User creator;
 
 }

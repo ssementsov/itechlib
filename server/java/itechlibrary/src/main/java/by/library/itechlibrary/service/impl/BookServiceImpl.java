@@ -5,8 +5,8 @@ import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.BookStatus;
 import by.library.itechlibrary.entity.FileInfo;
-import by.library.itechlibrary.entity.Status;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
@@ -164,13 +164,13 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    private void updateStatus(Status oldStatus, Status newStatus, long bookId, long ownerId) {
+    private void updateStatus(BookStatus oldBookStatus, BookStatus newBookStatus, long bookId, long ownerId) {
 
         log.info("Try to check permission for changing status.");
 
         checkCurrentUserIsOwner(ownerId);
 
-        if (oldStatus.getName().equals(StatusConstant.IN_USE) && !newStatus.getName().equals(StatusConstant.IN_USE)) {
+        if (oldBookStatus.getName().equals(StatusConstant.IN_USE) && !newBookStatus.getName().equals(StatusConstant.IN_USE)) {
 
             log.info("Disable current booking for for changing status from IN USE.");
 
@@ -186,27 +186,6 @@ public class BookServiceImpl implements BookService {
         if (securityUserDetailsService.getCurrentUserId() != ownerId) {
 
             throw new WrongCurrentUserException("Current user is not owner");
-        }
-    }
-
-    private void setStatus(Book book, String status) {
-
-        if (status.equals(StatusConstant.IN_USE)) {
-
-            book.setStatus(StatusConstant.IN_USE_STATUS);
-
-        } else if (status.equals(StatusConstant.AVAILABLE)) {
-
-            book.setStatus(StatusConstant.AVAILABLE_STATUS);
-
-        } else if (status.equals(StatusConstant.NOT_AVAILABLE)) {
-
-            book.setStatus(StatusConstant.NOT_AVAILABLE_STATUS);
-
-        } else {
-
-            throw new WrongBookStatusException("Status " + status + "has not found.");
-
         }
     }
 
