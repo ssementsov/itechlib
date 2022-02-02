@@ -15,7 +15,7 @@ const createOptions = (option) => {
     );
 };
 
-const AddEditBookForm = ({ formik, title, buttonName }) => {
+const AddEditBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
@@ -39,7 +39,7 @@ const AddEditBookForm = ({ formik, title, buttonName }) => {
                 error={Boolean(formik.touched.author && formik.errors.author)}
                 fullWidth
                 helperText={formik.touched.author && formik.errors.author}
-                label="Author*"
+                label={isSuggestForm ? 'Author' : 'Author*'}
                 margin="dense"
                 name="author"
                 onBlur={formik.handleBlur}
@@ -57,7 +57,7 @@ const AddEditBookForm = ({ formik, title, buttonName }) => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 margin="dense"
-                label="Category*"
+                label={isSuggestForm ? 'Category' : 'Category*'}
                 select
                 value={formik.values.category}
                 variant="outlined"
@@ -74,7 +74,7 @@ const AddEditBookForm = ({ formik, title, buttonName }) => {
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 margin="dense"
-                label="Language*"
+                label={isSuggestForm ? 'Language' : 'Language*'}
                 select
                 value={formik.values.language}
                 variant="outlined"
@@ -89,7 +89,7 @@ const AddEditBookForm = ({ formik, title, buttonName }) => {
                 helperText={
                     formik.touched.description && formik.errors.description
                 }
-                label="Description*"
+                label={isSuggestForm ? 'Comment' : 'Description*'}
                 multiline
                 margin="dense"
                 name="description"
@@ -110,21 +110,25 @@ const AddEditBookForm = ({ formik, title, buttonName }) => {
                 value={formik.values.link}
                 variant="outlined"
             />
-            <TextField
-                error={Boolean(formik.touched.status && formik.errors.status)}
-                fullWidth
-                helperText={formik.touched.status && formik.errors.status}
-                name="status"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                margin="dense"
-                label="Status*"
-                select
-                value={formik.values.status}
-                variant="outlined"
-            >
-                {statuses.map(createOptions)}
-            </TextField>
+            {!isSuggestForm && (
+                <TextField
+                    error={Boolean(
+                        formik.touched.status && formik.errors.status
+                    )}
+                    fullWidth
+                    helperText={formik.touched.status && formik.errors.status}
+                    name="status"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    margin="dense"
+                    label="Status*"
+                    select
+                    value={formik.values.status}
+                    variant="outlined"
+                >
+                    {statuses.map(createOptions)}
+                </TextField>
+            )}
             {formik.values.status === status.inUse.name && (
                 <HiddenForm formik={formik} createOptions={createOptions} />
             )}
@@ -149,6 +153,7 @@ AddEditBookForm.propTypes = {
     formik: PropTypes.object,
     buttonName: PropTypes.string,
     title: PropTypes.string,
+    isSuggestForm: PropTypes.bool,
 };
 
 export default AddEditBookForm;

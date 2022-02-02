@@ -18,6 +18,8 @@ const BooksCatalogue = (props) => {
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
+    const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] =
+        useBoolean();
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const searchedBooks = useMemo(() => {
@@ -100,9 +102,18 @@ const BooksCatalogue = (props) => {
                         search={search}
                         setSearch={setSearch}
                         onCreate={createBook}
-                        open={isAddButtonOpen}
-                        setOpen={setAddButtonOpen}
-                        onClose={setAddButtonClose}
+                        open={{
+                            add: isAddButtonOpen,
+                            suggest: isSuggestButtonOpen,
+                        }}
+                        onOpen={{
+                            add: setAddButtonOpen,
+                            suggest: setSuggestButtonOpen,
+                        }}
+                        onClose={{
+                            add: setAddButtonClose,
+                            suggest: setSuggestButtonClose,
+                        }}
                         title={title}
                     />
                     <Box sx={{ mt: 3 }}>
