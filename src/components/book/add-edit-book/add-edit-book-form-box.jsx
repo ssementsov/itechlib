@@ -4,7 +4,7 @@ import { types } from '../../../types';
 import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
-import AddEditBookForm from './add-edit-book-form';
+import MultipurposeBookForm from '../multipurpose-book-form';
 import { status } from '../../../common/constants/status-constants';
 
 const AddEditBookFormBox = (props) => {
@@ -120,7 +120,7 @@ const AddEditBookFormBox = (props) => {
                             }}
                         />
                     </Box>
-                    <AddEditBookForm
+                    <MultipurposeBookForm
                         formik={formik}
                         title={title}
                         buttonName={buttonName}

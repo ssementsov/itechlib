@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
-import AddEditBookForm from '../add-edit-book/add-edit-book-form';
+import MultipurposeBookForm from '../multipurpose-book-form';
 
 const SuggestBookFormBox = (props) => {
-    const { onClose, title, buttonName, open } = props;
+    const { onClose, title, buttonName, open, onCreate } = props;
     let newBook = {
         title: '',
         author: '',
@@ -38,7 +38,7 @@ const SuggestBookFormBox = (props) => {
                 .max(255, 'Title must be less than 255 symbols')
                 .required('Title is required'),
             author: Yup.string()
-                .min(4, 'Author must be more than 4 symbols')
+                .min(2, 'Author must be more than 2 symbols')
                 .max(255, 'Author must be less than 255 symbols'),
             category: Yup.string(),
             language: Yup.string(),
@@ -48,7 +48,7 @@ const SuggestBookFormBox = (props) => {
         }),
         validate,
         onSubmit: async (values) => {
-            console.log(values);
+            onCreate(values);
         },
     });
 
@@ -79,7 +79,7 @@ const SuggestBookFormBox = (props) => {
                             }}
                         />
                     </Box>
-                    <AddEditBookForm
+                    <MultipurposeBookForm
                         formik={formik}
                         title={title}
                         buttonName={buttonName}
@@ -96,6 +96,7 @@ SuggestBookFormBox.propTypes = {
     title: PropTypes.string,
     buttonName: PropTypes.string,
     open: PropTypes.bool,
+    onCreate: PropTypes.func.isRequired,
 };
 
 export default SuggestBookFormBox;

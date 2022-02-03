@@ -4,7 +4,7 @@ import StyledModal from '../../styled-modal';
 import SuggestBookFormBox from './suggest-book-form-box';
 
 export default function SuggestBookModal(props) {
-    const { open, onClose } = props;
+    const { open, onClose, onCreate } = props;
     return (
         <StyledModal open={open} onClose={onClose}>
             <SuggestBookFormBox
@@ -12,6 +12,7 @@ export default function SuggestBookModal(props) {
                 buttonName={'Submit'}
                 onClose={onClose}
                 open={open}
+                onCreate={onCreate}
             />
         </StyledModal>
     );
@@ -20,4 +21,5 @@ export default function SuggestBookModal(props) {
 SuggestBookModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    onCreate: PropTypes.func.isRequired,
 };

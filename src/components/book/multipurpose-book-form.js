@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
-import { categories } from './datas-for-form-options/categories';
-import { languages } from './datas-for-form-options/languages';
-import { statuses } from './datas-for-form-options/statuses';
-import HiddenForm from './hidden-form';
-import { status } from '../../../common/constants/status-constants';
+import { categories } from './add-edit-book/datas-for-form-options/categories';
+import { languages } from './add-edit-book/datas-for-form-options/languages';
+import { statuses } from './add-edit-book/datas-for-form-options/statuses';
+import HiddenForm from './add-edit-book/hidden-form';
+import { status } from '../../common/constants/status-constants';
 
 const createOptions = (option) => {
     return (
@@ -15,7 +15,7 @@ const createOptions = (option) => {
     );
 };
 
-const AddEditBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
+const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <Box sx={{ my: 3 }}>
@@ -149,11 +149,11 @@ const AddEditBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
     );
 };
 
-AddEditBookForm.propTypes = {
+MultipurposeBookForm.propTypes = {
     formik: PropTypes.object,
     buttonName: PropTypes.string,
     title: PropTypes.string,
     isSuggestForm: PropTypes.bool,
 };
 
-export default AddEditBookForm;
+export default MultipurposeBookForm;

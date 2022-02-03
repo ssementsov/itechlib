@@ -5,7 +5,9 @@ import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { useState, useMemo } from 'react';
 import { status } from '../common/constants/status-constants';
 import { Book } from '../models/book-model';
+import { SuggestedBook } from './../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
+import { SuggestionAPI } from '../api/suggested-book-api';
 import { category } from '../common/constants/category-constants';
 import { language } from '../common/constants/language-constants';
 import { useBoolean } from '../utils/boolean-hook';
@@ -85,6 +87,35 @@ const BooksCatalogue = (props) => {
             });
     };
 
+    const createSuggestedBook = (suggestedBook) => {
+        let idCategory =
+            suggestedBook.category === category.professional.name
+                ? category.professional.id
+                : category.fiction.id;
+        let idLanguage =
+            suggestedBook.language === language.english.name
+                ? language.english.id
+                : language.russian.id;
+
+        const newSuggestedBook = new SuggestedBook(
+            0,
+            suggestedBook.title,
+            suggestedBook.author,
+            idCategory,
+            suggestedBook.category,
+            idLanguage,
+            suggestedBook.language,
+            suggestedBook.link,
+            suggestedBook.comment
+        );
+
+        SuggestionAPI.createSuggestedBook(newSuggestedBook)
+            .then(() => {
+                setSuggestButtonClose();
+            })
+            .catch(() => defaultErrorSnackbar());
+    };
+
     return (
         <>
             <Head>
@@ -101,7 +132,10 @@ const BooksCatalogue = (props) => {
                     <BooksListToolbar
                         search={search}
                         setSearch={setSearch}
-                        onCreate={createBook}
+                        onCreate={{
+                            add: createBook,
+                            suggest: createSuggestedBook,
+                        }}
                         open={{
                             add: isAddButtonOpen,
                             suggest: isSuggestButtonOpen,

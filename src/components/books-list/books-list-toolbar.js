@@ -20,11 +20,15 @@ const BooksListToolbar = (props) => {
     return (
         <Box>
             <AddBookModal
-                onCreate={onCreate}
+                onCreate={onCreate.add}
                 open={open.add}
                 onClose={onClose.add}
             />
-            <SuggestBookModal open={open.suggest} onClose={onClose.suggest} />
+            <SuggestBookModal
+                onCreate={onCreate.suggest}
+                open={open.suggest}
+                onClose={onClose.suggest}
+            />
 
             <Box
                 sx={{
@@ -87,7 +91,7 @@ const BooksListToolbar = (props) => {
 BooksListToolbar.propTypes = {
     open: PropTypes.objectOf(PropTypes.bool),
     onClose: PropTypes.objectOf(PropTypes.func),
-    onCreate: PropTypes.func.isRequired,
+    onCreate: PropTypes.objectOf(PropTypes.func),
     setSearch: PropTypes.func.isRequired,
     search: PropTypes.string.isRequired,
     onOpen: PropTypes.objectOf(PropTypes.func),
