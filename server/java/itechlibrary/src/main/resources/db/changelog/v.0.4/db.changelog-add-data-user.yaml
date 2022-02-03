@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: 17012022-add-user-data-to-template
-      author: maksim_maevsky
-      changes:
-        sqlFile:
-          dbms:  'postgresql'
-          path:  /db/changelog/v.0.4/sql-import/import-data.sql
-          stripComments:  true

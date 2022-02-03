@@ -95,11 +95,11 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
                 .orElseThrow(() -> new NotFoundException("Suggested book was not found by id = " + id));
     }
 
-    private void checkId(SuggestedBook suggestedBook){
+    private void checkId(SuggestedBook suggestedBook) {
 
-        if(suggestedBook.getId() != 0){
+        if (suggestedBook.getId() != 0) {
 
-         throw new NotNewObjectException("This object has id != 0.");
+            throw new NotNewObjectException("This object has id != 0.");
 
         }
     }
