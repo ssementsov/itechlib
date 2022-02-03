@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -69,6 +70,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         checkId(suggestedBook);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         suggestedBook.setCreator(userService.getUserById(currentUserId));
+        suggestedBook.setCreateDate(LocalDate.now());
         suggestedBook = suggestedBookRepository.save(suggestedBook);
 
         return suggestedBookMapper.toSuggestedBookDto(suggestedBook);
