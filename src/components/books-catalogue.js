@@ -3,13 +3,14 @@ import { Box, Container } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { useState, useMemo } from 'react';
-import { status } from '../common/constants/status-constants';
+import { bookStatus } from '../common/constants/status-constants';
 import { Book } from '../models/book-model';
 import { SuggestedBook } from './../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
 import { SuggestionAPI } from '../api/suggested-book-api';
 import { category } from '../common/constants/category-constants';
 import { language } from '../common/constants/language-constants';
+import { suggestedBookStatus } from './../common/constants/suggested-book-status-constants';
 import { useBoolean } from '../utils/boolean-hook';
 import { PropTypes } from 'prop-types';
 import { types } from '../types';
@@ -48,14 +49,14 @@ const BooksCatalogue = (props) => {
                 : language.russian.id;
         let idStatus;
         switch (newBook.status) {
-            case status.notAvailable.name:
-                idStatus = status.notAvailable.id;
+            case bookStatus.notAvailable.name:
+                idStatus = bookStatus.notAvailable.id;
                 break;
-            case status.inUse.name:
-                idStatus = status.inUse.id;
+            case bookStatus.inUse.name:
+                idStatus = bookStatus.inUse.id;
                 break;
             default:
-                idStatus = status.available.id;
+                idStatus = bookStatus.available.id;
         }
         const createdBook = new Book(
             0,
@@ -105,6 +106,8 @@ const BooksCatalogue = (props) => {
             suggestedBook.category,
             idLanguage,
             suggestedBook.language,
+            suggestedBookStatus.active.id,
+            suggestedBookStatus.active.name,
             suggestedBook.link,
             suggestedBook.comment
         );

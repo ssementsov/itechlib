@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
 import MultipurposeBookForm from '../multipurpose-book-form';
-import { status } from '../../../common/constants/status-constants';
+import { bookStatus } from '../../../common/constants/status-constants';
 
 const AddEditBookFormBox = (props) => {
     const { onClose, onCreate, onEdit, title, buttonName, book } = props;
@@ -49,7 +49,7 @@ const AddEditBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if (value.status === status.inUse) {
+        } else if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
                 error.reader = 'Reader is required';
             }

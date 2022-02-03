@@ -7,6 +7,8 @@ export class SuggestedBook {
         categoryName = '',
         languageId = '',
         languageName = '',
+        statusId = '',
+        statusName = '',
         link = '',
         comment = ''
     ) {
@@ -20,6 +22,10 @@ export class SuggestedBook {
         this.language = {
             id: languageId,
             name: languageName,
+        };
+        this.status = {
+            id: statusId,
+            name: statusName,
         };
         this.link = link;
         this.comment = comment;

@@ -7,14 +7,6 @@ import MultipurposeBookForm from '../multipurpose-book-form';
 
 const SuggestBookFormBox = (props) => {
     const { onClose, title, buttonName, open, onCreate } = props;
-    let newBook = {
-        title: '',
-        author: '',
-        category: '',
-        language: '',
-        comment: '',
-        link: '',
-    };
 
     function validate(value) {
         let error = {};
@@ -31,7 +23,14 @@ const SuggestBookFormBox = (props) => {
     }
 
     const formik = useFormik({
-        initialValues: newBook,
+        initialValues: {
+            title: '',
+            author: '',
+            category: '',
+            language: '',
+            comment: '',
+            link: '',
+        },
         validationSchema: Yup.object({
             title: Yup.string()
                 .min(2, 'Title must be more than 2 symbols')

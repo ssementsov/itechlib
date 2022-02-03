@@ -5,7 +5,7 @@ import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
-import { status } from '../../common/constants/status-constants';
+import { bookStatus } from '../../common/constants/status-constants';
 
 const createOptions = (option) => {
     return (
@@ -81,23 +81,41 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
             >
                 {languages.map(createOptions)}
             </TextField>
-            <TextField
-                error={Boolean(
-                    formik.touched.description && formik.errors.description
-                )}
-                fullWidth
-                helperText={
-                    formik.touched.description && formik.errors.description
-                }
-                label={isSuggestForm ? 'Comment' : 'Description*'}
-                multiline
-                margin="dense"
-                name="description"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                value={formik.values.description}
-                variant="outlined"
-            />
+            {!isSuggestForm ? (
+                <TextField
+                    error={Boolean(
+                        formik.touched.description && formik.errors.description
+                    )}
+                    fullWidth
+                    helperText={
+                        formik.touched.description && formik.errors.description
+                    }
+                    label="Description*"
+                    multiline
+                    margin="dense"
+                    name="description"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.description}
+                    variant="outlined"
+                />
+            ) : (
+                <TextField
+                    error={Boolean(
+                        formik.touched.comment && formik.errors.comment
+                    )}
+                    fullWidth
+                    helperText={formik.touched.comment && formik.errors.comment}
+                    label="Comment"
+                    multiline
+                    margin="dense"
+                    name="comment"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.comment}
+                    variant="outlined"
+                />
+            )}
             <TextField
                 error={Boolean(formik.touched.link && formik.errors.link)}
                 fullWidth
@@ -129,7 +147,7 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
                     {statuses.map(createOptions)}
                 </TextField>
             )}
-            {formik.values.status === status.inUse.name && (
+            {formik.values.status === bookStatus.inUse.name && (
                 <HiddenForm formik={formik} createOptions={createOptions} />
             )}
 
