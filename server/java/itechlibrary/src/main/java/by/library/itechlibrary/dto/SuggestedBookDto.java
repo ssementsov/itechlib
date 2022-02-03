@@ -15,6 +15,8 @@ public class SuggestedBookDto {
 
     private String comment;
 
+    private String link;
+
     private LocalDate createDate;
 
     private LanguageDto language;
