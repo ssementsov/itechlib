@@ -28,6 +28,9 @@ public class SuggestedBook {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "link")
+    private String link;
+
     @Column(name = "creation_date", updatable = false)
     private LocalDate createDate;
 

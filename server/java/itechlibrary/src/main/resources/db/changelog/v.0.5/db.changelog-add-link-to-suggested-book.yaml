@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02022022-add-column-link-to-suggested-book
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: suggested_book
+            columns:
+              - column:
+                  name: link
+                  type: VARCHAR(400)
