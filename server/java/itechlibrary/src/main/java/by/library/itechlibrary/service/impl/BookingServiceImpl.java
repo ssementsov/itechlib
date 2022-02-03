@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
             Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             checkAndSetDates(booking);
             setCurrentUser(booking);
-            setBookAndChangeStatus(booking, StatusConstant.IN_USE_STATUS);
+            setBookAndChangeStatus(booking, StatusConstant.IN_USE_BOOK_STATUS);
             booking = bookingRepository.save(booking);
 
             return bookingMapper.toNewBookingResponseDto(booking);
@@ -131,7 +131,7 @@ public class BookingServiceImpl implements BookingService {
 
         if (booking.isActive()) {
 
-            booking.getBook().setStatus(StatusConstant.AVAILABLE_STATUS);
+            booking.getBook().setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
             booking.setActive(false);
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
             bookingRepository.save(booking);
@@ -263,7 +263,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void setBookAndChangeStatus(Booking booking, Status status) {
+    private void setBookAndChangeStatus(Booking booking, BookStatus bookStatus) {
 
         long bookId = booking.getBook().getId();
         Book book = bookRepository
@@ -271,7 +271,7 @@ public class BookingServiceImpl implements BookingService {
 
         if (book.getStatus().getName().equals(StatusConstant.AVAILABLE)) {
 
-            book.setStatus(status);
+            book.setStatus(bookStatus);
             booking.setBook(book);
 
         } else {

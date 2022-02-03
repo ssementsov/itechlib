@@ -1,11 +1,11 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.entity.Status;
+import by.library.itechlibrary.entity.BookStatus;
 
 public interface StatusService {
 
-    Status findById(short id);
+    BookStatus findById(short id);
 
-    Status findByName(String name);
+    BookStatus findByName(String name);
 
 }

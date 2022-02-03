@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-add-suggested-book.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-data-suggested-status.yaml
+      relativeToChangelogFile: true

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 15122021-add-book-status-category-language
+      id: 02022022-add-suggesting-book
       author: maksim_maevsky
       changes:
         - createTable:
-            tableName: book
+            tableName: suggested_book
             columns:
               - column:
                   name: id
@@ -15,8 +15,13 @@ databaseChangeLog:
                     unique: true
                     primaryKey: true
               - column:
+                  name: creation_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
                   name: title
-                  type: VARCHAR(100)
+                  type: VARCHAR(200)
                   constraints:
                     nullable: false
               - column:
@@ -25,23 +30,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: description
+                  name: comment
                   type: VARCHAR(500)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: link
-                  type: VARCHAR(2048)
-                  constraints:
-                    nullable: true
-              - column:
-                  name: add_date
-                  type: DATE
-                  constraints:
-                    nullable: true
-              - column:
-                  name: status_id
-                  type: SMALLINT
                   constraints:
                     nullable: false
               - column:
@@ -55,18 +45,24 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status_id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
                   name: user_id
                   type: BIGINT
                   constraints:
                     nullable: false
 
 
+
   - changeSet:
-      id: 15122021-add-table-status
+      id: 02022021-add-table-suggested-book-status
       author: maksim_maevsky
       changes:
         - createTable:
-            tableName: book_status
+            tableName: suggested_book_status
             columns:
               - column:
                   name: id
@@ -79,81 +75,46 @@ databaseChangeLog:
                   type: VARCHAR(50)
 
   - changeSet:
-      id: 15122021-add-table-category
-      author: maksim_maevsky
-      changes:
-        - createTable:
-            tableName: category
-            columns:
-              - column:
-                  name: id
-                  type: SMALLINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: name
-                  type: VARCHAR(50)
-
-  - changeSet:
-      id: 15122021-add-table-language
-      author: maksim_maevsky
-      changes:
-        - createTable:
-            tableName: language
-            columns:
-              - column:
-                  name: id
-                  type: SMALLINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-              - column:
-                  name: name
-                  type: VARCHAR(50)
-
-
-  - changeSet:
-      id:  22122021-add-ForeignKeyConstraint-user-to-book
+      id:  02022021-add-ForeignKeyConstraint-user-to-suggested-book
       author:  maksim_maevsky
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: user_id
-            baseTableName: book
-            constraintName: fk_books_user
+            baseTableName: suggested_book
+            constraintName: fk_suggested_book_user
             referencedColumnNames: id
             referencedTableName: user
 
-
   - changeSet:
-      id:  15122021-add-ForeignKeyConstraint-status-to-book
+      id:  02022021-add-ForeignKeyConstraint-sb-status-to-suggested-book
       author:  maksim_maevsky
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: status_id
-            baseTableName: book
-            constraintName: fk_books_status
+            baseTableName: suggested_book
+            constraintName: fk_suggested_book_sb_status
             referencedColumnNames: id
-            referencedTableName: book_status
+            referencedTableName: suggested_book_status
+
 
   - changeSet:
-      id:  15122021-add-ForeignKeyConstraint-category-to-book
+      id:  02022021-add-ForeignKeyConstraint-category-to-suggested-book
       author:  maksim_maevsky
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: category_id
-            baseTableName: book
-            constraintName: fk_books_category
+            baseTableName: suggested_book
+            constraintName: fk_suggested_book_category
             referencedColumnNames: id
             referencedTableName: category
 
   - changeSet:
-      id:  15122021-add-ForeignKeyConstraint-language-to-book
+      id:  02022021-add-ForeignKeyConstraint-language-to-suggested-book
       author:  maksim_maevsky
       changes:
         - addForeignKeyConstraint:
             baseColumnNames: language_id
-            baseTableName: book
-            constraintName: fk_books_language
+            baseTableName: suggested_book
+            constraintName: fk_suggested_book_language
             referencedColumnNames: id
             referencedTableName: language

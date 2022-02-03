@@ -56,3 +56,48 @@ jwt:
   secret: 8b4f7dd2-9884-4b96-af62-66e25441390e
 
 job.cron: "00 00 01 * * *"
+
+idDevelopment: false
+
+application:
+  users:
+    -
+      name: Maksim
+      surname: Mayeusky
+      corpEmail: maksim.mayeuski@itechart-group.com
+      isActive: true
+    -
+      name: Aliaksandr
+      surname: Silchanka
+      corpEmail: aliaksandr.silchanka@itechart-group.com
+      isActive: true
+    -
+      name: Siarhei
+      surname: Semiantsou
+      corpEmail: siarhei.semiantsou@itechart-group.com
+      isActive: true
+    -
+      name: Yanina
+      surname: Hutyro
+      corpEmail: yanina.hutyro@itechart-group.com
+      isActive: true
+    -
+      name: Pavel
+      surname: Baranau
+      corpEmail: Pavel.Baranau@itechart-group.com
+      isActive: true
+    -
+      name: Liubou
+      surname: Zhyhalka
+      corpEmail: liubou.zhyhalka@itechart-group.com
+      isActive: true
+    -
+      name: Aleh
+      surname: Bautunou
+      corpEmail: Aleh.Bautunou@itechart-group.com
+      isActive: true
+    -
+      name: Ilyas
+      surname: Sadziyeu
+      corpEmail: ilyas.sadziyeu@itechart-group.com
+      isActive: true
