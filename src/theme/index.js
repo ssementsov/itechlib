@@ -147,8 +147,8 @@ export const theme = createTheme({
                         lineHeight: 1,
                         letterSpacing: 0.5,
                         textTransform: 'uppercase',
-                        textAlign: 'center',
-                        padding: '26px 54px',
+                        textAlign: 'left',
+                        padding: '26px 26px 23px',
                     },
                     '& .MuiTableCell-paddingCheckbox': {
                         paddingTop: 4,
@@ -160,14 +160,14 @@ export const theme = createTheme({
         MuiTableCell: {
             styleOverrides: {
                 root: {
-                    textAlign: 'center',
+                    textAlign: 'left',
                     cursor: 'pointer',
                 },
                 sizeSmall: {
                     padding: '16px',
                 },
                 sizeMedium: {
-                    padding: '19px 0 23px',
+                    padding: '19px  19px 23px',
                 },
                 sizeLarge: {
                     padding: '24px',

@@ -17,6 +17,7 @@ import router from 'next/router';
 import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
 import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExeptFirstLetter } from './../../utils/functions/transform-words';
+import { trimmedString } from './../../utils/functions/trim-long-string';
 
 const BooksListResults = ({ books, isStartedSearch }) => {
     return (
@@ -48,22 +49,28 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                                             key={book.id}
                                             hover
                                         >
-                                            <TableCell>{book.title}</TableCell>
-                                            <TableCell>{book.author}</TableCell>
                                             <TableCell>
+                                                {trimmedString(book.title)}
+                                            </TableCell>
+                                            <TableCell>
+                                                {trimmedString(book.author)}
+                                            </TableCell>
+                                            <TableCell style={{ width: 80 }}>
                                                 {toLowerCaseExeptFirstLetter(
                                                     book.category.name
                                                 )}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={{ width: 80 }}>
                                                 {toLowerCaseExeptFirstLetter(
                                                     book.language.name
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {book.description}
+                                                {trimmedString(
+                                                    book.description
+                                                )}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={{ width: 80 }}>
                                                 <Tooltip
                                                     title={book.rate}
                                                     placement="right"
@@ -81,7 +88,7 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                                                     </span>
                                                 </Tooltip>
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell style={{ width: 80 }}>
                                                 {toLowerCaseExeptFirstLetter(
                                                     book.status.name
                                                 )}

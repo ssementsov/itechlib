@@ -79,7 +79,7 @@ const AddEditBookFormBox = (props) => {
             language: Yup.string().required('Language is required'),
             description: Yup.string()
                 .min(10, 'Description must be more than 10 symbols')
-                .max(100, 'Description must be less than 100 symbols')
+                .max(250, 'Description must be less than 250 symbols')
                 .required('Description is required'),
             status: Yup.string().required('Status is required'),
         }),
