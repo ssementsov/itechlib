@@ -3,11 +3,14 @@ import { Box, Container } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { useState, useMemo } from 'react';
-import { status } from '../common/constants/status-constants';
+import { bookStatus } from '../common/constants/book-status-constants';
 import { Book } from '../models/book-model';
+import { SuggestedBook } from './../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
+import { SuggestionAPI } from '../api/suggested-book-api';
 import { category } from '../common/constants/category-constants';
 import { language } from '../common/constants/language-constants';
+import { suggestedBookStatus } from './../common/constants/suggested-book-status-constants';
 import { useBoolean } from '../utils/boolean-hook';
 import { PropTypes } from 'prop-types';
 import { types } from '../types';
@@ -18,6 +21,8 @@ const BooksCatalogue = (props) => {
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
+    const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] =
+        useBoolean();
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const searchedBooks = useMemo(() => {
@@ -44,14 +49,14 @@ const BooksCatalogue = (props) => {
                 : language.russian.id;
         let idStatus;
         switch (newBook.status) {
-            case status.notAvailable.name:
-                idStatus = status.notAvailable.id;
+            case bookStatus.notAvailable.name:
+                idStatus = bookStatus.notAvailable.id;
                 break;
-            case status.inUse.name:
-                idStatus = status.inUse.id;
+            case bookStatus.inUse.name:
+                idStatus = bookStatus.inUse.id;
                 break;
             default:
-                idStatus = status.available.id;
+                idStatus = bookStatus.available.id;
         }
         const createdBook = new Book(
             0,
@@ -83,6 +88,37 @@ const BooksCatalogue = (props) => {
             });
     };
 
+    const createSuggestedBook = (suggestedBook) => {
+        let idCategory =
+            suggestedBook.category === category.professional.name
+                ? category.professional.id
+                : category.fiction.id;
+        let idLanguage =
+            suggestedBook.language === language.english.name
+                ? language.english.id
+                : language.russian.id;
+
+        const newSuggestedBook = new SuggestedBook(
+            0,
+            suggestedBook.title,
+            suggestedBook.author,
+            idCategory,
+            suggestedBook.category,
+            idLanguage,
+            suggestedBook.language,
+            suggestedBookStatus.active.id,
+            suggestedBookStatus.active.name,
+            suggestedBook.link,
+            suggestedBook.comment
+        );
+
+        SuggestionAPI.createSuggestedBook(newSuggestedBook)
+            .then(() => {
+                setSuggestButtonClose();
+            })
+            .catch(() => defaultErrorSnackbar());
+    };
+
     return (
         <>
             <Head>
@@ -99,10 +135,22 @@ const BooksCatalogue = (props) => {
                     <BooksListToolbar
                         search={search}
                         setSearch={setSearch}
-                        onCreate={createBook}
-                        open={isAddButtonOpen}
-                        setOpen={setAddButtonOpen}
-                        onClose={setAddButtonClose}
+                        onCreate={{
+                            add: createBook,
+                            suggest: createSuggestedBook,
+                        }}
+                        open={{
+                            add: isAddButtonOpen,
+                            suggest: isSuggestButtonOpen,
+                        }}
+                        onOpen={{
+                            add: setAddButtonOpen,
+                            suggest: setSuggestButtonOpen,
+                        }}
+                        onClose={{
+                            add: setAddButtonClose,
+                            suggest: setSuggestButtonClose,
+                        }}
                         title={title}
                     />
                     <Box sx={{ mt: 3 }}>

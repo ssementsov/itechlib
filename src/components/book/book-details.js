@@ -26,7 +26,7 @@ import ReturnBookModal from '../book/return-book/return-book-modal';
 import AssignBookModal from '../book/assign-book/assign-book-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import EditBookModal from '../book/add-edit-book/edit-book-modal';
-import { status } from '../../common/constants/status-constants';
+import { bookStatus } from '../../common/constants/book-status-constants';
 import { language } from '../../common/constants/language-constants';
 import { category } from '../../common/constants/category-constants';
 import { Book } from '../../models/book-model';
@@ -77,7 +77,7 @@ const BookDetails = (props) => {
     }, [isAssigned, router.query.id]);
 
     const deleteBook = () => {
-        if (book.status.name === status.available.name) {
+        if (book.status.name === bookStatus.available.name) {
             BooksAPI.removeBook(book.id)
                 .then(() => {
                     router.back();
@@ -112,14 +112,14 @@ const BookDetails = (props) => {
                 : language.russian.id;
         let idStatus;
         switch (newBook.status) {
-            case status.notAvailable.name:
-                idStatus = status.notAvailable.id;
+            case bookStatus.notAvailable.name:
+                idStatus = bookStatus.notAvailable.id;
                 break;
-            case status.inUse.name:
-                idStatus = status.inUse.id;
+            case bookStatus.inUse.name:
+                idStatus = bookStatus.inUse.id;
                 break;
             default:
-                idStatus = status.available.id;
+                idStatus = bookStatus.available.id;
         }
         const editedBook = new Book(
             newBook.id,
@@ -359,7 +359,7 @@ const BookDetails = (props) => {
                                     variant="contained"
                                     disabled={
                                         book.status.name !==
-                                        status.available.name
+                                        bookStatus.available.name
                                             ? true
                                             : false
                                     }
