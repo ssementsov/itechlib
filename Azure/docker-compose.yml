@@ -72,23 +72,23 @@ services:
     container_name: node_lib
     networks:
       - lib-network
-  nginx:
-    image:  itechlib2022.azurecr.io/ssementsovitechlib_nginx
-    restart: always
-    volumes:
-      - "/etc/nginx/conf.d"
-      - "/etc/nginx/vhost.d"
-      - "/usr/share/nginx/html"
-      - "./volumes/proxy/certs:/etc/nginx/certs:ro"
-    ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host
-      - target: 443
-        published: 443
-        protocol: tcp
-        mode: host
-    container_name: nginx
-    networks:
-      - lib-network
+#  nginx:
+#    image:  itechlib2022.azurecr.io/ssementsovitechlib_nginx
+#    restart: always
+#    volumes:
+#      - "/etc/nginx/conf.d"
+#      - "/etc/nginx/vhost.d"
+#      - "/usr/share/nginx/html"
+#      - "./volumes/proxy/certs:/etc/nginx/certs:ro"
+#    ports:
+#      - target: 80
+#        published: 80
+#        protocol: tcp
+#        mode: host
+#      - target: 443
+#        published: 443
+#        protocol: tcp
+#        mode: host
+#    container_name: nginx
+#    networks:
+#      - lib-network
