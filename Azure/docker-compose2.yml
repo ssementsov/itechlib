@@ -14,10 +14,7 @@ services:
     image: itechlib2022.azurecr.io/ssementsovitechlib_library_service_application
     restart: always
     ports:
-      - target: 8080
-        published: ${LIBRARY_SERVICE_PORT}
-        protocol: tcp
-        mode: host
+      - "8080:8089"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://itech_library_database:5432/${POSTGRES_DB_NAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
@@ -33,10 +30,7 @@ services:
     restart: always
     image: postgres:${POSTGRES_DB_VERSION}
     ports:
-      - target: 5432
-        published: ${POSTGRES_PORT}
-        protocol: tcp
-        mode: host
+      - "5432:5432"
     volumes:
       - itech-lib-data:/var/lib/postgresql/data
     environment:
@@ -54,10 +48,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - target: 80
-        published: 5050
-        protocol: tcp
-        mode: host
+      - "80:5050"
     networks:
       - lib-network
 
@@ -65,10 +56,7 @@ services:
     image: itechlib2022.azurecr.io/ssementsovitechlib_node
     restart: always
     ports:
-      - target: 3000
-        published: 3000
-        protocol: tcp
-        mode: host
+      - "3000:3000"
     container_name: node_lib
     networks:
       - lib-network
