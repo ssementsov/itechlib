@@ -11,7 +11,7 @@ services:
 
   library_service_application:
     container_name: ${LIBRARY_SERVICE_CONTAINER}
-    image: itechlib.azurecr.io/itechlib2021_library_service_application
+    image: itechlib2022.azurecr.io/ssementsovitechlib_library_service_application
     restart: always
     ports:
       - target: 8080
@@ -62,7 +62,7 @@ services:
       - lib-network
 
   node:
-    image: itechlib.azurecr.io/itechlib2021_node
+    image: itechlib2022.azurecr.io/ssementsovitechlib_node
     restart: always
     ports:
       - target: 3000
@@ -73,7 +73,7 @@ services:
     networks:
       - lib-network
   nginx:
-    image:  itechlib.azurecr.io/itechlib2021_nginx
+    image:  itechlib2022.azurecr.io/ssementsovitechlib_nginx
     restart: always
     volumes:
       - "/etc/nginx/conf.d"
