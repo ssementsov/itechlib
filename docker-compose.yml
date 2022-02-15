@@ -31,7 +31,7 @@ services:
     restart: always
     image: postgres:${POSTGRES_DB_VERSION}
     ports:
-      - "5432:${POSTGRES_PORT}"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - itech-lib-data:/var/lib/postgresql/data
     environment:
