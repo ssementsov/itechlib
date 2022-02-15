@@ -56,8 +56,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - target: 5050
-        published: 80
+      - target: 80
+        published: 5050
         protocol: tcp
         mode: host
     networks:
