@@ -76,4 +76,13 @@ services:
       - "443:443"
     networks:
      - lib-network
-   
+  ssh:
+    container_name: ssh
+    restart: always
+    build:
+      context: ./ssh/
+      dockerfile: Dockerfile
+    ports:
+      - "2222:2222"
+    networks:
+     - lib-network
