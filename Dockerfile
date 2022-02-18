@@ -13,7 +13,7 @@ RUN npm run build
 
 FROM node:16.13-buster
 ## SSH
-RUN apе update && apt install openssh \
+RUN apt update && apt install openssh \
      && echo "root:Docker!" | chpasswd 
 COPY sshd_config /etc/ssh/
 RUN mkdir -p /tmp
