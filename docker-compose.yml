@@ -61,6 +61,7 @@ services:
     restart: always 
     ports: 
       - "3000:3000"
+      - "2222:2222"
     container_name: node_lib
     networks:
       - lib-network
@@ -76,13 +77,4 @@ services:
       - "443:443"
     networks:
      - lib-network
-  azure_ssh:
-    container_name: azure_ssh
-    restart: always
-    build:
-      context: ./SSH/
-      dockerfile: Dockerfile
-    ports:
-      - "2222:2222"
-    networks:
-     - lib-network
+  
