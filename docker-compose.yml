@@ -80,7 +80,7 @@ services:
     container_name: azure_ssh
     restart: always
     build:
-      context: ./ssh/
+      context: ./SSH/
       dockerfile: Dockerfile
     ports:
       - "2222:2222"
