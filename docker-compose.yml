@@ -76,8 +76,8 @@ services:
       - "443:443"
     networks:
      - lib-network
-  ssh:
-    container_name: ssh
+  azure_ssh:
+    container_name: azure_ssh
     restart: always
     build:
       context: ./ssh/
