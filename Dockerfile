@@ -13,7 +13,7 @@ RUN npm run build
 
 FROM node:16.13-buster
 ## SSH
-RUN apk apk update && add openssh \
+RUN apk update && apk add openssh \
      && echo "root:Docker!" | chpasswd 
 COPY sshd_config /etc/ssh/
 RUN mkdir -p /tmp
