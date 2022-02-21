@@ -20,6 +20,7 @@ import { toLowerCaseExeptFirstLetter } from "./../../utils/functions/transform-w
 import { trimmedString } from "./../../utils/functions/trim-long-string";
 
 const BooksListResults = ({ books, isStartedSearch }) => {
+   const sortedBooks = books.sort((a, b) => a.id < b.id ? 1 : -1);
    return (
       <Card>
          <PerfectScrollbar>
@@ -38,7 +39,7 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                   </TableHead>
                   <TableBody>
                      {books.length ? (
-                        books.map((book) => {
+                        sortedBooks.map((book) => {
                            return (
                               <TableRow
                                  onClick={() =>
