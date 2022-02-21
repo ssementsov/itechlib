@@ -68,16 +68,19 @@ const AddEditBookFormBox = (props) => {
         initialValues: newBook,
         validationSchema: Yup.object({
             title: Yup.string()
+                .trim()
                 .min(2, 'Title must be more than 2 symbols')
                 .max(255, 'Title must be less than 255 symbols')
                 .required('Title is required'),
             author: Yup.string()
+                .trim()
                 .min(2, 'Author must be more than 2 symbols')
                 .max(255, 'Author must be less than 255 symbols')
                 .required('Author is required'),
             category: Yup.string().required('Category is required'),
             language: Yup.string().required('Language is required'),
             description: Yup.string()
+                .trim()
                 .min(10, 'Description must be more than 10 symbols')
                 .max(250, 'Description must be less than 250 symbols')
                 .required('Description is required'),
