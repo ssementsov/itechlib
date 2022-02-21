@@ -4,12 +4,17 @@ import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
 import MultipurposeBookForm from '../multipurpose-book-form';
+import { limitWordLength } from '../../../utils/functions/limit-word-length';
 
 const SuggestBookFormBox = (props) => {
     const { onClose, title, buttonName, open, onCreate } = props;
 
     function validate(value) {
         let error = {};
+        let title = limitWordLength(value.title);
+        let author = limitWordLength(value.author);
+        let comment = limitWordLength(value.comment);
+
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
@@ -17,6 +22,12 @@ const SuggestBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
+        } else if(title) {
+            error.title = 'Maximum 50 symbols for a single word';
+        } else if(author) {
+            error.author = 'Maximum 50 symbols for a single word';
+        } else if(comment) {
+            error.comment = 'Maximum 50 symbols for a single word';
         }
 
         return error;
@@ -33,15 +44,18 @@ const SuggestBookFormBox = (props) => {
         },
         validationSchema: Yup.object({
             title: Yup.string()
+                .trim()
                 .min(2, 'Title must be more than 2 symbols')
                 .max(255, 'Title must be less than 255 symbols')
                 .required('Title is required'),
             author: Yup.string()
+                .trim()
                 .min(2, 'Author must be more than 2 symbols')
                 .max(255, 'Author must be less than 255 symbols'),
             category: Yup.string(),
             language: Yup.string(),
             comment: Yup.string()
+                .trim()
                 .min(10, 'Comment must be more than 10 symbols')
                 .max(100, 'Comment must be less than 100 symbols'),
         }),

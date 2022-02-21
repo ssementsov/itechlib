@@ -6,6 +6,7 @@ import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
 import MultipurposeBookForm from '../multipurpose-book-form';
 import { bookStatus } from '../../../common/constants/book-status-constants';
+import { limitWordLength } from './../../../utils/functions/limit-word-length';
 
 const AddEditBookFormBox = (props) => {
     const { onClose, onCreate, onEdit, title, buttonName, book } = props;
@@ -42,6 +43,9 @@ const AddEditBookFormBox = (props) => {
 
     function validate(value) {
         let error = {};
+        let title = limitWordLength(value.title);
+        let author = limitWordLength(value.author);
+        let description = limitWordLength(value.description);
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
@@ -49,6 +53,12 @@ const AddEditBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
+        } else if(title) {
+            error.title = 'Maximum 50 symbols for a single word';
+        } else if(author) {
+            error.author = 'Maximum 50 symbols for a single word';
+        }else if(description) {
+            error.description = 'Maximum 50 symbols for a single word';
         } else if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
                 error.reader = 'Reader is required';
