@@ -115,6 +115,12 @@ const BooksCatalogue = (props) => {
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
             .then(() => {
                 setSuggestButtonClose();
+                enqueueSnackbar(
+                    'Book suggestion has been added successfully!',
+                    {
+                        variant: 'success',
+                    }
+                );
             })
             .catch(() => defaultErrorSnackbar());
     };

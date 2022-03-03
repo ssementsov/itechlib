@@ -22,14 +22,13 @@ const SuggestBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if(title) {
+        } else if (title) {
             error.title = 'Maximum 50 symbols for a single word';
-        } else if(author) {
+        } else if (author) {
             error.author = 'Maximum 50 symbols for a single word';
-        } else if(comment) {
+        } else if (comment) {
             error.comment = 'Maximum 50 symbols for a single word';
         }
-
         return error;
     }
 
