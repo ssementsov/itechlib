@@ -5,4 +5,8 @@ export const SuggestionAPI = {
     createSuggestedBook(model) {
         return api.Client.post(`/${EntityTypes.suggestedBooks}`, model);
     },
+
+    getSuggestedBooksList() {
+        return api.Client.get(`/${EntityTypes.suggestedBooks}`);
+    },
 };

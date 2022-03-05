@@ -18,6 +18,7 @@ import { BOOK_PREVIEW_PAGE_PATH } from "../../common/constants/route-constants";
 import { calculateRate } from "./../../utils/functions/calculate-rate";
 import { toLowerCaseExeptFirstLetter } from "./../../utils/functions/transform-words";
 import { trimmedString } from "./../../utils/functions/trim-long-string";
+import { types } from "../../types";
 
 const BooksListResults = ({ books, isStartedSearch }) => {
    const sortedBooks = books.sort((a, b) => a.id < b.id ? 1 : -1);
@@ -120,7 +121,7 @@ const BooksListResults = ({ books, isStartedSearch }) => {
 };
 
 BooksListResults.propTypes = {
-   books: PropTypes.arrayOf(PropTypes.object),
+   books: PropTypes.arrayOf(types.bookTypes),
    isStartedSearch: PropTypes.bool,
 };
 
