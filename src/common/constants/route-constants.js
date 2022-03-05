@@ -8,3 +8,4 @@ export const REGISTER_PATH = '/register';
 export const HELP_PATH = '/help';
 export const BOOK_PREVIEW_PAGE_PATH = '/books';
 export const FEEDBACKS_PATH = '/feedbacks';
+export const SUGGESTED_BOOKS_PATH = '/suggested-books';

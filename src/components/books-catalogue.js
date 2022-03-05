@@ -7,7 +7,7 @@ import { bookStatus } from '../common/constants/book-status-constants';
 import { Book } from '../models/book-model';
 import { SuggestedBook } from './../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
-import { SuggestionAPI } from '../api/suggested-book-api';
+import { SuggestionAPI } from '../api/suggested-books-api';
 import { category } from '../common/constants/category-constants';
 import { language } from '../common/constants/language-constants';
 import { suggestedBookStatus } from './../common/constants/suggested-book-status-constants';
@@ -15,9 +15,16 @@ import { useBoolean } from '../utils/boolean-hook';
 import { PropTypes } from 'prop-types';
 import { types } from '../types';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
 
 const BooksCatalogue = (props) => {
-    const { books, title, onUpdateBooks, onUpdateLoadingStatus } = props;
+    const {
+        books,
+        title,
+        onUpdateBooks,
+        onUpdateLoadingStatus,
+        isSuggestedBooksList,
+    } = props;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
@@ -113,7 +120,7 @@ const BooksCatalogue = (props) => {
         );
 
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
-            .then(() => {
+            .then((res) => {
                 setSuggestButtonClose();
                 enqueueSnackbar(
                     'Book suggestion has been added successfully!',
@@ -121,10 +128,12 @@ const BooksCatalogue = (props) => {
                         variant: 'success',
                     }
                 );
+                const newBooksList = [res.data, ...books];
+                onUpdateBooks(newBooksList);
+                onUpdateLoadingStatus(true);
             })
             .catch(() => defaultErrorSnackbar());
     };
-
     return (
         <>
             <Head>
@@ -160,10 +169,17 @@ const BooksCatalogue = (props) => {
                         title={title}
                     />
                     <Box sx={{ mt: 3 }}>
-                        <BooksListResults
-                            books={searchedBooks}
-                            isStartedSearch={isStartedSearch}
-                        />
+                        {isSuggestedBooksList ? (
+                            <SuggestedBooksListResults
+                                books={searchedBooks}
+                                isStartedSearch={isStartedSearch}
+                            />
+                        ) : (
+                            <BooksListResults
+                                books={searchedBooks}
+                                isStartedSearch={isStartedSearch}
+                            />
+                        )}
                     </Box>
                 </Container>
             </Box>
@@ -176,6 +192,7 @@ BooksCatalogue.propTypes = {
     title: PropTypes.string,
     onUpdateBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
+    isSuggestedBooksList: PropTypes.bool,
 };
 
 export default BooksCatalogue;
