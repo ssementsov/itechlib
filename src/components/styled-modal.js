@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Modal } from '@mui/material';
+import { Card, Modal } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -27,7 +27,7 @@ const StyledModal = (props) => {
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box sx={style}>{children}</Box>
+            <Card sx={style}>{children}</Card>
         </Modal>
     );
 };

@@ -1,13 +1,15 @@
+import PropTypes from 'prop-types';
 import { IconButton } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ThumbDownAltOutlinedIcon from '@mui/icons-material/ThumbDownAltOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import style from './like-icons.module.css';
 
-export const LikeIcons = () => {
+export const LikeIcons = (props) => {
+    const { isView } = props;
     let theme = useTheme();
     return (
-        <div className={style.likeIconArea}>
+        <div className={isView ? style.likeIconViewArea : style.likeIconArea}>
             <span style={{ color: theme.palette.info.main }}>0</span>
             <IconButton
                 color="info"
@@ -28,4 +30,8 @@ export const LikeIcons = () => {
             </IconButton>
         </div>
     );
+};
+
+LikeIcons.propTypes = {
+    isView: PropTypes.bool,
 };

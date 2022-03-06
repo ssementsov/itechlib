@@ -9,4 +9,8 @@ export const SuggestionAPI = {
     getSuggestedBooksList() {
         return api.Client.get(`/${EntityTypes.suggestedBooks}`);
     },
+
+    getSuggestedBook(bookId) {
+        return api.Client.get(`/${EntityTypes.suggestedBooks}/${bookId}`);
+    },
 };

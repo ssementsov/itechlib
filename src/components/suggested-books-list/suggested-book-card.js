@@ -23,7 +23,7 @@ export const SuggestedBookCard = (props) => {
                     display: 'block',
                     width: '100px',
                     objectFit: 'contain',
-                    alignSelf: 'center',
+                    margin: '0 auto',
                 }}
                 component="img"
                 image={isFiction ? fictionImageLink : professionalImageLink}
