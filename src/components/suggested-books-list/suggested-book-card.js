@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import { Card, CardMedia, Typography } from '@mui/material';
-import { fictionImageLink } from '../../assets/images/fiction-image-link';
-import { professionalImageLink } from './../../assets/images/professional-image-link';
 import { LikeIcons } from './like-icons';
 import style from './suggested-book-card.module.css';
 import { types } from '../../types';
 
 export const SuggestedBookCard = (props) => {
-    const { isFiction, book } = props;
+    const { altText, link, book } = props;
     return (
         <Card
             sx={{
@@ -26,8 +24,8 @@ export const SuggestedBookCard = (props) => {
                     margin: '0 auto',
                 }}
                 component="img"
-                image={isFiction ? fictionImageLink : professionalImageLink}
-                alt={isFiction ? 'fiction' : 'professional'}
+                image={link}
+                alt={altText}
             />
             <Typography
                 gutterBottom
@@ -54,6 +52,7 @@ export const SuggestedBookCard = (props) => {
 };
 
 SuggestedBookCard.propTypes = {
-    isFiction: PropTypes.bool,
+    altText: PropTypes.string,
     book: types.suggestedBookTypes,
+    link: PropTypes.string,
 };

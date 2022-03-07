@@ -11,10 +11,8 @@ import {
 import { styled } from '@mui/material/styles';
 import { titles } from '../../common/constants/book-page-titles-constants';
 import { toLowerCaseExeptFirstLetter } from '../../utils/functions/transform-words';
-import { fictionImageLink } from '../../assets/images/fiction-image-link';
-import { professionalImageLink } from '../../assets/images/professional-image-link';
-import { category } from '../../common/constants/category-constants';
 import { LikeIcons } from '../suggested-books-list/like-icons';
+import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -30,7 +28,7 @@ const TitleTblCell = styled(TblCell)(() => ({
 
 export default function SuggestedBookInfo(props) {
     const { book } = props;
-    const isFiction = category.fiction.name === book.category.name;
+    const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
     return (
         <>
             <CardMedia
@@ -41,8 +39,8 @@ export default function SuggestedBookInfo(props) {
                     margin: '0 auto',
                 }}
                 component="img"
-                image={isFiction ? fictionImageLink : professionalImageLink}
-                alt={isFiction ? 'fiction' : 'professional'}
+                image={bookIconLink}
+                alt={altText}
             />
             <CardContent style={{ paddingBottom: '0' }}>
                 <Table>

@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Button, Card, Divider, Grid, Stack, Typography } from '@mui/material';
-import { category } from './../../common/constants/category-constants';
 import { SuggestedBookCard } from './suggested-book-card';
 import { types } from '../../types/index.js';
 import SuggestedBookModal from '../suggested-book/suggested-book-modal';
 import { useBoolean } from '../../utils/boolean-hook';
 import { SuggestionAPI } from '../../api/suggested-books-api';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
+import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 
 const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
     const [
@@ -66,8 +66,8 @@ const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
                         columns={{ xs: 4, sm: 8, md: 12 }}
                     >
                         {sortedBooks.map((book) => {
-                            const fiction =
-                                category.fiction.name === book.category.name;
+                            const { bookIconLink, altText } =
+                                getLinkAndAltTextofBookIcon(book);
                             return (
                                 <Grid
                                     item
@@ -80,8 +80,9 @@ const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
                                     }
                                 >
                                     <SuggestedBookCard
-                                        isFiction={fiction}
+                                        link={bookIconLink}
                                         book={book}
+                                        altText={altText}
                                     />
                                 </Grid>
                             );
