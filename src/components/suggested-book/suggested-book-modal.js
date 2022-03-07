@@ -2,13 +2,13 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import StyledModal from '../styled-modal';
 import { types } from '../../types';
-import SuggestedBookView from './suggested-book-view';
+import SuggestedBookInfo from './suggested-book-info';
 
 export default function SuggestedBookModal(props) {
     const { open, onClose, book } = props;
     return (
         <StyledModal open={open} onClose={onClose}>
-            <SuggestedBookView book={book} />
+            <SuggestedBookInfo book={book} />
         </StyledModal>
     );
 }

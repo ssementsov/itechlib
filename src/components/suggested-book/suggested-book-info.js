@@ -9,7 +9,7 @@ import {
     TableRow,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { titles } from './../../common/constants/book-page-titles-constants';
+import { titles } from '../../common/constants/book-page-titles-constants';
 import { toLowerCaseExeptFirstLetter } from '../../utils/functions/transform-words';
 import { fictionImageLink } from '../../assets/images/fiction-image-link';
 import { professionalImageLink } from '../../assets/images/professional-image-link';
@@ -28,7 +28,7 @@ const TitleTblCell = styled(TblCell)(() => ({
     fontWeight: '700',
 }));
 
-export default function SuggestedBookView(props) {
+export default function SuggestedBookInfo(props) {
     const { book } = props;
     const isFiction = category.fiction.name === book.category.name;
     return (
@@ -100,6 +100,6 @@ export default function SuggestedBookView(props) {
     );
 }
 
-SuggestedBookView.propTypes = {
+SuggestedBookInfo.propTypes = {
     book: types.suggestedBookTypes,
 };

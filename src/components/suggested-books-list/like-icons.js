@@ -9,7 +9,7 @@ export const LikeIcons = (props) => {
     const { isView } = props;
     let theme = useTheme();
     return (
-        <div className={isView ? style.likeIconViewArea : style.likeIconArea}>
+        <div className={isView ? style.likeIconInfoArea : style.likeIconArea}>
             <span style={{ color: theme.palette.info.main }}>0</span>
             <IconButton
                 color="info"
