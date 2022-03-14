@@ -1,8 +1,4 @@
-import {
-    fictionImageLink,
-    professionalImageLink,
-    bookImageLink,
-} from '../../assets/images';
+import { fictionImageLink, professionalImageLink } from '../../assets/images';
 import { category } from '../../common/constants/category-constants';
 
 export function getLinkAndAltTextofBookIcon(book) {
@@ -13,13 +9,9 @@ export function getLinkAndAltTextofBookIcon(book) {
             bookIconLink = fictionImageLink;
             altText = 'fiction';
             break;
-        case category.professional.name:
+        default:
             bookIconLink = professionalImageLink;
             altText = 'professional';
-            break;
-        default:
-            bookIconLink = bookImageLink;
-            altText = 'some book';
     }
     return { bookIconLink, altText };
 }
