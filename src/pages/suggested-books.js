@@ -47,9 +47,9 @@ const SuggestedBooksCatalogue = () => {
         return (
             <BooksCatalogue
                 isSuggestedBooksList={true}
-                books={suggestedBooks}
+                suggestedBooks={suggestedBooks}
                 title={'Suggested books'}
-                onUpdateBooks={updateBooks}
+                onUpdateSuggestedBooks={updateBooks}
                 onUpdateLoadingStatus={updateLoadingStatus}
             />
         );
