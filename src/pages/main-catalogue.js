@@ -13,6 +13,10 @@ const MainCatalogue = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const { defaultErrorSnackbar } = useCustomSnackbar();
 
+    const updateBooks = (booksList) => {
+        setBooks(booksList);
+    };
+
     useEffect(() => {
         BooksAPI.getAllBooks()
             .then((res) => {
@@ -40,7 +44,7 @@ const MainCatalogue = () => {
             <BooksCatalogue
                 books={books}
                 title={'Main catalogue'}
-                onUpdateBooks={setBooks}
+                onUpdateBooks={updateBooks}
                 onUpdateLoadingStatus={setIsLoaded}
             />
         );

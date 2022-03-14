@@ -42,8 +42,8 @@ const userTypes = shape({
 });
 
 const suggestedBookTypes = shape({
-    id: number.isRequired,
-    title: string.isRequired,
+    id: number,
+    title: string,
     author: string,
     category: shape({
         id: number,
@@ -53,12 +53,12 @@ const suggestedBookTypes = shape({
         id: number,
         name: string,
     }),
-    comment: string.isRequired,
+    comment: string,
     link: string,
     status: shape({
         id: number,
         name: string,
-    }).isRequired,
+    }),
     creator: shape({
         corpEmail: string.isRequired,
         googleEmail: string.isRequired,

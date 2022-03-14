@@ -20,8 +20,10 @@ import SuggestedBooksListResults from './suggested-books-list/suggested-books-li
 const BooksCatalogue = (props) => {
     const {
         books,
+        suggestedBooks,
         title,
         onUpdateBooks,
+        onUpdateSuggestedBooks,
         onUpdateLoadingStatus,
         isSuggestedBooksList,
     } = props;
@@ -33,7 +35,7 @@ const BooksCatalogue = (props) => {
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const searchedBooks = useMemo(() => {
-        if (search.length > 1) {
+        if (search.length > 1 && books) {
             setIsStartedSearch(true);
             return books.filter((book) => {
                 return (
@@ -44,6 +46,19 @@ const BooksCatalogue = (props) => {
         }
         return books;
     }, [books, search]);
+
+    const searchedSuggestedBooks = useMemo(() => {
+        if (search.length > 1 && suggestedBooks) {
+            setIsStartedSearch(true);
+            return suggestedBooks.filter((book) => {
+                return (
+                    book.author.toLowerCase().includes(search.toLowerCase()) ||
+                    book.title.toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        }
+        return suggestedBooks;
+    }, [search, suggestedBooks]);
 
     const createBook = (newBook) => {
         let idCategory =
@@ -82,12 +97,14 @@ const BooksCatalogue = (props) => {
         BooksAPI.addBook(createdBook)
             .then((res) => {
                 setAddButtonClose();
+                if (books) {
+                    const newBooksList = [res.data, ...books];
+                    onUpdateBooks(newBooksList);
+                    onUpdateLoadingStatus(true);
+                }
                 enqueueSnackbar('Your book has been added successfully!', {
                     variant: 'success',
                 });
-                const newBooksList = [res.data, ...books];
-                onUpdateBooks(newBooksList);
-                onUpdateLoadingStatus(true);
             })
             .catch(() => {
                 defaultErrorSnackbar();
@@ -122,17 +139,21 @@ const BooksCatalogue = (props) => {
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
             .then((res) => {
                 setSuggestButtonClose();
+                if (suggestedBooks) {
+                    const newBooksList = [...suggestedBooks, res.data];
+                    onUpdateSuggestedBooks(newBooksList);
+                    onUpdateLoadingStatus(true);
+                }
                 enqueueSnackbar(
                     'Book suggestion has been added successfully!',
                     {
                         variant: 'success',
                     }
                 );
-                const newBooksList = [res.data, ...books];
-                onUpdateBooks(newBooksList);
-                onUpdateLoadingStatus(true);
             })
-            .catch(() => defaultErrorSnackbar());
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
     };
     return (
         <>
@@ -171,7 +192,7 @@ const BooksCatalogue = (props) => {
                     <Box sx={{ mt: 3 }}>
                         {isSuggestedBooksList ? (
                             <SuggestedBooksListResults
-                                books={searchedBooks}
+                                books={searchedSuggestedBooks}
                                 isStartedSearch={isStartedSearch}
                             />
                         ) : (
@@ -188,9 +209,10 @@ const BooksCatalogue = (props) => {
 };
 
 BooksCatalogue.propTypes = {
-    book: types.bookTypes,
+    books: PropTypes.arrayOf(types.bookTypes),
     title: PropTypes.string,
     onUpdateBooks: PropTypes.func,
+    onUpdateSuggestedBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
     isSuggestedBooksList: PropTypes.bool,
 };
