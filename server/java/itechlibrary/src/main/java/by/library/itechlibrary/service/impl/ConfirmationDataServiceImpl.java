@@ -26,6 +26,7 @@ public class ConfirmationDataServiceImpl implements ConfirmationDataService {
         ConfirmationData confirmationData = new ConfirmationData();
         UUID code = UUID.randomUUID();
         LocalDate creationDate = LocalDate.now();
+
         confirmationData.setCode(code);
         confirmationData.setRequestDate(creationDate);
 
@@ -33,7 +34,7 @@ public class ConfirmationDataServiceImpl implements ConfirmationDataService {
     }
 
     @Override
-    public void deleteById(long id){
+    public void deleteById(long id) {
 
         log.info("Try to delete Confirmation Data by id = {}", id);
 
