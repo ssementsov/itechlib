@@ -78,8 +78,20 @@ const Register = () => {
                     router.replace(LOGIN_PATH);
                 }
             })
-            .catch(() => {
-                defaultErrorSnackbar();
+            .catch((error) => {
+                if (
+                    error.response.data.message ===
+                    'This User already has a different google address.'
+                ) {
+                    enqueueSnackbar(
+                        'Please select Google account which You provided on sign up page.',
+                        {
+                            variant: 'error',
+                        }
+                    );
+                } else {
+                    defaultErrorSnackbar();
+                }
             });
     };
 
