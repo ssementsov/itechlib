@@ -4,8 +4,9 @@ export const titles = {
     category: 'Category',
     language: 'Language',
     description: 'Description',
-    link: 'Link to external website',
+    link: 'Link',
     rate: 'Rating',
     status: 'Status',
     owner: 'Book owner',
+    comment: 'Comment',
 };

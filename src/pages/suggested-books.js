@@ -1,26 +1,30 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
-import { BooksAPI } from '../api/books-api';
 import BooksCatalogue from '../components/books-catalogue';
+import { SuggestionAPI } from './../api/suggested-books-api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
-import { useRouter } from 'next/router';
 import { LOGIN_PATH } from '../common/constants/route-constants';
 
-const MainCatalogue = () => {
+const SuggestedBooksCatalogue = () => {
     const router = useRouter();
-    const [books, setBooks] = useState([]);
+    const [suggestedBooks, setSuggestedBooks] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const { defaultErrorSnackbar } = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const updateBooks = (booksList) => {
-        setBooks(booksList);
+        setSuggestedBooks(booksList);
+    };
+
+    const updateLoadingStatus = () => {
+        setIsLoaded(true);
     };
 
     useEffect(() => {
-        BooksAPI.getAllBooks()
+        SuggestionAPI.getSuggestedBooksList()
             .then((res) => {
-                setBooks(res.data);
+                setSuggestedBooks(res.data);
                 setIsLoaded(true);
             })
             .catch((err) => {
@@ -31,7 +35,7 @@ const MainCatalogue = () => {
                     defaultErrorSnackbar();
                 }
             });
-    }, [defaultErrorSnackbar, router]);
+    }, [defaultErrorSnackbar, enqueueSnackbar, router]);
 
     if (!isLoaded) {
         return (
@@ -42,16 +46,17 @@ const MainCatalogue = () => {
     } else {
         return (
             <BooksCatalogue
-                books={books}
-                title={'Main catalogue'}
-                onUpdateBooks={updateBooks}
-                onUpdateLoadingStatus={setIsLoaded}
+                isSuggestedBooksList={true}
+                suggestedBooks={suggestedBooks}
+                title={'Suggested books'}
+                onUpdateSuggestedBooks={updateBooks}
+                onUpdateLoadingStatus={updateLoadingStatus}
             />
         );
     }
 };
-MainCatalogue.getLayout = (page) => {
+SuggestedBooksCatalogue.getLayout = (page) => {
     return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export default MainCatalogue;
+export default SuggestedBooksCatalogue;

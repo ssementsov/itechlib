@@ -15,6 +15,7 @@ import {
     MY_BOOKS_PATH,
     REGISTER_PATH,
     HELP_PATH,
+    SUGGESTED_BOOKS_PATH,
 } from '../common/constants/route-constants';
 
 const items = [
@@ -27,6 +28,11 @@ const items = [
         href: MY_BOOKS_PATH,
         icon: <MyBooksIcon fontSize="small" />,
         title: 'My books',
+    },
+    {
+        href: SUGGESTED_BOOKS_PATH,
+        icon: <MyBooksIcon fontSize="small" />,
+        title: 'Suggested books',
     },
     {
         href: REGISTER_PATH,

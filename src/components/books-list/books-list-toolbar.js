@@ -12,13 +12,24 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import AddBookModal from './../book/add-edit-book/add-book-modal';
+import SuggestBookModal from '../book/suggest-book/suggest-book-modal';
 
 const BooksListToolbar = (props) => {
-    const { onCreate, setSearch, search, open, setOpen, onClose, title } =
-        props;
+    const { onCreate, setSearch, search, open, onOpen, onClose, title } = props;
 
     return (
         <Box>
+            <AddBookModal
+                onCreate={onCreate.add}
+                open={open.add}
+                onClose={onClose.add}
+            />
+            <SuggestBookModal
+                onCreate={onCreate.suggest}
+                open={open.suggest}
+                onClose={onClose.suggest}
+            />
+
             <Box
                 sx={{
                     alignItems: 'center',
@@ -32,19 +43,16 @@ const BooksListToolbar = (props) => {
                     {title}
                 </Typography>
                 <Box sx={{ m: 1, display: 'flex' }}>
-                    <Button sx={{ mr: 1 }}>Suggest a book</Button>
+                    <Button onClick={onOpen.suggest} sx={{ mr: 1 }}>
+                        Suggest a book
+                    </Button>
                     <Button
-                        onClick={setOpen}
+                        onClick={onOpen.add}
                         color="primary"
                         variant="contained"
                     >
                         Add a book
                     </Button>
-                    <AddBookModal
-                        onCreate={onCreate}
-                        open={open}
-                        onClose={onClose}
-                    />
                 </Box>
             </Box>
             <Box sx={{ mt: 3 }}>
@@ -81,12 +89,12 @@ const BooksListToolbar = (props) => {
 };
 
 BooksListToolbar.propTypes = {
-    open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onCreate: PropTypes.func.isRequired,
+    open: PropTypes.objectOf(PropTypes.bool),
+    onClose: PropTypes.objectOf(PropTypes.func),
+    onCreate: PropTypes.objectOf(PropTypes.func),
     setSearch: PropTypes.func.isRequired,
     search: PropTypes.string.isRequired,
-    setOpen: PropTypes.func.isRequired,
+    onOpen: PropTypes.objectOf(PropTypes.func),
     title: PropTypes.string.isRequired,
 };
 

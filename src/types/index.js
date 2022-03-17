@@ -41,7 +41,36 @@ const userTypes = shape({
     googleEmail: string.isRequired,
 });
 
+const suggestedBookTypes = shape({
+    id: number,
+    title: string,
+    author: string,
+    category: shape({
+        id: number,
+        name: string,
+    }),
+    language: shape({
+        id: number,
+        name: string,
+    }),
+    comment: string,
+    link: string,
+    status: shape({
+        id: number,
+        name: string,
+    }),
+    creator: shape({
+        corpEmail: string.isRequired,
+        googleEmail: string.isRequired,
+        id: number.isRequired,
+        name: string.isRequired,
+        surname: string.isRequired,
+    }),
+    createDate: PropTypes.arrayOf(PropTypes.number),
+});
+
 export const types = {
     bookTypes,
     userTypes,
+    suggestedBookTypes,
 };

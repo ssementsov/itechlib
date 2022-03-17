@@ -1,51 +1,20 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { types } from '../../../types';
 import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
 import MultipurposeBookForm from '../multipurpose-book-form';
-import { bookStatus } from '../../../common/constants/book-status-constants';
-import { limitWordLength } from './../../../utils/functions/limit-word-length';
+import { limitWordLength } from '../../../utils/functions/limit-word-length';
 
-const AddEditBookFormBox = (props) => {
-    const { onClose, onCreate, onEdit, title, buttonName, book } = props;
-    let newBook;
-
-    if (book) {
-        newBook = {
-            language: book.language.name,
-            category: book.category.name,
-            author: book.author,
-            title: book.title,
-            description: book.description,
-            id: book.id,
-            link: book.link,
-            status: book.status.name,
-            reader: '',
-            startDate: null,
-            finishDate: null,
-        };
-    } else {
-        newBook = {
-            title: '',
-            author: '',
-            category: '',
-            language: '',
-            description: '',
-            link: '',
-            status: '',
-            reader: '',
-            startDate: null,
-            finishDate: null,
-        };
-    }
+const SuggestBookFormBox = (props) => {
+    const { onClose, title, buttonName, open, onCreate } = props;
 
     function validate(value) {
         let error = {};
         let title = limitWordLength(value.title);
         let author = limitWordLength(value.author);
-        let description = limitWordLength(value.description);
+        let comment = limitWordLength(value.comment);
+
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
@@ -53,29 +22,25 @@ const AddEditBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if(title) {
+        } else if (title) {
             error.title = 'Maximum 50 symbols for a single word';
-        } else if(author) {
+        } else if (author) {
             error.author = 'Maximum 50 symbols for a single word';
-        }else if(description) {
-            error.description = 'Maximum 50 symbols for a single word';
-        } else if (value.status === bookStatus.inUse.name) {
-            if (!value.reader) {
-                error.reader = 'Reader is required';
-            }
-            if (!value.startDate) {
-                error.startDate = 'Date is required';
-            }
-            if (!value.finishDate) {
-                error.finishDate = 'Date is required';
-            }
+        } else if (comment) {
+            error.comment = 'Maximum 50 symbols for a single word';
         }
-
         return error;
     }
 
     const formik = useFormik({
-        initialValues: newBook,
+        initialValues: {
+            title: '',
+            author: '',
+            category: '',
+            language: '',
+            comment: '',
+            link: '',
+        },
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
@@ -85,24 +50,17 @@ const AddEditBookFormBox = (props) => {
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be more than 2 symbols')
-                .max(255, 'Author must be less than 255 symbols')
-                .required('Author is required'),
-            category: Yup.string().required('Category is required'),
-            language: Yup.string().required('Language is required'),
-            description: Yup.string()
+                .max(255, 'Author must be less than 255 symbols'),
+            category: Yup.string(),
+            language: Yup.string(),
+            comment: Yup.string()
                 .trim()
-                .min(10, 'Description must be more than 10 symbols')
-                .max(250, 'Description must be less than 250 symbols')
-                .required('Description is required'),
-            status: Yup.string().required('Status is required'),
+                .min(10, 'Comment must be more than 10 symbols')
+                .max(100, 'Comment must be less than 100 symbols'),
         }),
         validate,
         onSubmit: async (values) => {
-            if ('id' in values) {
-                await onEdit(values);
-            } else {
-                await onCreate(values);
-            }
+            onCreate(values);
         },
     });
 
@@ -137,6 +95,7 @@ const AddEditBookFormBox = (props) => {
                         formik={formik}
                         title={title}
                         buttonName={buttonName}
+                        isSuggestForm={open}
                     />
                 </Container>
             </Box>
@@ -144,13 +103,12 @@ const AddEditBookFormBox = (props) => {
     );
 };
 
-AddEditBookFormBox.propTypes = {
+SuggestBookFormBox.propTypes = {
     onClose: PropTypes.func,
-    createBook: PropTypes.func,
-    onEdit: PropTypes.func,
     title: PropTypes.string,
     buttonName: PropTypes.string,
-    book: types.bookTypes,
+    open: PropTypes.bool,
+    onCreate: PropTypes.func.isRequired,
 };
 
-export default AddEditBookFormBox;
+export default SuggestBookFormBox;
