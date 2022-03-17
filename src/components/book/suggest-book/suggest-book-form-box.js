@@ -44,19 +44,19 @@ const SuggestBookFormBox = (props) => {
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
-                .min(2, 'Title must be more than 2 symbols')
-                .max(255, 'Title must be less than 255 symbols')
+                .min(2, 'Title must be 2 or more symbols')
+                .max(255, 'Title must be 255 or less symbols')
                 .required('Title is required'),
             author: Yup.string()
                 .trim()
-                .min(2, 'Author must be more than 2 symbols')
-                .max(255, 'Author must be less than 255 symbols'),
+                .min(2, 'Author must be 2 or more symbols')
+                .max(255, 'Author must be 255 or less symbols'),
             category: Yup.string(),
             language: Yup.string(),
             comment: Yup.string()
                 .trim()
-                .min(10, 'Comment must be more than 10 symbols')
-                .max(100, 'Comment must be less than 100 symbols'),
+                .min(10, 'Comment must be 10 or more symbols')
+                .max(100, 'Comment must be 100 or less symbols'),
         }),
         validate,
         onSubmit: async (values) => {
