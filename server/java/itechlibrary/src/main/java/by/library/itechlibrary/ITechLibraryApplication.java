@@ -13,5 +13,4 @@ public class ITechLibraryApplication {
     public static void main(String[] args) {
         SpringApplication.run(ITechLibraryApplication.class, args);
     }
-
 }
