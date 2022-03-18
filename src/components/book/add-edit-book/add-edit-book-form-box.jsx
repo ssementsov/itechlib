@@ -53,11 +53,11 @@ const AddEditBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if(title) {
+        } else if (title) {
             error.title = 'Maximum 50 symbols for a single word';
-        } else if(author) {
+        } else if (author) {
             error.author = 'Maximum 50 symbols for a single word';
-        }else if(description) {
+        } else if (description) {
             error.description = 'Maximum 50 symbols for a single word';
         } else if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
@@ -79,20 +79,20 @@ const AddEditBookFormBox = (props) => {
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
-                .min(2, 'Title must be more than 2 symbols')
-                .max(255, 'Title must be less than 255 symbols')
+                .min(2, 'Title must be 2 or more symbols')
+                .max(255, 'Title must be 255 or less symbols')
                 .required('Title is required'),
             author: Yup.string()
                 .trim()
-                .min(2, 'Author must be more than 2 symbols')
-                .max(255, 'Author must be less than 255 symbols')
+                .min(2, 'Author must be 2 or more symbols')
+                .max(255, 'Author must be 255 or less symbols')
                 .required('Author is required'),
             category: Yup.string().required('Category is required'),
             language: Yup.string().required('Language is required'),
             description: Yup.string()
                 .trim()
-                .min(10, 'Description must be more than 10 symbols')
-                .max(250, 'Description must be less than 250 symbols')
+                .min(10, 'Description must be 10 or more symbols')
+                .max(250, 'Description must be 250 or less symbols')
                 .required('Description is required'),
             status: Yup.string().required('Status is required'),
         }),
