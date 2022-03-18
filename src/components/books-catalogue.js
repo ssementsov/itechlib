@@ -113,14 +113,28 @@ const BooksCatalogue = (props) => {
     };
 
     const createSuggestedBook = (suggestedBook) => {
-        let idCategory =
-            suggestedBook.category === category.professional.name
-                ? category.professional.id
-                : category.fiction.id;
-        let idLanguage =
-            suggestedBook.language === language.english.name
-                ? language.english.id
-                : language.russian.id;
+        let idCategory = '';
+        switch (suggestedBook.category) {
+            case category.professional.name:
+                idCategory = category.professional.id;
+                break;
+            case category.fiction.name:
+                idCategory = category.fiction.id;
+                break;
+            default:
+                idCategory = '';
+        }
+        let idLanguage = '';
+        switch (suggestedBook.language) {
+            case language.english.name:
+                idLanguage = language.english.id;
+                break;
+            case language.russian.name:
+                idLanguage = language.russian.id;
+                break;
+            default:
+                idLanguage = '';
+        }
 
         const newSuggestedBook = new SuggestedBook(
             0,
