@@ -1,4 +1,4 @@
-package by.library.itechlibrary.service;
+package by.library.itechlibrary.service.scheduler;
 
 import by.library.itechlibrary.entity.ConfirmationData;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
@@ -30,7 +30,7 @@ public class SchedulerService {
 
     }
 
-    private void checkAndDelete(List<ConfirmationData> confirmationDataList){
+    private void checkAndDelete(List<ConfirmationData> confirmationDataList) {
 
         log.info("Check confirmation data's user and delete");
 

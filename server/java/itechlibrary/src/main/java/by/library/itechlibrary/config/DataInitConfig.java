@@ -30,11 +30,15 @@ public class DataInitConfig {
     @PostConstruct
     public void initUserDataToDB() {
 
-        if (userRepository.findById(1).isEmpty()) {
+        List<User> propertyUsers = userMapper.mapUserListFromBaseUserInfos(users);
 
-            List<User> users1 = userMapper.mapUserListFromBaseUserInfos(users);
-            userRepository.saveAll(users1);
+        for (User propertyUser:propertyUsers) {
 
+            if(userRepository.findByCorpEmail(propertyUser.getCorpEmail()).isEmpty()){
+
+                userRepository.save(propertyUser);
+
+            }
         }
     }
 }

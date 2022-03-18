@@ -4,7 +4,6 @@ package by.library.itechlibrary.controller;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.dto.UserProfileDto;
-import by.library.itechlibrary.service.SchedulerService;
 import by.library.itechlibrary.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -2,13 +2,16 @@ package by.library.itechlibrary.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class LanguageDto {
+@NoArgsConstructor
+public class LanguageDto implements Serializable {
 
     private short id;
-
     private String name;
 
 }
