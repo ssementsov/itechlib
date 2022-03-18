@@ -1,6 +1,10 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.CategoryConstant;
+import by.library.itechlibrary.constant.LanguageConstant;
 import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.entity.Category;
+import by.library.itechlibrary.entity.Language;
 import by.library.itechlibrary.entity.SuggestedBook;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.NotNewObjectException;
@@ -67,10 +71,20 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         log.info("Try to save suggested book.");
 
         SuggestedBook suggestedBook = suggestedBookMapper.toSuggestedBook(suggestedBookDto);
+        checkLanguageAndCategory(suggestedBook);
         checkId(suggestedBook);
+
+        log.info("Try to set current user.");
+
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         suggestedBook.setCreator(userService.getUserById(currentUserId));
+
+        log.info("Try to set current date.");
+
         suggestedBook.setCreateDate(LocalDate.now());
+
+        log.info("Try to save suggested book.");
+
         suggestedBook = suggestedBookRepository.save(suggestedBook);
 
         return suggestedBookMapper.toSuggestedBookDto(suggestedBook);
@@ -105,4 +119,36 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         }
     }
+
+    private void checkLanguageAndCategory(SuggestedBook suggestedBook) {
+
+        if (suggestedBook.getLanguage() != null) {
+
+            tryCheckLanguage(suggestedBook.getLanguage());
+
+        }
+
+        if (suggestedBook.getCategory() != null) {
+
+            tryCheckCategory(suggestedBook.getCategory());
+
+        }
+    }
+
+    private void tryCheckLanguage(Language language) {
+
+        if (!LanguageConstant.languages.contains(language)) {
+
+            throw new NotFoundException("Language has not been found.");
+        }
+    }
+
+    private void tryCheckCategory(Category category) {
+
+        if (!CategoryConstant.categories.contains(category)) {
+
+            throw new NotFoundException("Category has not been found.");
+        }
+    }
+
 }

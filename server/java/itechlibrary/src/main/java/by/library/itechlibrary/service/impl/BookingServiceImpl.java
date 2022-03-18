@@ -50,7 +50,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto saveBooking(BookingDto bookingDto) {
+    public BookingResponseDto save(BookingDto bookingDto) {
 
         if (bookingDto.getId() == 0) {
 

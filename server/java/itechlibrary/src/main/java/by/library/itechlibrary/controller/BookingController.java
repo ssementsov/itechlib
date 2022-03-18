@@ -75,7 +75,7 @@ public class BookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookingResponseDto addBook(@Valid @RequestBody BookingDto bookingDto) {
 
-        return bookingService.saveBooking(bookingDto);
+        return bookingService.save(bookingDto);
     }
 
     @PutMapping("/update-finish-date")

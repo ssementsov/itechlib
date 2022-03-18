@@ -2,6 +2,7 @@ package by.library.itechlibrary.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Data
@@ -9,6 +10,7 @@ public class SuggestedBookDto {
 
     private long id;
 
+    @NotNull
     private String title;
 
     private String author;

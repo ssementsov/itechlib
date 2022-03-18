@@ -1,12 +1,17 @@
 package by.library.itechlibrary.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 @Data
-public class CategoryDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CategoryDto implements Serializable {
 
     private short id;
-
     private String name;
 
 }
