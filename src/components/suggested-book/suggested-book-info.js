@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { titles } from '../../common/constants/book-page-titles-constants';
-import { toLowerCaseExeptFirstLetter } from '../../utils/functions/transform-words';
+import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { LikeIcons } from '../suggested-books-list/like-icons';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 
@@ -29,6 +29,9 @@ const TitleTblCell = styled(TblCell)(() => ({
 export default function SuggestedBookInfo(props) {
     const { book } = props;
     const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
+    let noCategoryValue = book.category === null;
+    let noLanguageValue = book.language === null;
+
     return (
         <>
             <CardMedia
@@ -56,17 +59,21 @@ export default function SuggestedBookInfo(props) {
                         <TableRow>
                             <TitleTblCell>{titles.category}</TitleTblCell>
                             <TblCell>
-                                {toLowerCaseExeptFirstLetter(
-                                    book.category.name
-                                )}
+                                {noCategoryValue
+                                    ? ''
+                                    : toLowerCaseExceptFirstLetter(
+                                          book.category.name
+                                      )}
                             </TblCell>
                         </TableRow>
                         <TableRow>
                             <TitleTblCell>{titles.language}</TitleTblCell>
                             <TblCell>
-                                {toLowerCaseExeptFirstLetter(
-                                    book.language.name
-                                )}
+                                {noLanguageValue
+                                    ? ''
+                                    : toLowerCaseExceptFirstLetter(
+                                          book.language.name
+                                      )}
                             </TblCell>
                         </TableRow>
                         <TableRow>
