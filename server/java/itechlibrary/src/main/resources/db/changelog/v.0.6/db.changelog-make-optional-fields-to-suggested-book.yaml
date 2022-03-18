@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 18042022-drop-not-null-constraint-sb-author
+      author: maksim_maevsky
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: VARCHAR
+            columnName: author
+            schemaName: public
+            tableName: suggested_book
+  - changeSet:
+      id: 18042022-drop-not-null-constraint-sb-comment
+      author: maksim_maevsky
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: VARCHAR
+            columnName: comment
+            schemaName: public
+            tableName: suggested_book
+  - changeSet:
+      id: 18042022-drop-not-null-constraint-sb-category-id
+      author: maksim_maevsky
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: SMALLINT
+            columnName: category_id
+            schemaName: public
+            tableName: suggested_book
+  - changeSet:
+      id: 18042022-drop-not-null-constraint-sb-language-id
+      author: liquibase-docs
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: SMALLINT
+            columnName: language_id
+            schemaName: public
+            tableName: suggested_book

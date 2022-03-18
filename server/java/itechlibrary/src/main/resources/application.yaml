@@ -101,3 +101,13 @@ application:
       surname: Sadziyeu
       corpEmail: ilyas.sadziyeu@itechart-group.com
       isActive: true
+    -
+      name: Maksim
+      surname: Chyryk
+      corpEmail: maksim.chyryk@itechart-group.com
+      isActive: true
+    -
+      name: Natallia
+      surname: Halounich
+      corpEmail: natallia.halounich@itechart-group.com
+      isActive: true
