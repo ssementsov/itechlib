@@ -35,7 +35,7 @@ import { BooksAPI } from '../../api/books-api';
 import { BookingsAPI } from './../../api/bookings-api';
 import { useBoolean } from '../../utils/boolean-hook';
 import { calculateRate } from './../../utils/functions/calculate-rate';
-import { toLowerCaseExeptFirstLetter } from '../../utils/functions/transform-words';
+import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import {
     BOOK_PREVIEW_PAGE_PATH,
     FEEDBACKS_PATH,
@@ -247,7 +247,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.category}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExeptFirstLetter(
+                                            {toLowerCaseExceptFirstLetter(
                                                 book.category.name
                                             )}
                                         </TblCell>
@@ -255,7 +255,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.language}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExeptFirstLetter(
+                                            {toLowerCaseExceptFirstLetter(
                                                 book.language.name
                                             )}
                                         </TblCell>
@@ -304,7 +304,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.status}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExeptFirstLetter(
+                                            {toLowerCaseExceptFirstLetter(
                                                 book.status.name
                                             )}
                                         </TblCell>
