@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: db.changelog-make-optional-fields-to-suggested-book.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-suggested-book-vote.yaml
+      relativeToChangelogFile: true
