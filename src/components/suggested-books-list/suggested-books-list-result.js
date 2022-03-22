@@ -8,8 +8,14 @@ import { useBoolean } from '../../utils/boolean-hook';
 import { SuggestionAPI } from '../../api/suggested-books-api';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
+import EditSuggestedBookModal from './../suggested-book/add-edit-suggested-book/edit-suggested-book-modal';
+import { SuggestedBook } from '../../models/suggested-book-model';
+import { category } from '../../common/constants/category-constants';
+import { language } from '../../common/constants/language-constants';
+import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 
-const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
+const SuggestedBooksListResults = (props) => {
+    const { books, isStartedSearch, setIsEdited } = props;
     const [
         isSuggestBookModalOpen,
         setSuggestBookModalOpen,
@@ -17,7 +23,9 @@ const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
     ] = useBoolean();
     const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
     const [suggestedBook, setSuggestedBook] = useState({});
-    const { defaultErrorSnackbar } = useCustomSnackbar();
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
+        useBoolean();
     const filters = ['CATEGORY', 'LANGUAGE', 'POPULARITY'];
 
     const viewSuggestedBookInfo = (bookId) => {
@@ -30,13 +38,86 @@ const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
                 defaultErrorSnackbar();
             });
     };
+
+    const editButtonOpenHandler = () => {
+        setEditButtonOpen();
+        setSuggestBookModalClose();
+    };
+    const editButtonCloseHandler = () => {
+        setEditButtonClose();
+        setSuggestBookModalOpen();
+    };
+
+    const editBook = (newBook) => {
+        let idCategory;
+        switch (newBook.category) {
+            case category.professional.name:
+                idCategory = category.professional.id;
+                break;
+            case category.fiction.name:
+                idCategory = category.fiction.id;
+                break;
+            default:
+                idCategory = '';
+        }
+        let idLanguage;
+        switch (newBook.language) {
+            case language.english.name:
+                idLanguage = language.english.id;
+                break;
+            case language.russian.name:
+                idLanguage = language.russian.id;
+                break;
+            default:
+                idLanguage = '';
+        }
+
+        const editedBook = new SuggestedBook(
+            newBook.id,
+            newBook.title,
+            newBook.author,
+            idCategory,
+            newBook.category,
+            idLanguage,
+            newBook.language,
+            suggestedBookStatus.active.id,
+            suggestedBookStatus.active.name,
+            newBook.link,
+            newBook.comment
+        ).create();
+
+        SuggestionAPI.changeBookInfo(editedBook)
+            .then((res) => {
+                setIsEdited(true);
+                editButtonCloseHandler();
+                setSuggestedBook(res.data);
+                enqueueSnackbar(
+                    'Book suggestion has been added successfully!',
+                    {
+                        variant: 'success',
+                    }
+                );
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
+    };
+
     return (
         <>
             <SuggestedBookModal
                 open={isSuggestBookModalOpen}
                 onClose={setSuggestBookModalClose}
                 book={suggestedBook}
+                onOpen={editButtonOpenHandler}
             />
+            <EditSuggestedBookModal
+                open={isEditButtonOpen}
+                onClose={editButtonCloseHandler}
+                onEdit={editBook}
+                book={suggestedBook}
+            />
+
             <Card
                 sx={{
                     padding: '15px',

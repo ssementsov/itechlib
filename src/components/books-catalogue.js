@@ -5,7 +5,7 @@ import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { useState, useMemo } from 'react';
 import { bookStatus } from '../common/constants/book-status-constants';
 import { Book } from '../models/book-model';
-import { SuggestedBook } from './../models/suggested-book-model';
+import { SuggestedBook } from '../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
 import { SuggestionAPI } from '../api/suggested-books-api';
 import { category } from '../common/constants/category-constants';
@@ -26,6 +26,7 @@ const BooksCatalogue = (props) => {
         onUpdateSuggestedBooks,
         onUpdateLoadingStatus,
         isSuggestedBooksList,
+        setIsEdited,
     } = props;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
@@ -208,6 +209,7 @@ const BooksCatalogue = (props) => {
                             <SuggestedBooksListResults
                                 books={searchedSuggestedBooks}
                                 isStartedSearch={isStartedSearch}
+                                setIsEdited={setIsEdited}
                             />
                         ) : (
                             <BooksListResults

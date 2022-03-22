@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import AddBookModal from './../book/add-edit-book/add-book-modal';
-import SuggestBookModal from '../book/suggest-book/suggest-book-modal';
+import AddSuggestedBookModal from '../suggested-book/add-edit-suggested-book/add-suggested-book-modal';
 
 const BooksListToolbar = (props) => {
     const { onCreate, setSearch, search, open, onOpen, onClose, title } = props;
@@ -24,7 +24,7 @@ const BooksListToolbar = (props) => {
                 open={open.add}
                 onClose={onClose.add}
             />
-            <SuggestBookModal
+            <AddSuggestedBookModal
                 onCreate={onCreate.suggest}
                 open={open.suggest}
                 onClose={onClose.suggest}

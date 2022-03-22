@@ -11,6 +11,7 @@ const SuggestedBooksCatalogue = () => {
     const router = useRouter();
     const [suggestedBooks, setSuggestedBooks] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [isEdited, setIsEdited] = useState(false);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const updateBooks = (booksList) => {
@@ -26,6 +27,7 @@ const SuggestedBooksCatalogue = () => {
             .then((res) => {
                 setSuggestedBooks(res.data);
                 setIsLoaded(true);
+                setIsEdited(false);
             })
             .catch((err) => {
                 if (err.response.status === 403) {
@@ -35,7 +37,7 @@ const SuggestedBooksCatalogue = () => {
                     defaultErrorSnackbar();
                 }
             });
-    }, [defaultErrorSnackbar, enqueueSnackbar, router]);
+    }, [defaultErrorSnackbar, enqueueSnackbar, router, isEdited]);
 
     if (!isLoaded) {
         return (
@@ -51,6 +53,7 @@ const SuggestedBooksCatalogue = () => {
                 title={'Suggested books'}
                 onUpdateSuggestedBooks={updateBooks}
                 onUpdateLoadingStatus={updateLoadingStatus}
+                setIsEdited={setIsEdited}
             />
         );
     }

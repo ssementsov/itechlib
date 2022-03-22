@@ -1,13 +1,18 @@
 import { types } from '../../types';
+import { PropTypes } from 'prop-types';
 import {
+    CardHeader,
     CardContent,
     CardMedia,
+    IconButton,
     Link,
     Table,
     TableBody,
     TableCell,
     TableRow,
 } from '@mui/material';
+import { EditIcon } from '../../icons/edit-icon';
+import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
 import { styled } from '@mui/material/styles';
 import { titles } from '../../common/constants/book-page-titles-constants';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
@@ -27,13 +32,35 @@ const TitleTblCell = styled(TblCell)(() => ({
 }));
 
 export default function SuggestedBookInfo(props) {
-    const { book } = props;
+    const { book, onOpen } = props;
     const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
     let noCategoryValue = book.category === null;
     let noLanguageValue = book.language === null;
+    const corpEmail = localStorage.getItem('corpEmail');
+    let isCreater = book.creator.corpEmail === corpEmail;
 
     return (
         <>
+            <CardHeader
+                sx={{
+                    padding: 0,
+                }}
+                action={
+                    isCreater && (
+                        <>
+                            <IconButton
+                                // onClick={setDeleteButtonOpen}
+                                aria-label="delete"
+                            >
+                                <DarkDeleteIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton onClick={onOpen} aria-label="edit">
+                                <EditIcon fontSize="small" />
+                            </IconButton>
+                        </>
+                    )
+                }
+            />
             <CardMedia
                 sx={{
                     display: 'block',
@@ -107,4 +134,5 @@ export default function SuggestedBookInfo(props) {
 
 SuggestedBookInfo.propTypes = {
     book: types.suggestedBookTypes,
+    onOpen: PropTypes.func,
 };

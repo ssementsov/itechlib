@@ -23,10 +23,10 @@ const style = {
 };
 
 const StyledModal = (props) => {
-    const { open, onClose, children } = props;
+    const { open, onClose, children, ...prop } = props;
 
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal {...prop} open={open} onClose={onClose}>
             <Card sx={style}>{children}</Card>
         </Modal>
     );

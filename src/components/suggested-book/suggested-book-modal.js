@@ -5,10 +5,13 @@ import { types } from '../../types';
 import SuggestedBookInfo from './suggested-book-info';
 
 export default function SuggestedBookModal(props) {
-    const { open, onClose, book } = props;
+    const { open, onClose, book, onOpen } = props;
     return (
         <StyledModal open={open} onClose={onClose}>
-            <SuggestedBookInfo book={book} />
+            <SuggestedBookInfo
+                book={book}
+                onOpen={onOpen}
+            />
         </StyledModal>
     );
 }
@@ -17,4 +20,5 @@ SuggestedBookModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     book: types.suggestedBookTypes,
+    onOpen: PropTypes.func,
 };
