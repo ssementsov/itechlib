@@ -1,4 +1,4 @@
-package by.library.itechlibrary.repository;
+package by.library.itechlibrary.repository.vote;
 
 import by.library.itechlibrary.entity.vote.Vote;
 import org.springframework.data.jpa.repository.JpaRepository;

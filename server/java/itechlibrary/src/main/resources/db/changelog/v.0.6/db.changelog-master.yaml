@@ -3,5 +3,11 @@ databaseChangeLog:
       file: db.changelog-make-optional-fields-to-suggested-book.yaml
       relativeToChangelogFile: true
   - include:
-      file: db.changelog-add-suggested-book-vote.yaml
+      file: db.changelog-add-vote.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-fk-constraints.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-data.yaml
       relativeToChangelogFile: true

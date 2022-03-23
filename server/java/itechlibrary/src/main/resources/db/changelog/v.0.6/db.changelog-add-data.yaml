@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 23032022-add-vote-type-and-vote-object-type-data
+      author: maksim_maevsky
+      changes:
+        sqlFile:
+          dbms: 'postgresql'
+          path: /db/changelog/v.0.6/sql-import/import-data.sql
+          stripComments: true
