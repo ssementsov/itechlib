@@ -27,6 +27,7 @@ const BooksCatalogue = (props) => {
         onUpdateLoadingStatus,
         isSuggestedBooksList,
         setIsEdited,
+        setIsDeleted,
     } = props;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
@@ -210,6 +211,7 @@ const BooksCatalogue = (props) => {
                                 books={searchedSuggestedBooks}
                                 isStartedSearch={isStartedSearch}
                                 setIsEdited={setIsEdited}
+                                setIsDeleted={setIsDeleted}
                             />
                         ) : (
                             <BooksListResults
@@ -231,6 +233,8 @@ BooksCatalogue.propTypes = {
     onUpdateSuggestedBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
     isSuggestedBooksList: PropTypes.bool,
+    setIsDeleted: PropTypes.func.isRequired,
+    setIsEdited: PropTypes.func.isRequired,
 };
 
 export default BooksCatalogue;

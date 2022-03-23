@@ -15,15 +15,15 @@ import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, setIsEdited } = props;
+    const { books, isStartedSearch, setIsEdited, setIsDeleted } = props;
+    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
+    const [suggestedBook, setSuggestedBook] = useState({});
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [
         isSuggestBookModalOpen,
         setSuggestBookModalOpen,
         setSuggestBookModalClose,
     ] = useBoolean();
-    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
-    const [suggestedBook, setSuggestedBook] = useState({});
-    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
         useBoolean();
     const filters = ['CATEGORY', 'LANGUAGE', 'POPULARITY'];
@@ -48,7 +48,7 @@ const SuggestedBooksListResults = (props) => {
         setSuggestBookModalOpen();
     };
 
-    const editBook = (newBook) => {
+    const editSuggestionBook = (newBook) => {
         let idCategory;
         switch (newBook.category) {
             case category.professional.name:
@@ -103,6 +103,21 @@ const SuggestedBooksListResults = (props) => {
             });
     };
 
+    const deleteSuggestedBook = (book, closeDeleteModal) => {
+        SuggestionAPI.removeBook(book.id)
+            .then(() => {
+                closeDeleteModal();
+                setSuggestBookModalClose();
+                setIsDeleted(true);
+                enqueueSnackbar('Book suggestion was deleted successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
+    };
+
     return (
         <>
             <SuggestedBookModal
@@ -110,11 +125,12 @@ const SuggestedBooksListResults = (props) => {
                 onClose={setSuggestBookModalClose}
                 book={suggestedBook}
                 onOpen={editButtonOpenHandler}
+                onDelete={deleteSuggestedBook}
             />
             <EditSuggestedBookModal
                 open={isEditButtonOpen}
                 onClose={editButtonCloseHandler}
-                onEdit={editBook}
+                onEdit={editSuggestionBook}
                 book={suggestedBook}
             />
 
@@ -189,6 +205,8 @@ const SuggestedBooksListResults = (props) => {
 SuggestedBooksListResults.propTypes = {
     isStartedSearch: PropTypes.bool,
     books: PropTypes.arrayOf(types.suggestedBookTypes),
+    setIsDeleted: PropTypes.func.isRequired,
+    setIsEdited: PropTypes.func.isRequired,
 };
 
 export default SuggestedBooksListResults;

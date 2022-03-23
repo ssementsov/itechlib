@@ -18,6 +18,8 @@ import { titles } from '../../common/constants/book-page-titles-constants';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { LikeIcons } from '../suggested-books-list/like-icons';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
+import { useBoolean } from '../../utils/boolean-hook';
+import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -32,13 +34,22 @@ const TitleTblCell = styled(TblCell)(() => ({
 }));
 
 export default function SuggestedBookInfo(props) {
-    const { book, onOpen } = props;
+    const { book, onOpen, onDelete } = props;
     const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
     const corpEmail = localStorage.getItem('corpEmail');
     let isCreater = book.creator.corpEmail === corpEmail;
+    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
+        useBoolean();
 
     return (
         <>
+            <DeleteModal
+                onDelete={() => onDelete(book, setDeleteButtonClose)}
+                open={isDeleteButtonOpen}
+                onClose={setDeleteButtonClose}
+                title={'book suggestion'}
+            />
+
             <CardHeader
                 sx={{
                     padding: 0,
@@ -46,7 +57,10 @@ export default function SuggestedBookInfo(props) {
                 action={
                     isCreater && (
                         <>
-                            <IconButton aria-label="delete">
+                            <IconButton
+                                onClick={setDeleteButtonOpen}
+                                aria-label="delete"
+                            >
                                 <DarkDeleteIcon fontSize="small" />
                             </IconButton>
                             <IconButton onClick={onOpen} aria-label="edit">
@@ -126,4 +140,5 @@ export default function SuggestedBookInfo(props) {
 SuggestedBookInfo.propTypes = {
     book: types.suggestedBookTypes,
     onOpen: PropTypes.func,
+    onDelete: PropTypes.func,
 };
