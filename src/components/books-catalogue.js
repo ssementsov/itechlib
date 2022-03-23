@@ -123,7 +123,7 @@ const BooksCatalogue = (props) => {
                 idCategory = category.fiction.id;
                 break;
             default:
-                idCategory = '';
+                idCategory = 0;
         }
         let idLanguage;
         switch (suggestedBook.language) {
@@ -134,7 +134,7 @@ const BooksCatalogue = (props) => {
                 idLanguage = language.russian.id;
                 break;
             default:
-                idLanguage = '';
+                idLanguage = 0;
         }
 
         const newSuggestedBook = new SuggestedBook(
@@ -149,7 +149,7 @@ const BooksCatalogue = (props) => {
             suggestedBookStatus.active.name,
             suggestedBook.link,
             suggestedBook.comment
-        ).create();
+        );
 
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
             .then((res) => {

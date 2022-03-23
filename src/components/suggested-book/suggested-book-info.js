@@ -34,8 +34,6 @@ const TitleTblCell = styled(TblCell)(() => ({
 export default function SuggestedBookInfo(props) {
     const { book, onOpen } = props;
     const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
-    let noCategoryValue = book.category === null;
-    let noLanguageValue = book.language === null;
     const corpEmail = localStorage.getItem('corpEmail');
     let isCreater = book.creator.corpEmail === corpEmail;
 
@@ -48,10 +46,7 @@ export default function SuggestedBookInfo(props) {
                 action={
                     isCreater && (
                         <>
-                            <IconButton
-                                // onClick={setDeleteButtonOpen}
-                                aria-label="delete"
-                            >
+                            <IconButton aria-label="delete">
                                 <DarkDeleteIcon fontSize="small" />
                             </IconButton>
                             <IconButton onClick={onOpen} aria-label="edit">
@@ -86,21 +81,17 @@ export default function SuggestedBookInfo(props) {
                         <TableRow>
                             <TitleTblCell>{titles.category}</TitleTblCell>
                             <TblCell>
-                                {noCategoryValue
-                                    ? ''
-                                    : toLowerCaseExceptFirstLetter(
-                                          book.category.name
-                                      )}
+                                {toLowerCaseExceptFirstLetter(
+                                    book.category?.name
+                                )}
                             </TblCell>
                         </TableRow>
                         <TableRow>
                             <TitleTblCell>{titles.language}</TitleTblCell>
                             <TblCell>
-                                {noLanguageValue
-                                    ? ''
-                                    : toLowerCaseExceptFirstLetter(
-                                          book.language.name
-                                      )}
+                                {toLowerCaseExceptFirstLetter(
+                                    book.language?.name
+                                )}
                             </TblCell>
                         </TableRow>
                         <TableRow>

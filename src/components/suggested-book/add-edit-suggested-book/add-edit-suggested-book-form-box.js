@@ -10,12 +10,11 @@ import { types } from '../../../types';
 const AddEditSuggestedBookFormBox = (props) => {
     const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
     let newBook;
-
     if (book) {
         newBook = {
             title: book.title,
-            language: book.language === null ? '' : book.language.name,
-            category: book.category === null ? '' : book.category.name,
+            language: book.language?.name || '',
+            category: book.category?.name || '',
             author: book.author,
             comment: book.comment,
             id: book.id,

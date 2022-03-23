@@ -136,7 +136,6 @@ const BookDetails = (props) => {
         );
         BooksAPI.changeBookInfo(editedBook)
             .then((res) => {
-                console.log(res.data);
                 setEditButtonClose();
                 onUpdate(res.data);
                 enqueueSnackbar('Your book has been updated successfully!', {

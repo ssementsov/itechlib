@@ -84,7 +84,7 @@ const SuggestedBooksListResults = (props) => {
             suggestedBookStatus.active.name,
             newBook.link,
             newBook.comment
-        ).create();
+        );
 
         SuggestionAPI.changeBookInfo(editedBook)
             .then((res) => {
