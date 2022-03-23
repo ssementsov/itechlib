@@ -13,4 +13,10 @@ export const SuggestionAPI = {
     getSuggestedBook(bookId) {
         return api.Client.get(`/${EntityTypes.suggestedBooks}/${bookId}`);
     },
+    changeBookInfo(model) {
+        return api.Client.put(`/${EntityTypes.suggestedBooks}`, model);
+    },
+    removeBook(id) {
+        return api.Client.delete(`/${EntityTypes.suggestedBooks}/${id}`);
+    },
 };

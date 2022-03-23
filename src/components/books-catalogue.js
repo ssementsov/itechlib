@@ -5,7 +5,7 @@ import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { useState, useMemo } from 'react';
 import { bookStatus } from '../common/constants/book-status-constants';
 import { Book } from '../models/book-model';
-import { SuggestedBook } from './../models/suggested-book-model';
+import { SuggestedBook } from '../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
 import { SuggestionAPI } from '../api/suggested-books-api';
 import { category } from '../common/constants/category-constants';
@@ -26,6 +26,8 @@ const BooksCatalogue = (props) => {
         onUpdateSuggestedBooks,
         onUpdateLoadingStatus,
         isSuggestedBooksList,
+        setIsEdited,
+        setIsDeleted,
     } = props;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
@@ -122,7 +124,7 @@ const BooksCatalogue = (props) => {
                 idCategory = category.fiction.id;
                 break;
             default:
-                idCategory = '';
+                idCategory = 0;
         }
         let idLanguage;
         switch (suggestedBook.language) {
@@ -133,7 +135,7 @@ const BooksCatalogue = (props) => {
                 idLanguage = language.russian.id;
                 break;
             default:
-                idLanguage = '';
+                idLanguage = 0;
         }
 
         const newSuggestedBook = new SuggestedBook(
@@ -148,7 +150,7 @@ const BooksCatalogue = (props) => {
             suggestedBookStatus.active.name,
             suggestedBook.link,
             suggestedBook.comment
-        ).create();
+        );
 
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
             .then((res) => {
@@ -208,6 +210,8 @@ const BooksCatalogue = (props) => {
                             <SuggestedBooksListResults
                                 books={searchedSuggestedBooks}
                                 isStartedSearch={isStartedSearch}
+                                setIsEdited={setIsEdited}
+                                setIsDeleted={setIsDeleted}
                             />
                         ) : (
                             <BooksListResults
@@ -229,6 +233,8 @@ BooksCatalogue.propTypes = {
     onUpdateSuggestedBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
     isSuggestedBooksList: PropTypes.bool,
+    setIsDeleted: PropTypes.func.isRequired,
+    setIsEdited: PropTypes.func.isRequired,
 };
 
 export default BooksCatalogue;

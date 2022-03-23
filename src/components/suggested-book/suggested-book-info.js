@@ -1,18 +1,25 @@
 import { types } from '../../types';
+import { PropTypes } from 'prop-types';
 import {
+    CardHeader,
     CardContent,
     CardMedia,
+    IconButton,
     Link,
     Table,
     TableBody,
     TableCell,
     TableRow,
 } from '@mui/material';
+import { EditIcon } from '../../icons/edit-icon';
+import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
 import { styled } from '@mui/material/styles';
 import { titles } from '../../common/constants/book-page-titles-constants';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { LikeIcons } from '../suggested-books-list/like-icons';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
+import { useBoolean } from '../../utils/boolean-hook';
+import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -27,13 +34,42 @@ const TitleTblCell = styled(TblCell)(() => ({
 }));
 
 export default function SuggestedBookInfo(props) {
-    const { book } = props;
+    const { book, onOpen, onDelete } = props;
     const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
-    let noCategoryValue = book.category === null;
-    let noLanguageValue = book.language === null;
+    const corpEmail = localStorage.getItem('corpEmail');
+    let isCreater = book.creator.corpEmail === corpEmail;
+    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
+        useBoolean();
 
     return (
         <>
+            <DeleteModal
+                onDelete={() => onDelete(book, setDeleteButtonClose)}
+                open={isDeleteButtonOpen}
+                onClose={setDeleteButtonClose}
+                title={'book suggestion'}
+            />
+
+            <CardHeader
+                sx={{
+                    padding: 0,
+                }}
+                action={
+                    isCreater && (
+                        <>
+                            <IconButton
+                                onClick={setDeleteButtonOpen}
+                                aria-label="delete"
+                            >
+                                <DarkDeleteIcon fontSize="small" />
+                            </IconButton>
+                            <IconButton onClick={onOpen} aria-label="edit">
+                                <EditIcon fontSize="small" />
+                            </IconButton>
+                        </>
+                    )
+                }
+            />
             <CardMedia
                 sx={{
                     display: 'block',
@@ -59,21 +95,17 @@ export default function SuggestedBookInfo(props) {
                         <TableRow>
                             <TitleTblCell>{titles.category}</TitleTblCell>
                             <TblCell>
-                                {noCategoryValue
-                                    ? ''
-                                    : toLowerCaseExceptFirstLetter(
-                                          book.category.name
-                                      )}
+                                {toLowerCaseExceptFirstLetter(
+                                    book.category?.name
+                                )}
                             </TblCell>
                         </TableRow>
                         <TableRow>
                             <TitleTblCell>{titles.language}</TitleTblCell>
                             <TblCell>
-                                {noLanguageValue
-                                    ? ''
-                                    : toLowerCaseExceptFirstLetter(
-                                          book.language.name
-                                      )}
+                                {toLowerCaseExceptFirstLetter(
+                                    book.language?.name
+                                )}
                             </TblCell>
                         </TableRow>
                         <TableRow>
@@ -107,4 +139,6 @@ export default function SuggestedBookInfo(props) {
 
 SuggestedBookInfo.propTypes = {
     book: types.suggestedBookTypes,
+    onOpen: PropTypes.func,
+    onDelete: PropTypes.func,
 };

@@ -3,11 +3,33 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
-import MultipurposeBookForm from '../multipurpose-book-form';
+import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { limitWordLength } from '../../../utils/functions/limit-word-length';
+import { types } from '../../../types';
 
-const SuggestBookFormBox = (props) => {
-    const { onClose, title, buttonName, open, onCreate } = props;
+const AddEditSuggestedBookFormBox = (props) => {
+    const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
+    let newBook;
+    if (book) {
+        newBook = {
+            title: book.title,
+            language: book.language?.name || '',
+            category: book.category?.name || '',
+            author: book.author,
+            comment: book.comment,
+            id: book.id,
+            link: book.link,
+        };
+    } else {
+        newBook = {
+            title: '',
+            author: '',
+            category: '',
+            language: '',
+            comment: '',
+            link: '',
+        };
+    }
 
     function validate(value) {
         let error = {};
@@ -33,14 +55,7 @@ const SuggestBookFormBox = (props) => {
     }
 
     const formik = useFormik({
-        initialValues: {
-            title: '',
-            author: '',
-            category: '',
-            language: '',
-            comment: '',
-            link: '',
-        },
+        initialValues: newBook,
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
@@ -60,7 +75,11 @@ const SuggestBookFormBox = (props) => {
         }),
         validate,
         onSubmit: async (values) => {
-            onCreate(values);
+            if ('id' in values) {
+                await onEdit(values);
+            } else {
+                await onCreate(values);
+            }
         },
     });
 
@@ -103,12 +122,14 @@ const SuggestBookFormBox = (props) => {
     );
 };
 
-SuggestBookFormBox.propTypes = {
+AddEditSuggestedBookFormBox.propTypes = {
     onClose: PropTypes.func,
     title: PropTypes.string,
     buttonName: PropTypes.string,
     open: PropTypes.bool,
-    onCreate: PropTypes.func.isRequired,
+    onCreate: PropTypes.func,
+    onEdit: PropTypes.func,
+    book: types.suggestedBookTypes,
 };
 
-export default SuggestBookFormBox;
+export default AddEditSuggestedBookFormBox;

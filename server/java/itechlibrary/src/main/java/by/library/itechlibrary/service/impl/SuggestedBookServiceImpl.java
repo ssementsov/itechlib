@@ -122,20 +122,44 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
     private void checkLanguageAndCategory(SuggestedBook suggestedBook) {
 
-        if (suggestedBook.getLanguage() != null) {
+        checkLanguage(suggestedBook);
+        checkCategory(suggestedBook);
 
-            tryCheckLanguage(suggestedBook.getLanguage());
+    }
 
-        }
+    private void checkCategory(SuggestedBook suggestedBook) {
 
         if (suggestedBook.getCategory() != null) {
 
-            tryCheckCategory(suggestedBook.getCategory());
+            if (suggestedBook.getCategory().getId() == 0) {
 
+                suggestedBook.setCategory(null);
+
+            } else {
+
+                tryCheckExistenceCategory(suggestedBook.getCategory());
+
+            }
         }
     }
 
-    private void tryCheckLanguage(Language language) {
+    private void checkLanguage(SuggestedBook suggestedBook) {
+
+        if (suggestedBook.getLanguage() != null) {
+
+            if (suggestedBook.getLanguage().getId() == 0) {
+
+                suggestedBook.setLanguage(null);
+
+            } else {
+
+                tryCheckExistenceLanguage(suggestedBook.getLanguage());
+
+            }
+        }
+    }
+
+    private void tryCheckExistenceLanguage(Language language) {
 
         if (!LanguageConstant.languages.contains(language)) {
 
@@ -143,12 +167,11 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         }
     }
 
-    private void tryCheckCategory(Category category) {
+    private void tryCheckExistenceCategory(Category category) {
 
         if (!CategoryConstant.categories.contains(category)) {
 
             throw new NotFoundException("Category has not been found.");
         }
     }
-
 }

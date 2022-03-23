@@ -1,13 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
-import SuggestBookFormBox from './suggest-book-form-box';
+import AddEditSuggestedBookFormBox from './add-edit-suggested-book-form-box';
 
-export default function SuggestBookModal(props) {
+export default function AddSuggestedBookModal(props) {
     const { open, onClose, onCreate } = props;
     return (
         <StyledModal open={open} onClose={onClose}>
-            <SuggestBookFormBox
+            <AddEditSuggestedBookFormBox
                 title={'Suggest a book'}
                 buttonName={'Submit'}
                 onClose={onClose}
@@ -18,8 +18,8 @@ export default function SuggestBookModal(props) {
     );
 }
 
-SuggestBookModal.propTypes = {
+AddSuggestedBookModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
-    onCreate: PropTypes.func.isRequired,
+    onCreate: PropTypes.func,
 };

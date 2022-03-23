@@ -8,16 +8,24 @@ import { useBoolean } from '../../utils/boolean-hook';
 import { SuggestionAPI } from '../../api/suggested-books-api';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
+import EditSuggestedBookModal from './../suggested-book/add-edit-suggested-book/edit-suggested-book-modal';
+import { SuggestedBook } from '../../models/suggested-book-model';
+import { category } from '../../common/constants/category-constants';
+import { language } from '../../common/constants/language-constants';
+import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 
-const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
+const SuggestedBooksListResults = (props) => {
+    const { books, isStartedSearch, setIsEdited, setIsDeleted } = props;
+    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
+    const [suggestedBook, setSuggestedBook] = useState({});
+    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [
         isSuggestBookModalOpen,
         setSuggestBookModalOpen,
         setSuggestBookModalClose,
     ] = useBoolean();
-    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
-    const [suggestedBook, setSuggestedBook] = useState({});
-    const { defaultErrorSnackbar } = useCustomSnackbar();
+    const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
+        useBoolean();
     const filters = ['CATEGORY', 'LANGUAGE', 'POPULARITY'];
 
     const viewSuggestedBookInfo = (bookId) => {
@@ -30,13 +38,102 @@ const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
                 defaultErrorSnackbar();
             });
     };
+
+    const editButtonOpenHandler = () => {
+        setEditButtonOpen();
+        setSuggestBookModalClose();
+    };
+    const editButtonCloseHandler = () => {
+        setEditButtonClose();
+        setSuggestBookModalOpen();
+    };
+
+    const editSuggestionBook = (newBook) => {
+        let idCategory;
+        switch (newBook.category) {
+            case category.professional.name:
+                idCategory = category.professional.id;
+                break;
+            case category.fiction.name:
+                idCategory = category.fiction.id;
+                break;
+            default:
+                idCategory = '';
+        }
+        let idLanguage;
+        switch (newBook.language) {
+            case language.english.name:
+                idLanguage = language.english.id;
+                break;
+            case language.russian.name:
+                idLanguage = language.russian.id;
+                break;
+            default:
+                idLanguage = '';
+        }
+
+        const editedBook = new SuggestedBook(
+            newBook.id,
+            newBook.title,
+            newBook.author,
+            idCategory,
+            newBook.category,
+            idLanguage,
+            newBook.language,
+            suggestedBookStatus.active.id,
+            suggestedBookStatus.active.name,
+            newBook.link,
+            newBook.comment
+        );
+
+        SuggestionAPI.changeBookInfo(editedBook)
+            .then((res) => {
+                setIsEdited(true);
+                editButtonCloseHandler();
+                setSuggestedBook(res.data);
+                enqueueSnackbar(
+                    'Book suggestion has been added successfully!',
+                    {
+                        variant: 'success',
+                    }
+                );
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
+    };
+
+    const deleteSuggestedBook = (book, closeDeleteModal) => {
+        SuggestionAPI.removeBook(book.id)
+            .then(() => {
+                closeDeleteModal();
+                setSuggestBookModalClose();
+                setIsDeleted(true);
+                enqueueSnackbar('Book suggestion was deleted successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
+    };
+
     return (
         <>
             <SuggestedBookModal
                 open={isSuggestBookModalOpen}
                 onClose={setSuggestBookModalClose}
                 book={suggestedBook}
+                onOpen={editButtonOpenHandler}
+                onDelete={deleteSuggestedBook}
             />
+            <EditSuggestedBookModal
+                open={isEditButtonOpen}
+                onClose={editButtonCloseHandler}
+                onEdit={editSuggestionBook}
+                book={suggestedBook}
+            />
+
             <Card
                 sx={{
                     padding: '15px',
@@ -108,6 +205,8 @@ const SuggestedBooksListResults = ({ books, isStartedSearch }) => {
 SuggestedBooksListResults.propTypes = {
     isStartedSearch: PropTypes.bool,
     books: PropTypes.arrayOf(types.suggestedBookTypes),
+    setIsDeleted: PropTypes.func.isRequired,
+    setIsEdited: PropTypes.func.isRequired,
 };
 
 export default SuggestedBooksListResults;
