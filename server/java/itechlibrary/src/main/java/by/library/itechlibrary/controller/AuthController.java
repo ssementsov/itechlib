@@ -1,6 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.auth.AuthDto;
+import by.library.itechlibrary.dto.auth.AuthRequestDto;
+import by.library.itechlibrary.dto.auth.AuthResponseDto;
 import by.library.itechlibrary.service.AuthenticationService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class AuthController {
 
 
     @PostMapping
-    public String auth(@RequestBody AuthDto authDto) {
+    public AuthResponseDto auth(@RequestBody AuthRequestDto authRequestDto) {
 
-        return authenticationService.authenticate(authDto);
+        return authenticationService.authenticate(authRequestDto);
     }
 }
