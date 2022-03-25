@@ -37,7 +37,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return getToken(currentUser);
     }
 
-
     private Optional<User> getOptionalUser(AuthDto authDto) {
 
         if (authDto.getEmail() != null) {

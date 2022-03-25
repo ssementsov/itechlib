@@ -11,3 +11,9 @@ databaseChangeLog:
   - include:
       file: db.changelog-add-data.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-vote-object-id-to-vote.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-unique-constraints.yaml
+      relativeToChangelogFile: true

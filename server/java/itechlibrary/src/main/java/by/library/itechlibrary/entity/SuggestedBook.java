@@ -1,5 +1,6 @@
 package by.library.itechlibrary.entity;
 
+import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
