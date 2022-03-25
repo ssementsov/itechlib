@@ -20,7 +20,6 @@ public class AuthDto {
     @JsonProperty("accessToken")
     private String token;
 
-
     @JsonProperty("profileObj")
     private void getEmail(Map<String, String> ya) {
         email = ya.get("email");

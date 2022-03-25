@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 24032022-add-vote-object-id-to-vote
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: vote
+            columns:
+              - column:
+                  name: vote_object_id
+                  type: BIGINT
