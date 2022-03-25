@@ -1,7 +1,8 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.config.JwtProvider;
-import by.library.itechlibrary.dto.auth.AuthDto;
+import by.library.itechlibrary.dto.auth.AuthRequestDto;
+import by.library.itechlibrary.dto.auth.AuthResponseDto;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotActivatedUserException;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -29,19 +30,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public String authenticate(AuthDto authDto) {
+    public AuthResponseDto authenticate(AuthRequestDto authRequestDto) {
 
-        Optional<User> userOptional = getOptionalUser(authDto);
+        Optional<User> userOptional = getOptionalUser(authRequestDto);
         User currentUser = checkAndGetUser(userOptional);
 
-        return getToken(currentUser);
+        return getAuthResponseDto(currentUser);
     }
 
-    private Optional<User> getOptionalUser(AuthDto authDto) {
+    private Optional<User> getOptionalUser(AuthRequestDto authRequestDto) {
 
-        if (authDto.getEmail() != null) {
+        if (authRequestDto.getEmail() != null) {
 
-            return userRepository.findByGoogleEmail(authDto.getEmail());
+            return userRepository.findByGoogleEmail(authRequestDto.getEmail());
 
         } else {
 
@@ -72,5 +73,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return jwtProvider.generateToken(corpEmail);
 
         } else throw new NotActivatedUserException("User has not been activated");
+    }
+
+    private AuthResponseDto getAuthResponseDto(User currentUser) {
+
+        AuthResponseDto authResponseDto = new AuthResponseDto();
+        String token = getToken(currentUser);
+        authResponseDto.setToken(token);
+        tryToSetUserPhoto(currentUser, authResponseDto);
+
+        return authResponseDto;
+    }
+
+    private void tryToSetUserPhoto(User currentUser, AuthResponseDto authResponseDto) {
+
+        if (currentUser.getFileInfo() != null) {
+
+            byte[] userPhoto = currentUser.getFileInfo().getFileData();
+            authResponseDto.setUserPhoto(userPhoto);
+
+        }
     }
 }
