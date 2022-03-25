@@ -17,8 +17,8 @@ import java.util.List;
 @Configuration
 @Data
 @RequiredArgsConstructor
-@ConfigurationProperties(prefix = "application")
-public class DataInitConfig {
+@ConfigurationProperties(prefix = "application-data")
+public class DataInitializationConfig {
 
     private final UserRepository userRepository;
 
@@ -26,15 +26,14 @@ public class DataInitConfig {
 
     private final UserMapper userMapper;
 
-
     @PostConstruct
     public void initUserDataToDB() {
 
         List<User> propertyUsers = userMapper.mapUserListFromBaseUserInfos(users);
 
-        for (User propertyUser:propertyUsers) {
+        for (User propertyUser : propertyUsers) {
 
-            if(userRepository.findByCorpEmail(propertyUser.getCorpEmail()).isEmpty()){
+            if (userRepository.findByCorpEmail(propertyUser.getCorpEmail()).isEmpty()) {
 
                 userRepository.save(propertyUser);
 
