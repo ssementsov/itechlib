@@ -4,6 +4,8 @@ import by.library.itechlibrary.constant.vote.VoteConstant;
 import by.library.itechlibrary.dto.vote.VoteDto;
 import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import by.library.itechlibrary.entity.vote.Vote;
+import by.library.itechlibrary.entity.vote.VoteObjectType;
+import by.library.itechlibrary.entity.vote.VoteType;
 import by.library.itechlibrary.exeption_handler.exception.WrongVoteException;
 import by.library.itechlibrary.mapper.VoteMapper;
 import by.library.itechlibrary.repository.vote.VoteRepository;
@@ -37,7 +39,7 @@ public class VoteServiceImpl implements VoteService {
 
         Vote vote = voteMapper.toVote(voteDto);
         setDateAndUserId(vote);
-        checkUniqueVote(vote);
+        checkVote(vote);
 
         log.info("Try to save vote.");
 
@@ -56,6 +58,14 @@ public class VoteServiceImpl implements VoteService {
         return new GeneralAmountVoteDto(positive, negative);
     }
 
+    private void checkVote(Vote vote){
+
+        checkUniqueVote(vote);
+        checkVoteType(vote.getVoteType());
+        checkVoteObjectType(vote.getVoteObjectType());
+
+    }
+
     private void checkUniqueVote(Vote vote) {
 
         Optional<Vote> desiredOptionalVote = voteRepository.findByUserIdAndVoteObjectId(vote.getUserId(), vote.getVoteObjectId());
@@ -63,6 +73,24 @@ public class VoteServiceImpl implements VoteService {
         if (desiredOptionalVote.isPresent()) {
 
             throw new WrongVoteException("This user already voted.");
+
+        }
+    }
+
+    private void checkVoteType(VoteType voteType){
+
+        if(!VoteConstant.VOTE_TYPES.contains(voteType)){
+
+            throw new WrongVoteException("Wrong vote type.");
+
+        }
+    }
+
+    private void checkVoteObjectType(VoteObjectType voteObjectType){
+
+        if(!VoteConstant.VOTE_OBJECT_TYPES.contains(voteObjectType)){
+
+            throw new WrongVoteException("Wrong vote object type.");
 
         }
     }
