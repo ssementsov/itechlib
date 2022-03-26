@@ -14,8 +14,11 @@ import by.library.itechlibrary.repository.SuggestedBookRepository;
 import by.library.itechlibrary.service.SuggestedBookService;
 import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.service.VoteService;
+import by.library.itechlibrary.util.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,12 +43,12 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
 
     @Override
-    public List<SuggestedBookDto> getAll() {
+    public List<SuggestedBookDto> getAll(int pageNumber, int pageCapacity) {
 
         log.info("Try to get all suggested books.");
-
-        List<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll();
-        List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks);
+        Pageable pageable = PageableUtil.getPageable(pageNumber, pageCapacity);
+        Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(pageable);
+        List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
         suggestedBookDtoList.forEach(this::setGeneralAmountVote);
 
         return suggestedBookDtoList;
@@ -185,7 +188,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         }
     }
 
-    private void setGeneralAmountVote(SuggestedBookDto suggestedBookDto){
+    private void setGeneralAmountVote(SuggestedBookDto suggestedBookDto) {
 
         long id = suggestedBookDto.getId();
         GeneralAmountVoteDto generalAmountVoteDto = voteService.countObjectVotes(id);

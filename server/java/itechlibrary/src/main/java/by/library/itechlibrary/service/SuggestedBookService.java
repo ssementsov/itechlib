@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SuggestedBookService {
 
-    List<SuggestedBookDto> getAll();
+    List<SuggestedBookDto> getAll(int pageNumber, int pageCapacity);
 
     SuggestedBookDto getById(long id);
 
