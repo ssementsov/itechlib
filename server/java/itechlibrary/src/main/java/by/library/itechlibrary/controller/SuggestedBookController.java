@@ -1,5 +1,6 @@
 package by.library.itechlibrary.controller;
 
+import by.library.itechlibrary.dto.PageableDto;
 import by.library.itechlibrary.dto.SuggestedBookDto;
 import by.library.itechlibrary.service.SuggestedBookService;
 import io.swagger.annotations.Api;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 
@@ -21,11 +23,11 @@ public class SuggestedBookController {
     private final SuggestedBookService suggestedBookService;
 
     @GetMapping
-    @ApiOperation("get all suggested books")
+    @ApiOperation("get all suggested books, max capacity is 50")
     @ResponseStatus(HttpStatus.OK)
-    public List<SuggestedBookDto> getAll() {
+    public List<SuggestedBookDto> getAll(@PathParam("pageNumber") int pageNumber, @PathParam("pageCapacity") int pageCapacity) {
 
-        return suggestedBookService.getAll();
+        return suggestedBookService.getAll(pageNumber, pageCapacity);
     }
 
     @GetMapping("/{id}")
@@ -35,7 +37,6 @@ public class SuggestedBookController {
 
         return suggestedBookService.getById(id);
     }
-
 
     @PostMapping
     @ApiOperation("create new suggested book")
