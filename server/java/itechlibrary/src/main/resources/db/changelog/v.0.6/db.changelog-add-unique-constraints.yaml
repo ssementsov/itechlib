@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 23032022-add-unique-constraints
+      author: maksim_maevsky
+      changes:
+        - addUniqueConstraint:
+            columnNames:  user_id, vote_object_id
+            constraintName:  uc_user_vot
+            schemaName:  public
+            tableName:  vote

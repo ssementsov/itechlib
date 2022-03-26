@@ -13,13 +13,12 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthDto {
+public class AuthRequestDto {
 
     private String email;
 
     @JsonProperty("accessToken")
     private String token;
-
 
     @JsonProperty("profileObj")
     private void getEmail(Map<String, String> ya) {

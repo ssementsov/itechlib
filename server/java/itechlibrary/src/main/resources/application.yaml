@@ -59,7 +59,10 @@ job.cron: "00 00 01 * * *"
 
 idDevelopment: false
 
-application:
+pageable:
+  capacity: 50
+
+application-data:
   users:
     -
       name: Maksim
@@ -110,4 +113,9 @@ application:
       name: Natallia
       surname: Halounich
       corpEmail: natallia.halounich@itechart-group.com
+      isActive: true
+    -
+      name: TestName
+      surname: TestSurname
+      corpEmail: testitechlib@itechart-group.com
       isActive: true

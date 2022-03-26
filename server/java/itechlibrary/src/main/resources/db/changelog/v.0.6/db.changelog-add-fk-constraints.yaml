@@ -1,0 +1,35 @@
+databaseChangeLog:
+
+  - changeSet:
+      id:  20032022-add-ForeignKeyConstraint-user-to-vote
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: vote
+            constraintName: fk_vote_user
+            referencedColumnNames: id
+            referencedTableName: user
+
+  - changeSet:
+      id:  20032022-add-ForeignKeyConstraint-vote-type-to-vote
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: vote_type_id
+            baseTableName: vote
+            constraintName: fk_vote_vote_type
+            referencedColumnNames: id
+            referencedTableName: vote_type
+
+  - changeSet:
+      id:  20032022-add-ForeignKeyConstraint-vote-object-type-to-vote
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: vote_object_type_id
+            baseTableName: vote
+            constraintName: fk_vote_vote_object_type
+            referencedColumnNames: id
+            referencedTableName: vote_object_type
+

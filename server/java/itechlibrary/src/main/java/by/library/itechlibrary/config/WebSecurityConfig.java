@@ -29,7 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/swagger-ui/**",
-            "/v3/api-docs",
+            "/v3/api-docs"
+
     };
 
     public WebSecurityConfig(JwtFilter jwtFilter) {

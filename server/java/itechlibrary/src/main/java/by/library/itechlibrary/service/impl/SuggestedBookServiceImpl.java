@@ -3,6 +3,7 @@ package by.library.itechlibrary.service.impl;
 import by.library.itechlibrary.constant.CategoryConstant;
 import by.library.itechlibrary.constant.LanguageConstant;
 import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import by.library.itechlibrary.entity.Category;
 import by.library.itechlibrary.entity.Language;
 import by.library.itechlibrary.entity.SuggestedBook;
@@ -12,8 +13,12 @@ import by.library.itechlibrary.mapper.SuggestedBookMapper;
 import by.library.itechlibrary.repository.SuggestedBookRepository;
 import by.library.itechlibrary.service.SuggestedBookService;
 import by.library.itechlibrary.service.UserService;
+import by.library.itechlibrary.service.VoteService;
+import by.library.itechlibrary.util.PageableUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,17 +37,21 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
     private final SecurityUserDetailsServiceImpl securityUserDetailsService;
 
+    private final VoteService voteService;
+
     private final UserService userService;
 
 
     @Override
-    public List<SuggestedBookDto> getAll() {
+    public List<SuggestedBookDto> getAll(int pageNumber, int pageCapacity) {
 
         log.info("Try to get all suggested books.");
+        Pageable pageable = PageableUtil.getPageable(pageNumber, pageCapacity);
+        Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(pageable);
+        List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
+        suggestedBookDtoList.forEach(this::setGeneralAmountVote);
 
-        List<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll();
-
-        return suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks);
+        return suggestedBookDtoList;
     }
 
     @Override
@@ -51,8 +60,10 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         log.info("Try to get suggested book by id.");
 
         SuggestedBook suggestedBook = findById(id);
+        SuggestedBookDto suggestedBookDto = suggestedBookMapper.toSuggestedBookDto(suggestedBook);
+        setGeneralAmountVote(suggestedBookDto);
 
-        return suggestedBookMapper.toSuggestedBookDto(suggestedBook);
+        return suggestedBookDto;
     }
 
     @Override
@@ -101,8 +112,10 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         SuggestedBook oldSuggestedBook = findById(suggestedBookId);
         newSuggestedBook.setCreator(oldSuggestedBook.getCreator());
         newSuggestedBook = suggestedBookRepository.save(newSuggestedBook);
+        SuggestedBookDto updatedSuggestedBookDto = suggestedBookMapper.toSuggestedBookDto(newSuggestedBook);
+        setGeneralAmountVote(updatedSuggestedBookDto);
 
-        return suggestedBookMapper.toSuggestedBookDto(newSuggestedBook);
+        return updatedSuggestedBookDto;
     }
 
     private SuggestedBook findById(long id) {
@@ -173,5 +186,13 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
             throw new NotFoundException("Category has not been found.");
         }
+    }
+
+    private void setGeneralAmountVote(SuggestedBookDto suggestedBookDto) {
+
+        long id = suggestedBookDto.getId();
+        GeneralAmountVoteDto generalAmountVoteDto = voteService.countObjectVotes(id);
+        suggestedBookDto.setAmountVote(generalAmountVoteDto);
+
     }
 }
