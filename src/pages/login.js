@@ -27,8 +27,8 @@ const Login = () => {
         if (resFromGoogle.profileObj.email === googleEmail) {
             UserAPI.auth(resFromGoogle)
                 .then((res) => {
-                    localStorage.setItem('token', res.data);
-                    api.setupAuth(res.data);
+                    localStorage.setItem('token', res.data.token);
+                    api.setupAuth(res.data.token);
                     router.replace(MAIN_CATALOGUE_PATH);
                 })
                 .catch(() => {

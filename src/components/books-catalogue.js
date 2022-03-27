@@ -233,8 +233,8 @@ BooksCatalogue.propTypes = {
     onUpdateSuggestedBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
     isSuggestedBooksList: PropTypes.bool,
-    setIsDeleted: PropTypes.func.isRequired,
-    setIsEdited: PropTypes.func.isRequired,
+    setIsDeleted: PropTypes.func,
+    setIsEdited: PropTypes.func,
 };
 
 export default BooksCatalogue;
