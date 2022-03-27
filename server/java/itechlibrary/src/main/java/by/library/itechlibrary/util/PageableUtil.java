@@ -1,30 +1,29 @@
 package by.library.itechlibrary.util;
 
+import by.library.itechlibrary.constant.PageableConstant;
 import by.library.itechlibrary.exeption_handler.exception.WrongPageableCapacityException;
-import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.Setter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+@Setter
+public final class PageableUtil {
 
-@UtilityClass
-public class PageableUtil {
+    private PageableUtil() {
+    }
 
-    @Value("${pageable.capacity}")
-    private int maxPageableCapacity;
-
-    public Pageable getPageable(int pageNumber, int pageCapacity) {
+    public static Pageable getPageable(int pageNumber, int pageCapacity) {
 
         checkPageCapacity(pageCapacity);
 
         return PageRequest.of(pageNumber, pageCapacity);
     }
 
-    private void checkPageCapacity(int pageCapacity) {
+    private static void checkPageCapacity(int pageCapacity) {
 
-        if(pageCapacity >= maxPageableCapacity){
+        if (pageCapacity > PageableConstant.MAX_CAPACITY_VALUE) {
 
-            throw new WrongPageableCapacityException("Capacity should not be more than " + maxPageableCapacity);
+            throw new WrongPageableCapacityException("Capacity should not be more than " + PageableConstant.MAX_CAPACITY_VALUE);
 
         }
     }
