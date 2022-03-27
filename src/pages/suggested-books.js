@@ -24,7 +24,7 @@ const SuggestedBooksCatalogue = () => {
     };
 
     useEffect(() => {
-        SuggestionAPI.getSuggestedBooksList()
+        SuggestionAPI.getSuggestedBooksList(1, 10)
             .then((res) => {
                 setSuggestedBooks(res.data);
                 setIsLoaded(true);

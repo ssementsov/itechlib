@@ -6,8 +6,13 @@ export const SuggestionAPI = {
         return api.Client.post(`/${EntityTypes.suggestedBooks}`, model);
     },
 
-    getSuggestedBooksList() {
-        return api.Client.get(`/${EntityTypes.suggestedBooks}`);
+    getSuggestedBooksList(pageNumber, count) {
+        return api.Client.get(`/${EntityTypes.suggestedBooks}`, {
+            params: {
+                pageNumber: pageNumber,
+                pageCapacity: count,
+            },
+        });
     },
 
     getSuggestedBook(bookId) {
