@@ -59,9 +59,6 @@ job.cron: "00 00 01 * * *"
 
 idDevelopment: false
 
-pageable:
-  capacity: 50
-
 application-data:
   users:
     -
