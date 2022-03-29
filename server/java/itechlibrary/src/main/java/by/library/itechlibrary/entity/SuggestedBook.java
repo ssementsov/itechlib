@@ -1,12 +1,11 @@
 package by.library.itechlibrary.entity;
 
-import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "suggested_book")
@@ -33,7 +32,7 @@ public class SuggestedBook {
     private String link;
 
     @Column(name = "creation_date", updatable = false)
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
     private Language language;

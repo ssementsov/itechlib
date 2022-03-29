@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +24,7 @@ public class SuggestedBookDto {
 
     private String link;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     private LanguageDto language;
 

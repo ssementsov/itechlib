@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 29032022-change-date-type-to-suggested-book
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName:  creation_date
+            newDataType:  DATETIME
+            schemaName:  public
+            tableName:  suggested_book
