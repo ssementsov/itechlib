@@ -14,7 +14,7 @@ import by.library.itechlibrary.repository.SuggestedBookRepository;
 import by.library.itechlibrary.service.SuggestedBookService;
 import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.service.VoteService;
-import by.library.itechlibrary.util.PageableUtil;
+import by.library.itechlibrary.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -46,7 +46,8 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
     public List<SuggestedBookDto> getAll(int pageNumber, int pageCapacity) {
 
         log.info("Try to get all suggested books.");
-        Pageable pageable = PageableUtil.getPageable(pageNumber, pageCapacity);
+
+        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity);
         Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(pageable);
         List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
         suggestedBookDtoList.forEach(this::setGeneralAmountVote);
