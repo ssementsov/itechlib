@@ -171,7 +171,7 @@ const SuggestedBooksListResults = (props) => {
                                     xs={4}
                                     sm={4}
                                     md={4}
-                                    key={book.id}
+                                    key={book.id + Math.random()}
                                     onClick={() =>
                                         viewSuggestedBookInfo(book.id)
                                     }
