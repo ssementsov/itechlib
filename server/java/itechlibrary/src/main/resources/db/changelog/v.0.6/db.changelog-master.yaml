@@ -17,3 +17,6 @@ databaseChangeLog:
   - include:
       file: db.changelog-add-unique-constraints.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-change-date-type-to-suggested-book.yaml
+      relativeToChangelogFile: true

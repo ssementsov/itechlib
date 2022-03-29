@@ -22,7 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -93,7 +93,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         log.info("Try to set current date.");
 
-        suggestedBook.setCreateDate(LocalDate.now());
+        suggestedBook.setCreateDate(LocalDateTime.now());
 
         log.info("Try to save suggested book.");
 
