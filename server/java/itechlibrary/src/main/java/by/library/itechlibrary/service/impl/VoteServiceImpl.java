@@ -52,10 +52,24 @@ public class VoteServiceImpl implements VoteService {
 
         log.info("Try to count positive and negative votes");
 
+        GeneralAmountVoteDto generalAmountVoteDto = new GeneralAmountVoteDto();
+
         int positive = voteRepository.countVoteByVoteObjectIdAndVoteTypeName(objectId, VoteConstant.VOTE_TYPE_POSITIVE_NAME);
         int negative = voteRepository.countVoteByVoteObjectIdAndVoteTypeName(objectId, VoteConstant.VOTE_TYPE_NEGATIVE_NAME);
+        generalAmountVoteDto.setPositive(positive);
+        generalAmountVoteDto.setNegative(negative);
+        setCurrentUserVote(generalAmountVoteDto, objectId);
 
-        return new GeneralAmountVoteDto(positive, negative);
+        return generalAmountVoteDto;
+    }
+
+    private void setCurrentUserVote(GeneralAmountVoteDto generalAmountVoteDto, long objectId){
+
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+
+        getVoteByUserIdAndVoteObjectId(currentUserId, objectId)
+                .ifPresent(x -> generalAmountVoteDto.setCurrentUserVote(x.getVoteType().getName()));
+
     }
 
     private void checkVote(Vote vote){
@@ -68,9 +82,7 @@ public class VoteServiceImpl implements VoteService {
 
     private void checkUniqueVote(Vote vote) {
 
-        Optional<Vote> desiredOptionalVote = voteRepository.findByUserIdAndVoteObjectId(vote.getUserId(), vote.getVoteObjectId());
-
-        if (desiredOptionalVote.isPresent()) {
+        if (getVoteByUserIdAndVoteObjectId(vote.getUserId(), vote.getVoteObjectId()).isPresent()) {
 
             throw new WrongVoteException("This user already voted.");
 
@@ -102,6 +114,11 @@ public class VoteServiceImpl implements VoteService {
         vote.setDate(LocalDateTime.now());
         vote.setUserId(securityUserDetailsService.getCurrentUserId());
 
+    }
+
+    private Optional<Vote> getVoteByUserIdAndVoteObjectId(long userId, long voteObjectId){
+
+        return voteRepository.findByUserIdAndVoteObjectId(userId, voteObjectId);
     }
 }
 
