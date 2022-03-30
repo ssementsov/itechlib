@@ -13,4 +13,6 @@ public class GeneralAmountVoteDto {
 
     private int negative;
 
+    private String currentUserVote;
+
 }
