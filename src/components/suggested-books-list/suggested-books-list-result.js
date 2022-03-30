@@ -15,7 +15,8 @@ import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, setIsEdited, setIsDeleted } = props;
+    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } =
+        props;
     const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
@@ -88,9 +89,13 @@ const SuggestedBooksListResults = (props) => {
 
         SuggestionAPI.changeBookInfo(editedBook)
             .then((res) => {
-                setIsEdited(true);
                 editButtonCloseHandler();
                 setSuggestedBook(res.data);
+                onUpdateSuggestedBooks(
+                    suggestedBooks.map((book) =>
+                        book.id === res.data.id ? res.data : book
+                    )
+                );
                 enqueueSnackbar(
                     'Book suggestion has been added successfully!',
                     {
@@ -103,12 +108,14 @@ const SuggestedBooksListResults = (props) => {
             });
     };
 
-    const deleteSuggestedBook = (book, closeDeleteModal) => {
-        SuggestionAPI.removeBook(book.id)
+    const deleteSuggestedBook = (deletedBook, closeDeleteModal) => {
+        SuggestionAPI.removeBook(deletedBook.id)
             .then(() => {
                 closeDeleteModal();
                 setSuggestBookModalClose();
-                setIsDeleted(true);
+                onUpdateSuggestedBooks(
+                    suggestedBooks.filter((book) => book.id !== deletedBook.id)
+                );
                 enqueueSnackbar('Book suggestion was deleted successfully!', {
                     variant: 'success',
                 });
@@ -205,8 +212,6 @@ const SuggestedBooksListResults = (props) => {
 SuggestedBooksListResults.propTypes = {
     isStartedSearch: PropTypes.bool,
     books: PropTypes.arrayOf(types.suggestedBookTypes),
-    setIsDeleted: PropTypes.func.isRequired,
-    setIsEdited: PropTypes.func.isRequired,
 };
 
 export default SuggestedBooksListResults;
