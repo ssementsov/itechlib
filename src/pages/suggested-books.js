@@ -6,19 +6,14 @@ import BooksCatalogue from '../components/books-catalogue';
 import { SuggestionAPI } from './../api/suggested-books-api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 import { LOGIN_PATH } from '../common/constants/route-constants';
-import { useVoting } from '../utils/vote-hook';
 
 const SuggestedBooksCatalogue = () => {
     const router = useRouter();
     const [suggestedBooks, setSuggestedBooks] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const [isEdited, setIsEdited] = useState(false);
-    const [isDeleted, setIsDeleted] = useState(false);
-    const { isVoted, setIsVoted, ...rest } = useVoting();
-    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const { defaultErrorSnackbar } = useCustomSnackbar();
 
-    const [isFetchingWhileScrolling, setIsFetchingWhileScrolling] =
-        useState(true);
+    const [isFetchingWhileScrolling, setIsFetchingWhileScrolling] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
     const [emptyPage, setEmptyPage] = useState(false);
 
@@ -42,7 +37,7 @@ const SuggestedBooksCatalogue = () => {
 
     useEffect(() => {
         console.log('eff');
-        if (isFetchingWhileScrolling || isEdited || isDeleted) {
+        if (isFetchingWhileScrolling) {
             console.log('eff2');
             SuggestionAPI.getSuggestedBooksList(currentPage, 9)
                 .then((res) => {
@@ -52,9 +47,6 @@ const SuggestedBooksCatalogue = () => {
                         setSuggestedBooks([...suggestedBooks, ...res.data]);
                         setCurrentPage((prev) => prev + 1);
                         setIsLoaded(true);
-                        setIsEdited(false);
-                        setIsDeleted(false);
-                        setIsVoted(false);
                     }
                 })
                 .catch((err) => {
@@ -69,18 +61,8 @@ const SuggestedBooksCatalogue = () => {
                     setIsFetchingWhileScrolling(false);
                 });
         }
-    }, [
-        defaultErrorSnackbar,
-        enqueueSnackbar,
-        router,
-        isEdited,
-        isDeleted,
-        isFetchingWhileScrolling,
-        isVoted,
-        suggestedBooks,
-        currentPage,
-        setIsVoted,
-    ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaultErrorSnackbar, router, isFetchingWhileScrolling]);
 
     if (!isLoaded) {
         return (
@@ -96,10 +78,6 @@ const SuggestedBooksCatalogue = () => {
                 title={'Suggested books'}
                 onUpdateSuggestedBooks={setSuggestedBooks}
                 onUpdateLoadingStatus={setIsLoaded}
-                setIsEdited={setIsEdited}
-                setIsDeleted={setIsDeleted}
-                setIsVoted={setIsVoted}
-                {...rest}
             />
         );
     }

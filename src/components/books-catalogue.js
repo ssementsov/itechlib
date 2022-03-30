@@ -26,16 +26,11 @@ const BooksCatalogue = (props) => {
         onUpdateSuggestedBooks,
         onUpdateLoadingStatus,
         isSuggestedBooksList,
-        setIsEdited,
-        setIsDeleted,
-        setIsVoted,
-        ...rest
     } = props;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
-    const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] =
-        useBoolean();
+    const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] = useBoolean();
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const searchedBooks = useMemo(() => {
@@ -70,9 +65,7 @@ const BooksCatalogue = (props) => {
                 ? category.professional.id
                 : category.fiction.id;
         let idLanguage =
-            newBook.language === language.english.name
-                ? language.english.id
-                : language.russian.id;
+            newBook.language === language.english.name ? language.english.id : language.russian.id;
         let idStatus;
         switch (newBook.status) {
             case bookStatus.notAvailable.name:
@@ -162,12 +155,9 @@ const BooksCatalogue = (props) => {
                     onUpdateSuggestedBooks(newBooksList);
                     onUpdateLoadingStatus(true);
                 }
-                enqueueSnackbar(
-                    'Book suggestion has been added successfully!',
-                    {
-                        variant: 'success',
-                    }
-                );
+                enqueueSnackbar('Book suggestion has been added successfully!', {
+                    variant: 'success',
+                });
             })
             .catch(() => {
                 defaultErrorSnackbar();
@@ -212,10 +202,8 @@ const BooksCatalogue = (props) => {
                             <SuggestedBooksListResults
                                 books={searchedSuggestedBooks}
                                 isStartedSearch={isStartedSearch}
-                                setIsEdited={setIsEdited}
-                                setIsDeleted={setIsDeleted}
-                                setIsVoted={setIsVoted}
-                                {...rest}
+                                suggestedBooks={suggestedBooks}
+                                onUpdateSuggestedBooks={onUpdateSuggestedBooks}
                             />
                         ) : (
                             <BooksListResults
@@ -237,9 +225,6 @@ BooksCatalogue.propTypes = {
     onUpdateSuggestedBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
     isSuggestedBooksList: PropTypes.bool,
-    setIsDeleted: PropTypes.func,
-    setIsEdited: PropTypes.func,
-    setIsVoted: PropTypes.func,
 };
 
 export default BooksCatalogue;
