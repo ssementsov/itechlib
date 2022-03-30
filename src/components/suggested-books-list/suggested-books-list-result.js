@@ -13,20 +13,21 @@ import { SuggestedBook } from '../../models/suggested-book-model';
 import { category } from '../../common/constants/category-constants';
 import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
+import { useVoting } from '../../utils/vote-hook';
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } =
-        props;
-    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
+    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } = props;
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-    const [
-        isSuggestBookModalOpen,
-        setSuggestBookModalOpen,
-        setSuggestBookModalClose,
-    ] = useBoolean();
-    const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
+    const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] =
         useBoolean();
+    const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
+    const { ...rest } = useVoting(
+        suggestedBooks,
+        onUpdateSuggestedBooks,
+        suggestedBook,
+        setSuggestedBook
+    );
     const filters = ['CATEGORY', 'LANGUAGE', 'POPULARITY'];
 
     const viewSuggestedBookInfo = (bookId) => {
@@ -92,16 +93,11 @@ const SuggestedBooksListResults = (props) => {
                 editButtonCloseHandler();
                 setSuggestedBook(res.data);
                 onUpdateSuggestedBooks(
-                    suggestedBooks.map((book) =>
-                        book.id === res.data.id ? res.data : book
-                    )
+                    suggestedBooks.map((book) => (book.id === res.data.id ? res.data : book))
                 );
-                enqueueSnackbar(
-                    'Book suggestion has been added successfully!',
-                    {
-                        variant: 'success',
-                    }
-                );
+                enqueueSnackbar('Book suggestion has been added successfully!', {
+                    variant: 'success',
+                });
             })
             .catch(() => {
                 defaultErrorSnackbar();
@@ -113,9 +109,7 @@ const SuggestedBooksListResults = (props) => {
             .then(() => {
                 closeDeleteModal();
                 setSuggestBookModalClose();
-                onUpdateSuggestedBooks(
-                    suggestedBooks.filter((book) => book.id !== deletedBook.id)
-                );
+                onUpdateSuggestedBooks(suggestedBooks.filter((book) => book.id !== deletedBook.id));
                 enqueueSnackbar('Book suggestion was deleted successfully!', {
                     variant: 'success',
                 });
@@ -133,6 +127,7 @@ const SuggestedBooksListResults = (props) => {
                 book={suggestedBook}
                 onOpen={editButtonOpenHandler}
                 onDelete={deleteSuggestedBook}
+                {...rest}
             />
             <EditSuggestedBookModal
                 open={isEditButtonOpen}
@@ -164,14 +159,9 @@ const SuggestedBooksListResults = (props) => {
                 </Stack>
                 <Divider sx={{ mb: 2 }} />
                 {books.length ? (
-                    <Grid
-                        container
-                        spacing={{ xs: 2, md: 3 }}
-                        columns={{ xs: 4, sm: 8, md: 12 }}
-                    >
-                        {sortedBooks.map((book) => {
-                            const { bookIconLink, altText } =
-                                getLinkAndAltTextofBookIcon(book);
+                    <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                        {books.map((book) => {
+                            const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
                             return (
                                 <Grid
                                     item
@@ -179,14 +169,13 @@ const SuggestedBooksListResults = (props) => {
                                     sm={4}
                                     md={4}
                                     key={book.id + Math.random()}
-                                    onClick={() =>
-                                        viewSuggestedBookInfo(book.id)
-                                    }
+                                    onClick={() => viewSuggestedBookInfo(book.id)}
                                 >
                                     <SuggestedBookCard
                                         link={bookIconLink}
                                         book={book}
                                         altText={altText}
+                                        {...rest}
                                     />
                                 </Grid>
                             );
@@ -199,9 +188,7 @@ const SuggestedBooksListResults = (props) => {
                             color: 'action.active',
                         }}
                     >
-                        {isStartedSearch
-                            ? 'No books found'
-                            : 'No suggested books yet!'}
+                        {isStartedSearch ? 'No books found' : 'No suggested books yet!'}
                     </Typography>
                 )}
             </Card>

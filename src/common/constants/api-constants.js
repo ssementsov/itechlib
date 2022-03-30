@@ -4,4 +4,5 @@ export const EntityTypes = {
     books: 'books',
     bookings: 'bookings',
     suggestedBooks: 'suggested-books',
+    vote: 'vote',
 };

@@ -5,7 +5,6 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import BooksCatalogue from '../components/books-catalogue';
 import { SuggestionAPI } from './../api/suggested-books-api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
-import { LOGIN_PATH } from '../common/constants/route-constants';
 
 const SuggestedBooksCatalogue = () => {
     const router = useRouter();
@@ -47,13 +46,8 @@ const SuggestedBooksCatalogue = () => {
                         setIsLoaded(true);
                     }
                 })
-                .catch((err) => {
-                    if (err.response.status === 403) {
-                        router.replace(LOGIN_PATH);
-                        localStorage.removeItem('token');
-                    } else {
-                        defaultErrorSnackbar();
-                    }
+                .catch(() => {
+                    defaultErrorSnackbar();
                 })
                 .finally(() => {
                     setIsFetchingWhileScrolling(false);

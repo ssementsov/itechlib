@@ -5,7 +5,8 @@ import style from './suggested-book-card.module.css';
 import { types } from '../../types';
 
 export const SuggestedBookCard = (props) => {
-    const { altText, link, book } = props;
+    const { altText, link, book, ...rest } = props;
+
     return (
         <Card
             sx={{
@@ -38,14 +39,13 @@ export const SuggestedBookCard = (props) => {
                 {book.title}
             </Typography>
             <div className={style.rangeArea}>
-                <Typography
-                    variant="body1"
-                    color="text.secondary"
-                    sx={{ flexBasis: '270px' }}
-                >
+                <Typography variant="body1" color="text.secondary" sx={{ flexBasis: '270px' }}>
                     Author: {book.author}
                 </Typography>
-                <LikeIcons />
+                <LikeIcons
+                    book={book}
+                    {...rest}
+                />
             </div>
         </Card>
     );
