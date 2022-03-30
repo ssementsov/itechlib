@@ -28,6 +28,8 @@ const BooksCatalogue = (props) => {
         isSuggestedBooksList,
         setIsEdited,
         setIsDeleted,
+        setIsVoted,
+        ...rest
     } = props;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
@@ -212,6 +214,8 @@ const BooksCatalogue = (props) => {
                                 isStartedSearch={isStartedSearch}
                                 setIsEdited={setIsEdited}
                                 setIsDeleted={setIsDeleted}
+                                setIsVoted={setIsVoted}
+                                {...rest}
                             />
                         ) : (
                             <BooksListResults
@@ -235,6 +239,7 @@ BooksCatalogue.propTypes = {
     isSuggestedBooksList: PropTypes.bool,
     setIsDeleted: PropTypes.func,
     setIsEdited: PropTypes.func,
+    setIsVoted: PropTypes.func,
 };
 
 export default BooksCatalogue;

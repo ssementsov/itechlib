@@ -5,7 +5,8 @@ import style from './suggested-book-card.module.css';
 import { types } from '../../types';
 
 export const SuggestedBookCard = (props) => {
-    const { altText, link, book } = props;
+    const { altText, link, book, setIsVoted, ...rest } = props;
+
     return (
         <Card
             sx={{
@@ -45,7 +46,12 @@ export const SuggestedBookCard = (props) => {
                 >
                     Author: {book.author}
                 </Typography>
-                <LikeIcons />
+                <LikeIcons
+                    bookId={book.id}
+                    votes={book.amountVote}
+                    setIsVoted={setIsVoted}
+                    {...rest}
+                />
             </div>
         </Card>
     );
@@ -55,4 +61,5 @@ SuggestedBookCard.propTypes = {
     altText: PropTypes.string,
     book: types.suggestedBookTypes,
     link: PropTypes.string,
+    setIsVoted: PropTypes.func,
 };

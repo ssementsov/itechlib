@@ -15,8 +15,14 @@ import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, setIsEdited, setIsDeleted } = props;
-    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
+    const {
+        books,
+        isStartedSearch,
+        setIsEdited,
+        setIsDeleted,
+        setIsVoted,
+        ...rest
+    } = props;
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [
@@ -162,7 +168,7 @@ const SuggestedBooksListResults = (props) => {
                         spacing={{ xs: 2, md: 3 }}
                         columns={{ xs: 4, sm: 8, md: 12 }}
                     >
-                        {sortedBooks.map((book) => {
+                        {books.map((book) => {
                             const { bookIconLink, altText } =
                                 getLinkAndAltTextofBookIcon(book);
                             return (
@@ -180,6 +186,8 @@ const SuggestedBooksListResults = (props) => {
                                         link={bookIconLink}
                                         book={book}
                                         altText={altText}
+                                        setIsVoted={setIsVoted}
+                                        {...rest}
                                     />
                                 </Grid>
                             );
@@ -207,6 +215,7 @@ SuggestedBooksListResults.propTypes = {
     books: PropTypes.arrayOf(types.suggestedBookTypes),
     setIsDeleted: PropTypes.func.isRequired,
     setIsEdited: PropTypes.func.isRequired,
+    setIsVoted: PropTypes.func,
 };
 
 export default SuggestedBooksListResults;

@@ -6,6 +6,7 @@ import BooksCatalogue from '../components/books-catalogue';
 import { SuggestionAPI } from './../api/suggested-books-api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 import { LOGIN_PATH } from '../common/constants/route-constants';
+import { useVoting } from '../utils/vote-hook';
 
 const SuggestedBooksCatalogue = () => {
     const router = useRouter();
@@ -13,6 +14,7 @@ const SuggestedBooksCatalogue = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [isEdited, setIsEdited] = useState(false);
     const [isDeleted, setIsDeleted] = useState(false);
+    const { isVoted, setIsVoted, ...rest } = useVoting();
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const [isFetchingWhileScrolling, setIsFetchingWhileScrolling] =
@@ -39,7 +41,9 @@ const SuggestedBooksCatalogue = () => {
     }, [emptyPage]);
 
     useEffect(() => {
-        if (isFetchingWhileScrolling) {
+        console.log('eff');
+        if (isFetchingWhileScrolling || isEdited || isDeleted) {
+            console.log('eff2');
             SuggestionAPI.getSuggestedBooksList(currentPage, 9)
                 .then((res) => {
                     if (res.data.length === 0 && currentPage > 0) {
@@ -50,6 +54,7 @@ const SuggestedBooksCatalogue = () => {
                         setIsLoaded(true);
                         setIsEdited(false);
                         setIsDeleted(false);
+                        setIsVoted(false);
                     }
                 })
                 .catch((err) => {
@@ -71,6 +76,10 @@ const SuggestedBooksCatalogue = () => {
         isEdited,
         isDeleted,
         isFetchingWhileScrolling,
+        isVoted,
+        suggestedBooks,
+        currentPage,
+        setIsVoted,
     ]);
 
     if (!isLoaded) {
@@ -89,6 +98,8 @@ const SuggestedBooksCatalogue = () => {
                 onUpdateLoadingStatus={setIsLoaded}
                 setIsEdited={setIsEdited}
                 setIsDeleted={setIsDeleted}
+                setIsVoted={setIsVoted}
+                {...rest}
             />
         );
     }
