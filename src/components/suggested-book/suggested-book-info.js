@@ -119,7 +119,7 @@ export default function SuggestedBookInfo(props) {
                         </TableRow>
                     </TableBody>
                 </Table>
-                <LikeIcons isView={true} bookId={book.id} votes={book.amountVote} {...rest} />
+                <LikeIcons isView={true} book={book} {...rest} />
             </CardContent>
         </>
     );

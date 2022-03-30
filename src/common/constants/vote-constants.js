@@ -1,3 +1,4 @@
+export let isAlreadyVotedMessage = 'This user already voted.';
 export const voteObjectTypes = {
     suggestedBook: {
         name: 'SUGGESTED_BOOK',

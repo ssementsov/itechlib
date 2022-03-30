@@ -67,6 +67,11 @@ const suggestedBookTypes = shape({
         surname: string.isRequired,
     }),
     createDate: PropTypes.arrayOf(PropTypes.number),
+    amountVote: shape({
+        negative: number.isRequired,
+        positive: number.isRequired,
+        currentUserVote: string,
+    }),
 });
 
 export const types = {

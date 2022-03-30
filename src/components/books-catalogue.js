@@ -151,7 +151,13 @@ const BooksCatalogue = (props) => {
             .then((res) => {
                 setSuggestButtonClose();
                 if (suggestedBooks) {
-                    const newBooksList = [...suggestedBooks, res.data];
+                    const previousBooksList =
+                        suggestedBooks.length > 8
+                            ? suggestedBooks.filter(
+                                  (item) => item.id !== suggestedBooks[suggestedBooks.length - 1].id
+                              )
+                            : suggestedBooks;
+                    const newBooksList = [res.data, ...previousBooksList];
                     onUpdateSuggestedBooks(newBooksList);
                     onUpdateLoadingStatus(true);
                 }

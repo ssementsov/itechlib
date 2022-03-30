@@ -42,7 +42,10 @@ export const SuggestedBookCard = (props) => {
                 <Typography variant="body1" color="text.secondary" sx={{ flexBasis: '270px' }}>
                     Author: {book.author}
                 </Typography>
-                <LikeIcons bookId={book.id} votes={book.amountVote} {...rest} />
+                <LikeIcons
+                    book={book}
+                    {...rest}
+                />
             </div>
         </Card>
     );
