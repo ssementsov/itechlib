@@ -13,6 +13,7 @@ import { SuggestedBook } from '../../models/suggested-book-model';
 import { category } from '../../common/constants/category-constants';
 import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
+import { useVoting } from '../../utils/vote-hook';
 
 const SuggestedBooksListResults = (props) => {
     const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } = props;
@@ -21,6 +22,12 @@ const SuggestedBooksListResults = (props) => {
     const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] =
         useBoolean();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
+    const { ...rest } = useVoting(
+        suggestedBooks,
+        onUpdateSuggestedBooks,
+        suggestedBook,
+        setSuggestedBook
+    );
     const filters = ['CATEGORY', 'LANGUAGE', 'POPULARITY'];
 
     const viewSuggestedBookInfo = (bookId) => {
@@ -120,6 +127,7 @@ const SuggestedBooksListResults = (props) => {
                 book={suggestedBook}
                 onOpen={editButtonOpenHandler}
                 onDelete={deleteSuggestedBook}
+                {...rest}
             />
             <EditSuggestedBookModal
                 open={isEditButtonOpen}
@@ -167,6 +175,7 @@ const SuggestedBooksListResults = (props) => {
                                         link={bookIconLink}
                                         book={book}
                                         altText={altText}
+                                        {...rest}
                                     />
                                 </Grid>
                             );

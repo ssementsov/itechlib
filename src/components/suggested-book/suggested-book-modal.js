@@ -5,14 +5,10 @@ import { types } from '../../types';
 import SuggestedBookInfo from './suggested-book-info';
 
 export default function SuggestedBookModal(props) {
-    const { open, onClose, book, onOpen, onDelete } = props;
+    const { open, onClose, book, onOpen, onDelete, ...rest } = props;
     return (
         <StyledModal open={open} onClose={onClose}>
-            <SuggestedBookInfo
-                book={book}
-                onOpen={onOpen}
-                onDelete={onDelete}
-            />
+            <SuggestedBookInfo book={book} onOpen={onOpen} onDelete={onDelete} {...rest} />
         </StyledModal>
     );
 }

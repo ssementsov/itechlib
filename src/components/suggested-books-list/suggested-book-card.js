@@ -5,7 +5,7 @@ import style from './suggested-book-card.module.css';
 import { types } from '../../types';
 
 export const SuggestedBookCard = (props) => {
-    const { altText, link, book, setIsVoted, ...rest } = props;
+    const { altText, link, book, ...rest } = props;
 
     return (
         <Card
@@ -39,19 +39,10 @@ export const SuggestedBookCard = (props) => {
                 {book.title}
             </Typography>
             <div className={style.rangeArea}>
-                <Typography
-                    variant="body1"
-                    color="text.secondary"
-                    sx={{ flexBasis: '270px' }}
-                >
+                <Typography variant="body1" color="text.secondary" sx={{ flexBasis: '270px' }}>
                     Author: {book.author}
                 </Typography>
-                <LikeIcons
-                    bookId={book.id}
-                    votes={book.amountVote}
-                    setIsVoted={setIsVoted}
-                    {...rest}
-                />
+                <LikeIcons bookId={book.id} votes={book.amountVote} {...rest} />
             </div>
         </Card>
     );
@@ -61,5 +52,4 @@ SuggestedBookCard.propTypes = {
     altText: PropTypes.string,
     book: types.suggestedBookTypes,
     link: PropTypes.string,
-    setIsVoted: PropTypes.func,
 };

@@ -34,12 +34,11 @@ const TitleTblCell = styled(TblCell)(() => ({
 }));
 
 export default function SuggestedBookInfo(props) {
-    const { book, onOpen, onDelete } = props;
+    const { book, onOpen, onDelete, ...rest } = props;
     const { bookIconLink, altText } = getLinkAndAltTextofBookIcon(book);
     const corpEmail = localStorage.getItem('corpEmail');
     let isCreater = book.creator.corpEmail === corpEmail;
-    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
-        useBoolean();
+    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
 
     return (
         <>
@@ -57,10 +56,7 @@ export default function SuggestedBookInfo(props) {
                 action={
                     isCreater && (
                         <>
-                            <IconButton
-                                onClick={setDeleteButtonOpen}
-                                aria-label="delete"
-                            >
+                            <IconButton onClick={setDeleteButtonOpen} aria-label="delete">
                                 <DarkDeleteIcon fontSize="small" />
                             </IconButton>
                             <IconButton onClick={onOpen} aria-label="edit">
@@ -94,19 +90,11 @@ export default function SuggestedBookInfo(props) {
                         </TableRow>
                         <TableRow>
                             <TitleTblCell>{titles.category}</TitleTblCell>
-                            <TblCell>
-                                {toLowerCaseExceptFirstLetter(
-                                    book.category?.name
-                                )}
-                            </TblCell>
+                            <TblCell>{toLowerCaseExceptFirstLetter(book.category?.name)}</TblCell>
                         </TableRow>
                         <TableRow>
                             <TitleTblCell>{titles.language}</TitleTblCell>
-                            <TblCell>
-                                {toLowerCaseExceptFirstLetter(
-                                    book.language?.name
-                                )}
-                            </TblCell>
+                            <TblCell>{toLowerCaseExceptFirstLetter(book.language?.name)}</TblCell>
                         </TableRow>
                         <TableRow>
                             <TitleTblCell>{titles.link}</TitleTblCell>
@@ -131,11 +119,7 @@ export default function SuggestedBookInfo(props) {
                         </TableRow>
                     </TableBody>
                 </Table>
-                <LikeIcons
-                    isView={true}
-                    bookId={book.id}
-                    votes={book.amountVote}
-                />
+                <LikeIcons isView={true} bookId={book.id} votes={book.amountVote} {...rest} />
             </CardContent>
         </>
     );

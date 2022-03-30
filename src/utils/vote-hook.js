@@ -1,23 +1,21 @@
-import { useState } from 'react';
 import { Vote } from '../models/vote-model';
 import { voteObjectTypes, voteType } from '../common/constants/vote-constants';
 import { VoteAPI } from '../api/vote-api';
 
-export const useVoting = () => {
-    const [isVoted, setIsVoted] = useState(false);
-
+export const useVoting = (books, setBooks, book, setBook) => {
     const negativeVoteHandler = (e, bookId) => {
         e.stopPropagation();
-        const vote = new Vote(
-            0,
-            bookId,
-            voteObjectTypes.suggestedBook,
-            voteType.negative
-        );
+        const vote = new Vote(0, bookId, voteObjectTypes.suggestedBook, voteType.negative);
         VoteAPI.voteSuggestedBook(vote)
             .then(() => {
-                setIsVoted(true);
-                console.log('vote');
+                setBooks(
+                    books.map((book) =>
+                        book.id === bookId
+                            ? { ...book, amountVote: { negative: 1, positive: 0 } }
+                            : book
+                    )
+                );
+                setBook({ ...book, amountVote: { negative: 1, positive: 0 } });
             })
             .catch((err) => {
                 console.log(err);
@@ -26,15 +24,17 @@ export const useVoting = () => {
 
     const positiveVoteHandler = (e, bookId) => {
         e.stopPropagation();
-        const vote = new Vote(
-            0,
-            bookId,
-            voteObjectTypes.suggestedBook,
-            voteType.positive
-        );
+        const vote = new Vote(0, bookId, voteObjectTypes.suggestedBook, voteType.positive);
         VoteAPI.voteSuggestedBook(vote)
-            .then((res) => {
-                console.log(res);
+            .then(() => {
+                setBooks(
+                    books.map((book) =>
+                        book.id === bookId
+                            ? { ...book, amountVote: { negative: 0, positive: 1 } }
+                            : book
+                    )
+                );
+                setBook({ ...book, amountVote: { negative: 0, positive: 1 } });
             })
             .catch((err) => {
                 console.log(err);
@@ -44,7 +44,5 @@ export const useVoting = () => {
     return {
         onNegativeVote: negativeVoteHandler,
         onPositiveVote: positiveVoteHandler,
-        isVoted: isVoted,
-        setIsVoted: setIsVoted,
     };
 };

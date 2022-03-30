@@ -36,9 +36,7 @@ const SuggestedBooksCatalogue = () => {
     }, [emptyPage]);
 
     useEffect(() => {
-        console.log('eff');
         if (isFetchingWhileScrolling) {
-            console.log('eff2');
             SuggestionAPI.getSuggestedBooksList(currentPage, 9)
                 .then((res) => {
                     if (res.data.length === 0 && currentPage > 0) {
