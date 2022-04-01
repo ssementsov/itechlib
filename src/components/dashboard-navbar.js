@@ -50,7 +50,7 @@ const styleForMenu = {
 export const DashboardNavbar = (props) => {
     const router = useRouter();
     const { onSidebarOpen, ...other } = props;
-    const [avatar, setAvatar] = useState(null);
+    const [avatar, setAvatar] = useState('');
     const popupState = usePopupState({
         variant: 'popover',
         popupId: 'demoMenu',
@@ -62,7 +62,10 @@ export const DashboardNavbar = (props) => {
     };
 
     useEffect(() => {
-        setAvatar(localStorage.getItem('avatar'));
+        const avatarDataStr = localStorage.getItem('avatar');
+        const avatarData = JSON.parse(avatarDataStr);
+        const avatartUrl = `data:image/${avatarData?.extension};base64,${avatarData?.fileData}`;
+        setAvatar(avatartUrl);
     }, []);
 
     return (

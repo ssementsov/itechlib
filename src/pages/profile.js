@@ -36,6 +36,7 @@ function ProfilePage() {
             .then(() => {
                 setIsUploadedAvatar(false);
                 onDeleteButtonClose();
+                localStorage.removeItem('avatar');
             })
             .catch(() => defaultErrorSnackbar());
     };
@@ -48,6 +49,7 @@ function ProfilePage() {
                 setIsOwner(true);
                 let avatar = res.data.fileInfo;
                 if (avatar) {
+                    localStorage.setItem('avatar', JSON.stringify(avatar));
                     setIsUploadedAvatar(true);
                 }
             })
