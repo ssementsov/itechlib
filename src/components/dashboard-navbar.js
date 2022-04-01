@@ -62,7 +62,7 @@ export const DashboardNavbar = (props) => {
     };
 
     useEffect(() => {
-        setAvatar(localStorage.getItem('avatar'));
+        setAvatar('');
     }, []);
 
     return (
