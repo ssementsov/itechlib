@@ -22,7 +22,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                                   ...book,
                                   amountVote: {
                                       negative: book.amountVote ? book.amountVote.negative + 1 : 1,
-                                      positive: 0,
+                                      positive: book.amountVote?.positive || 0,
                                       currentUserVote:
                                           book.amountVote?.currentUserVote ||
                                           voteType.negative.name,
@@ -35,7 +35,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                     ...book,
                     amountVote: {
                         negative: book.amountVote ? book.amountVote.negative + 1 : 1,
-                        positive: 0,
+                        positive: book.amountVote?.positive || 0,
                         currentUserVote: book.amountVote?.currentUserVote || voteType.negative.name,
                     },
                 });
@@ -62,7 +62,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                             ? {
                                   ...book,
                                   amountVote: {
-                                      negative: 0,
+                                      negative: book.amountVote?.negative || 0,
                                       positive: book.amountVote ? book.amountVote.positive + 1 : 1,
                                       currentUserVote:
                                           book.amountVote?.currentUserVote ||
@@ -75,7 +75,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                 setBook({
                     ...book,
                     amountVote: {
-                        negative: 0,
+                        negative: book.amountVote?.negative || 0,
                         positive: book.amountVote ? book.amountVote.positive + 1 : 1,
                         currentUserVote: book.amountVote?.currentUserVote || voteType.positive.name,
                     },
