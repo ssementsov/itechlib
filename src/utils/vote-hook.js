@@ -16,25 +16,27 @@ export const useVoting = (books, setBooks, book, setBook) => {
         VoteAPI.voteSuggestedBook(vote)
             .then(() => {
                 setBooks(
-                    books.map((book) =>
-                        book.id === bookId
+                    books.map((book) => {
+                        return book.id === bookId
                             ? {
                                   ...book,
                                   amountVote: {
-                                      negative: 1,
-                                      positive: 0,
-                                      currentUserVote: voteType.negative.name,
+                                      negative: book.amountVote ? book.amountVote.negative + 1 : 1,
+                                      positive: book.amountVote?.positive || 0,
+                                      currentUserVote:
+                                          book.amountVote?.currentUserVote ||
+                                          voteType.negative.name,
                                   },
                               }
-                            : book
-                    )
+                            : book;
+                    })
                 );
                 setBook({
                     ...book,
                     amountVote: {
-                        negative: 1,
-                        positive: 0,
-                        currentUserVote: voteType.negative.name,
+                        negative: book.amountVote ? book.amountVote.negative + 1 : 1,
+                        positive: book.amountVote?.positive || 0,
+                        currentUserVote: book.amountVote?.currentUserVote || voteType.negative.name,
                     },
                 });
             })
@@ -60,9 +62,11 @@ export const useVoting = (books, setBooks, book, setBook) => {
                             ? {
                                   ...book,
                                   amountVote: {
-                                      negative: 0,
-                                      positive: 1,
-                                      currentUserVote: voteType.positive.name,
+                                      negative: book.amountVote?.negative || 0,
+                                      positive: book.amountVote ? book.amountVote.positive + 1 : 1,
+                                      currentUserVote:
+                                          book.amountVote?.currentUserVote ||
+                                          voteType.positive.name,
                                   },
                               }
                             : book
@@ -71,9 +75,9 @@ export const useVoting = (books, setBooks, book, setBook) => {
                 setBook({
                     ...book,
                     amountVote: {
-                        negative: 0,
-                        positive: 1,
-                        currentUserVote: voteType.positive.name,
+                        negative: book.amountVote?.negative || 0,
+                        positive: book.amountVote ? book.amountVote.positive + 1 : 1,
+                        currentUserVote: book.amountVote?.currentUserVote || voteType.positive.name,
                     },
                 });
             })
