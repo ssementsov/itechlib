@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Menu from '@mui/material/Menu';
+import HoverMenu from 'material-ui-popup-state/HoverMenu';
+import { usePopupState, bindHover, bindMenu } from 'material-ui-popup-state/hooks';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
@@ -24,7 +25,7 @@ const styleForMenu = {
         width: '150px',
         overflow: 'visible',
         filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-        mt: 1.5,
+        mt: 0,
         '& .MuiAvatar-root': {
             width: 32,
             height: 32,
@@ -35,8 +36,8 @@ const styleForMenu = {
             content: '""',
             display: 'block',
             position: 'absolute',
-            top: 0,
-            right: 14,
+            top: 2,
+            right: 20,
             width: 10,
             height: 10,
             bgcolor: 'background.paper',
@@ -49,16 +50,11 @@ const styleForMenu = {
 export const DashboardNavbar = (props) => {
     const router = useRouter();
     const { onSidebarOpen, ...other } = props;
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
     const [avatar, setAvatar] = useState(null);
-
-    const handleHover = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const popupState = usePopupState({
+        variant: 'popover',
+        popupId: 'demoMenu',
+    });
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -102,7 +98,7 @@ export const DashboardNavbar = (props) => {
                         <MenuIcon fontSize="small" />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <IconButton onMouseEnter={handleHover} size="small" sx={{ ml: 2 }}>
+                    <IconButton {...bindHover(popupState)} size="small" sx={{ ml: 2 }}>
                         <Avatar
                             src={avatar}
                             sx={{
@@ -112,24 +108,15 @@ export const DashboardNavbar = (props) => {
                             }}
                         ></Avatar>
                     </IconButton>
-                    <Menu
-                        anchorEl={anchorEl}
-                        autoFocus={false}
-                        open={open}
-                        onClose={handleClose}
-                        onClick={handleClose}
+                    <HoverMenu
+                        {...bindMenu(popupState)}
                         PaperProps={{ ...styleForMenu }}
-                        transformOrigin={{
-                            horizontal: 'right',
-                            vertical: 'top',
-                        }}
-                        anchorOrigin={{
-                            horizontal: 'right',
-                            vertical: 'bottom',
-                        }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                     >
                         <MenuItem
                             onClick={() => {
+                                popupState.close();
                                 router.push(PROFILE_PATH);
                             }}
                         >
@@ -151,7 +138,7 @@ export const DashboardNavbar = (props) => {
                                 </MenuItem>
                             )}
                         ></GoogleLogout>
-                    </Menu>
+                    </HoverMenu>
                 </Toolbar>
             </DashboardNavbarRoot>
         </>
