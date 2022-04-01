@@ -16,6 +16,7 @@ import {
     TableCell,
     TableRow,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
@@ -36,10 +37,7 @@ import { BookingsAPI } from './../../api/bookings-api';
 import { useBoolean } from '../../utils/boolean-hook';
 import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
-import {
-    BOOK_PREVIEW_PAGE_PATH,
-    FEEDBACKS_PATH,
-} from '../../common/constants/route-constants';
+import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 
 const TblCell = styled(TableCell)(() => ({
@@ -55,15 +53,12 @@ const BookDetails = (props) => {
     const router = useRouter();
     const corpEmail = localStorage.getItem('corpEmail');
     let isOwner = book.owner.corpEmail === corpEmail;
+    const inUseStatus = book.status.name === bookStatus.inUse.name;
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-    const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] =
-        useBoolean();
-    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
-        useBoolean();
-    const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] =
-        useBoolean();
-    const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] =
-        useBoolean();
+    const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
+    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
+    const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
+    const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
 
     useEffect(() => {
         if (isAssigned) {
@@ -81,23 +76,17 @@ const BookDetails = (props) => {
             BooksAPI.removeBook(book.id)
                 .then(() => {
                     router.back();
-                    enqueueSnackbar(
-                        'Your book has been deleted successfully!',
-                        {
-                            variant: 'success',
-                        }
-                    );
+                    enqueueSnackbar('Your book has been deleted successfully!', {
+                        variant: 'success',
+                    });
                 })
                 .catch(() => {
                     defaultErrorSnackbar();
                 });
         } else {
-            enqueueSnackbar(
-                'You can only delete books which are currently in “Available” status',
-                {
-                    variant: 'error',
-                }
-            );
+            enqueueSnackbar('You can only delete books which are currently in “Available” status', {
+                variant: 'error',
+            });
         }
     };
 
@@ -107,9 +96,7 @@ const BookDetails = (props) => {
                 ? category.professional.id
                 : category.fiction.id;
         let idLanguage =
-            newBook.language === language.english.name
-                ? language.english.id
-                : language.russian.id;
+            newBook.language === language.english.name ? language.english.id : language.russian.id;
         let idStatus;
         switch (newBook.status) {
             case bookStatus.notAvailable.name:
@@ -215,16 +202,10 @@ const BookDetails = (props) => {
                     action={
                         isOwner && (
                             <>
-                                <IconButton
-                                    onClick={setDeleteButtonOpen}
-                                    aria-label="delete"
-                                >
+                                <IconButton onClick={setDeleteButtonOpen} aria-label="delete">
                                     <DarkDeleteIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton
-                                    onClick={setEditButtonOpen}
-                                    aria-label="edit"
-                                >
+                                <IconButton onClick={setEditButtonOpen} aria-label="edit">
                                     <EditIcon fontSize="small" />
                                 </IconButton>
                             </>
@@ -247,17 +228,13 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.category}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExceptFirstLetter(
-                                                book.category.name
-                                            )}
+                                            {toLowerCaseExceptFirstLetter(book.category.name)}
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
                                         <TblCell>{titles.language}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExceptFirstLetter(
-                                                book.language.name
-                                            )}
+                                            {toLowerCaseExceptFirstLetter(book.language.name)}
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
@@ -280,17 +257,12 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.rate}</TblCell>
                                         <TblCell>
-                                            <Tooltip
-                                                title={book.rate}
-                                                placement="right"
-                                            >
+                                            <Tooltip title={book.rate} placement="right">
                                                 <span>
                                                     <Rating
                                                         precision={0.5}
                                                         name="read-only"
-                                                        value={calculateRate(
-                                                            book.rate
-                                                        )}
+                                                        value={calculateRate(book.rate)}
                                                         size="small"
                                                         readOnly
                                                         sx={{
@@ -304,8 +276,21 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.status}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExceptFirstLetter(
-                                                book.status.name
+                                            {inUseStatus ? (
+                                                <Tooltip
+                                                    title={`Reader: ${book.reader}`}
+                                                    placement="right"
+                                                >
+                                                    <Typography sx={{ width: '100px' }}>
+                                                        {toLowerCaseExceptFirstLetter(
+                                                            book.status.name
+                                                        )}
+                                                    </Typography>
+                                                </Tooltip>
+                                            ) : (
+                                                <Typography sx={{ width: '100px' }}>
+                                                    {toLowerCaseExceptFirstLetter(book.status.name)}
+                                                </Typography>
                                             )}
                                         </TblCell>
                                     </TableRow>
@@ -332,9 +317,7 @@ const BookDetails = (props) => {
                 >
                     <Button
                         onClick={() =>
-                            router.push(
-                                `${BOOK_PREVIEW_PAGE_PATH}/${book.id}${FEEDBACKS_PATH}`
-                            )
+                            router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}${FEEDBACKS_PATH}`)
                         }
                         sx={{ mr: 1 }}
                     >
@@ -358,8 +341,7 @@ const BookDetails = (props) => {
                                     color="primary"
                                     variant="contained"
                                     disabled={
-                                        book.status.name !==
-                                        bookStatus.available.name
+                                        book.status.name !== bookStatus.available.name
                                             ? true
                                             : false
                                     }
