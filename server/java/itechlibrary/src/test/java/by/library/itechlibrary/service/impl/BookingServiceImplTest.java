@@ -334,7 +334,7 @@ class BookingServiceImplTest {
             Mockito.doReturn(Optional.of(booking)).when(bookingRepository)
                     .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
 
-            Assertions.assertTrue(bookingService.isReader(userId, bookId));
+            Assertions.assertTrue(bookingService.getBookingInfo(bookId));
 
             Mockito.verify(bookingRepository, Mockito.times(1))
                     .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
@@ -347,7 +347,7 @@ class BookingServiceImplTest {
             Mockito.doReturn(Optional.empty()).when(bookingRepository)
                     .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
 
-            Assertions.assertFalse(bookingService.isReader(userId, bookId));
+            Assertions.assertFalse(bookingService.getBookingInfo(bookId));
 
             Mockito.verify(bookingRepository, Mockito.times(1))
                     .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);

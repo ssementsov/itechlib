@@ -116,13 +116,13 @@ class BookServiceImplTest {
         Mockito.doReturn(bookId).when(securityUserDetailsService).getCurrentUserId();
         Mockito.doReturn(Optional.of(book)).when(bookRepository).findById(bookId);
         Mockito.doReturn(fullBookDto).when(bookMapper).toFullBookDto(book);
-        Mockito.doReturn(true).when(bookingService).isReader(book.getOwner().getId(), bookId);
+        Mockito.doReturn(true).when(bookingService).getBookingInfo(bookId);
 
         Assertions.assertEquals(fullBookDto, bookService.findByIdFullVersion(bookId));
 
         Mockito.verify(bookMapper, Mockito.times(1)).toFullBookDto(book);
         Mockito.verify(securityUserDetailsService, Mockito.times(1)).getCurrentUserId();
-        Mockito.verify(bookingService, Mockito.times(1)).isReader(book.getOwner().getId(), bookId);
+        Mockito.verify(bookingService, Mockito.times(1)).getBookingInfo(bookId);
         Mockito.verify(bookRepository, Mockito.times(1)).findById(bookId);
 
     }
