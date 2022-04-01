@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Box, Container } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
@@ -16,6 +17,7 @@ import { PropTypes } from 'prop-types';
 import { types } from '../types';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
+import { SUGGESTED_BOOKS_PATH } from '../common/constants/route-constants';
 
 const BooksCatalogue = (props) => {
     const {
@@ -27,6 +29,8 @@ const BooksCatalogue = (props) => {
         onUpdateLoadingStatus,
         isSuggestedBooksList,
     } = props;
+    const router = useRouter();
+    const isNotSuggestedBooksPage = router.pathname !== SUGGESTED_BOOKS_PATH;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
@@ -160,6 +164,9 @@ const BooksCatalogue = (props) => {
                     const newBooksList = [res.data, ...previousBooksList];
                     onUpdateSuggestedBooks(newBooksList);
                     onUpdateLoadingStatus(true);
+                }
+                if (isNotSuggestedBooksPage) {
+                    router.replace(SUGGESTED_BOOKS_PATH);
                 }
                 enqueueSnackbar('Book suggestion has been added successfully!', {
                     variant: 'success',
