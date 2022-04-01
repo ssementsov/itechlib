@@ -102,11 +102,7 @@ export const DashboardNavbar = (props) => {
                         <MenuIcon fontSize="small" />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <IconButton
-                        onClick={handleHover}
-                        size="small"
-                        sx={{ ml: 2 }}
-                    >
+                    <IconButton onMouseEnter={handleHover} size="small" sx={{ ml: 2 }}>
                         <Avatar
                             src={avatar}
                             sx={{
@@ -118,6 +114,7 @@ export const DashboardNavbar = (props) => {
                     </IconButton>
                     <Menu
                         anchorEl={anchorEl}
+                        autoFocus={false}
                         open={open}
                         onClose={handleClose}
                         onClick={handleClose}
