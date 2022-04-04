@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Box, Container } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
@@ -16,6 +17,7 @@ import { PropTypes } from 'prop-types';
 import { types } from '../types';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
+import { SUGGESTED_BOOKS_PATH } from '../common/constants/route-constants';
 
 const BooksCatalogue = (props) => {
     const {
@@ -27,11 +29,12 @@ const BooksCatalogue = (props) => {
         onUpdateLoadingStatus,
         isSuggestedBooksList,
     } = props;
+    const router = useRouter();
+    const isNotSuggestedBooksPage = router.pathname !== SUGGESTED_BOOKS_PATH;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
-    const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] =
-        useBoolean();
+    const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] = useBoolean();
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const searchedBooks = useMemo(() => {
@@ -66,9 +69,7 @@ const BooksCatalogue = (props) => {
                 ? category.professional.id
                 : category.fiction.id;
         let idLanguage =
-            newBook.language === language.english.name
-                ? language.english.id
-                : language.russian.id;
+            newBook.language === language.english.name ? language.english.id : language.russian.id;
         let idStatus;
         switch (newBook.status) {
             case bookStatus.notAvailable.name:
@@ -154,16 +155,22 @@ const BooksCatalogue = (props) => {
             .then((res) => {
                 setSuggestButtonClose();
                 if (suggestedBooks) {
-                    const newBooksList = [...suggestedBooks, res.data];
+                    const previousBooksList =
+                        suggestedBooks.length > 8
+                            ? suggestedBooks.filter(
+                                  (item) => item.id !== suggestedBooks[suggestedBooks.length - 1].id
+                              )
+                            : suggestedBooks;
+                    const newBooksList = [res.data, ...previousBooksList];
                     onUpdateSuggestedBooks(newBooksList);
                     onUpdateLoadingStatus(true);
                 }
-                enqueueSnackbar(
-                    'Book suggestion has been added successfully!',
-                    {
-                        variant: 'success',
-                    }
-                );
+                if (isNotSuggestedBooksPage) {
+                    router.replace(SUGGESTED_BOOKS_PATH);
+                }
+                enqueueSnackbar('Book suggestion has been added successfully!', {
+                    variant: 'success',
+                });
             })
             .catch(() => {
                 defaultErrorSnackbar();

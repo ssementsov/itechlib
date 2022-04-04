@@ -6,7 +6,6 @@ import { GoogleLogin } from 'react-google-login';
 import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
 import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
-import jwt_decode from 'jwt-decode';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { api } from '../api/api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
@@ -20,9 +19,6 @@ const Login = () => {
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
     const resGoogleHandlerLogin = (resFromGoogle) => {
-        const responsePayload = jwt_decode(resFromGoogle.tokenId);
-        localStorage.setItem('avatar', responsePayload.picture);
-
         let googleEmail = localStorage.getItem('googleEmail');
         if (resFromGoogle.profileObj.email === googleEmail) {
             UserAPI.auth(resFromGoogle)
@@ -107,16 +103,11 @@ const Login = () => {
                                         mt: 5,
                                     }}
                                 >
-                                    Your Google account has been confirmed
-                                    successfully
+                                    Your Google account has been confirmed successfully
                                 </Typography>
                             )}
                             <Typography
-                                color={
-                                    correctEmail
-                                        ? 'textPrimary'
-                                        : theme.palette.error.main
-                                }
+                                color={correctEmail ? 'textPrimary' : theme.palette.error.main}
                                 variant="body1"
                                 sx={{
                                     mt: 5,
@@ -137,9 +128,7 @@ const Login = () => {
                         >
                             <Grid item xs={12} md={12}>
                                 <GoogleLogin
-                                    clientId={
-                                        process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
-                                    }
+                                    clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                                     render={(renderProps) => (
                                         <Button
                                             fullWidth
