@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
         User currentUser = getCurrentUser();
 
         User user = userRepository.findByFileInfoId(fileId)
-                .orElseThrow(() -> new NotFoundException("The user was not found."));
+                .orElseThrow(() -> new NotFoundException("The user was not found by file id."));
 
         checkIsCurrentUser(user.getId(), currentUser.getId());
         checkIsCurrentUsersPhoto(user.getFileInfo().getId(), currentUser.getFileInfo().getId());
