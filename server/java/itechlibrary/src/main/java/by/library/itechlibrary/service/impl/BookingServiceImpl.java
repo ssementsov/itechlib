@@ -150,18 +150,23 @@ public class BookingServiceImpl implements BookingService {
 
         Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
 
-        BookingInfo bookingInfo = new BookingInfo();
+        return  checkAndBuildBookingInfo(bookId, bookingOptional);
+    }
+
+    private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional) {
 
         if (bookingOptional.isPresent()) {
+
+            BookingInfo bookingInfo = new BookingInfo();
 
             Booking currentBooking = bookingOptional.get();
             setFullNameReaderToBookingInfo(bookingInfo, currentBooking);
             checkAndSetCurrentUserIsReader(bookingInfo, currentBooking);
             bookingInfo.setBookingEndDate(currentBooking.getFinishDate());
 
-        } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
+            return bookingInfo;
 
-        return bookingInfo;
+        } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
     }
 
     private void checkAndSetCurrentUserIsReader(BookingInfo bookingInfo, Booking booking) {

@@ -324,33 +324,20 @@ class BookingServiceImplTest {
     @Nested
     class checkUserIsReaderTest {
 
-        long userId = 1;
         long bookId = 1;
         Booking booking = getBooking();
 
         @Test
-        void isReaderTrue() {
+        void getBookingInfoTest() {
 
+            booking.setReader(getTestUser());
             Mockito.doReturn(Optional.of(booking)).when(bookingRepository)
-                    .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
+                    .findByBookIdAndActiveIsTrue(bookId);
 
-            Assertions.assertTrue(bookingService.getBookingInfo(bookId));
-
-            Mockito.verify(bookingRepository, Mockito.times(1))
-                    .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
-
-        }
-
-        @Test
-        void isReaderFalse() {
-
-            Mockito.doReturn(Optional.empty()).when(bookingRepository)
-                    .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
-
-            Assertions.assertFalse(bookingService.getBookingInfo(bookId));
+            BookingInfo bookingInfo = bookingService.getBookingInfo(bookId);
 
             Mockito.verify(bookingRepository, Mockito.times(1))
-                    .findByActiveIsTrueAndReaderIdAndBookId(userId, bookId);
+                    .findByBookIdAndActiveIsTrue(bookId);
 
         }
     }
