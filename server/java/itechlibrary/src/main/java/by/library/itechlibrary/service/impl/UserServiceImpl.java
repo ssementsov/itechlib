@@ -18,14 +18,12 @@ import by.library.itechlibrary.service.MailNotificationService;
 import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 
@@ -129,14 +127,10 @@ public class UserServiceImpl implements UserService {
 
         User currentUser = getCurrentUser();
 
-        User user = userRepository.findByFileInfoId(fileId)
-                .orElseThrow(() -> new NotFoundException("The user was not found by file id."));
+        checkIsCurrentUsersPhoto(fileId, currentUser.getFileInfo().getId());
+        currentUser.setFileInfo(null);
 
-        checkIsCurrentUser(user.getId(), currentUser.getId());
-        checkIsCurrentUsersPhoto(user.getFileInfo().getId(), currentUser.getFileInfo().getId());
-
-        user.setFileInfo(null);
-        userRepository.save(user);
+        userRepository.save(currentUser);
         fileInfoService.removeById(fileId);
 
     }
@@ -154,16 +148,6 @@ public class UserServiceImpl implements UserService {
         if (userPhotoId != currentUserPhotoId) {
 
             throw new WrongUserPhotoIdException("wrong photo id for current user.");
-
-        }
-
-    }
-
-    private void checkIsCurrentUser(long userId, long currentUserId) {
-
-        if (currentUserId != userId) {
-
-            throw new WrongCurrentUserException("Current user is not owner.");
 
         }
     }
