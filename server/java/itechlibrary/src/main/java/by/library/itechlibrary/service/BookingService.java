@@ -3,6 +3,7 @@ package by.library.itechlibrary.service;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.entity.BookingInfo;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface BookingService {
 
     void returnBooking(ReviewDto reviewDto, long id);
 
-    boolean isReader(long userId, long bookId);
+    BookingInfo getBookingInfo(long bookId);
 
     void disableCurrentBooking(long bookId);
 
