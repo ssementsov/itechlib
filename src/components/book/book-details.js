@@ -278,7 +278,7 @@ const BookDetails = (props) => {
                                         <TblCell>
                                             {inUseStatus ? (
                                                 <Tooltip
-                                                    title={`Reader: ${book.reader}`}
+                                                    title={`Reader: ${book.bookingInfoDto?.nameOfReader}`}
                                                     placement="right"
                                                 >
                                                     <Typography sx={{ width: '100px' }}>
