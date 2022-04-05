@@ -8,6 +8,7 @@ import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.booking.BookingInfoDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
@@ -113,16 +114,14 @@ class BookServiceImplTest {
         Book book = getTestBook();
         long bookId = 1;
 
-        Mockito.doReturn(bookId).when(securityUserDetailsService).getCurrentUserId();
         Mockito.doReturn(Optional.of(book)).when(bookRepository).findById(bookId);
         Mockito.doReturn(fullBookDto).when(bookMapper).toFullBookDto(book);
-        Mockito.doReturn(true).when(bookingService).isReader(book.getOwner().getId(), bookId);
 
         Assertions.assertEquals(fullBookDto, bookService.findByIdFullVersion(bookId));
 
         Mockito.verify(bookMapper, Mockito.times(1)).toFullBookDto(book);
-        Mockito.verify(securityUserDetailsService, Mockito.times(1)).getCurrentUserId();
-        Mockito.verify(bookingService, Mockito.times(1)).isReader(book.getOwner().getId(), bookId);
+        Mockito.verify(securityUserDetailsService, Mockito.times(0)).getCurrentUserId();
+        Mockito.verify(bookingService, Mockito.times(0)).getBookingInfo(bookId);
         Mockito.verify(bookRepository, Mockito.times(1)).findById(bookId);
 
     }
@@ -302,9 +301,19 @@ class BookServiceImplTest {
         book.setCategory(category);
         book.setStatus(new BookStatusDto((short) 1, "AVAILABLE"));
         book.setFileInfo(null);
-        book.setReader(true);
+        book.setBookingInfoDto(getBookingInfoDto());
 
         return book;
+    }
+
+    private BookingInfoDto getBookingInfoDto(){
+
+        return new BookingInfoDto(true, "IVAN IVANOVICH", LocalDate.now());
+    }
+
+    private BookingInfo getBookingInfo(){
+
+        return new BookingInfo(true, "IVAN IVANOVICH", LocalDate.now());
     }
 
     private BookDto getTestBookDto() {

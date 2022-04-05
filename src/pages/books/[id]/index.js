@@ -52,7 +52,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     } else {
                         setIsOwner(false);
                     }
-                    res.data.reader
+                    res.data.bookingInfoDto?.currentUserReader
                         ? assignHandler(true)
                         : assignHandler(false);
                     setBook(res.data);
@@ -63,7 +63,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     }
                 })
                 .catch((err) => {
-                    if (err.response.status === 403) {
+                    if (err.response?.status === 403) {
                         router.replace(LOGIN_PATH);
                         localStorage.removeItem('token');
                     } else {
