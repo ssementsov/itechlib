@@ -63,9 +63,11 @@ export const DashboardNavbar = (props) => {
 
     useEffect(() => {
         const avatarDataStr = localStorage.getItem('avatar');
-        const avatarData = JSON.parse(avatarDataStr);
-        const avatartUrl = `data:image/${avatarData?.extension};base64,${avatarData?.fileData}`;
-        setAvatar(avatartUrl);
+        if (avatarDataStr) {
+            const avatarData = JSON.parse(avatarDataStr);
+            const avatartUrl = `data:image/${avatarData?.extension};base64,${avatarData?.fileData}`;
+            setAvatar(avatartUrl);
+        }
     }, []);
 
     return (
