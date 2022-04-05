@@ -16,6 +16,7 @@ import {
     TableCell,
     TableRow,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
@@ -52,6 +53,7 @@ const BookDetails = (props) => {
     const router = useRouter();
     const corpEmail = localStorage.getItem('corpEmail');
     let isOwner = book.owner.corpEmail === corpEmail;
+    const inUseStatus = book.status.name === bookStatus.inUse.name;
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
@@ -274,7 +276,22 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.status}</TblCell>
                                         <TblCell>
-                                            {toLowerCaseExceptFirstLetter(book.status.name)}
+                                            {inUseStatus ? (
+                                                <Tooltip
+                                                    title={`Reader: ${book.bookingInfoDto?.nameOfReader}`}
+                                                    placement="right"
+                                                >
+                                                    <Typography sx={{ width: '100px' }}>
+                                                        {toLowerCaseExceptFirstLetter(
+                                                            book.status.name
+                                                        )}
+                                                    </Typography>
+                                                </Tooltip>
+                                            ) : (
+                                                <Typography sx={{ width: '100px' }}>
+                                                    {toLowerCaseExceptFirstLetter(book.status.name)}
+                                                </Typography>
+                                            )}
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
