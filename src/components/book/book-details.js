@@ -295,12 +295,12 @@ const BookDetails = (props) => {
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
-                                        <TblCell>{titles.description}</TblCell>
-                                        <TblCell>{book.description}</TblCell>
-                                    </TableRow>
-                                    <TableRow>
                                         <TblCell>{titles.owner}</TblCell>
                                         <TblCell>{`${book.owner.name} ${book.owner.surname}`}</TblCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TblCell>{titles.description}</TblCell>
+                                        <TblCell>{book.description}</TblCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

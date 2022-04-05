@@ -144,18 +144,44 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public boolean isReader(long userId, long bookId) {
+    public BookingInfo getBookingInfo(long bookId) {
 
-        log.info("Try to find active booking by book id = {} and user id = {}", bookId, userId);
+        log.info("Try to find active booking by book id = {}", bookId);
 
-        if (bookingRepository.findByActiveIsTrueAndReaderIdAndBookId(userId, bookId).isPresent()) {
+        Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
 
-            return true;
+        return  checkAndBuildBookingInfo(bookId, bookingOptional);
+    }
 
-        } else {
+    private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional) {
 
-            return false;
+        if (bookingOptional.isPresent()) {
+
+            BookingInfo bookingInfo = new BookingInfo();
+
+            Booking currentBooking = bookingOptional.get();
+            setFullNameReaderToBookingInfo(bookingInfo, currentBooking);
+            checkAndSetCurrentUserIsReader(bookingInfo, currentBooking);
+            bookingInfo.setBookingEndDate(currentBooking.getFinishDate());
+
+            return bookingInfo;
+
+        } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
+    }
+
+    private void checkAndSetCurrentUserIsReader(BookingInfo bookingInfo, Booking booking) {
+
+        if (securityUserDetailsService.getCurrentUserId() == booking.getReader().getId()) {
+
+            bookingInfo.setCurrentUserReader(true);
         }
+    }
+
+    private void setFullNameReaderToBookingInfo(BookingInfo bookingInfo, Booking booking) {
+
+        String fullNameOfReader = booking.getReader().getName() + " " + booking.getReader().getSurname();
+        bookingInfo.setNameOfReader(fullNameOfReader);
+
     }
 
     @Transactional

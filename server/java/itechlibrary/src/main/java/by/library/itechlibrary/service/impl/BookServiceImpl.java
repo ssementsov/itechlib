@@ -4,13 +4,16 @@ import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.book.BookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.booking.BookingInfoDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
+import by.library.itechlibrary.entity.BookingInfo;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
 import by.library.itechlibrary.mapper.BookMapper;
+import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
@@ -34,6 +37,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     private final BookMapper bookMapper;
+
+    private final BookingInfoMapper bookingInfoMapper;
 
     private final UserService userService;
 
@@ -93,13 +98,17 @@ public class BookServiceImpl implements BookService {
     public FullBookDto findByIdFullVersion(long id) {
 
         Book book = findById(id);
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         log.info("Try to map book to bookAndIsReaderDto");
 
         FullBookDto fullBookDto = bookMapper.toFullBookDto(book);
-        boolean isReader = bookingService.isReader(currentUserId, id);
-        fullBookDto.setReader(isReader);
+
+        if (book.getStatus().getName().equals(StatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = bookingService.getBookingInfo(id);
+            fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
 
         return fullBookDto;
     }
