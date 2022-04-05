@@ -48,6 +48,20 @@ const TblCell = styled(TableCell)(() => ({
     padding: '5px 35px',
 }));
 
+const getBookingEndDate = (dateArray) => {
+    let date = '';
+    if (dateArray) {
+        dateArray.reverse().forEach((item, index) => {
+            if (index === 2) {
+                date += item;
+            } else {
+                date += item.toString().length > 1 ? `${item}.` : `0${item}.`;
+            }
+        });
+    }
+    return date;
+};
+
 const BookDetails = (props) => {
     const { book, onUpdate, isAssigned, assignHandler } = props;
     const router = useRouter();
@@ -59,6 +73,7 @@ const BookDetails = (props) => {
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
+    const bookingEndDate = getBookingEndDate(book.bookingInfoDto?.bookingEndDate);
 
     useEffect(() => {
         if (isAssigned) {
@@ -281,14 +296,14 @@ const BookDetails = (props) => {
                                                     title={`Reader: ${book.bookingInfoDto?.nameOfReader}`}
                                                     placement="right"
                                                 >
-                                                    <Typography sx={{ width: '100px' }}>
-                                                        {toLowerCaseExceptFirstLetter(
+                                                    <Typography sx={{ width: '170px' }}>
+                                                        {`${toLowerCaseExceptFirstLetter(
                                                             book.status.name
-                                                        )}
+                                                        )} till ${bookingEndDate}`}
                                                     </Typography>
                                                 </Tooltip>
                                             ) : (
-                                                <Typography sx={{ width: '100px' }}>
+                                                <Typography sx={{ width: '170px' }}>
                                                     {toLowerCaseExceptFirstLetter(book.status.name)}
                                                 </Typography>
                                             )}
