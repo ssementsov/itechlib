@@ -1,6 +1,7 @@
 package by.library.itechlibrary.mapper;
 
-import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
+import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.entity.Book;
@@ -28,7 +29,13 @@ public interface BookMapper {
     @Named(value = "fullBookDto")
     FullBookDto toFullBookDto(Book book);
 
-    @Named(value = "mapBookDtoToBook")
-    Book toBook(BookDto book);
+    @Named(value = "mapWithLikAndStatusBookDtoToBook")
+    Book toBook(WithLikAndStatusBookDto book);
+
+    @Named(value = "ResponseOwnBookDto")
+    ResponseOwnBookDto mapToResponseOwnBookDto(Book book);
+
+    @IterableMapping(qualifiedByName = "ResponseOwnBookDto")
+    List<ResponseOwnBookDto> mapToResponseOwnBookDtoList(List<Book> books);
 
 }

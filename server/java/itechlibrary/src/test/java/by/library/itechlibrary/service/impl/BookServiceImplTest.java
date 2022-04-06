@@ -5,11 +5,12 @@ import by.library.itechlibrary.dto.BookStatusDto;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
 import by.library.itechlibrary.dto.UserDto;
-import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
-import by.library.itechlibrary.dto.booking.BookingInfoDto;
+import by.library.itechlibrary.dto.booking.bookingInfo.BookingInfoDto;
 import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
@@ -88,7 +89,7 @@ class BookServiceImplTest {
     @Test
     void update() {
 
-        BookDto bookDto = getTestBookDto();
+        WithLikAndStatusBookDto bookDto = getTestBookDto();
         Book book = getTestBook();
         FullBookDto fullBookDto = getTestFullBookDto();
 
@@ -117,7 +118,7 @@ class BookServiceImplTest {
         Mockito.doReturn(Optional.of(book)).when(bookRepository).findById(bookId);
         Mockito.doReturn(fullBookDto).when(bookMapper).toFullBookDto(book);
 
-        Assertions.assertEquals(fullBookDto, bookService.findByIdFullVersion(bookId));
+        Assertions.assertEquals(fullBookDto, bookService.getByIdFullVersion(bookId));
 
         Mockito.verify(bookMapper, Mockito.times(1)).toFullBookDto(book);
         Mockito.verify(securityUserDetailsService, Mockito.times(0)).getCurrentUserId();
@@ -134,7 +135,7 @@ class BookServiceImplTest {
 
         Mockito.doThrow(new NotFoundException(exceptionMessage + id)).when(bookRepository).findById(id);
 
-        NotFoundException exception = Assertions.assertThrowsExactly(NotFoundException.class, () -> bookService.findByIdFullVersion(id));
+        NotFoundException exception = Assertions.assertThrowsExactly(NotFoundException.class, () -> bookService.getByIdFullVersion(id));
         Assertions.assertEquals(exceptionMessage + id, exception.getMessage());
 
     }
@@ -150,7 +151,7 @@ class BookServiceImplTest {
         Mockito.doReturn(books).when(bookRepository).findAllByOwnerId(userId);
         Mockito.doReturn(withOwnerBookDtos).when(bookMapper).mapWithOwnerBookDtoList(books);
 
-        Assertions.assertEquals(withOwnerBookDtos, bookService.findOwnersBook());
+        Assertions.assertEquals(withOwnerBookDtos, bookService.getOwnersBook());
 
         Mockito.verify(bookMapper, Mockito.times(1)).mapWithOwnerBookDtoList(books);
         Mockito.verify(bookRepository, Mockito.times(1)).findAllByOwnerId(userId);
@@ -308,15 +309,21 @@ class BookServiceImplTest {
 
     private BookingInfoDto getBookingInfoDto(){
 
-        return new BookingInfoDto(true, "IVAN IVANOVICH", LocalDate.now());
+        BookingInfoDto bookingInfoDto = new BookingInfoDto(true, "IVAN IVANOVICH");
+        bookingInfoDto.setBookingEndDate(LocalDate.now());
+
+        return bookingInfoDto;
     }
 
     private BookingInfo getBookingInfo(){
 
-        return new BookingInfo(true, "IVAN IVANOVICH", LocalDate.now());
+        BookingInfo bookingInfo = new BookingInfo(true, "IVAN IVANOVICH");
+        bookingInfo.setBookingEndDate(LocalDate.now());
+
+        return bookingInfo;
     }
 
-    private BookDto getTestBookDto() {
+    private WithLikAndStatusBookDto getTestBookDto() {
 
         LanguageDto language = new LanguageDto((short) 1, "ENGLISH");
         CategoryDto category = new CategoryDto((short) 1, "PROFESSIONAL");
@@ -328,7 +335,7 @@ class BookServiceImplTest {
         user.setName("IVAN");
         user.setSurname("IVANOV");
 
-        BookDto book = new BookDto();
+        WithLikAndStatusBookDto book = new WithLikAndStatusBookDto();
         book.setRate(2);
         book.setAuthor("Ivan Ivanov");
         book.setDescription("test description");

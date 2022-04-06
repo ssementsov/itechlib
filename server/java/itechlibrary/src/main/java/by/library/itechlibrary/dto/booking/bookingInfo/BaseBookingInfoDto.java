@@ -1,4 +1,4 @@
-package by.library.itechlibrary.entity;
+package by.library.itechlibrary.dto.booking.bookingInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,11 +9,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingInfo {
-
-    private boolean isCurrentUserReader;
-
-    private String nameOfReader;
+public class BaseBookingInfoDto {
 
     private LocalDate bookingEndDate;
 
