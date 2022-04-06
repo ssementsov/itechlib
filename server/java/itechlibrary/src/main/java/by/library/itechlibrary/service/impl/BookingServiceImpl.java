@@ -6,6 +6,8 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.bookingInfo.BaseBookingInfo;
+import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
@@ -148,9 +150,44 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Try to find active booking by book id = {}", bookId);
 
-        Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
+        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
 
-        return  checkAndBuildBookingInfo(bookId, bookingOptional);
+        return checkAndBuildBookingInfo(bookId, bookingOptional);
+    }
+
+    @Override
+    public BaseBookingInfo getBaseBookingInfo(long bookId) {
+
+        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
+
+        if (bookingOptional.isPresent()) {
+
+            BaseBookingInfo baseBookingInfo = new BaseBookingInfo();
+            baseBookingInfo.setBookingEndDate(bookingOptional.get().getFinishDate());
+
+            return baseBookingInfo;
+
+        } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
+    }
+
+    @Transactional
+    @Override
+    public void disableCurrentBooking(long bookId) {
+
+        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
+
+        if (bookingOptional.isPresent()) {
+
+            Booking booking = bookingOptional.get();
+            booking.setActive(false);
+
+        }
+    }
+
+    private Optional<Booking> getActiveByBookId(long bookId) {
+
+        return bookingRepository.findByBookIdAndActiveIsTrue(bookId);
+
     }
 
     private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional) {
@@ -182,20 +219,6 @@ public class BookingServiceImpl implements BookingService {
         String fullNameOfReader = booking.getReader().getName() + " " + booking.getReader().getSurname();
         bookingInfo.setNameOfReader(fullNameOfReader);
 
-    }
-
-    @Transactional
-    @Override
-    public void disableCurrentBooking(long bookId) {
-
-        Optional<Booking> bookingOptional = bookingRepository.findByBookIdAndActiveIsTrue(bookId);
-
-        if (bookingOptional.isPresent()) {
-
-            Booking booking = bookingOptional.get();
-            booking.setActive(false);
-
-        }
     }
 
     private Booking findByBookingId(long bookId) {

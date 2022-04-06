@@ -1,13 +1,13 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.book.BookDto;
+import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
+import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
-import by.library.itechlibrary.dto.booking.BookingInfoDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
-import by.library.itechlibrary.entity.BookingInfo;
+import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
@@ -61,7 +61,7 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public FullBookDto update(BookDto bookDto) {
+    public FullBookDto update(WithLikAndStatusBookDto bookDto) {
 
         log.info("Try to update book");
 
@@ -95,7 +95,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public FullBookDto findByIdFullVersion(long id) {
+    public FullBookDto getByIdFullVersion(long id) {
 
         Book book = findById(id);
 
@@ -114,15 +114,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<WithOwnerBookDto> findOwnersBook() {
+    public List<WithOwnerBookDto> getOwnersBook() {
 
         log.info("Try get books by user id.");
 
         long ownerId = securityUserDetailsService.getCurrentUserId();
-
         List<Book> books = bookRepository.findAllByOwnerId(ownerId);
 
         return bookMapper.mapWithOwnerBookDtoList(books);
+    }
+
+    @Override
+    public List<ResponseOwnBookDto> getCurrentUsersBookedBooks() {
+
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+        List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
+        List<ResponseOwnBookDto> responseOwnBookDtos = bookMapper.mapToResponseOwnBookDtoList(currentBooks);
+
+        responseOwnBookDtos.forEach(x -> x.setBaseBookingInfo(bookingInfoMapper
+                .mapToBaseBookingInfoDto(bookingService.getBaseBookingInfo(x.getId()))));
+
+        return responseOwnBookDtos;
     }
 
     @Transactional
