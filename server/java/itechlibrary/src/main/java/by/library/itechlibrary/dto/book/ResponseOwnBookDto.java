@@ -1,6 +1,6 @@
 package by.library.itechlibrary.dto.book;
 
-import by.library.itechlibrary.dto.UserDto;
+import by.library.itechlibrary.dto.booking.bookingInfo.BaseBookingInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WithOwnerBookDto extends WithLikAndStatusBookDto {
+public class ResponseOwnBookDto extends BaseBookDto {
 
-    private UserDto owner;
+    private BaseBookingInfoDto baseBookingInfo;
 
 }

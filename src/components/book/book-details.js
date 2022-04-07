@@ -49,17 +49,24 @@ const TblCell = styled(TableCell)(() => ({
 }));
 
 const getBookingEndDate = (dateArray) => {
-    let date = '';
+    let year = '';
+    let month = '';
+    let day = '';
     if (dateArray) {
-        dateArray.reverse().forEach((item, index) => {
+        dateArray.forEach((item, index) => {
+            const correctNumber = item.toString().length > 1 ? `${item}.` : `0${item}.`;
+            if (index === 0) {
+                year += item;
+            }
+            if (index === 1) {
+                month += correctNumber;
+            }
             if (index === 2) {
-                date += item;
-            } else {
-                date += item.toString().length > 1 ? `${item}.` : `0${item}.`;
+                day += correctNumber;
             }
         });
     }
-    return date;
+    return month + day + year;
 };
 
 const BookDetails = (props) => {

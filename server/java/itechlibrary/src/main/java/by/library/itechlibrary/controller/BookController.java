@@ -1,6 +1,7 @@
 package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
@@ -35,15 +36,23 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public FullBookDto getBookById(@PathVariable("id") long id) {
 
-        return bookService.findByIdFullVersion(id);
+        return bookService.getByIdFullVersion(id);
     }
 
-    @GetMapping("/user/")
+    @GetMapping("/users/")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getBooksByUserId() {
+    public List<WithOwnerBookDto> getUsersBook() {
 
-        return bookService.findOwnersBook();
+        return bookService.getOwnersBook();
+    }
+
+    @GetMapping("/users/bookings")
+    @ApiOperation("get current users booked books")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ResponseOwnBookDto> getCurrentUsersBookedBooks() {
+
+        return bookService.getCurrentUsersBookedBooks();
     }
 
     @PostMapping
@@ -70,7 +79,7 @@ public class BookController {
         bookService.remove(id);
     }
 
-    @PostMapping(path = "/attach-photo")
+    @PostMapping(path = "/photo")
     @ApiOperation("attach photo to book")
     @ResponseStatus(HttpStatus.CREATED)
     public void addPhotoBook(@RequestPart(value = "file") final MultipartFile multipartFile,
@@ -80,7 +89,7 @@ public class BookController {
 
     }
 
-    @DeleteMapping(path = "/{fileId}/removed-photo")
+    @DeleteMapping(path = "/{fileId}/photo")
     @ApiOperation("removed photo to book by file id")
     @ResponseStatus(HttpStatus.OK)
     public void removedPhotoBook(@PathVariable long fileId) {
