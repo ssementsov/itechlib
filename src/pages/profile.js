@@ -9,22 +9,26 @@ import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
 import ProfileDetails from './../components/profile/profile-details';
 import { LOGIN_PATH } from '../common/constants/route-constants';
+import { avatarSlice } from './../store/reducers/AvatarSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 function ProfilePage() {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [user, setUser] = useState({});
     const [isLoaded, setIsLoaded] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
-    const [isUploadedAvatar, setIsUploadedAvatar] = useState(false);
-    const [isUpdatedAvatar, setIsUpdatedAvatar] = useState(false);
+    const isUpdatedAvatar = useSelector((state) => state.avatarReducer.isUpdatedAvatar);
+    const isUploadedAvatar = useSelector((state) => state.avatarReducer.isUploadedAvatar);
     const { defaultErrorSnackbar } = useCustomSnackbar();
+    const { uploadAvatar, updateAvatar, setAvatarData, deleteAvatarData } = avatarSlice.actions;
 
     const addAvatar = (file, onClose) => {
         UserAPI.addAvatar(file)
             .then(() => {
                 onClose();
-                setIsUploadedAvatar(true);
-                setIsUpdatedAvatar(true);
+                dispatch(uploadAvatar(true));
+                dispatch(updateAvatar(true));
             })
             .catch(() => {
                 defaultErrorSnackbar();
@@ -34,9 +38,9 @@ function ProfilePage() {
     const deleteAvatar = (imageId, onDeleteButtonClose) => {
         UserAPI.deleteAvatar(imageId)
             .then(() => {
-                setIsUploadedAvatar(false);
+                dispatch(uploadAvatar(false));
+                dispatch(deleteAvatarData());
                 onDeleteButtonClose();
-                localStorage.removeItem('avatar');
             })
             .catch(() => defaultErrorSnackbar());
     };
@@ -49,19 +53,27 @@ function ProfilePage() {
                 setIsOwner(true);
                 let avatar = res.data.fileInfo;
                 if (avatar) {
-                    localStorage.setItem('avatar', JSON.stringify(avatar));
-                    setIsUploadedAvatar(true);
+                    dispatch(setAvatarData(avatar));
+                    dispatch(uploadAvatar(true));
                 }
             })
             .catch((err) => {
-                if (err.response.status === 403) {
+                if (err.response?.status === 403) {
                     router.replace(LOGIN_PATH);
                     localStorage.removeItem('token');
                 } else {
                     defaultErrorSnackbar();
                 }
             });
-    }, [defaultErrorSnackbar, isUpdatedAvatar, isUploadedAvatar, router]);
+    }, [
+        defaultErrorSnackbar,
+        dispatch,
+        isUpdatedAvatar,
+        isUploadedAvatar,
+        router,
+        setAvatarData,
+        uploadAvatar,
+    ]);
 
     if (!isLoaded) {
         return (
@@ -102,9 +114,6 @@ function ProfilePage() {
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
                                 <UploadImageCard
-                                    isUploaded={isUploadedAvatar}
-                                    onUpdate={setIsUpdatedAvatar}
-                                    onUpload={setIsUploadedAvatar}
                                     data={user}
                                     isOwner={isOwner}
                                     onAdd={addAvatar}

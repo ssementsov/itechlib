@@ -13,6 +13,7 @@ import Divider from '@mui/material/Divider';
 import Logout from '@mui/icons-material/Logout';
 import { GoogleLogout } from 'react-google-login';
 import { LOGIN_PATH, PROFILE_PATH } from '../common/constants/route-constants';
+import { useSelector } from 'react-redux';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -49,8 +50,10 @@ const styleForMenu = {
 
 export const DashboardNavbar = (props) => {
     const router = useRouter();
+    const avatarData = useSelector((state) => state.avatarReducer.avatarData);
     const { onSidebarOpen, ...other } = props;
     const [avatar, setAvatar] = useState('');
+
     const popupState = usePopupState({
         variant: 'popover',
         popupId: 'demoMenu',
@@ -62,13 +65,11 @@ export const DashboardNavbar = (props) => {
     };
 
     useEffect(() => {
-        const avatarDataStr = localStorage.getItem('avatar');
-        if (avatarDataStr) {
-            const avatarData = JSON.parse(avatarDataStr);
+        if (avatarData) {
             const avatartUrl = `data:image/${avatarData?.extension};base64,${avatarData?.fileData}`;
             setAvatar(avatartUrl);
         }
-    }, []);
+    }, [avatarData]);
 
     return (
         <>
