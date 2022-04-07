@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { Button, IconButton } from '@mui/material';
 import { LightDeleteIcon } from '../../icons/light-delete-icon';
 import StyledCard from './styled-card';
+import { useSelector } from 'react-redux';
 
 const HiddenBookCoverTools = (props) => {
-    const { onUploadButtonOpen, visible, isUploaded, onOpen } = props;
+    const { onUploadButtonOpen, visible, onOpen } = props;
+    const isUploadedAvatar = useSelector((state) => state.avatarReducer.isUploadedAvatar);
 
     return (
         <StyledCard
             sx={{
-                display: visible && isUploaded ? 'block' : 'none',
+                display: visible && isUploadedAvatar ? 'block' : 'none',
                 background: 'rgba(0, 0, 0, 0.6)',
             }}
         >
@@ -29,10 +31,7 @@ const HiddenBookCoverTools = (props) => {
                 >
                     <LightDeleteIcon fontSize="larg" />
                 </IconButton>
-                <Button
-                    onClick={onUploadButtonOpen}
-                    sx={{ mr: 1, color: 'white' }}
-                >
+                <Button onClick={onUploadButtonOpen} sx={{ mr: 1, color: 'white' }}>
                     Upload image
                 </Button>
             </div>
@@ -43,7 +42,6 @@ const HiddenBookCoverTools = (props) => {
 HiddenBookCoverTools.propTypes = {
     onUploadButtonOpen: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
-    isUploaded: PropTypes.bool.isRequired,
     onOpen: PropTypes.func.isRequired,
 };
 

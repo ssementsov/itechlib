@@ -10,15 +10,15 @@ import { theme } from '../theme';
 import { SnackbarProvider } from 'notistack';
 import { Slide } from '@mui/material';
 import { api } from '../api/api';
+import { Provider } from 'react-redux';
+import { setupStore } from './../store/store';
+
+const store = setupStore();
 
 const clientSideEmotionCache = createEmotionCache();
 
 const App = (props) => {
-    const {
-        Component,
-        emotionCache = clientSideEmotionCache,
-        pageProps,
-    } = props;
+    const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
     const getLayout = Component.getLayout ?? ((page) => page);
     const [isAssigned, setIsAssigned] = useState(false);
     const assignHandler = useCallback((assigned) => {
@@ -32,37 +32,36 @@ const App = (props) => {
     }, []);
 
     return (
-        <CacheProvider value={emotionCache}>
-            <Head>
-                <title>ITechLib</title>
-                <meta
-                    name="viewport"
-                    content="initial-scale=1, width=device-width"
-                />
-            </Head>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <ThemeProvider theme={theme}>
-                    <SnackbarProvider
-                        maxSnack={3}
-                        hideIconVariant
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'center',
-                        }}
-                        TransitionComponent={Slide}
-                    >
-                        <CssBaseline />
-                        {getLayout(
-                            <Component
-                                isAssigned={isAssigned}
-                                assignHandler={assignHandler}
-                                {...pageProps}
-                            />
-                        )}
-                    </SnackbarProvider>
-                </ThemeProvider>
-            </LocalizationProvider>
-        </CacheProvider>
+        <Provider store={store}>
+            <CacheProvider value={emotionCache}>
+                <Head>
+                    <title>ITechLib</title>
+                    <meta name="viewport" content="initial-scale=1, width=device-width" />
+                </Head>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <ThemeProvider theme={theme}>
+                        <SnackbarProvider
+                            maxSnack={3}
+                            hideIconVariant
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                            TransitionComponent={Slide}
+                        >
+                            <CssBaseline />
+                            {getLayout(
+                                <Component
+                                    isAssigned={isAssigned}
+                                    assignHandler={assignHandler}
+                                    {...pageProps}
+                                />
+                            )}
+                        </SnackbarProvider>
+                    </ThemeProvider>
+                </LocalizationProvider>
+            </CacheProvider>
+        </Provider>
     );
 };
 

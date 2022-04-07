@@ -8,28 +8,22 @@ import HiddenBookCoverTools from './hidden-book-cover-tools';
 import { useBoolean } from '../../utils/boolean-hook';
 import styles from './upload-image-card.module.css';
 import StyledCard from './styled-card';
+import { useSelector, useDispatch } from 'react-redux';
+import { avatarSlice } from '../../store/reducers/AvatarSlice';
 
 const UploadImageCard = (props) => {
-    const {
-        isUploaded,
-        onUpdate,
-        data,
-        isOwner,
-        onAdd,
-        onDelete,
-        title,
-        description,
-    } = props;
+    const { data, isOwner, onAdd, onDelete, title, description } = props;
     const router = useRouter();
+    const dispatch = useDispatch();
     const id = router.query.id;
+    const isUploadedAvatar = useSelector((state) => state.avatarReducer.isUploadedAvatar);
+    const { updateAvatar } = avatarSlice.actions;
     const [visible, setVisible, setHidden] = useBoolean();
     const [selectedImage, setSelectedImage] = useState(null);
     const [isUrlImage, setIsUrlImage] = useState(null);
     const [isAllowedImage, setIsAllowedImage] = useState(false);
-    const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] =
-        useBoolean();
-    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] =
-        useBoolean();
+    const [isUploadButtonOpen, setUploadButtonOpen, setUploadButtonClose] = useBoolean();
+    const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
 
     const imageUploadHandler = () => {
         const file = new FormData();
@@ -69,7 +63,7 @@ const UploadImageCard = (props) => {
 
     const onHoverHandler = () => {
         setVisible();
-        onUpdate(false);
+        dispatch(updateAvatar(false));
     };
 
     return (
@@ -111,7 +105,7 @@ const UploadImageCard = (props) => {
                         backgroundPosition: 'center',
                     }}
                 >
-                    {isOwner && !isUploaded && (
+                    {isOwner && !isUploadedAvatar && (
                         <Button onClick={setUploadButtonOpen} sx={{ mr: 1 }}>
                             Upload image
                         </Button>
@@ -120,7 +114,6 @@ const UploadImageCard = (props) => {
                 {isOwner && (
                     <HiddenBookCoverTools
                         visible={visible}
-                        isUploaded={isUploaded}
                         onUploadButtonOpen={setUploadButtonOpen}
                         onOpen={setDeleteButtonOpen}
                     />
@@ -132,10 +125,8 @@ const UploadImageCard = (props) => {
 
 UploadImageCard.propTypes = {
     isOwner: PropTypes.bool.isRequired,
-    isUploaded: PropTypes.bool.isRequired,
     onDelete: PropTypes.func.isRequired,
     onAdd: PropTypes.func.isRequired,
-    onUpdate: PropTypes.func.isRequired,
     data: PropTypes.object,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
