@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 
@@ -26,9 +27,9 @@ public class BookController {
     @GetMapping
     @ApiOperation("get all books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getBooks() {
+    public List<WithOwnerBookDto> getBooks(@PathParam("pageNumber") int pageNumber, @PathParam("pageCapacity") int pageCapacity) {
 
-        return bookService.findAll();
+        return bookService.findAll(pageNumber, pageCapacity);
     }
 
     @GetMapping("/{id}")
@@ -42,9 +43,9 @@ public class BookController {
     @GetMapping("/users/")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getUsersBook() {
+    public List<WithOwnerBookDto> getUsersBook(@PathParam("pageNumber") int pageNumber, @PathParam("pageCapacity") int pageCapacity) {
 
-        return bookService.getOwnersBook();
+        return bookService.getOwnersBook(pageNumber, pageCapacity);
     }
 
     @GetMapping("/users/bookings")

@@ -7,6 +7,7 @@ public final class PaginationConstant {
 
     public static final Integer MAX_CAPACITY_VALUE = 50;
 
-    public static final String SORT_BY_DATE = "createDate";
+    public static final String SORT_BY_DATE_SUGGESTED_BOOK = "createDate";
+    public static final String SORT_BY_DATE_BOOK = "createDate";
 
 }
