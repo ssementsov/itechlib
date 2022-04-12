@@ -9,4 +9,5 @@ export const titles = {
     status: 'Status',
     owner: 'Book owner',
     comment: 'Comment',
+    dueDate: 'Due date',
 };

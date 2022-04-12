@@ -18,10 +18,9 @@ import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
 import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from './../../utils/functions/transform-words';
 import { trimmedString } from './../../utils/functions/trim-long-string';
-import { types } from '../../types';
+import { getDate } from '../../utils/functions/get-date';
 
-const BooksListResults = ({ books, isStartedSearch }) => {
-    const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
+const BooksInUseListResults = ({ books, isStartedSearch }) => {
     return (
         <Card>
             <PerfectScrollbar>
@@ -37,12 +36,12 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                                 <TableCell style={{ width: 115, textAlign: 'center' }}>
                                     {titles.rate}
                                 </TableCell>
-                                <TableCell style={{ width: 115 }}>{titles.status}</TableCell>
+                                <TableCell style={{ width: 115 }}>{titles.dueDate}</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {books.length ? (
-                                sortedBooks.map((book) => {
+                                books.map((book) => {
                                     return (
                                         <TableRow
                                             onClick={() =>
@@ -78,7 +77,7 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                                                 </Tooltip>
                                             </TableCell>
                                             <TableCell>
-                                                {toLowerCaseExceptFirstLetter(book.status.name)}
+                                                {getDate(book.baseBookingInfo.bookingEndDate)}
                                             </TableCell>
                                         </TableRow>
                                     );
@@ -107,9 +106,8 @@ const BooksListResults = ({ books, isStartedSearch }) => {
     );
 };
 
-BooksListResults.propTypes = {
-    books: PropTypes.arrayOf(types.bookTypes),
+BooksInUseListResults.propTypes = {
     isStartedSearch: PropTypes.bool,
 };
 
-export default BooksListResults;
+export default BooksInUseListResults;

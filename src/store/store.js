@@ -1,8 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import avatarReducer from './reducers/AvatarSlice';
+import booksInUseReducer from './reducers/BooksInUseSlice';
 
 const rootReducer = combineReducers({
-    avatarReducer,
+    avatar: avatarReducer,
+    booksInUse: booksInUseReducer,
 });
 
 export const setupStore = () => {

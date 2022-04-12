@@ -16,6 +16,7 @@ import {
     REGISTER_PATH,
     HELP_PATH,
     SUGGESTED_BOOKS_PATH,
+    BOOKS_IN_USE,
 } from '../common/constants/route-constants';
 
 const items = [
@@ -35,15 +36,20 @@ const items = [
         title: 'Suggested books',
     },
     {
-        href: REGISTER_PATH,
-        icon: <SettingsIcon fontSize="small" />,
-        title: 'Settings',
+        href: BOOKS_IN_USE,
+        icon: <MyBooksIcon fontSize="small" />,
+        title: 'Books in use',
     },
-    {
-        href: HELP_PATH,
-        icon: <HelpIcon fontSize="small" />,
-        title: 'Help',
-    },
+    // {
+    //     href: REGISTER_PATH,
+    //     icon: <SettingsIcon fontSize="small" />,
+    //     title: 'Settings',
+    // },
+    // {
+    //     href: HELP_PATH,
+    //     icon: <HelpIcon fontSize="small" />,
+    //     title: 'Help',
+    // },
 ];
 
 export const DashboardSidebar = (props) => {

@@ -46,6 +46,7 @@ const MainCatalogue = () => {
                 title={'Main catalogue'}
                 onUpdateBooks={updateBooks}
                 onUpdateLoadingStatus={setIsLoaded}
+                isAllBooks={true}
             />
         );
     }

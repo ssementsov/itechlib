@@ -39,6 +39,7 @@ import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
+import { getDate } from '../../utils/functions/get-date';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -47,27 +48,6 @@ const TblCell = styled(TableCell)(() => ({
     borderTop: '1px solid #E7E8EF',
     padding: '5px 35px',
 }));
-
-const getBookingEndDate = (dateArray) => {
-    let year = '';
-    let month = '';
-    let day = '';
-    if (dateArray) {
-        dateArray.forEach((item, index) => {
-            const correctNumber = item.toString().length > 1 ? `${item}.` : `0${item}.`;
-            if (index === 0) {
-                year += item;
-            }
-            if (index === 1) {
-                month += correctNumber;
-            }
-            if (index === 2) {
-                day += correctNumber;
-            }
-        });
-    }
-    return month + day + year;
-};
 
 const BookDetails = (props) => {
     const { book, onUpdate, isAssigned, assignHandler } = props;
@@ -80,7 +60,7 @@ const BookDetails = (props) => {
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
-    const bookingEndDate = getBookingEndDate(book.bookingInfoDto?.bookingEndDate);
+    const bookingEndDate = getDate(book.bookingInfoDto?.bookingEndDate);
 
     useEffect(() => {
         if (isAssigned) {
