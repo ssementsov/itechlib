@@ -1,14 +1,15 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.PaginationConstant;
 import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
-import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
 import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
@@ -19,8 +20,11 @@ import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FileInfoService;
 import by.library.itechlibrary.service.UserService;
+import by.library.itechlibrary.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,13 +54,14 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public List<WithOwnerBookDto> findAll() {
+    public List<WithOwnerBookDto> findAll(int pageNumber, int pageCapacity) {
 
         log.info("Try to find all books");
 
-        List<Book> books = bookRepository.findAll();
+        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_BOOK);
+        Page<Book> books = bookRepository.findAll(pageable);
 
-        return bookMapper.mapWithOwnerBookDtoList(books);
+        return bookMapper.mapWithOwnerBookDtoList(books.getContent());
     }
 
     @Transactional
@@ -114,18 +119,21 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<WithOwnerBookDto> getOwnersBook() {
+    public List<WithOwnerBookDto> getOwnersBook(int pageNumber, int pageCapacity) {
 
         log.info("Try get books by user id.");
 
+        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_BOOK);
         long ownerId = securityUserDetailsService.getCurrentUserId();
-        List<Book> books = bookRepository.findAllByOwnerId(ownerId);
+        List<Book> books = bookRepository.findAllByOwnerId(ownerId, pageable);
 
         return bookMapper.mapWithOwnerBookDtoList(books);
     }
 
     @Override
     public List<ResponseOwnBookDto> getCurrentUsersBookedBooks() {
+
+        log.info("Try to get current users books.");
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);

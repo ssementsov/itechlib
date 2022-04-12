@@ -2,6 +2,7 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.CategoryConstant;
 import by.library.itechlibrary.constant.LanguageConstant;
+import by.library.itechlibrary.constant.PaginationConstant;
 import by.library.itechlibrary.dto.SuggestedBookDto;
 import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import by.library.itechlibrary.entity.Category;
@@ -47,7 +48,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         log.info("Try to get all suggested books.");
 
-        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity);
+        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_SUGGESTED_BOOK);
         Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(pageable);
         List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
         suggestedBookDtoList.forEach(this::setGeneralAmountVote);

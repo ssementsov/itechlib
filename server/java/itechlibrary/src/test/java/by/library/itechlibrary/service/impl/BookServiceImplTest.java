@@ -25,6 +25,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
@@ -57,13 +59,16 @@ class BookServiceImplTest {
 
         List<Book> books = getTestBookList();
         List<WithOwnerBookDto> withOwnerBookDtoListTemplate = getTestWithOwnerBookDtoList();
+        int pageNumber = 0;
+        int pageCapacity = 1;
+        Pageable pageable = PageRequest.of(pageNumber, pageCapacity);
 
-        Mockito.doReturn(books).when(bookRepository).findAll();
+        Mockito.doReturn(books).when(bookRepository).findAll(pageable);
         Mockito.doReturn(withOwnerBookDtoListTemplate).when(bookMapper).mapWithOwnerBookDtoList(books);
 
-        Assertions.assertEquals(withOwnerBookDtoListTemplate, bookService.findAll());
+        Assertions.assertEquals(withOwnerBookDtoListTemplate, bookService.findAll(pageNumber, pageCapacity));
 
-        Mockito.verify(bookRepository, Mockito.times(1)).findAll();
+        Mockito.verify(bookRepository, Mockito.times(1)).findAll(pageable);
         Mockito.verify(bookMapper, Mockito.times(1)).mapWithOwnerBookDtoList(books);
 
     }
@@ -143,18 +148,21 @@ class BookServiceImplTest {
     @Test
     void findOwnersBook() {
 
+        int pageNumber = 0;
+        int pageCapacity = 1;
         long userId = 1;
         List<Book> books = getTestBookList();
         List<WithOwnerBookDto> withOwnerBookDtos = getTestWithOwnerBookDtoList();
+        Pageable pageable = PageRequest.of(pageNumber, pageCapacity);
 
         Mockito.doReturn(userId).when(securityUserDetailsService).getCurrentUserId();
-        Mockito.doReturn(books).when(bookRepository).findAllByOwnerId(userId);
+        Mockito.doReturn(books).when(bookRepository).findAllByOwnerId(userId, pageable);
         Mockito.doReturn(withOwnerBookDtos).when(bookMapper).mapWithOwnerBookDtoList(books);
 
-        Assertions.assertEquals(withOwnerBookDtos, bookService.getOwnersBook());
+        Assertions.assertEquals(withOwnerBookDtos, bookService.getOwnersBook(pageNumber, pageCapacity));
 
         Mockito.verify(bookMapper, Mockito.times(1)).mapWithOwnerBookDtoList(books);
-        Mockito.verify(bookRepository, Mockito.times(1)).findAllByOwnerId(userId);
+        Mockito.verify(bookRepository, Mockito.times(1)).findAllByOwnerId(userId, pageable);
         Mockito.verify(securityUserDetailsService, Mockito.times(1)).getCurrentUserId();
 
     }
