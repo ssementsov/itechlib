@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = {"confirmationData"})
     Optional<User> findById(long id);
 
-    @EntityGraph(attributePaths = {"confirmationData"})
+    @EntityGraph(attributePaths = {"confirmationData", "fileInfo"})
     Optional<User> findByGoogleEmail(String email);
 
     @EntityGraph(attributePaths = {"confirmationData", "fileInfo"})

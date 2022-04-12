@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 08042022-change-date-type-to-book
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName:  add_date
+            newDataType:  DATETIME
+            schemaName:  public
+            tableName:  book

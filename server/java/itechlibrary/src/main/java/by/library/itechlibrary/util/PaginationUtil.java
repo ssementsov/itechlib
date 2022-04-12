@@ -11,10 +11,10 @@ public final class PaginationUtil {
     private PaginationUtil() {
     }
 
-    public static Pageable getPageable(int pageNumber, int pageCapacity) {
+    public static Pageable getPageable(int pageNumber, int pageCapacity, String sortingMode) {
 
         checkPageCapacity(pageCapacity);
-        Sort sortByDate = getSort(PaginationConstant.SORT_BY_DATE);
+        Sort sortByDate = getSort(sortingMode);
 
         return PageRequest.of(pageNumber, pageCapacity, sortByDate);
     }
