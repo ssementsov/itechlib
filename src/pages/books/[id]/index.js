@@ -122,7 +122,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
                                 <UploadImageCard
-                                    isUploaded={isUploadedBookCover}
+                                    isUploadedImage={isUploadedBookCover}
                                     onUpdate={setIsUpdatedBookCover}
                                     onUpload={setIsUploadedBookCover}
                                     data={book}

@@ -8,15 +8,14 @@ import HiddenBookCoverTools from './hidden-book-cover-tools';
 import { useBoolean } from '../../utils/boolean-hook';
 import styles from './upload-image-card.module.css';
 import StyledCard from './styled-card';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { avatarSlice } from '../../store/reducers/AvatarSlice';
 
 const UploadImageCard = (props) => {
-    const { data, isOwner, onAdd, onDelete, title, description } = props;
+    const { data, isOwner, onAdd, onDelete, title, description, isUploadedImage } = props;
     const router = useRouter();
     const dispatch = useDispatch();
     const id = router.query.id;
-    const isUploadedAvatar = useSelector((state) => state.avatarReducer.isUploadedAvatar);
     const { updateAvatar } = avatarSlice.actions;
     const [visible, setVisible, setHidden] = useBoolean();
     const [selectedImage, setSelectedImage] = useState(null);
@@ -29,7 +28,6 @@ const UploadImageCard = (props) => {
         const file = new FormData();
         file.append('bookId', id);
         file.append('file', selectedImage);
-
         onAdd(file, onCloseHandler);
     };
 
@@ -105,7 +103,7 @@ const UploadImageCard = (props) => {
                         backgroundPosition: 'center',
                     }}
                 >
-                    {isOwner && !isUploadedAvatar && (
+                    {isOwner && !isUploadedImage && (
                         <Button onClick={setUploadButtonOpen} sx={{ mr: 1 }}>
                             Upload image
                         </Button>
@@ -130,6 +128,7 @@ UploadImageCard.propTypes = {
     data: PropTypes.object,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    isUploadedImage: PropTypes.bool,
 };
 
 export default UploadImageCard;

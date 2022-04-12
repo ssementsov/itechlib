@@ -50,7 +50,7 @@ const styleForMenu = {
 
 export const DashboardNavbar = (props) => {
     const router = useRouter();
-    const avatarData = useSelector((state) => state.avatarReducer.avatarData);
+    const avatarData = useSelector((state) => state.avatar.avatarData);
     const { onSidebarOpen, ...other } = props;
     const [avatar, setAvatar] = useState('');
 
