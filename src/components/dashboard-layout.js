@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
+import { avatarSlice } from '../store/reducers/AvatarSlice';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -19,8 +21,10 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
 export const DashboardLayout = (props) => {
     const { children } = props;
     const router = useRouter();
+    const dispatch = useDispatch();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [loaded, setLoaded] = useState(false);
+    const { setAvatarData } = avatarSlice.actions;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -32,6 +36,9 @@ export const DashboardLayout = (props) => {
         } else {
             setLoaded(true);
         }
+        const avatarStr = localStorage.getItem('avatar');
+        const avatar = JSON.parse(avatarStr);
+        dispatch(setAvatarData(avatar));
     }, [router]);
 
     if (!loaded) {

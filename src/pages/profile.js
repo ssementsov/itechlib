@@ -53,6 +53,7 @@ function ProfilePage() {
                 setIsOwner(true);
                 let avatar = res.data.fileInfo;
                 if (avatar) {
+                    localStorage.setItem('avatar', JSON.stringify(avatar));
                     dispatch(setAvatarData(avatar));
                     dispatch(uploadAvatar(true));
                 }
