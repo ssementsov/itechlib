@@ -9,10 +9,14 @@ import { useTheme } from '@mui/material/styles';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { api } from '../api/api';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useDispatch } from 'react-redux';
+import { avatarSlice } from '../store/reducers/AvatarSlice';
 
 const Login = () => {
     let theme = useTheme();
     const router = useRouter();
+    const dispatch = useDispatch();
+    const { uploadAvatar, setAvatarData } = avatarSlice.actions;
     const [correctEmail, setCorrectEmail] = useState(true);
     const [isRegistered, setIsRegistered] = useState(false);
     const [loaded, setLoaded] = useState(false);
@@ -26,6 +30,12 @@ const Login = () => {
                     localStorage.setItem('token', res.data.token);
                     api.setupAuth(res.data.token);
                     router.replace(MAIN_CATALOGUE_PATH);
+
+                    let avatar = res.data.fileInfoDto;
+                    if (avatar) {
+                        dispatch(setAvatarData(avatar));
+                        dispatch(uploadAvatar(true));
+                    }
                 })
                 .catch(() => {
                     defaultErrorSnackbar();

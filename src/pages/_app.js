@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { CacheProvider } from '@emotion/react';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -9,7 +9,6 @@ import { createEmotionCache } from '../utils/create-emotion-cache';
 import { theme } from '../theme';
 import { SnackbarProvider } from 'notistack';
 import { Slide } from '@mui/material';
-import { api } from '../api/api';
 import { Provider } from 'react-redux';
 import { setupStore } from './../store/store';
 
@@ -23,13 +22,6 @@ const App = (props) => {
     const [isAssigned, setIsAssigned] = useState(false);
     const assignHandler = useCallback((assigned) => {
         setIsAssigned(assigned);
-    }, []);
-
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            api.setupAuth(token);
-        }
     }, []);
 
     return (

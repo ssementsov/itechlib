@@ -51,6 +51,7 @@ const styleForMenu = {
 export const DashboardNavbar = (props) => {
     const router = useRouter();
     const avatarData = useSelector((state) => state.avatar.avatarData);
+    const isLoadingAvatar = useSelector((state) => state.avatar.isLoadingAvatar);
     const { onSidebarOpen, ...other } = props;
     const [avatar, setAvatar] = useState('');
 
@@ -69,7 +70,7 @@ export const DashboardNavbar = (props) => {
             const avatartUrl = `data:image/${avatarData?.extension};base64,${avatarData?.fileData}`;
             setAvatar(avatartUrl);
         }
-    }, [avatarData]);
+    }, [avatarData, isLoadingAvatar]);
 
     return (
         <>
@@ -104,16 +105,18 @@ export const DashboardNavbar = (props) => {
                         <MenuIcon fontSize="small" />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <IconButton {...bindHover(popupState)} size="small" sx={{ ml: 2 }}>
-                        <Avatar
-                            src={avatar}
-                            sx={{
-                                height: 40,
-                                width: 40,
-                                ml: 1,
-                            }}
-                        ></Avatar>
-                    </IconButton>
+                    {!isLoadingAvatar && (
+                        <IconButton {...bindHover(popupState)} size="small" sx={{ ml: 2 }}>
+                            <Avatar
+                                src={avatar}
+                                sx={{
+                                    height: 40,
+                                    width: 40,
+                                    ml: 1,
+                                }}
+                            ></Avatar>
+                        </IconButton>
+                    )}
                     <HoverMenu
                         {...bindMenu(popupState)}
                         PaperProps={{ ...styleForMenu }}

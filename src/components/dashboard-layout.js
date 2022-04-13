@@ -7,6 +7,8 @@ import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
+import { UserAPI } from '../api/user-api';
+import { api } from '../api/api';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,7 +26,28 @@ export const DashboardLayout = (props) => {
     const dispatch = useDispatch();
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [loaded, setLoaded] = useState(false);
-    const { setAvatarData } = avatarSlice.actions;
+    const { setAvatarData, uploadAvatar, setIsLoadingAvatar } = avatarSlice.actions;
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            api.setupAuth(token);
+        }
+        dispatch(setIsLoadingAvatar(true));
+        UserAPI.getUser()
+            .then((res) => {
+                dispatch(setIsLoadingAvatar(false));
+                let avatar = res.data.fileInfo;
+                if (avatar) {
+                    dispatch(setAvatarData(avatar));
+                    dispatch(uploadAvatar(true));
+                    dispatch(setIsLoadingAvatar(false));
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }, []);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -36,9 +59,6 @@ export const DashboardLayout = (props) => {
         } else {
             setLoaded(true);
         }
-        const avatarStr = localStorage.getItem('avatar');
-        const avatar = JSON.parse(avatarStr);
-        dispatch(setAvatarData(avatar));
     }, [router]);
 
     if (!loaded) {

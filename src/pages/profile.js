@@ -21,14 +21,17 @@ function ProfilePage() {
     const isUpdatedAvatar = useSelector((state) => state.avatar.isUpdatedAvatar);
     const isUploadedAvatar = useSelector((state) => state.avatar.isUploadedAvatar);
     const { defaultErrorSnackbar } = useCustomSnackbar();
-    const { uploadAvatar, updateAvatar, setAvatarData, deleteAvatarData } = avatarSlice.actions;
+    const { uploadAvatar, updateAvatar, setAvatarData, deleteAvatarData, setIsLoadingAvatar } =
+        avatarSlice.actions;
 
     const addAvatar = (file, onClose) => {
+        dispatch(setIsLoadingAvatar(true));
         UserAPI.addAvatar(file)
             .then(() => {
                 onClose();
                 dispatch(uploadAvatar(true));
                 dispatch(updateAvatar(true));
+                dispatch(setIsLoadingAvatar(false));
             })
             .catch(() => {
                 defaultErrorSnackbar();
@@ -53,7 +56,6 @@ function ProfilePage() {
                 setIsOwner(true);
                 let avatar = res.data.fileInfo;
                 if (avatar) {
-                    localStorage.setItem('avatar', JSON.stringify(avatar));
                     dispatch(setAvatarData(avatar));
                     dispatch(uploadAvatar(true));
                 }

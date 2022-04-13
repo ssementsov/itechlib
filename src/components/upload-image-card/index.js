@@ -51,6 +51,7 @@ const UploadImageCard = (props) => {
     const imageDeletedHandler = () => {
         let imageId = data.fileInfo.id;
         onDelete(imageId, setDeleteButtonClose);
+        localStorage.removeItem('avatar');
     };
 
     const onCloseHandler = () => {

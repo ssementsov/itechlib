@@ -1,14 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+    isLoadingAvatar: false,
     isUploadedAvatar: false,
     isUpdatedAvatar: false,
-    avatarData: {},
+    avatarData: null,
 };
 export const avatarSlice = createSlice({
     name: 'avatar',
     initialState,
     reducers: {
+        setIsLoadingAvatar(state, action) {
+            state.isLoadingAvatar = action.payload;
+        },
         uploadAvatar(state, action) {
             state.isUploadedAvatar = action.payload;
         },
