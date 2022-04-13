@@ -40,7 +40,7 @@ public class BookController {
         return bookService.getByIdFullVersion(id);
     }
 
-    @GetMapping("/users/")
+    @GetMapping("/users")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
     public List<WithOwnerBookDto> getUsersBook(@PathParam("pageNumber") int pageNumber,

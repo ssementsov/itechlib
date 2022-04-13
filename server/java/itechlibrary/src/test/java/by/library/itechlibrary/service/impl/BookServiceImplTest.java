@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -372,7 +373,7 @@ class BookServiceImplTest {
         book.setOwner(getTestUser());
         book.setFileInfo(null);
         book.setRate(2);
-        book.setCreateDate(LocalDate.of(2022, 02, 27));
+        book.setCreateDate(LocalDateTime.of(2022, 02, 27, 00, 00, 00));
         book.setAuthor("Ivan Ivanov");
         book.setDescription("test description");
         book.setId(1);
