@@ -9,7 +9,7 @@ import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
 import by.library.itechlibrary.entity.FileInfo;
-import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
+import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
@@ -20,6 +20,7 @@ import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FileInfoService;
 import by.library.itechlibrary.service.UserService;
+import by.library.itechlibrary.util.ResponseOwnBookDtoComparator;
 import by.library.itechlibrary.util.PaginationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +53,11 @@ public class BookServiceImpl implements BookService {
 
     private final SecurityUserDetailsServiceImpl securityUserDetailsService;
 
+    private final ResponseOwnBookDtoComparator responseOwnBookDtoComparator;
+
 
     @Override
-    public List<WithOwnerBookDto> findAll(int pageNumber, int pageCapacity) {
+    public List<WithOwnerBookDto> getAll(int pageNumber, int pageCapacity) {
 
         log.info("Try to find all books");
 
@@ -137,12 +140,14 @@ public class BookServiceImpl implements BookService {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
-        List<ResponseOwnBookDto> responseOwnBookDtos = bookMapper.mapToResponseOwnBookDtoList(currentBooks);
+        List<ResponseOwnBookDto> responseOwnBookDtoList = bookMapper.mapToResponseOwnBookDtoList(currentBooks);
 
-        responseOwnBookDtos.forEach(x -> x.setBaseBookingInfo(bookingInfoMapper
+        responseOwnBookDtoList.forEach(x -> x.setBaseBookingInfo(bookingInfoMapper
                 .mapToBaseBookingInfoDto(bookingService.getBaseBookingInfo(x.getId()))));
 
-        return responseOwnBookDtos;
+        responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
+
+        return responseOwnBookDtoList;
     }
 
     @Transactional

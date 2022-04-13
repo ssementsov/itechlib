@@ -8,9 +8,9 @@ import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
-import by.library.itechlibrary.dto.booking.bookingInfo.BookingInfoDto;
+import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.*;
-import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
+import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
@@ -66,7 +66,7 @@ class BookServiceImplTest {
         Mockito.doReturn(books).when(bookRepository).findAll(pageable);
         Mockito.doReturn(withOwnerBookDtoListTemplate).when(bookMapper).mapWithOwnerBookDtoList(books);
 
-        Assertions.assertEquals(withOwnerBookDtoListTemplate, bookService.findAll(pageNumber, pageCapacity));
+        Assertions.assertEquals(withOwnerBookDtoListTemplate, bookService.getAll(pageNumber, pageCapacity));
 
         Mockito.verify(bookRepository, Mockito.times(1)).findAll(pageable);
         Mockito.verify(bookMapper, Mockito.times(1)).mapWithOwnerBookDtoList(books);

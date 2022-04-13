@@ -1,7 +1,6 @@
 package by.library.itechlibrary.mapper;
 
 import by.library.itechlibrary.dto.SuggestedBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.entity.SuggestedBook;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

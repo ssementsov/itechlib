@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface FeedbackService {
 
-    List<FeedbackResponseDto> getFeedbackResponses(long bookId);
+    List<FeedbackResponseDto> getAll(long bookId, int pageNumber, int pageCapacity);
 
 }

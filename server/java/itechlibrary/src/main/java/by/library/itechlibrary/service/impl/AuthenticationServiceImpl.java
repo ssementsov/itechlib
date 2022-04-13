@@ -1,11 +1,13 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.config.JwtProvider;
+import by.library.itechlibrary.dto.FileInfoDto;
 import by.library.itechlibrary.dto.auth.AuthRequestDto;
 import by.library.itechlibrary.dto.auth.AuthResponseDto;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.NotActivatedUserException;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.mapper.FileInfoMapper;
 import by.library.itechlibrary.repository.UserRepository;
 import by.library.itechlibrary.service.AuthenticationService;
 import lombok.Data;
@@ -23,6 +25,8 @@ import java.util.Optional;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
+
+    private final FileInfoMapper fileInfoMapper;
 
     private final JwtProvider jwtProvider;
 
@@ -89,8 +93,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (currentUser.getFileInfo() != null) {
 
-            byte[] userPhoto = currentUser.getFileInfo().getFileData();
-            authResponseDto.setUserPhoto(userPhoto);
+            FileInfoDto fileInfoDto = fileInfoMapper.map(currentUser.getFileInfo());
+            authResponseDto.setFileInfoDto(fileInfoDto);
 
         }
     }
