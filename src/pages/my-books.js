@@ -50,6 +50,7 @@ const OwnerCatalogue = () => {
                 title={'My books'}
                 onUpdateBooks={updateBooks}
                 onUpdateLoadingStatus={updateLoadingStatus}
+                isMyBooks={true}
             />
         );
     }

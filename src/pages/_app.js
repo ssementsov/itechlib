@@ -24,6 +24,7 @@ const App = (props) => {
     const assignHandler = useCallback((assigned) => {
         setIsAssigned(assigned);
     }, []);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {

@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 const HiddenBookCoverTools = (props) => {
     const { onUploadButtonOpen, visible, onOpen } = props;
-    const isUploadedAvatar = useSelector((state) => state.avatarReducer.isUploadedAvatar);
+    const isUploadedAvatar = useSelector((state) => state.avatar.isUploadedAvatar);
 
     return (
         <StyledCard

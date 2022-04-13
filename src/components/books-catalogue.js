@@ -18,6 +18,8 @@ import { types } from '../types';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
 import { SUGGESTED_BOOKS_PATH } from '../common/constants/route-constants';
+import { useSelector } from 'react-redux';
+import BooksInUseListResults from './books-in-use.js/books-in-use-list-results';
 
 const BooksCatalogue = (props) => {
     const {
@@ -27,7 +29,10 @@ const BooksCatalogue = (props) => {
         onUpdateBooks,
         onUpdateSuggestedBooks,
         onUpdateLoadingStatus,
+        isAllBooks,
+        isMyBooks,
         isSuggestedBooksList,
+        isBooksInUseList,
     } = props;
     const router = useRouter();
     const isNotSuggestedBooksPage = router.pathname !== SUGGESTED_BOOKS_PATH;
@@ -35,8 +40,9 @@ const BooksCatalogue = (props) => {
     const [isStartedSearch, setIsStartedSearch] = useState(false);
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
     const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] = useBoolean();
+    const booksInUse = useSelector((state) => state.booksInUse.booksInUse);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-
+   
     const searchedBooks = useMemo(() => {
         if (search.length > 1 && books) {
             setIsStartedSearch(true);
@@ -62,6 +68,19 @@ const BooksCatalogue = (props) => {
         }
         return suggestedBooks;
     }, [search, suggestedBooks]);
+
+    const searchedBooksInUse = useMemo(() => {
+        if (search.length > 1 && booksInUse) {
+            setIsStartedSearch(true);
+            return booksInUse.filter((book) => {
+                return (
+                    book.author.toLowerCase().includes(search.toLowerCase()) ||
+                    book.title.toLowerCase().includes(search.toLowerCase())
+                );
+            });
+        }
+        return booksInUse;
+    }, [search, booksInUse]);
 
     const createBook = (newBook) => {
         let idCategory =
@@ -211,14 +230,16 @@ const BooksCatalogue = (props) => {
                         title={title}
                     />
                     <Box sx={{ mt: 3 }}>
-                        {isSuggestedBooksList ? (
+                        {isSuggestedBooksList && (
                             <SuggestedBooksListResults
                                 books={searchedSuggestedBooks}
                                 isStartedSearch={isStartedSearch}
                                 suggestedBooks={suggestedBooks}
                                 onUpdateSuggestedBooks={onUpdateSuggestedBooks}
                             />
-                        ) : (
+                        )}
+                        {isBooksInUseList && <BooksInUseListResults books={searchedBooksInUse} />}
+                        {(isAllBooks || isMyBooks) && (
                             <BooksListResults
                                 books={searchedBooks}
                                 isStartedSearch={isStartedSearch}

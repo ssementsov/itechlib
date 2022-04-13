@@ -9,7 +9,7 @@ import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
 import ProfileDetails from './../components/profile/profile-details';
 import { LOGIN_PATH } from '../common/constants/route-constants';
-import { avatarSlice } from './../store/reducers/AvatarSlice';
+import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 function ProfilePage() {
@@ -18,8 +18,8 @@ function ProfilePage() {
     const [user, setUser] = useState({});
     const [isLoaded, setIsLoaded] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
-    const isUpdatedAvatar = useSelector((state) => state.avatarReducer.isUpdatedAvatar);
-    const isUploadedAvatar = useSelector((state) => state.avatarReducer.isUploadedAvatar);
+    const isUpdatedAvatar = useSelector((state) => state.avatar.isUpdatedAvatar);
+    const isUploadedAvatar = useSelector((state) => state.avatar.isUploadedAvatar);
     const { defaultErrorSnackbar } = useCustomSnackbar();
     const { uploadAvatar, updateAvatar, setAvatarData, deleteAvatarData } = avatarSlice.actions;
 
@@ -53,6 +53,7 @@ function ProfilePage() {
                 setIsOwner(true);
                 let avatar = res.data.fileInfo;
                 if (avatar) {
+                    localStorage.setItem('avatar', JSON.stringify(avatar));
                     dispatch(setAvatarData(avatar));
                     dispatch(uploadAvatar(true));
                 }
@@ -119,6 +120,7 @@ function ProfilePage() {
                                     onAdd={addAvatar}
                                     onDelete={deleteAvatar}
                                     title={'avatar'}
+                                    isUploadedImage={isUploadedAvatar}
                                     description={
                                         'You can upload an image in JPG, GIF or PNG format.\
                                     Maximum size 5MB.'
