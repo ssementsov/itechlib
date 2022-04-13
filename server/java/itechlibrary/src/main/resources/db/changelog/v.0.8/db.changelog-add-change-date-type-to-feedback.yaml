@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 13042022-change-date-type-to-feedback
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName:  date
+            newDataType:  DATETIME
+            schemaName:  public
+            tableName:  feedback

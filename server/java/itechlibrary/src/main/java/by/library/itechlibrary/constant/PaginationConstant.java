@@ -9,5 +9,6 @@ public final class PaginationConstant {
 
     public static final String SORT_BY_DATE_SUGGESTED_BOOK = "createDate";
     public static final String SORT_BY_DATE_BOOK = "createDate";
+    public static final String SORT_BY_DATE_FEEDBACK = "date";
 
 }
