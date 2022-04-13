@@ -21,7 +21,6 @@ import { trimmedString } from './../../utils/functions/trim-long-string';
 import { types } from '../../types';
 
 const BooksListResults = ({ books, isStartedSearch }) => {
-    // const sortedBooks = books.sort((a, b) => (a.id < b.id ? 1 : -1));
     return (
         <Card>
             <PerfectScrollbar>
