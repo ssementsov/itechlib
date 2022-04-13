@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -33,7 +33,7 @@ public class Book {
     private String author;
 
     @Column(name = "add_date", updatable = false)
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     @Column(name = "rate")
     private double rate;

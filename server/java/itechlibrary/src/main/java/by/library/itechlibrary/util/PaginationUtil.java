@@ -14,9 +14,9 @@ public final class PaginationUtil {
     public static Pageable getPageable(int pageNumber, int pageCapacity, String sortingMode) {
 
         checkPageCapacity(pageCapacity);
-        Sort sortByDate = getSort(sortingMode);
+        Sort sort = getSort(sortingMode);
 
-        return PageRequest.of(pageNumber, pageCapacity, sortByDate);
+        return PageRequest.of(pageNumber, pageCapacity, sort);
     }
 
     private static Sort getSort(String sortMode) {

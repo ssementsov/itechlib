@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -229,7 +230,7 @@ public class BookServiceImpl implements BookService {
 
             log.info("Try to set creation date.");
 
-            LocalDate date = LocalDate.now();
+            LocalDateTime date = LocalDateTime.now();
             book.setCreateDate(date);
 
         }
