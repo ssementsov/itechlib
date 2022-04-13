@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: db.changelog-add-change-date-type-to-book.yaml
+      file: db.changelog-add-change-date-type-to-feedback.yaml
       relativeToChangelogFile: true

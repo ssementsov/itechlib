@@ -1,4 +1,4 @@
-package by.library.itechlibrary.entity.bookingInfo;
+package by.library.itechlibrary.entity.bookinginfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

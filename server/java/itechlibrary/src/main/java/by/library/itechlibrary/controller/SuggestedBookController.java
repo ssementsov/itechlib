@@ -1,6 +1,5 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.PageableDto;
 import by.library.itechlibrary.dto.SuggestedBookDto;
 import by.library.itechlibrary.service.SuggestedBookService;
 import io.swagger.annotations.Api;

@@ -31,7 +31,7 @@ public interface UserMapper {
 
     @Mapping(source = "isActive", target = "active")
     @Named(value = "userConfig")
-    User toUserFromBaseUserInfo(BaseUserInfo BaseUserInfo);
+    User toUserFromBaseUserInfo(BaseUserInfo baseUserInfo);
 
     @IterableMapping(qualifiedByName = "userConfig")
     List<User> mapUserListFromBaseUserInfos(List<BaseUserInfo> baseUserInfos);

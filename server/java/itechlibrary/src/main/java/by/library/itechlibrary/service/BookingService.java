@@ -3,8 +3,8 @@ package by.library.itechlibrary.service;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
-import by.library.itechlibrary.entity.bookingInfo.BaseBookingInfo;
-import by.library.itechlibrary.entity.bookingInfo.BookingInfo;
+import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
+import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
 import java.time.LocalDate;
 import java.util.List;

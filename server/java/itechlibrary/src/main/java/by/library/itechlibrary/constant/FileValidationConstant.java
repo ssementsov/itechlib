@@ -11,6 +11,6 @@ public final class FileValidationConstant {
     private static final String GIF = "gif";
     private static final String PNG = "png";
 
-    public static Set<String> IMAGE_VALID_EXTENSION_LIST = Set.of(JPG, PNG, GIF);
+    public static final Set<String> IMAGE_VALID_EXTENSION_LIST = Set.of(JPG, PNG, GIF);
 
 }

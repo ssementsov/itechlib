@@ -1,6 +1,6 @@
 package by.library.itechlibrary.dto.book;
 
-import by.library.itechlibrary.dto.booking.bookingInfo.BaseBookingInfoDto;
+import by.library.itechlibrary.dto.booking.bookinginfo.BaseBookingInfoDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

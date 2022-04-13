@@ -29,7 +29,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public List<WithOwnerBookDto> getBooks(@PathParam("pageNumber") int pageNumber, @PathParam("pageCapacity") int pageCapacity) {
 
-        return bookService.findAll(pageNumber, pageCapacity);
+        return bookService.getAll(pageNumber, pageCapacity);
     }
 
     @GetMapping("/{id}")
@@ -43,7 +43,8 @@ public class BookController {
     @GetMapping("/users/")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getUsersBook(@PathParam("pageNumber") int pageNumber, @PathParam("pageCapacity") int pageCapacity) {
+    public List<WithOwnerBookDto> getUsersBook(@PathParam("pageNumber") int pageNumber,
+                                               @PathParam("pageCapacity") int pageCapacity) {
 
         return bookService.getOwnersBook(pageNumber, pageCapacity);
     }
