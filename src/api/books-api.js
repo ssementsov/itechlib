@@ -2,8 +2,13 @@ import { api } from './api';
 import { EntityTypes } from '../common/constants/api-constants';
 
 export const BooksAPI = {
-    getAllBooks() {
-        return api.Client.get(`/${EntityTypes.books}`);
+    getAllBooks(pageNumber, count) {
+        return api.Client.get(`/${EntityTypes.books}`, {
+            params: {
+                pageNumber: pageNumber,
+                pageCapacity: count,
+            },
+        });
     },
     getBookInfo(id) {
         return api.Client.get(`/${EntityTypes.books}/${id}`);
@@ -17,8 +22,13 @@ export const BooksAPI = {
     removeBook(id) {
         return api.Client.delete(`/${EntityTypes.books}/${id}`);
     },
-    getOwnerBooks() {
-        return api.Client.get(`/${EntityTypes.books}/users/`);
+    getOwnerBooks(pageNumber, count) {
+        return api.Client.get(`/${EntityTypes.books}/users/`, {
+            params: {
+                pageNumber: pageNumber,
+                pageCapacity: count,
+            },
+        });
     },
     getBooksInUse() {
         return api.Client.get(`/${EntityTypes.books}/users/bookings`);
