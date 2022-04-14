@@ -60,9 +60,10 @@ public class BookController {
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
-    public WithOwnerBookDto addBook(@Valid @RequestBody WithOwnerBookDto withOwnerBookDto) {
+    public WithOwnerBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
+                                    @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
 
-        return bookService.save(withOwnerBookDto);
+        return bookService.save(withOwnerBookDto, multipartFile);
     }
 
     @PutMapping
@@ -79,13 +80,14 @@ public class BookController {
     public void removeBook(@PathVariable long id) {
 
         bookService.remove(id);
+
     }
 
-    @PostMapping(path = "/photo")
+    @PutMapping(path = "/photo")
     @ApiOperation("attach photo to book")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addPhotoBook(@RequestPart(value = "file") final MultipartFile multipartFile,
-                             @RequestPart(name = "bookId") long bookId) {
+    public void updateImageBook(@RequestPart(value = "file") final MultipartFile multipartFile,
+                                @RequestPart(name = "bookId") long bookId) {
 
         bookService.attachFile(multipartFile, bookId);
 
