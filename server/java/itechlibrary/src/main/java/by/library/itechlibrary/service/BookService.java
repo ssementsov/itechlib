@@ -14,7 +14,7 @@ public interface BookService {
 
     FullBookDto update(WithLikAndStatusBookDto bookDto);
 
-    WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto);
+    WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile);
 
     FullBookDto getByIdFullVersion(long id);
 
