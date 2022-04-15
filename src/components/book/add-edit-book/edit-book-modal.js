@@ -14,6 +14,7 @@ export default function EditBookModal(props) {
                 onEdit={onEdit}
                 book={book}
                 onClose={onClose}
+                inEditMode
             />
         </StyledModal>
     );

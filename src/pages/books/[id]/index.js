@@ -10,6 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
 import { LOGIN_PATH } from '../../../common/constants/route-constants';
+import { YOU_CAN_UPLOAD_IMAGE } from './../../../common/constants/warning-messages';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
@@ -130,10 +131,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                     onAdd={addBookCover}
                                     onDelete={deleteBookCover}
                                     title={'book cover'}
-                                    description={
-                                        'You can upload an image in JPG, GIF or PNG format.\
-                                    Maximum size 5MB.'
-                                    }
+                                    description={YOU_CAN_UPLOAD_IMAGE}
                                 />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>

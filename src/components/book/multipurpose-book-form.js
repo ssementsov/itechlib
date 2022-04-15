@@ -6,8 +6,10 @@ import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants/book-status-constants';
+import { UploadBookCoverField } from './upload-book-cover-field';
 
 const createOptions = (option) => {
+    if (option.value === 'IN USE') return null;
     return (
         <MenuItem key={option.value} value={option.value}>
             {option.label}
@@ -15,10 +17,15 @@ const createOptions = (option) => {
     );
 };
 
-const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
+const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm, inEditMode = false }) => {
     return (
         <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ my: 3 }}>
+            <Box
+                sx={{
+                    mt: 1,
+                    mb: 2,
+                }}
+            >
                 <Typography color="textPrimary" variant="h4" textAlign="center">
                     {title}
                 </Typography>
@@ -48,9 +55,7 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
                 variant="outlined"
             />
             <TextField
-                error={Boolean(
-                    formik.touched.category && formik.errors.category
-                )}
+                error={Boolean(formik.touched.category && formik.errors.category)}
                 fullWidth
                 helperText={formik.touched.category && formik.errors.category}
                 name="category"
@@ -65,9 +70,7 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
                 {categories.map(createOptions)}
             </TextField>
             <TextField
-                error={Boolean(
-                    formik.touched.language && formik.errors.language
-                )}
+                error={Boolean(formik.touched.language && formik.errors.language)}
                 fullWidth
                 helperText={formik.touched.language && formik.errors.language}
                 name="language"
@@ -83,13 +86,9 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
             </TextField>
             {!isSuggestForm ? (
                 <TextField
-                    error={Boolean(
-                        formik.touched.description && formik.errors.description
-                    )}
+                    error={Boolean(formik.touched.description && formik.errors.description)}
                     fullWidth
-                    helperText={
-                        formik.touched.description && formik.errors.description
-                    }
+                    helperText={formik.touched.description && formik.errors.description}
                     label="Description*"
                     multiline
                     margin="dense"
@@ -101,9 +100,7 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
                 />
             ) : (
                 <TextField
-                    error={Boolean(
-                        formik.touched.comment && formik.errors.comment
-                    )}
+                    error={Boolean(formik.touched.comment && formik.errors.comment)}
                     fullWidth
                     helperText={formik.touched.comment && formik.errors.comment}
                     label="Comment"
@@ -130,9 +127,7 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
             />
             {!isSuggestForm && (
                 <TextField
-                    error={Boolean(
-                        formik.touched.status && formik.errors.status
-                    )}
+                    error={Boolean(formik.touched.status && formik.errors.status)}
                     fullWidth
                     helperText={formik.touched.status && formik.errors.status}
                     name="status"
@@ -147,10 +142,11 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
                     {statuses.map(createOptions)}
                 </TextField>
             )}
+
             {formik.values.status === bookStatus.inUse.name && (
                 <HiddenForm formik={formik} createOptions={createOptions} />
             )}
-
+            {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
             <Box sx={{ py: 2 }}>
                 <Button
                     color="primary"
@@ -172,6 +168,7 @@ MultipurposeBookForm.propTypes = {
     buttonName: PropTypes.string,
     title: PropTypes.string,
     isSuggestForm: PropTypes.bool,
+    inEditMode: PropTypes.bool,
 };
 
 export default MultipurposeBookForm;

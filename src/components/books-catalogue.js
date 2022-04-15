@@ -19,7 +19,7 @@ import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
 import { SUGGESTED_BOOKS_PATH } from '../common/constants/route-constants';
 import { useSelector } from 'react-redux';
-import BooksInUseListResults from './books-in-use.js/books-in-use-list-results';
+import BooksInUseListResults from './books-in-use/books-in-use-list-results';
 
 const BooksCatalogue = (props) => {
     const {
@@ -42,7 +42,7 @@ const BooksCatalogue = (props) => {
     const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] = useBoolean();
     const booksInUse = useSelector((state) => state.booksInUse.booksInUse);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-   
+
     const searchedBooks = useMemo(() => {
         if (search.length > 1 && books) {
             setIsStartedSearch(true);
@@ -100,6 +100,7 @@ const BooksCatalogue = (props) => {
             default:
                 idStatus = bookStatus.available.id;
         }
+
         const createdBook = new Book(
             0,
             newBook.title,
@@ -114,7 +115,11 @@ const BooksCatalogue = (props) => {
             newBook.description
         );
 
-        BooksAPI.addBook(createdBook)
+        const newBookFormData = new FormData();
+        newBookFormData.append('withOwnerBookDto', JSON.stringify(createdBook));
+        newBookFormData.append('file', newBook.file);
+
+        BooksAPI.addBook(newBookFormData)
             .then((res) => {
                 setAddButtonClose();
                 if (books) {
