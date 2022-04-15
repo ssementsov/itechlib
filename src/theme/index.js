@@ -147,7 +147,6 @@ export const theme = createTheme({
                         lineHeight: 1,
                         letterSpacing: 0.5,
                         textTransform: 'uppercase',
-                        textAlign: 'left',
                         padding: '26px 26px 23px',
                     },
                     '& .MuiTableCell-paddingCheckbox': {

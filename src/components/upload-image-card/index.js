@@ -115,6 +115,7 @@ const UploadImageCard = (props) => {
                         visible={visible}
                         onUploadButtonOpen={setUploadButtonOpen}
                         onOpen={setDeleteButtonOpen}
+                        isImage={data.fileInfo}
                     />
                 )}
             </div>

@@ -9,7 +9,7 @@ import { bookStatus } from '../../../common/constants/book-status-constants';
 import { limitWordLength } from './../../../utils/functions/limit-word-length';
 
 const AddEditBookFormBox = (props) => {
-    const { onClose, onCreate, onEdit, title, buttonName, book } = props;
+    const { onClose, onCreate, onEdit, title, buttonName, book, ...rest } = props;
     let newBook;
 
     if (book) {
@@ -137,6 +137,7 @@ const AddEditBookFormBox = (props) => {
                         formik={formik}
                         title={title}
                         buttonName={buttonName}
+                        {...rest}
                     />
                 </Container>
             </Box>

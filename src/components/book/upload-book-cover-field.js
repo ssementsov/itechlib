@@ -6,6 +6,7 @@ import classes from './upload-book-cover-field.module.css';
 import { theme } from '../../theme';
 import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages';
 import { MAX_SIZE } from './../../common/constants/file-size';
+import { limitFileNameLength } from '../../utils/functions/limit-file-name-length';
 
 export const UploadBookCoverField = (props) => {
     const { formik } = props;
@@ -21,14 +22,14 @@ export const UploadBookCoverField = (props) => {
             } else {
                 setFieldName(imgFile.name);
                 setIsAllowedImage(true);
-                formik.setFieldValue('image', imgFile);
+                formik.setFieldValue('file', imgFile);
             }
         }
         e.target.value = '';
     };
 
     const imageDeletedHandler = () => {
-        formik.setFieldValue('image', null);
+        formik.setFieldValue('file', null);
         setFieldName(null);
     };
 
@@ -45,7 +46,7 @@ export const UploadBookCoverField = (props) => {
                 </div>
                 {fieldName && (
                     <div className={fieldName ? classes.aligned : classes.hidden}>
-                        <Typography color="primary">{fieldName}</Typography>
+                        <Typography color="primary">{limitFileNameLength(fieldName)}</Typography>
                         <IconButton aria-label="delete" onClick={imageDeletedHandler}>
                             <StyledDeleteIcon
                                 fontSize="medium"

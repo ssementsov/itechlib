@@ -20,6 +20,9 @@ const style = {
     '&:focus': {
         outline: 'none',
     },
+    '&::-webkit-scrollbar': {
+        width: 0,
+    },
 };
 
 const StyledModal = (props) => {

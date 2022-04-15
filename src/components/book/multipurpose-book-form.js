@@ -9,6 +9,7 @@ import { bookStatus } from '../../common/constants/book-status-constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
 
 const createOptions = (option) => {
+    if (option.value === 'IN USE') return null;
     return (
         <MenuItem key={option.value} value={option.value}>
             {option.label}
@@ -16,8 +17,7 @@ const createOptions = (option) => {
     );
 };
 
-const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
-    console.log(formik.values);
+const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm, inEditMode = false }) => {
     return (
         <form onSubmit={formik.handleSubmit}>
             <Box
@@ -146,7 +146,7 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm }) => {
             {formik.values.status === bookStatus.inUse.name && (
                 <HiddenForm formik={formik} createOptions={createOptions} />
             )}
-            {!isSuggestForm && <UploadBookCoverField formik={formik} />}
+            {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
             <Box sx={{ py: 2 }}>
                 <Button
                     color="primary"
@@ -168,6 +168,7 @@ MultipurposeBookForm.propTypes = {
     buttonName: PropTypes.string,
     title: PropTypes.string,
     isSuggestForm: PropTypes.bool,
+    inEditMode: PropTypes.bool,
 };
 
 export default MultipurposeBookForm;

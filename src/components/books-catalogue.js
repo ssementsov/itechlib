@@ -100,6 +100,7 @@ const BooksCatalogue = (props) => {
             default:
                 idStatus = bookStatus.available.id;
         }
+
         const createdBook = new Book(
             0,
             newBook.title,
@@ -114,7 +115,11 @@ const BooksCatalogue = (props) => {
             newBook.description
         );
 
-        BooksAPI.addBook(createdBook)
+        const newBookFormData = new FormData();
+        newBookFormData.append('withOwnerBookDto', JSON.stringify(createdBook));
+        newBookFormData.append('file', newBook.file);
+
+        BooksAPI.addBook(newBookFormData)
             .then((res) => {
                 setAddButtonClose();
                 if (books) {
