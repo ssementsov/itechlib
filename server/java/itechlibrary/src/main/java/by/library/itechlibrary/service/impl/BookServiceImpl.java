@@ -20,8 +20,8 @@ import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FileInfoService;
 import by.library.itechlibrary.service.UserService;
-import by.library.itechlibrary.util.ResponseOwnBookDtoComparator;
 import by.library.itechlibrary.util.PaginationUtil;
+import by.library.itechlibrary.util.ResponseOwnBookDtoComparator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -88,16 +87,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile) {
 
         log.info("Try to map bookDto to book");
 
         Book book = bookMapper.toBook(withOwnerBookDto);
 
-        log.info("Try to set user and save book");
+        log.info("Try to set data and save book");
 
         setDate(book);
         setCurrentUserToOwner(book);
+        setFileInfo(multipartFile, book);
         book = bookRepository.save(book);
 
         return bookMapper.toWithOwnerBookDto(book);
@@ -178,8 +178,7 @@ public class BookServiceImpl implements BookService {
 
         Book book = findById(bookId);
         checkCurrentUserIsOwner(book.getOwner().getId());
-        FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
-        book.setFileInfo(fileInfo);
+        setFileInfo(multipartFile, book);
 
     }
 
@@ -253,5 +252,15 @@ public class BookServiceImpl implements BookService {
 
         return bookRepository
                 .findById(id).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+    }
+
+    private void setFileInfo(MultipartFile multipartFile, Book book) {
+
+        if (!multipartFile.isEmpty()) {
+
+            FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
+            book.setFileInfo(fileInfo);
+
+        }
     }
 }

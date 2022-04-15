@@ -28,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -79,16 +80,18 @@ class BookServiceImplTest {
 
         Book book = getTestBook();
         WithOwnerBookDto withOwnerBookDto = getTestWithOwnerBookDto();
+        MultipartFile multipartFile = new MockMultipartFile("", new byte[0]);
 
         Mockito.doReturn(book).when(bookMapper).toBook(withOwnerBookDto);
         Mockito.doReturn(withOwnerBookDto).when(bookMapper).toWithOwnerBookDto(book);
         Mockito.doReturn(book).when(bookRepository).save(book);
 
-        Assertions.assertEquals(withOwnerBookDto, bookService.save(withOwnerBookDto));
+        Assertions.assertEquals(withOwnerBookDto, bookService.save(withOwnerBookDto, multipartFile));
 
         Mockito.verify(bookRepository, Mockito.times(1)).save(book);
         Mockito.verify(bookMapper, Mockito.times(1)).toWithOwnerBookDto(book);
         Mockito.verify(bookMapper, Mockito.times(1)).toBook(withOwnerBookDto);
+        Mockito.verify(fileInfoService, Mockito.times(1)).getFileInfo(multipartFile);
 
     }
 
