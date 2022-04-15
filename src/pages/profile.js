@@ -11,6 +11,7 @@ import ProfileDetails from './../components/profile/profile-details';
 import { LOGIN_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { YOU_CAN_UPLOAD_IMAGE } from './../common/constants/warning-messages';
 
 function ProfilePage() {
     const router = useRouter();
@@ -123,10 +124,7 @@ function ProfilePage() {
                                     onDelete={deleteAvatar}
                                     title={'avatar'}
                                     isUploadedImage={isUploadedAvatar}
-                                    description={
-                                        'You can upload an image in JPG, GIF or PNG format.\
-                                    Maximum size 5MB.'
-                                    }
+                                    description={YOU_CAN_UPLOAD_IMAGE}
                                 />
                             </Grid>
                             <Grid item lg={8} md={8} xs={12}>

@@ -1,0 +1,66 @@
+import { useState } from 'react';
+import SelectFileButton from './../common/select-file-button';
+import { IconButton, Typography } from '@mui/material';
+import { StyledDeleteIcon } from '../../icons/styled-delete-icon';
+import classes from './upload-book-cover-field.module.css';
+import { theme } from '../../theme';
+import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages';
+import { MAX_SIZE } from './../../common/constants/file-size';
+
+export const UploadBookCoverField = (props) => {
+    const { formik } = props;
+    const [fieldName, setFieldName] = useState(null);
+    const [isAllowedImage, setIsAllowedImage] = useState(true);
+
+    const imageSelectedHandler = (e) => {
+        const imgFile = e.target.files[0];
+        if (imgFile) {
+            if (imgFile.size > MAX_SIZE) {
+                setIsAllowedImage(false);
+                return;
+            } else {
+                setFieldName(imgFile.name);
+                setIsAllowedImage(true);
+                formik.setFieldValue('image', imgFile);
+            }
+        }
+        e.target.value = '';
+    };
+
+    const imageDeletedHandler = () => {
+        formik.setFieldValue('image', null);
+        setFieldName(null);
+    };
+
+    return (
+        <>
+            <div className={classes.container}>
+                <div className={classes.alignedButton}>
+                    <SelectFileButton
+                        uploadButton
+                        multipal
+                        onSelect={imageSelectedHandler}
+                        isLight={true}
+                    />
+                </div>
+                {fieldName && (
+                    <div className={fieldName ? classes.aligned : classes.hidden}>
+                        <Typography color="primary">{fieldName}</Typography>
+                        <IconButton aria-label="delete" onClick={imageDeletedHandler}>
+                            <StyledDeleteIcon
+                                fontSize="medium"
+                                sx={{ color: theme.palette.grey[600] }}
+                            />
+                        </IconButton>
+                    </div>
+                )}
+            </div>
+            <Typography
+                variant="caption"
+                color={isAllowedImage ? 'textSecondary' : theme.palette.error.main}
+            >
+                {YOU_CAN_UPLOAD_IMAGE}
+            </Typography>
+        </>
+    );
+};
