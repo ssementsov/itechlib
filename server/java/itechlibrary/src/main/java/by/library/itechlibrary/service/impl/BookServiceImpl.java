@@ -256,7 +256,7 @@ public class BookServiceImpl implements BookService {
 
     private void setFileInfo(MultipartFile multipartFile, Book book) {
 
-        if (!multipartFile.isEmpty()) {
+        if (multipartFile != null) {
 
             FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
             book.setFileInfo(fileInfo);
