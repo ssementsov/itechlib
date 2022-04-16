@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { LOGIN_PATH } from '../common/constants/route-constants';
 import { useCustomSnackbar } from './custom-snackbar-hook';
 
-export const useInfiniteScroll = (api, items, setItems, itemsCount) => {
+export const useInfiniteScroll = (api, items, setItems, itemsCount, id = false) => {
     const router = useRouter();
     const [isLoaded, setIsLoaded] = useState(false);
     const [isFetchingWhileScrolling, setIsFetchingWhileScrolling] = useState(true);
@@ -30,8 +30,8 @@ export const useInfiniteScroll = (api, items, setItems, itemsCount) => {
     }, [emptyPage]);
 
     useEffect(() => {
-        if (isFetchingWhileScrolling) {
-            api(currentPage, itemsCount)
+        if (isFetchingWhileScrolling && router.isReady) {
+            api(currentPage, itemsCount, id)
                 .then((res) => {
                     if (res.data.length === 0 && currentPage > 0) {
                         setEmptyPage(true);

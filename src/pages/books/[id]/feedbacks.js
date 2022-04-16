@@ -1,38 +1,27 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Box, Container, Divider, Button, Typography } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Feedback from '../../../components/feedback';
 import { BookingsAPI } from './../../../api/bookings-api';
 import { theme } from './../../../theme/index';
-import { LOGIN_PATH } from '../../../common/constants/route-constants';
+import { useInfiniteScroll } from './../../../utils/infinite-scroll-hook';
 
 function FeedbacksPage() {
     const router = useRouter();
     const [feedbacks, setFeedbacks] = useState([]);
-    const [isLoadedData, setIsLoadedData] = useState(false);
+    const bookId = router.query.id;
+    const { isLoaded } = useInfiniteScroll(
+        BookingsAPI.getFeedbacks,
+        feedbacks,
+        setFeedbacks,
+        30,
+        bookId
+    );
 
-    useEffect(() => {
-        if (router.isReady) {
-            const bookId = router.query.id;
-
-            BookingsAPI.getFeedbacks(bookId)
-                .then((res) => {
-                    setFeedbacks(res.data);
-                    setIsLoadedData(true);
-                })
-                .catch((err) => {
-                    if (err.response.status === 403) {
-                        router.replace(LOGIN_PATH);
-                        localStorage.removeItem('token');
-                    }
-                });
-        }
-    }, [router, router.isReady, router.query.id]);
-
-    if (!isLoadedData) {
+    if (!isLoaded) {
         return (
             <Typography sx={{ my: 8, mx: 4 }} variant="h4">
                 Loading...
@@ -65,7 +54,7 @@ function FeedbacksPage() {
             <Container
                 maxWidth="lg"
                 sx={{
-                    mt: 9,
+                    mt: 4,
                     py: 5,
                     minHeight: '300px',
                     boxShadow: theme.shadows[4],
