@@ -93,7 +93,7 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                                         >
                                             {isStartedSearch
                                                 ? 'No books found'
-                                                : 'No books have been added yet!'}
+                                                : 'No books assigned to you yet!'}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>
