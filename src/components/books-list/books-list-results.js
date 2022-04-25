@@ -33,7 +33,7 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                             <TableRow>
                                 <TableCell>{titles.title}</TableCell>
                                 <TableCell>{titles.author}</TableCell>
-                                <TableCell>{titles.description}</TableCell>
+                                <TableCell sx={{ width: '35%' }}>{titles.description}</TableCell>
                                 <StyledTableCell>{titles.category}</StyledTableCell>
                                 <StyledTableCell>{titles.language}</StyledTableCell>
                                 <StyledTableCell>{titles.rate}</StyledTableCell>

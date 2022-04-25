@@ -30,7 +30,7 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                             <TableRow>
                                 <TableCell>{titles.title}</TableCell>
                                 <TableCell>{titles.author}</TableCell>
-                                <TableCell>{titles.description}</TableCell>
+                                <TableCell sx={{ width: '35%' }}>{titles.description}</TableCell>
                                 <TableCell style={{ width: 115 }}>{titles.category}</TableCell>
                                 <TableCell style={{ width: 115 }}>{titles.language}</TableCell>
                                 <TableCell style={{ width: 115, textAlign: 'center' }}>

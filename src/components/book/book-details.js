@@ -46,7 +46,7 @@ const TblCell = styled(TableCell)(() => ({
     cursor: 'auto',
     borderBottom: '1px solid #E7E8EF',
     borderTop: '1px solid #E7E8EF',
-    padding: '5px 35px',
+    padding: '5px 0 5px 35px',
 }));
 
 const BookDetails = (props) => {
@@ -224,7 +224,7 @@ const BookDetails = (props) => {
                             <Table>
                                 <TableBody>
                                     <TableRow>
-                                        <TblCell>{titles.author}</TblCell>
+                                        <TblCell sx={{ width: '20%' }}>{titles.author}</TblCell>
                                         <TblCell>{book.author}</TblCell>
                                     </TableRow>
                                     <TableRow>

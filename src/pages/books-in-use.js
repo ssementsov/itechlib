@@ -17,7 +17,7 @@ const BooksInUseCatalogue = () => {
         if (isError) {
             defaultErrorSnackbar();
         }
-    }, [dispatch]);
+    }, [defaultErrorSnackbar, dispatch, isError]);
 
     if (isLoading) {
         return (
