@@ -157,7 +157,7 @@ const Register = () => {
                             helperText={
                                 formik.touched.email && formik.errors.email
                             }
-                            label="Please enter Your corporate email here"
+                            label="Please enter your corporate email here"
                             margin="normal"
                             name="email"
                             onBlur={formik.handleBlur}
