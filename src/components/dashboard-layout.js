@@ -9,6 +9,7 @@ import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
+import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -27,6 +28,7 @@ export const DashboardLayout = (props) => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const { setAvatarData, uploadAvatar, setIsLoadingAvatar } = avatarSlice.actions;
+    const { defaultErrorSnackbar } = useCustomSnackbar();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -45,7 +47,12 @@ export const DashboardLayout = (props) => {
                 }
             })
             .catch((err) => {
-                console.log(err);
+                if (err.response?.status === 403) {
+                    router.replace(LOGIN_PATH);
+                    localStorage.removeItem('token');
+                } else {
+                    defaultErrorSnackbar();
+                }
             });
     }, []);
 
