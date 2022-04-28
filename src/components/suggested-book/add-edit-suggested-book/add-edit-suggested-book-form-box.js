@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
 import MultipurposeBookForm from '../../book/multipurpose-book-form';
-import { limitWordLength } from '../../../utils/functions/limit-word-length';
 import { types } from '../../../types';
 
 const AddEditSuggestedBookFormBox = (props) => {
@@ -33,9 +32,6 @@ const AddEditSuggestedBookFormBox = (props) => {
 
     function validate(value) {
         let error = {};
-        let title = limitWordLength(value.title);
-        let author = limitWordLength(value.author);
-        let comment = limitWordLength(value.comment);
 
         if (
             value.link &&
@@ -44,12 +40,6 @@ const AddEditSuggestedBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if (title) {
-            error.title = 'Maximum 50 symbols for a single word';
-        } else if (author) {
-            error.author = 'Maximum 50 symbols for a single word';
-        } else if (comment) {
-            error.comment = 'Maximum 50 symbols for a single word';
         }
         return error;
     }
@@ -65,13 +55,13 @@ const AddEditSuggestedBookFormBox = (props) => {
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
-                .max(255, 'Author must be 255 or less symbols'),
+                .max(500, 'Author must be 500 or less symbols'),
             category: Yup.string(),
             language: Yup.string(),
             comment: Yup.string()
                 .trim()
                 .min(10, 'Comment must be 10 or more symbols')
-                .max(100, 'Comment must be 100 or less symbols'),
+                .max(250, 'Comment must be 250 or less symbols'),
         }),
         validate,
         onSubmit: async (values) => {
