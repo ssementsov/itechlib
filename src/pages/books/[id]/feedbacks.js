@@ -8,6 +8,7 @@ import Feedback from '../../../components/feedback';
 import { BookingsAPI } from './../../../api/bookings-api';
 import { theme } from './../../../theme/index';
 import { useInfiniteScroll } from './../../../utils/infinite-scroll-hook';
+import {ProgressLinear} from '../../../common/UI/progressLinear';
 
 function FeedbacksPage() {
     const router = useRouter();
@@ -22,11 +23,7 @@ function FeedbacksPage() {
     );
 
     if (!isLoaded) {
-        return (
-            <Typography sx={{ my: 8, mx: 4 }} variant="h4">
-                Loading...
-            </Typography>
-        );
+        return <ProgressLinear/>;
     }
 
     return (

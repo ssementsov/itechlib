@@ -9,6 +9,7 @@ import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
+import { ProgressSpinner } from '../common/UI/progressSpinner';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -62,7 +63,7 @@ export const DashboardLayout = (props) => {
     }, [router]);
 
     if (!loaded) {
-        return <div></div>;
+        return <ProgressSpinner/>;
     }
 
     return (

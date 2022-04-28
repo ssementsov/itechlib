@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { Box, Container, Grid, Button, Typography } from '@mui/material';
+import { Box, Container, Grid, Button } from '@mui/material';
 import { UserAPI } from '../api/user-api';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -12,6 +12,7 @@ import { LOGIN_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { YOU_CAN_UPLOAD_IMAGE } from './../common/constants/warning-messages';
+import { ProgressLinear } from '../common/UI/progressLinear';
 
 function ProfilePage() {
     const router = useRouter();
@@ -80,11 +81,7 @@ function ProfilePage() {
     ]);
 
     if (!isLoaded) {
-        return (
-            <Typography sx={{ my: 8, mx: 4 }} variant="h4">
-                Loading...
-            </Typography>
-        );
+        return <ProgressLinear/>;
     } else {
         return (
             <>
