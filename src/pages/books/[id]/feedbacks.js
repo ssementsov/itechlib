@@ -1,14 +1,14 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { Box, Container, Divider, Button, Typography } from '@mui/material';
+import { Box, Container, Divider, Typography } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Feedback from '../../../components/feedback';
 import { BookingsAPI } from './../../../api/bookings-api';
 import { theme } from './../../../theme/index';
 import { useInfiniteScroll } from './../../../utils/infinite-scroll-hook';
-import {ProgressLinear} from '../../../common/UI/progressLinear';
+import { ProgressLinear } from '../../../common/UI/progressLinear';
+import { GoBackButton } from './../../../common/UI/buttons/go-back-button';
 
 function FeedbacksPage() {
     const router = useRouter();
@@ -37,16 +37,7 @@ function FeedbacksPage() {
                     pt: 3,
                 }}
             >
-                <Button
-                    onClick={() => router.back()}
-                    component="a"
-                    startIcon={<ArrowBackIcon fontSize="small" />}
-                    sx={{
-                        ml: 2,
-                    }}
-                >
-                    Back
-                </Button>
+                <GoBackButton />
             </Box>
             <Container
                 maxWidth="lg"

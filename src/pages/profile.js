@@ -1,9 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { Box, Container, Grid, Button } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import { UserAPI } from '../api/user-api';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
@@ -13,6 +12,7 @@ import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { YOU_CAN_UPLOAD_IMAGE } from './../common/constants/warning-messages';
 import { ProgressLinear } from '../common/UI/progressLinear';
+import { GoBackButton } from './../common/UI/buttons/go-back-button';
 
 function ProfilePage() {
     const router = useRouter();
@@ -96,16 +96,7 @@ function ProfilePage() {
                         pb: 8,
                     }}
                 >
-                    <Button
-                        onClick={() => router.back()}
-                        component="a"
-                        startIcon={<ArrowBackIcon fontSize="small" />}
-                        sx={{
-                            ml: 2,
-                        }}
-                    >
-                        Back
-                    </Button>
+                    <GoBackButton/>
                     <Container
                         maxWidth="lg"
                         sx={{

@@ -40,6 +40,7 @@ import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-wo
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getDate } from '../../utils/functions/get-date';
+import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -327,30 +328,25 @@ const BookDetails = (props) => {
                     </Button>
                     {!isOwner && (
                         <>
-                            {isAssigned ? (
-                                <Button
+                            {isAssigned
+                                ? <PrimaryButton
+                                    title={'Return the book'}
+                                    size='small'
+                                    fullWidth={false}
                                     onClick={setReturnButtonOpen}
-                                    aria-label="assign"
-                                    color="primary"
-                                    variant="contained"
-                                >
-                                    Return the book
-                                </Button>
-                            ) : (
-                                <Button
+                                />
+                                : <PrimaryButton
+                                    title={'Assign to me'}
+                                    size='small'
+                                    fullWidth={false}
                                     onClick={setAssignButtonOpen}
-                                    aria-label="assign"
-                                    color="primary"
-                                    variant="contained"
                                     disabled={
                                         book.status.name !== bookStatus.available.name
                                             ? true
                                             : false
                                     }
-                                >
-                                    Assign to me
-                                </Button>
-                            )}
+                                />
+                            }
                         </>
                     )}
                 </Box>

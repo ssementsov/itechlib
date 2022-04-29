@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { Button } from '@mui/material';
+import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 
 const Input = styled('input')({
     display: 'none',
@@ -18,15 +18,11 @@ const SelectFileButton = (props) => {
                 type="file"
                 onChange={onSelect}
             />
-            <Button
+            <PrimaryButton
+                title={uploadButton ? 'Upload image' : 'Select image'}
                 variant={isLight ? 'outlined' : 'contained'}
                 component="span"
-                color="primary"
-                fullWidth
-                size="large"
-            >
-                {uploadButton ? 'Upload image' : 'Select image'}
-            </Button>
+            />
         </label>
     );
 };

@@ -1,11 +1,13 @@
 import React from "react";
 import { useFormik } from "formik";
 import PropTypes from "prop-types";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import DatePicker from "@mui/lab/DatePicker";
-import { add } from "date-fns";
-import StyledModal from "../../styled-modal";
+import { Box, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import DatePicker from '@mui/lab/DatePicker';
+import { add } from 'date-fns';
+import StyledModal from '../../styled-modal';
+import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
+import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
 
 const BoxForDate = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -104,28 +106,11 @@ const AssignBookModal = (props) => {
           />
         </BoxForDate>
         <Box sx={{ py: 2, mt: 4 }}>
-          <Button
-            color="primary"
-            fullWidth
-            size="large"
+          <PrimaryButton
+            title='Ok'
             type="submit"
-            variant="contained"
-          >
-            Ok
-          </Button>
-          <Button
-            onClick={onClose}
-            fullWidth
-            size="large"
-            sx={{
-              my: "20px",
-              borderWidth: "1px",
-              borderStyle: "solid",
-              borderColor: "primary",
-            }}
-          >
-            Cancel
-          </Button>
+          />
+          <SecondaryButton title='Cancel' onClick={onClose}/>
         </Box>
       </form>
     </StyledModal>

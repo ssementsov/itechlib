@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Button, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, MenuItem, TextField, Typography } from '@mui/material';
 import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants/book-status-constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
+import { PrimaryButton } from './../../common/UI/buttons/primary-button';
 
 const createOptions = (option) => {
     if (option.value === 'IN USE') return null;
@@ -148,16 +149,11 @@ const MultipurposeBookForm = ({ formik, title, buttonName, isSuggestForm, inEdit
             )}
             {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
             <Box sx={{ py: 2 }}>
-                <Button
-                    color="primary"
-                    disabled={formik.isSubmitting}
-                    fullWidth
-                    size="large"
+                <PrimaryButton
+                    title={buttonName}
                     type="submit"
-                    variant="contained"
-                >
-                    {buttonName}
-                </Button>
+                    disabled={formik.isSubmitting}
+                />
             </Box>
         </form>
     );
