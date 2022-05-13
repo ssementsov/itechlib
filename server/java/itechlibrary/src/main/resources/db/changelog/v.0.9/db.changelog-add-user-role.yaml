@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10052022-add-user-role
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 10052022-add-user-role-data
+      author: maksim_maevsky
+      changes:
+        sqlFile:
+          dbms: 'postgresql'
+          path: /db/changelog/v.0.9/sql-import/import-data.sql
+          stripComments: true
+
+  - changeSet:
+      id: 10052022-add-users-roles-table
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id:  10052022-add-ForeignKeyConstraint-role-to-users-roles
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: role_id
+            baseTableName: users_roles
+            constraintName: fk_users_roles_role
+            referencedColumnNames: id
+            referencedTableName: user_role
+
+  - changeSet:
+      id:  10052022-add-ForeignKeyConstraint-user-to-users-roles
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: users_roles
+            constraintName: fk_users_roles_user
+            referencedColumnNames: id
+            referencedTableName: user
+
+
+

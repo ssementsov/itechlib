@@ -61,7 +61,9 @@ public class BookingServiceImpl implements BookingService {
             Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             checkAndSetDates(booking);
             setCurrentUser(booking);
+            checkLimitOfActiveBookings(booking.getReader().getId());
             setBookAndChangeStatus(booking, StatusConstant.IN_USE_BOOK_STATUS);
+
             booking = bookingRepository.save(booking);
 
             return bookingMapper.toNewBookingResponseDto(booking);
@@ -245,6 +247,19 @@ public class BookingServiceImpl implements BookingService {
             feedback.setText(feedbackText);
             feedback.setDate(LocalDate.now());
             booking.setFeedback(feedback);
+
+        }
+    }
+
+    private void checkLimitOfActiveBookings(long userId){
+
+        List<Booking> bookings = bookingRepository.findByReaderIdAndActiveIsTrue(userId);
+
+        if(bookings.size() >= BookingConstant.ACTIVE_BOOKINGS_LIMIT){
+
+            log.info("Number of active bookings is exceeded");
+
+            throw new BookingBookLimitException("You can have maximum count active bookings.");
 
         }
     }

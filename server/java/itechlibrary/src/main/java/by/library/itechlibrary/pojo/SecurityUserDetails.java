@@ -1,10 +1,14 @@
 package by.library.itechlibrary.pojo;
 
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.UserRole;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class SecurityUserDetails implements UserDetails {
@@ -13,6 +17,7 @@ public class SecurityUserDetails implements UserDetails {
     private String corpEmail;
     private String googleEmail;
     private boolean isActive;
+    private Collection<? extends GrantedAuthority> authorities;
 
     public static SecurityUserDetails fromUserToUserDetails(User user) {
 
@@ -21,6 +26,7 @@ public class SecurityUserDetails implements UserDetails {
         scUser.corpEmail = user.getCorpEmail();
         scUser.googleEmail = user.getGoogleEmail();
         scUser.isActive = user.isActive();
+        scUser.authorities = getAuthoritiesFromUserRoles(user.getRoles());
 
         return scUser;
     }
@@ -33,17 +39,14 @@ public class SecurityUserDetails implements UserDetails {
         return corpEmail;
     }
 
-    public String getGoogleEmail() {
-        return googleEmail;
-    }
-
     public boolean isActive() {
         return isActive;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        return authorities;
     }
 
     @Override
@@ -74,6 +77,14 @@ public class SecurityUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    private static Collection<? extends GrantedAuthority> getAuthoritiesFromUserRoles(List<UserRole> roles) {
+
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+                .collect(Collectors.toList());
+
     }
 
     @Override

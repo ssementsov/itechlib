@@ -240,7 +240,6 @@ public class BookServiceImpl implements BookService {
         if (book.getOwner() == null) {
 
             long currentUserId = securityUserDetailsService.getCurrentUserId();
-
             book.setOwner(userService.getUserById(currentUserId));
 
         }
@@ -256,7 +255,7 @@ public class BookServiceImpl implements BookService {
 
     private void setFileInfo(MultipartFile multipartFile, Book book) {
 
-        if (!multipartFile.isEmpty()) {
+        if (multipartFile != null) {
 
             FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
             book.setFileInfo(fileInfo);

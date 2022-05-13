@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/js/**", "/error**", "/users/check/**",
+                .antMatchers("/", "/login/**", "/js/**", "/error**", "/users/check/**",
                         "/users/confirm/**", "/suggested-books/**", "/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
@@ -55,7 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().headers()
                 .defaultsDisabled()
                 .cacheControl();
-
 
         http
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

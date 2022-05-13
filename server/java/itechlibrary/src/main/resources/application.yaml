@@ -116,3 +116,8 @@ application-data:
       surname: TestSurname
       corpEmail: testitechlib@itechart-group.com
       isActive: true
+    -
+      name: Sergey
+      surname: Kuzmianok
+      corpEmail: sergey.kuzmianok@itechart-group.com
+      isActive: true
