@@ -173,7 +173,7 @@ const SuggestedBooksListResults = (props) => {
                             sx={{ width: '130px', marginLeft: '25px' }}
                             name="category"
                             label="Category"
-                            //   size="small"
+                            size="small"
                             select
                             variant="outlined"
                         >
