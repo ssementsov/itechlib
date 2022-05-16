@@ -15,9 +15,9 @@ import {
 import { titles } from '../../common/constants/book-page-titles-constants';
 import router from 'next/router';
 import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
-import { calculateRate } from './../../utils/functions/calculate-rate';
-import { toLowerCaseExceptFirstLetter } from './../../utils/functions/transform-words';
-import { trimmedString } from './../../utils/functions/trim-long-string';
+import { calculateRate } from '../../utils/functions/calculate-rate';
+import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
+import { trimmedString } from '../../utils/functions/trim-long-string';
 import { getDate } from '../../utils/functions/get-date';
 
 const BooksInUseListResults = ({ books, isStartedSearch }) => {
@@ -30,7 +30,7 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                             <TableRow>
                                 <TableCell>{titles.title}</TableCell>
                                 <TableCell>{titles.author}</TableCell>
-                                <TableCell>{titles.description}</TableCell>
+                                <TableCell sx={{ width: '35%' }}>{titles.description}</TableCell>
                                 <TableCell style={{ width: 115 }}>{titles.category}</TableCell>
                                 <TableCell style={{ width: 115 }}>{titles.language}</TableCell>
                                 <TableCell style={{ width: 115, textAlign: 'center' }}>
@@ -93,7 +93,7 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                                         >
                                             {isStartedSearch
                                                 ? 'No books found'
-                                                : 'No books have been added yet!'}
+                                                : 'No books assigned to you yet!'}
                                         </Typography>
                                     </TableCell>
                                 </TableRow>

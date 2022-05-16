@@ -6,10 +6,9 @@ import { Box, Container } from '@mui/material';
 import { CloseIcon } from '../../../icons/close-icon';
 import MultipurposeBookForm from '../multipurpose-book-form';
 import { bookStatus } from '../../../common/constants/book-status-constants';
-import { limitWordLength } from './../../../utils/functions/limit-word-length';
 
 const AddEditBookFormBox = (props) => {
-    const { onClose, onCreate, onEdit, title, buttonName, book } = props;
+    const { onClose, onCreate, onEdit, title, buttonName, book, ...rest } = props;
     let newBook;
 
     if (book) {
@@ -43,9 +42,6 @@ const AddEditBookFormBox = (props) => {
 
     function validate(value) {
         let error = {};
-        let title = limitWordLength(value.title);
-        let author = limitWordLength(value.author);
-        let description = limitWordLength(value.description);
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
@@ -53,12 +49,6 @@ const AddEditBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if (title) {
-            error.title = 'Maximum 50 symbols for a single word';
-        } else if (author) {
-            error.author = 'Maximum 50 symbols for a single word';
-        } else if (description) {
-            error.description = 'Maximum 50 symbols for a single word';
         } else if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
                 error.reader = 'Reader is required';
@@ -85,14 +75,14 @@ const AddEditBookFormBox = (props) => {
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
-                .max(255, 'Author must be 255 or less symbols')
+                .max(500, 'Author must be 500 or less symbols')
                 .required('Author is required'),
             category: Yup.string().required('Category is required'),
             language: Yup.string().required('Language is required'),
             description: Yup.string()
                 .trim()
                 .min(10, 'Description must be 10 or more symbols')
-                .max(250, 'Description must be 250 or less symbols')
+                .max(500, 'Description must be 500 or less symbols')
                 .required('Description is required'),
             status: Yup.string().required('Status is required'),
         }),
@@ -137,6 +127,7 @@ const AddEditBookFormBox = (props) => {
                         formik={formik}
                         title={title}
                         buttonName={buttonName}
+                        {...rest}
                     />
                 </Container>
             </Box>

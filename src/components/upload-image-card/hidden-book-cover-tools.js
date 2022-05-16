@@ -4,15 +4,20 @@ import { Button, IconButton } from '@mui/material';
 import { LightDeleteIcon } from '../../icons/light-delete-icon';
 import StyledCard from './styled-card';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
+import { PROFILE_PATH } from '../../common/constants/route-constants';
 
 const HiddenBookCoverTools = (props) => {
-    const { onUploadButtonOpen, visible, onOpen } = props;
+    const { onUploadButtonOpen, visible, onOpen, isImage } = props;
+    const router = useRouter();
+    const isProfilePage = router.pathname === PROFILE_PATH;
     const isUploadedAvatar = useSelector((state) => state.avatar.isUploadedAvatar);
+    const isVisibleTools = isProfilePage ? visible && isUploadedAvatar : visible && isImage;
 
     return (
         <StyledCard
             sx={{
-                display: visible && isUploadedAvatar ? 'block' : 'none',
+                display: isVisibleTools ? 'block' : 'none',
                 background: 'rgba(0, 0, 0, 0.6)',
             }}
         >
@@ -43,6 +48,7 @@ HiddenBookCoverTools.propTypes = {
     onUploadButtonOpen: PropTypes.func.isRequired,
     visible: PropTypes.bool.isRequired,
     onOpen: PropTypes.func.isRequired,
+    isImage: PropTypes.object,
 };
 
 export default HiddenBookCoverTools;

@@ -2,20 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Typography } from '@mui/material';
 import StyledModal from '../styled-modal';
-import SelectFileButton from './select-image-button';
+import SelectFileButton from '../common/select-file-button';
 import { theme } from '../../theme/index';
 
 const SelectImageModal = (props) => {
-    const {
-        onClose,
-        open,
-        onSelect,
-        urlImage,
-        isAllowedImage,
-        onUpload,
-        title,
-        description,
-    } = props;
+    const { onClose, open, onSelect, urlImage, isAllowedImage, onUpload, title, description } =
+        props;
 
     return (
         <StyledModal open={open} onClose={onClose}>
@@ -34,11 +26,7 @@ const SelectImageModal = (props) => {
                                 marginBottom: '20px',
                             }}
                         >
-                            <img
-                                height="200px"
-                                src={urlImage}
-                                alt="book cover"
-                            />
+                            <img height="200px" src={urlImage} alt="book cover" />
                         </Box>
                         <Button
                             onClick={onUpload}
@@ -55,11 +43,7 @@ const SelectImageModal = (props) => {
                     <>
                         <Typography
                             variant="body1"
-                            color={
-                                isAllowedImage
-                                    ? theme.palette.error.main
-                                    : 'textSecondary'
-                            }
+                            color={isAllowedImage ? theme.palette.error.main : 'textSecondary'}
                             textAlign="center"
                             sx={{
                                 mb: '20px',

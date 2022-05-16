@@ -14,7 +14,11 @@ export const BooksAPI = {
         return api.Client.get(`/${EntityTypes.books}/${id}`);
     },
     addBook(model) {
-        return api.Client.post(`/${EntityTypes.books}`, model);
+        return api.Client.post(`/${EntityTypes.books}`, model, {
+            headers: {
+                'Content-type': 'multipart/form-data',
+            },
+        });
     },
     changeBookInfo(model) {
         return api.Client.put(`/${EntityTypes.books}`, model);
@@ -34,7 +38,7 @@ export const BooksAPI = {
         return api.Client.get(`/${EntityTypes.books}/users/bookings`);
     },
     addBookCover(model) {
-        return api.Client.post(`/${EntityTypes.books}/photo`, model, {
+        return api.Client.put(`/${EntityTypes.books}/photo`, model, {
             headers: {
                 'Content-type': 'multipart/form-data',
             },
