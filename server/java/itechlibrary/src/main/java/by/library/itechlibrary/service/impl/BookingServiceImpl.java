@@ -133,14 +133,16 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public void returnBooking(ReviewDto reviewDto, long id) {
 
+        log.info("Try to return booking, make active is false.");
+
         Booking booking = findBookingById(id);
 
         if (booking.isActive()) {
 
             booking.getBook().setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
+            checkAndSetUserRoles(booking);
             booking.setActive(false);
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
-            checkAndSetUserRoles(booking);
 
             bookingRepository.save(booking);
 
@@ -154,11 +156,14 @@ public class BookingServiceImpl implements BookingService {
     private void checkAndSetUserRoles(Booking booking) {
 
         Set<UserRole> roles = booking.getReader().getRoles();
+        int countOfOverdueBookings = bookingRepository.findByReaderIdAndFinishDateBeforeAndActiveIsTrue(booking.getReader().getId());
 
-        if(!roles.contains(UserRoleConstant.BOOK_READER_ROLE)){
+        if (!(roles.contains(UserRoleConstant.BOOK_READER_ROLE)) &&
+                countOfOverdueBookings == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS) {
 
             roles.add(UserRoleConstant.BOOK_READER_ROLE);
             booking.getReader().setRoles(roles);
+
         }
     }
 
@@ -266,11 +271,11 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void checkLimitOfActiveBookings(long userId){
+    private void checkLimitOfActiveBookings(long userId) {
 
         List<Booking> bookings = bookingRepository.findByReaderIdAndActiveIsTrue(userId);
 
-        if(bookings.size() >= BookingConstant.ACTIVE_BOOKINGS_LIMIT){
+        if (bookings.size() >= BookingConstant.ACTIVE_BOOKINGS_LIMIT) {
 
             log.info("Number of active bookings is exceeded");
 

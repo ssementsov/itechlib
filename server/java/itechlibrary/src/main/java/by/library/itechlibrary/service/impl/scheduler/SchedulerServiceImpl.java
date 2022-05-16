@@ -50,7 +50,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         if (!bookings.isEmpty()) {
 
-            bookings.forEach(x -> checkAndDeleteRole(x));
+            bookings.forEach(this::checkAndDeleteRole);
 
         }
 
