@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,6 +38,7 @@ public class SuggestedBookController {
         return suggestedBookService.getById(id);
     }
 
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("create new suggested book")
     @ResponseStatus(HttpStatus.CREATED)

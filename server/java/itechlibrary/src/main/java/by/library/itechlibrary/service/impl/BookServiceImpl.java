@@ -240,7 +240,6 @@ public class BookServiceImpl implements BookService {
         if (book.getOwner() == null) {
 
             long currentUserId = securityUserDetailsService.getCurrentUserId();
-
             book.setOwner(userService.getUserById(currentUserId));
 
         }
