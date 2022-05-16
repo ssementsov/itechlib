@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,6 +58,7 @@ public class BookController {
         return bookService.getCurrentUsersBookedBooks();
     }
 
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
@@ -65,6 +67,7 @@ public class BookController {
 
         return bookService.save(withOwnerBookDto, multipartFile);
     }
+
 
     @PutMapping
     @ApiOperation("update book")

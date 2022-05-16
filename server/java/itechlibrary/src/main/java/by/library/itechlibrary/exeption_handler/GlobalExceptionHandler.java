@@ -157,6 +157,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(BookingBookLimitException.class)
+    public ResponseEntity<IncorrectData> handleException(BookingBookLimitException exception) {
+
+        IncorrectData incorrectData = incorrectDataFilling(exception);
+
+        return new ResponseEntity<>(incorrectData, HttpStatus.BAD_REQUEST);
+    }
+
     private IncorrectData incorrectDataFilling(Exception exception) {
 
        IncorrectData incorrectData = new IncorrectData();

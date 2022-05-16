@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(schema = "public", name = "user")
@@ -43,5 +44,12 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "file_info_id")
     private FileInfo fileInfo;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<UserRole> roles;
 
 }

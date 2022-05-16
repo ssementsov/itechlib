@@ -27,10 +27,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @EntityGraph(attributePaths = {"language", "status", "category", "owner", "fileInfo"})
     Book save(Book book);
 
-    @Modifying
-    @Query("update Book b set b.fileInfo = null where b.fileInfo.id = :fileId")
-    void removeFileInfoFromBook(long fileId);
-
     @EntityGraph(attributePaths = {"owner", "fileInfo"})
     Optional<Book> findByFileInfoId(long fileInfoId);
 

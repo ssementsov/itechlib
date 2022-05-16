@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,6 +20,7 @@ public class VoteController {
     private final VoteService voteService;
 
 
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("vote endpoint")
     @ResponseStatus(HttpStatus.CREATED)
