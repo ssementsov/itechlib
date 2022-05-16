@@ -20,7 +20,7 @@ public class VoteController {
     private final VoteService voteService;
 
 
-    @PreAuthorize("hasRole('READER')")
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("vote endpoint")
     @ResponseStatus(HttpStatus.CREATED)

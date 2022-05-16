@@ -3,6 +3,7 @@ package by.library.itechlibrary.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class Booking {
     @JoinColumn(name = "user_id")
     private User reader;
 
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH})
     @JoinColumn(name = "book_id")
     private Book book;

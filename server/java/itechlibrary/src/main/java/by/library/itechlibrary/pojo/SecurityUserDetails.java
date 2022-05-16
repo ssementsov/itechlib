@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -79,7 +80,7 @@ public class SecurityUserDetails implements UserDetails {
         return false;
     }
 
-    private static Collection<? extends GrantedAuthority> getAuthoritiesFromUserRoles(List<UserRole> roles) {
+    private static Collection<? extends GrantedAuthority> getAuthoritiesFromUserRoles(Set<UserRole> roles) {
 
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))

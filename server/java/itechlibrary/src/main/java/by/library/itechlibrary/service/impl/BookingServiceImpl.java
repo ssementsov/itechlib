@@ -2,6 +2,7 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
@@ -23,6 +24,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Data
@@ -138,12 +140,25 @@ public class BookingServiceImpl implements BookingService {
             booking.getBook().setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
             booking.setActive(false);
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
+            checkAndSetUserRoles(booking);
+
             bookingRepository.save(booking);
 
         } else {
 
             throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
 
+        }
+    }
+
+    private void checkAndSetUserRoles(Booking booking) {
+
+        Set<UserRole> roles = booking.getReader().getRoles();
+
+        if(!roles.contains(UserRoleConstant.BOOK_READER_ROLE)){
+
+            roles.add(UserRoleConstant.BOOK_READER_ROLE);
+            booking.getReader().setRoles(roles);
         }
     }
 

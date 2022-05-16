@@ -58,7 +58,7 @@ public class BookController {
         return bookService.getCurrentUsersBookedBooks();
     }
 
-    @PreAuthorize("hasRole('READER')")
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)

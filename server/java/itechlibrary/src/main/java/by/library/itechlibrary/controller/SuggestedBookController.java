@@ -38,7 +38,7 @@ public class SuggestedBookController {
         return suggestedBookService.getById(id);
     }
 
-    @PreAuthorize("hasRole('READER')")
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("create new suggested book")
     @ResponseStatus(HttpStatus.CREATED)
