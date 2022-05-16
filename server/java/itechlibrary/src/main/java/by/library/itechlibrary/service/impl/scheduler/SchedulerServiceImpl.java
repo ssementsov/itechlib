@@ -29,7 +29,7 @@ public class SchedulerServiceImpl implements SchedulerService {
     private final BookingRepository bookingRepository;
 
 
-    @Scheduled(cron = "${job.cron}")
+    @Scheduled(cron = "${cron.check-confirm-data}")
     @Transactional
     public void deleteNotActivatedConfirmationData() {
 
@@ -40,7 +40,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
-    @Scheduled(cron = "${job.cron}")
+    @Scheduled(cron = "${cron.check-bookings}")
     @Transactional
     public void checkBookingsAndBlockUsersDidNotReturnBook() {
 

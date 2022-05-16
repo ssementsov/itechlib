@@ -55,7 +55,9 @@ template:
 jwt:
   secret: 8b4f7dd2-9884-4b96-af62-66e25441390e
 
-job.cron: "00 00 01 * * *"
+cron:
+  check-confirm-data: "00 00 01 * * *"
+  check-bookings: "00 30 00 * * *"
 
 idDevelopment: false
 
