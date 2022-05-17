@@ -75,5 +75,17 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: user
 
+  - changeSet:
+      id:  17052022-add-constraint-user-role
+      author:  maksim_maevsky
+      changes:
+        - addUniqueConstraint:
+            columnNames:  user_id, role_id
+            constraintName:  const_user_role
+            schemaName:  public
+            tableName:  users_roles
+            validate:  true
+
+
 
 
