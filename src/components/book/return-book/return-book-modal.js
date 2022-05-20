@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
-import { limitWordLength } from '../../../utils/functions/limit-word-length';
 
 const ReturnBookModal = (props) => {
     const { open, onClose, onReturn } = props;
@@ -55,24 +54,14 @@ const ReturnBookModal = (props) => {
         handleDisableButtons(rateValue, newValue);
     };
 
-    function validate(value) {
-        let error = {};
-        let feedback = limitWordLength(value.feedback);
-        if (feedback) {
-            error.feedback = 'Maximum 50 symbols for a single word';
-        }
-        return error;
-    }
-
     const formik = useFormik({
         initialValues: initValue,
         validationSchema: Yup.object({
             feedback: Yup.string()
                 .trim()
                 .min(10, 'Feedback must be 10 or more symbols')
-                .max(500, 'Feedback must be 500 or less symbols'),
+                .max(250, 'Feedback must be 250 or less symbols'),
         }),
-        validate,
         onSubmit: async (values, actions) => {
             actions.resetForm({
                 values: initValue,
@@ -115,12 +104,8 @@ const ReturnBookModal = (props) => {
                     }}
                 >
                     <TextField
-                        error={Boolean(
-                            formik.touched.feedback && formik.errors.feedback
-                        )}
-                        helperText={
-                            formik.touched.feedback && formik.errors.feedback
-                        }
+                        error={Boolean(formik.touched.feedback && formik.errors.feedback)}
+                        helperText={formik.touched.feedback && formik.errors.feedback}
                         onBlur={formik.handleBlur}
                         multiline
                         fullWidth

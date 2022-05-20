@@ -22,7 +22,6 @@ import java.util.List;
 @RequestMapping("/bookings")
 @Api(tags = "Endpoints for booking")
 @RequiredArgsConstructor
-@PreAuthorize(value = "isAuthenticated()")
 public class BookingController {
 
     private final BookingService bookingService;
@@ -36,6 +35,13 @@ public class BookingController {
     public List<BookingResponseDto> getBookingsByReaderId(@PathVariable("readerId") long readerId) {
 
         return bookingService.findAllByReaderId(readerId);
+    }
+
+    @GetMapping("/readers/{readerId}/count")
+    public int getCountActiveBookings(@PathVariable("readerId") long readerId){
+
+        return bookingService.getCountActiveBookings(readerId);
+
     }
 
     @GetMapping("/{readerId}/current")
@@ -70,7 +76,7 @@ public class BookingController {
         return bookingService.findById(id);
     }
 
-
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping
     @ApiOperation("create new booking")
     @ResponseStatus(HttpStatus.CREATED)
@@ -79,6 +85,7 @@ public class BookingController {
         return bookingService.save(bookingDto);
     }
 
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PutMapping("/update-finish-date")
     @ApiOperation("update booking")
     @ResponseStatus(HttpStatus.OK)
@@ -97,6 +104,7 @@ public class BookingController {
 
     }
 
+    @PreAuthorize("hasRole('BOOK_READER')")
     @GetMapping("/feedback")
     @ApiOperation("get feedback list by book id")
     @ResponseStatus(HttpStatus.OK)
