@@ -37,6 +37,13 @@ public class BookingController {
         return bookingService.findAllByReaderId(readerId);
     }
 
+    @GetMapping("/readers/{readerId}/count")
+    public int getCountActiveBookings(@PathVariable("readerId") long readerId){
+
+        return bookingService.getCountActiveBookings(readerId);
+
+    }
+
     @GetMapping("/{readerId}/current")
     @ApiOperation("get all reader's current bookings")
     @ResponseStatus(HttpStatus.OK)

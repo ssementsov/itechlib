@@ -136,35 +136,8 @@ public class BookingServiceImpl implements BookingService {
         log.info("Try to return booking, make active is false.");
 
         Booking booking = findBookingById(id);
+        tryToReturnBooking(reviewDto, id, booking);
 
-        if (booking.isActive()) {
-
-            booking.getBook().setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
-            checkAndSetUserRoles(booking);
-            booking.setActive(false);
-            setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
-
-            bookingRepository.save(booking);
-
-        } else {
-
-            throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
-
-        }
-    }
-
-    private void checkAndSetUserRoles(Booking booking) {
-
-        Set<UserRole> roles = booking.getReader().getRoles();
-        int countOfOverdueBookings = bookingRepository.findByReaderIdAndFinishDateBeforeAndActiveIsTrue(booking.getReader().getId());
-
-        if (!(roles.contains(UserRoleConstant.BOOK_READER_ROLE)) &&
-                countOfOverdueBookings == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS) {
-
-            roles.add(UserRoleConstant.BOOK_READER_ROLE);
-            booking.getReader().setRoles(roles);
-
-        }
     }
 
     @Override
@@ -192,6 +165,14 @@ public class BookingServiceImpl implements BookingService {
         } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
     }
 
+    @Override
+    public int getCountActiveBookings(long readerId) {
+
+        log.info("Try get count of active bookings of reader.");
+
+        return bookingRepository.findByReaderIdAndFinishDateBeforeAndActiveIsTrue(readerId);
+    }
+
     @Transactional
     @Override
     public void disableCurrentBooking(long bookId) {
@@ -202,6 +183,38 @@ public class BookingServiceImpl implements BookingService {
 
             Booking booking = bookingOptional.get();
             booking.setActive(false);
+
+        }
+    }
+
+    private void tryToReturnBooking(ReviewDto reviewDto, long id, Booking booking) {
+
+        if (booking.isActive()) {
+
+            booking.getBook().setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
+            checkAndSetUserRoles(booking);
+            booking.setActive(false);
+            setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
+
+            bookingRepository.save(booking);
+
+        } else {
+
+            throw new NotActiveBookingException("Booking with id = " + id + " is not active now.");
+
+        }
+    }
+
+    private void checkAndSetUserRoles(Booking booking) {
+
+        Set<UserRole> roles = booking.getReader().getRoles();
+        int countOfOverdueBookings = bookingRepository.findByReaderIdAndFinishDateBeforeAndActiveIsTrue(booking.getReader().getId());
+
+        if (!(roles.contains(UserRoleConstant.BOOK_READER_ROLE)) &&
+                countOfOverdueBookings == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS) {
+
+            roles.add(UserRoleConstant.BOOK_READER_ROLE);
+            booking.getReader().setRoles(roles);
 
         }
     }
