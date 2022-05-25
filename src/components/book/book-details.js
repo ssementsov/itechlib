@@ -51,6 +51,8 @@ const TblCell = styled(TableCell)(() => ({
     padding: '5px 0 5px 35px',
 }));
 
+const LIMIT_COUNT_NOTIFICATIONS = 5;
+
 const BookDetails = (props) => {
     const { book, onUpdate, isAssigned, assignHandler } = props;
     const router = useRouter();
@@ -64,20 +66,22 @@ const BookDetails = (props) => {
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
     const bookingEndDate = getDate(book.bookingInfoDto?.bookingEndDate);
     const readerId = useSelector(state => state.user.isUser.id);
-    const [isTriedToAssign, setIsTriedToAssign] = useState(false);
+    const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
 
     const assignBookHandler = useCallback(async () => {
-        if (isTriedToAssign) return
-        setIsTriedToAssign(true)
         await BookingsAPI.getCountActiveBookings(readerId)
             .then(res => {
-                console.log(res)
+                if(res.data === LIMIT_COUNT_NOTIFICATIONS) {
+                    setIsRejectedToAssign(true);
+                } else {
+                    setIsRejectedToAssign(false);
+                }
+                setAssignButtonOpen();
             })
-            .catch(err => {
-                console.log(err)
+            .catch(() => {
+                defaultErrorSnackbar();
             })
-        setIsTriedToAssign(false)
-    }, [isTriedToAssign])
+    }, [isRejectedToAssign])
 
     useEffect(() => {
         if (isAssigned) {
@@ -208,6 +212,7 @@ const BookDetails = (props) => {
                 onAssign={assignBook}
                 open={isAssignButtonOpen}
                 onClose={setAssignButtonClose}
+                isRejectedToAssign={isRejectedToAssign}
             />
             <ReturnBookModal
                 open={isReturnButtonOpen}
