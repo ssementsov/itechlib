@@ -7,6 +7,7 @@ import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
+import { userSlice } from "../store/reducers/UserSlice";
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
 
@@ -27,6 +28,7 @@ export const DashboardLayout = (props) => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const { setAvatarData, uploadAvatar, setIsLoadingAvatar } = avatarSlice.actions;
+    const { setUser } = userSlice.actions;
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -36,6 +38,7 @@ export const DashboardLayout = (props) => {
         dispatch(setIsLoadingAvatar(true));
         UserAPI.getUser()
             .then((res) => {
+                dispatch(setUser(res.data));
                 dispatch(setIsLoadingAvatar(false));
                 let avatar = res.data.fileInfo;
                 if (avatar) {

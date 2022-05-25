@@ -22,4 +22,7 @@ export const BookingsAPI = {
             },
         });
     },
+    getCountActiveBookings(readerId) {
+        return api.Client.get(`/${EntityTypes.bookings}/readers/${readerId}/count`)
+    },
 };
