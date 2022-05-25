@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { types } from './../../types/index';
 import {
@@ -40,6 +40,8 @@ import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-wo
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getDate } from '../../utils/functions/get-date';
+import { userSlice } from "../../store/reducers/UserSlice";
+import { useSelector } from 'react-redux';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -61,6 +63,21 @@ const BookDetails = (props) => {
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
     const bookingEndDate = getDate(book.bookingInfoDto?.bookingEndDate);
+    const readerId = useSelector(state => state.user.isUser.id);
+    const [isTriedToAssign, setIsTriedToAssign] = useState(false);
+
+    const assignBookHandler = useCallback(async () => {
+        if (isTriedToAssign) return
+        setIsTriedToAssign(true)
+        await BookingsAPI.getCountActiveBookings(readerId)
+            .then(res => {
+                console.log(res)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        setIsTriedToAssign(false)
+    }, [isTriedToAssign])
 
     useEffect(() => {
         if (isAssigned) {
@@ -338,15 +355,11 @@ const BookDetails = (props) => {
                                 </Button>
                             ) : (
                                 <Button
-                                    onClick={setAssignButtonOpen}
+                                    onClick={assignBookHandler}
                                     aria-label="assign"
                                     color="primary"
                                     variant="contained"
-                                    disabled={
-                                        book.status.name !== bookStatus.available.name
-                                            ? true
-                                            : false
-                                    }
+                                    disabled={book.status.name !== bookStatus.available.name}
                                 >
                                     Assign to me
                                 </Button>
