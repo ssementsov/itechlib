@@ -33,4 +33,6 @@ public interface BookingService {
 
     BaseBookingInfo getBaseBookingInfo(long bookId);
 
+    int getCountActiveBookings(long readerId);
+
 }
