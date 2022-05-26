@@ -40,7 +40,6 @@ import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-wo
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getDate } from '../../utils/functions/get-date';
-import { userSlice } from "../../store/reducers/UserSlice";
 import { useSelector } from 'react-redux';
 
 const TblCell = styled(TableCell)(() => ({
@@ -81,7 +80,7 @@ const BookDetails = (props) => {
             .catch(() => {
                 defaultErrorSnackbar();
             })
-    }, [isRejectedToAssign])
+    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen])
 
     useEffect(() => {
         if (isAssigned) {
