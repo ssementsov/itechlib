@@ -1,5 +1,6 @@
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
+import { styled } from '@mui/material/styles';
 import {
     Box,
     Card,
@@ -20,6 +21,8 @@ import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-wo
 import { trimmedString } from '../../utils/functions/trim-long-string';
 import { getDate } from '../../utils/functions/get-date';
 
+const StyledTableCell = styled(TableCell)(() => ({ width: 115, textAlign: 'center' }));
+
 const BooksInUseListResults = ({ books, isStartedSearch }) => {
     return (
         <Card>
@@ -30,13 +33,11 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                             <TableRow>
                                 <TableCell>{titles.title}</TableCell>
                                 <TableCell>{titles.author}</TableCell>
-                                <TableCell sx={{ width: '35%' }}>{titles.description}</TableCell>
-                                <TableCell style={{ width: 115 }}>{titles.category}</TableCell>
-                                <TableCell style={{ width: 115 }}>{titles.language}</TableCell>
-                                <TableCell style={{ width: 115, textAlign: 'center' }}>
-                                    {titles.rate}
-                                </TableCell>
-                                <TableCell style={{ width: 115 }}>{titles.dueDate}</TableCell>
+                                <TableCell>{titles.description}</TableCell>
+                                <StyledTableCell>{titles.category}</StyledTableCell>
+                                <StyledTableCell>{titles.language}</StyledTableCell>
+                                <StyledTableCell>{titles.rate}</StyledTableCell>
+                                <StyledTableCell>{titles.dueDate}</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -53,17 +54,13 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                                             <TableCell>{trimmedString(book.title)}</TableCell>
                                             <TableCell>{trimmedString(book.author)}</TableCell>
                                             <TableCell>{trimmedString(book.description)}</TableCell>
-                                            <TableCell>
+                                            <StyledTableCell>
                                                 {toLowerCaseExceptFirstLetter(book.category.name)}
-                                            </TableCell>
-                                            <TableCell
-                                                style={{
-                                                    textAlign: 'center',
-                                                }}
-                                            >
+                                            </StyledTableCell>
+                                            <StyledTableCell>
                                                 {toLowerCaseExceptFirstLetter(book.language.name)}
-                                            </TableCell>
-                                            <TableCell>
+                                            </StyledTableCell>
+                                            <StyledTableCell>
                                                 <Tooltip title={book.rate} placement="right">
                                                     <span>
                                                         <Rating
@@ -75,10 +72,10 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                                                         />
                                                     </span>
                                                 </Tooltip>
-                                            </TableCell>
-                                            <TableCell>
+                                            </StyledTableCell>
+                                            <StyledTableCell>
                                                 {getDate(book.baseBookingInfo.bookingEndDate)}
-                                            </TableCell>
+                                            </StyledTableCell>
                                         </TableRow>
                                     );
                                 })
