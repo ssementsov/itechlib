@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { types } from './../../types/index';
 import {
@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
-import { titles } from './../../common/constants/book-page-titles-constants';
+import { titles } from '../../common/constants/book-page-titles-constants';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
@@ -31,7 +31,7 @@ import { bookStatus } from '../../common/constants/book-status-constants';
 import { language } from '../../common/constants/language-constants';
 import { category } from '../../common/constants/category-constants';
 import { Book } from '../../models/book-model';
-import { Booking } from './../../models/booking-model';
+import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
 import { BookingsAPI } from './../../api/bookings-api';
 import { useBoolean } from '../../utils/boolean-hook';
@@ -41,6 +41,7 @@ import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/r
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getDate } from '../../utils/functions/get-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
+import { useSelector } from 'react-redux';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -49,6 +50,8 @@ const TblCell = styled(TableCell)(() => ({
     borderTop: '1px solid #E7E8EF',
     padding: '5px 0 5px 35px',
 }));
+
+const LIMIT_COUNT_NOTIFICATIONS = 5;
 
 const BookDetails = (props) => {
     const { book, onUpdate, isAssigned, assignHandler } = props;
@@ -62,6 +65,23 @@ const BookDetails = (props) => {
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
     const bookingEndDate = getDate(book.bookingInfoDto?.bookingEndDate);
+    const readerId = useSelector(state => state.user.isUser.id);
+    const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
+
+    const assignBookHandler = useCallback(async () => {
+        await BookingsAPI.getCountActiveBookings(readerId)
+            .then(res => {
+                if(res.data === LIMIT_COUNT_NOTIFICATIONS) {
+                    setIsRejectedToAssign(true);
+                } else {
+                    setIsRejectedToAssign(false);
+                }
+                setAssignButtonOpen();
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            })
+    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen])
 
     useEffect(() => {
         if (isAssigned) {
@@ -192,6 +212,7 @@ const BookDetails = (props) => {
                 onAssign={assignBook}
                 open={isAssignButtonOpen}
                 onClose={setAssignButtonClose}
+                isRejectedToAssign={isRejectedToAssign}
             />
             <ReturnBookModal
                 open={isReturnButtonOpen}
@@ -339,7 +360,7 @@ const BookDetails = (props) => {
                                     title={'Assign to me'}
                                     size='small'
                                     fullWidth={false}
-                                    onClick={setAssignButtonOpen}
+                                    onClick={assignBookHandler}
                                     disabled={
                                         book.status.name !== bookStatus.available.name
                                             ? true

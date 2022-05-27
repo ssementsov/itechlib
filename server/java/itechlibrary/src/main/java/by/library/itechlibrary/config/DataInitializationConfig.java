@@ -1,5 +1,6 @@
 package by.library.itechlibrary.config;
 
+import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.pojo.BaseUserInfo;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Set;
 
 @ConditionalOnExpression("${idDevelopment} == false")
 @Configuration
@@ -30,6 +32,7 @@ public class DataInitializationConfig {
     public void initUserDataToDB() {
 
         List<User> propertyUsers = userMapper.mapUserListFromBaseUserInfos(users);
+        propertyUsers.forEach(x -> x.setRoles(Set.of(UserRoleConstant.BOOK_READER_ROLE)));
 
         for (User propertyUser : propertyUsers) {
 

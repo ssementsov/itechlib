@@ -28,7 +28,7 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
     public void setUserDetailsToContext(String corpEmail){
 
         SecurityUserDetails securityUserDetails = getSecurityUserDetails(corpEmail);
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null, null);
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null, securityUserDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
     }
