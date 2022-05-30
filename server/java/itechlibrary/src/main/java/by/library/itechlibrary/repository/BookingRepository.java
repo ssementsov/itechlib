@@ -46,4 +46,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select count(b) from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.reader.id = :readerId")
     int findByReaderIdAndFinishDateBeforeAndActiveIsTrue(long readerId);
 
+    @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId")
+    int findCountByReaderIdAndActiveIsTrue(long readerId);
+
 }
