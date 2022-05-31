@@ -7,15 +7,13 @@ import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.dto.UserProfileDto;
 import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.repository.UserRepository;
-import by.library.itechlibrary.service.ConfirmationDataService;
-import by.library.itechlibrary.service.FileInfoService;
-import by.library.itechlibrary.service.MailNotificationService;
-import by.library.itechlibrary.service.UserService;
+import by.library.itechlibrary.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +39,8 @@ public class UserServiceImpl implements UserService {
     private final ConfirmationDataService confirmationDataService;
 
     private final FileInfoService fileInfoService;
+
+    private final MailTemplateService mailTemplateService;
 
 
     @Override
@@ -178,7 +178,8 @@ public class UserServiceImpl implements UserService {
             checkAndDeleteOldConfirmationData(user);
             user.setConfirmationData(confirmationDataService.create());
             user.setGoogleEmail(googleEmail);
-            mailNotificationService.sent(user, MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
+            Template template = mailTemplateService.getAndFillConfirmationTemplateFromUser(user, MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
+            mailNotificationService.sent(user, template);
 
             return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_SENT;
 

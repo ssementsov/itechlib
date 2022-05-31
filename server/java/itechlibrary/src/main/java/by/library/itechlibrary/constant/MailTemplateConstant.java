@@ -17,5 +17,6 @@ public final class MailTemplateConstant {
     public static final String MAIL_CONFIRMATION_TEMPLATE_NAME = "MAIL_CONFIRMATION_TEMPLATE";
     public static final String ACCEPTANCE_DECLINED_TEMPLATE_NAME = "ACCEPTANCE_DECLINED";
     public static final String BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME = "BLOCK_OR_UNBLOCK_READER";
+    public static final String RETURN_BOOK_TEMPLATE_NAME = "RETURN_BOOK";
 
 }

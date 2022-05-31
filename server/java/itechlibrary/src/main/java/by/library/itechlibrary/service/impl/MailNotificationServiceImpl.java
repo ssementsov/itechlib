@@ -30,8 +30,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     private final JavaMailSender emailSender;
 
-    private final MailTemplateService mailTemplateService;
-
     private final MailNotificationRepository mailNotificationRepository;
 
     private final ConfirmationDataService confirmationDataService;
@@ -43,9 +41,8 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Async("threadPoolTaskExecutor")
     @Transactional
     @Override
-    public void sent(User user, String templateName) {
+    public void sent(User user, Template template) {
 
-        Template template = mailTemplateService.getAndFillConfirmationTemplate(user, templateName);
         MailNotification notification = getMailNotification(user, template);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();

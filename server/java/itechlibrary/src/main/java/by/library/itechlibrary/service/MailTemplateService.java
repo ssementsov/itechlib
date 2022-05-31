@@ -6,7 +6,7 @@ import by.library.itechlibrary.entity.User;
 
 public interface MailTemplateService {
 
-    Template getAndFillConfirmationTemplate(User user);
+    Template getAndFillConfirmationTemplateFromUser(User user, String templateName);
 
     Template getAndFillTemplateFromBookingInfo(Booking booking, String templateName);
 

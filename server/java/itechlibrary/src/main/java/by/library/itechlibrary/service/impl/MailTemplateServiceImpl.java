@@ -26,9 +26,9 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     private String host;
 
     @Override
-    public Template getAndFillConfirmationTemplate(User user) {
+    public Template getAndFillConfirmationTemplateFromUser(User user, String templateName) {
 
-        Template template = getByName(MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
+        Template template = getByName(templateName);
         String templateText = template.getText();
 
         templateText = getFilledTextOfTemplateFromUserInfo(user, templateText);

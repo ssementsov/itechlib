@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +49,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId")
     int findCountByReaderIdAndActiveIsTrue(long readerId);
+
+    @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true")
+    List<Booking> findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(LocalDate maximumFinishDate);
+
+
 
 }
