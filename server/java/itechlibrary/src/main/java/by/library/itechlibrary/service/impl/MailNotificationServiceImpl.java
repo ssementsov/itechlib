@@ -45,7 +45,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Override
     public void sent(User user, String templateName) {
 
-        Template template = mailTemplateService.getAndFillTemplate(user, templateName);
+        Template template = mailTemplateService.getAndFillConfirmationTemplate(user, templateName);
         MailNotification notification = getMailNotification(user, template);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();

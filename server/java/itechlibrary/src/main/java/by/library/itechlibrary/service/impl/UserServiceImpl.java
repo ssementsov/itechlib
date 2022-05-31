@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
             checkAndDeleteOldConfirmationData(user);
             user.setConfirmationData(confirmationDataService.create());
             user.setGoogleEmail(googleEmail);
-            mailNotificationService.sent(user, MailTemplateConstant.MAIL_CONFIRMATION);
+            mailNotificationService.sent(user, MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
 
             return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_SENT;
 

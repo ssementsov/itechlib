@@ -58,6 +58,15 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
+    @Scheduled(cron = "${cron.check-bookings-remind-finish-date}")
+    @Transactional
+    public void checkBookingsForRemindReturnDate(){
+
+
+
+
+    }
+
     private void checkAndDeleteRole(Booking booking) {
 
         Set<UserRole> roles = booking.getReader().getRoles();
