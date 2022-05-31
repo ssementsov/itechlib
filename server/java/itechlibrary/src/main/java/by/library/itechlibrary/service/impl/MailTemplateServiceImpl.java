@@ -46,7 +46,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
 
     }
 
-
     private String getFilledTextOfTemplateFromUserInfo(User user, String templateText) {
 
         if (templateText.contains(MailTemplateConstant.USER_ID)) {
