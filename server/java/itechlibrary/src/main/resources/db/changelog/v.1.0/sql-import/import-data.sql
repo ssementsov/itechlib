@@ -327,7 +327,7 @@ VALUES ('RETURN_BOOK', 'Return book', '<html>
                                                 <tr>
                                                     <td>
                                                         <p><b>{BOOKING_START_DATE}</b> You took the
-                                                            <b>&ldquo;{BOOK_TITLE}&rdquo;</b> book on iTechLib
+                                                            <b>{BOOK_TITLE}</b> book on iTechLib
                                                             website.
                                                         </p>
                                                     </td>
