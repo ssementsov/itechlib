@@ -37,11 +37,8 @@ VALUES ('ACCEPTANCE_DECLINED', 'Acceptance declined','<html>
                                                 <tr>
                                                     <td>
                                                         <p>
-                                                            <b>{BOOK_READER_NAME}</b> has declined the <b>{title
-                                                                of the
-                                                                book}</b> book from <b>{BOOKING_START_DATE}</b> till
-                                                            <b>{booking
-                                                                end date}</b>. You can find the decline reason
+                                                            <b>{BOOK_READER_NAME}</b> has declined the <b>{BOOK_TITLE}</b> book from <b>{BOOKING_START_DATE}</b> till
+                                                            <b>{BOOKING_END_DATE}</b>. You can find the decline reason
                                                             on the Book preview page &ndash; just hover a
                                                             mouse over the status field.
                                                         </p>
@@ -51,7 +48,7 @@ VALUES ('ACCEPTANCE_DECLINED', 'Acceptance declined','<html>
                                                     <td>
                                                         <p>To do so, please follow the link.
                                                             <span style="background: #ffffff;">
-                                                                <a href="{ADDRESS}" target="_blank"
+                                                                <a href="http://{HOST}/my-books" target="_blank"
                                                                     style="background: #ffffff; border-color: #ffffff;">
                                                                     Click here
                                                                 </a>
@@ -114,7 +111,7 @@ VALUES('BLOCK_OR_UNBLOCK_READER', 'Block or unblock reader', '<html>
                                                 <tr>
                                                     <td>
                                                         <p>
-                                                            <b>{Book title}</b> was due to return on <b>{BOOKING_END_DATE}</b>. Some
+                                                            <b>{BOOK_TITLE}</b> was due to return on <b>{BOOKING_END_DATE}</b>. Some
                                                                     functionalities were blocked for You because the
                                                                     book was not returned in time. Please return the
                                                                     book to retain access to all functionalities.
@@ -125,7 +122,7 @@ VALUES('BLOCK_OR_UNBLOCK_READER', 'Block or unblock reader', '<html>
                                                     <td>
                                                         <p>To do so, please follow the link.
                                                             <span style="background: #ffffff;">
-                                                                <a href="{ADDRESS}" target="_blank"
+                                                                <a href="http://{HOST}/books/{BOOK_ID}" target="_blank"
                                                                     style="background: #ffffff; border-color: #ffffff;">
                                                                     Click here
                                                                 </a>
@@ -196,7 +193,7 @@ VALUES ('BOOK_ACCEPTANCE', 'Book acceptance', '<html>
                                                     <td>
                                                         <p>To do so, please follow the link.
                                                             <span style="background: #ffffff;">
-                                                                <a href="{ADDRESS}" target="_blank"
+                                                                <a href="http://{HOST}/my-books" target="_blank"
                                                                     style="background: #ffffff; border-color: #ffffff;">
                                                                     Click here
                                                                 </a>
@@ -267,7 +264,7 @@ VALUES ('BOOK_ACCEPTANCE_BY_READER', 'Book acceptance by reader', '<html>
                                                     <td>
                                                         <p>To do so, please follow the link.
                                                             <span style="background: #ffffff;">
-                                                                <a href="{ADDRESS}" target="_blank"
+                                                                <a href="http://{HOST}/books/{BOOK_ID}" target="_blank"
                                                                     style="background: #ffffff; border-color: #ffffff;">
                                                                     Click here
                                                                 </a>
@@ -340,7 +337,7 @@ VALUES ('RETURN_BOOK', 'Return book', '<html>
                                                         <p>The book is due to return on <b>{BOOKING_END_DATE}</b>. You can return the book by clicking
                                                             the link:
                                                             <span style="background: #ffffff;">
-                                                                <a href="{ADDRESS}" target="_blank"
+                                                                <a href="http://{HOST}/books/{BOOK_ID}" target="_blank"
                                                                     style="background: #ffffff; border-color: #ffffff;">
                                                                     Click here
                                                                 </a>
