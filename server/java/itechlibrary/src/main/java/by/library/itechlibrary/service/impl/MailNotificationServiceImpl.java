@@ -41,9 +41,9 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Async("threadPoolTaskExecutor")
     @Transactional
     @Override
-    public void sent(User user, Template template) {
+    public void sent(User user, Template template, String filedTemplateText) {
 
-        MailNotification notification = getMailNotification(user, template);
+        MailNotification notification = getMailNotification(user, template, filedTemplateText);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         trySetDataMimeMessage(user, notification, mimeMessage);
@@ -70,7 +70,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
-    private MailNotification getMailNotification(User user, Template template) {
+    private MailNotification getMailNotification(User user, Template template, String filedTemplateText) {
 
         MailNotification notification = new MailNotification();
 
@@ -78,7 +78,7 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         notification.setTo(user.getGoogleEmail());
         notification.setSubject(template.getSubject());
         notification.setTemplate(template);
-        notification.setText(template.getText());
+        notification.setText(filedTemplateText);
         notification.setUser(user);
         notification.setDate(LocalDateTime.now());
 

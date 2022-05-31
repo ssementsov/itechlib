@@ -5,5 +5,5 @@ import by.library.itechlibrary.entity.User;
 
 public interface MailNotificationService {
 
-    void sent(User user, Template template);
+    void sent(User user, Template template, String filedTemplateText);
 }

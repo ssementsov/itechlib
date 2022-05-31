@@ -13,6 +13,7 @@ public final class MailTemplateConstant {
     public static final String BOOKING_START_DATE = "{BOOKING_START_DATE}";
     public static final String BOOKING_END_DATE = "{BOOKING_END_DATE}";
     public static final String OWNER_NAME = "{OWNER_NAME}";
+    public static final String BOOK_ID = "{BOOK_ID}";
 
     public static final String MAIL_CONFIRMATION_TEMPLATE_NAME = "MAIL_CONFIRMATION_TEMPLATE";
     public static final String ACCEPTANCE_DECLINED_TEMPLATE_NAME = "ACCEPTANCE_DECLINED";

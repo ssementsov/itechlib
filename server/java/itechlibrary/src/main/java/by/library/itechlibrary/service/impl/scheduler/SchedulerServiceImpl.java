@@ -84,9 +84,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     private void getTemplateAndSendNotification(Booking booking) {
 
-        Template template = mailTemplateService
-                .getAndFillTemplateFromBookingInfo(booking, MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME);
-        mailNotificationService.sent(booking.getReader(), template);
+        Template template = mailTemplateService.getByName(MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME);
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
+        mailNotificationService.sent(booking.getReader(), template, filedTemplateText);
 
     }
 

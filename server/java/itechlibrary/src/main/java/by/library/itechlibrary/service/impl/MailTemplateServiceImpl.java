@@ -26,29 +26,24 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     private String host;
 
     @Override
-    public Template getAndFillConfirmationTemplateFromUser(User user, String templateName) {
+    public String getAndFillConfirmationTemplateFromUser(User user, String templateText) {
 
-        Template template = getByName(templateName);
-        String templateText = template.getText();
+        return getFilledTextOfTemplateFromUserInfo(user, templateText);
 
-        templateText = getFilledTextOfTemplateFromUserInfo(user, templateText);
-
-        template.setText(templateText);
-
-        return template;
     }
 
     @Override
-    public Template getAndFillTemplateFromBookingInfo(Booking booking, String templateName) {
+    public String getAndFillTemplateFromBookingInfo(Booking booking, String templateText) {
 
-        Template template = getByName(templateName);
-        String templateText = template.getText();
+        return getFilledTextFromBookingInfo(booking, templateText);
+    }
 
-        getFilledTextFromBookingInfo(booking, templateText);
+    @Override
+    public Template getByName(String templateName) {
 
-        template.setText(templateText);
+        return templateRepository.findByName(templateName)
+                .orElseThrow(() -> new NotFoundException("Template has not found by name " + templateName));
 
-        return template;
     }
 
 
@@ -77,33 +72,40 @@ public class MailTemplateServiceImpl implements MailTemplateService {
 
     private String getFilledTextFromBookingInfo(Booking booking, String templateText) {
 
+        String bookTitle = booking.getBook().getTitle();
+        String bookReaderName = booking.getReader().getName();
+        String startDate = booking.getStartDate().toString();
+        String endDate = booking.getFinishDate().toString();
+        String ownerName = booking.getBook().getOwner().getName();
+        String bookId = String.valueOf(booking.getBook().getId());
+
         if (templateText.contains(MailTemplateConstant.BOOK_TITLE)) {
 
-            templateText = templateText.replace(MailTemplateConstant.BOOK_TITLE, String.valueOf(booking.getBook().getId()));
+            templateText = templateText.replace(MailTemplateConstant.BOOK_TITLE, bookTitle);
 
         }
 
         if (templateText.contains(MailTemplateConstant.BOOK_READER_NAME)) {
 
-            templateText = templateText.replace(MailTemplateConstant.BOOK_READER_NAME, booking.getReader().getName());
+            templateText = templateText.replace(MailTemplateConstant.BOOK_READER_NAME, bookReaderName);
 
         }
 
         if (templateText.contains(MailTemplateConstant.BOOKING_START_DATE)) {
 
-            templateText = templateText.replace(MailTemplateConstant.BOOKING_START_DATE, booking.getStartDate().toString());
+            templateText = templateText.replace(MailTemplateConstant.BOOKING_START_DATE, startDate);
 
         }
 
         if (templateText.contains(MailTemplateConstant.BOOKING_END_DATE)) {
 
-            templateText = templateText.replace(MailTemplateConstant.BOOKING_END_DATE, booking.getFinishDate().toString());
+            templateText = templateText.replace(MailTemplateConstant.BOOKING_END_DATE, endDate);
 
         }
 
         if (templateText.contains(MailTemplateConstant.OWNER_NAME)) {
 
-            templateText = templateText.replace(MailTemplateConstant.OWNER_NAME, booking.getBook().getOwner().getName());
+            templateText = templateText.replace(MailTemplateConstant.OWNER_NAME, ownerName);
 
         }
 
@@ -113,13 +115,12 @@ public class MailTemplateServiceImpl implements MailTemplateService {
 
         }
 
+        if (templateText.contains(MailTemplateConstant.BOOK_ID)) {
+
+            templateText = templateText.replace(MailTemplateConstant.BOOK_ID, bookId);
+
+        }
+
         return templateText;
-    }
-
-    private Template getByName(String templateName) {
-
-        return templateRepository.findByName(templateName)
-                .orElseThrow(() -> new NotFoundException("Template has not found by name " + templateName));
-
     }
 }
