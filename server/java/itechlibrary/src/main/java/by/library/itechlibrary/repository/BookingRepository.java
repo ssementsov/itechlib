@@ -53,6 +53,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true")
     List<Booking> findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(LocalDate maximumFinishDate);
 
-
-
 }
