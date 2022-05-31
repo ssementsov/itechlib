@@ -31,15 +31,15 @@ VALUES ('ACCEPTANCE_DECLINED', 'Acceptance declined','<html>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p>Dear <b>{name of the owner}</b>,</p>
+                                                        <p>Dear <b>{OWNER_NAME}</b>,</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
                                                         <p>
-                                                            <b>{Name of the book reader}</b> has declined the <b>{title
+                                                            <b>{BOOK_READER_NAME}</b> has declined the <b>{title
                                                                 of the
-                                                                book}</b> book from <b>{booking start date}</b> till
+                                                                book}</b> book from <b>{BOOKING_START_DATE}</b> till
                                                             <b>{booking
                                                                 end date}</b>. You can find the decline reason
                                                             on the Book preview page &ndash; just hover a
@@ -108,13 +108,13 @@ VALUES('BLOCK_OR_UNBLOCK_READER', 'Block or unblock reader', '<html>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p>Dear <b>{name of the reader}</b>,</p>
+                                                        <p>Dear <b>{BOOK_READER_NAME}</b>,</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
                                                         <p>
-                                                            <b>{Book title}</b> was due to return on <b>{booking end date}</b>. Some
+                                                            <b>{Book title}</b> was due to return on <b>{BOOKING_END_DATE}</b>. Some
                                                                     functionalities were blocked for You because the
                                                                     book was not returned in time. Please return the
                                                                     book to retain access to all functionalities.
@@ -182,14 +182,13 @@ VALUES ('BOOK_ACCEPTANCE', 'Book acceptance', '<html>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p>Dear <b>{name of the owner}</b>,</p>
+                                                        <p>Dear <b>{OWNER_NAME}</b>,</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p><b>{Name of the book reader}</b> has accepted the <b>{title
-                                                                of the book}</b> book from <b>{booking start date}</b>
-                                                            till <b>{booking end date}</b>.
+                                                        <p><b>{BOOK_READER_NAME}</b> has accepted the <b>{BOOK_TITLE}</b> book from <b>{BOOKING_START_DATE}</b>
+                                                            till <b>{BOOKING_END_DATE}</b>.
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -254,14 +253,13 @@ VALUES ('BOOK_ACCEPTANCE_BY_READER', 'Book acceptance by reader', '<html>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p>Dear <b>{name of the reader}</b>,</p>
+                                                        <p>Dear <b>{BOOK_READER_NAME}</b>,</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p><b>{Name of the book owner}</b> is requesting You to accept
-                                                            the <b>{title of the book}</b> book from <b>{booking start
-                                                                date}</b> till <b>{booking end date}</b>.
+                                                        <p><b>{OWNER_NAME}</b> is requesting You to accept
+                                                            the <b>{BOOK_TITLE}</b> book from <b>{BOOKING_START_DATE}</b> till <b>{BOOKING_END_DATE}</b>.
                                                         </p>
                                                     </td>
                                                 </tr>
@@ -326,21 +324,20 @@ VALUES ('RETURN_BOOK', 'Return book', '<html>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p>Dear <b>{name of the reader}</b>,</p>
+                                                        <p>Dear <b>{BOOK_READER_NAME}</b>,</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p><b>{booking start date}</b> You took the
-                                                            <b>&ldquo;{book title}&rdquo;</b> book on iTechLib
+                                                        <p><b>{BOOKING_START_DATE}</b> You took the
+                                                            <b>&ldquo;{BOOK_TITLE}&rdquo;</b> book on iTechLib
                                                             website.
                                                         </p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p>The book is due to return on <b>{booking end
-                                                                date}</b>. You can return the book by clicking
+                                                        <p>The book is due to return on <b>{BOOKING_END_DATE}</b>. You can return the book by clicking
                                                             the link:
                                                             <span style="background: #ffffff;">
                                                                 <a href="{ADDRESS}" target="_blank"
@@ -354,7 +351,7 @@ VALUES ('RETURN_BOOK', 'Return book', '<html>
                                                 <tr>
                                                     <td>
                                                         <p>Note that if You do not return the book by 23:59 on
-                                                            <b>{booking end date}</b>, some functionalities on iTechLib
+                                                            <b>{BOOKING_END_DATE}</b>, some functionalities on iTechLib
                                                             website will be blocked until You return the book.
                                                         </p>
                                                     </td>

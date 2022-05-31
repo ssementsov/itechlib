@@ -3,6 +3,8 @@ package by.library.itechlibrary.service.impl;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.repository.TemplateRepository;
 import by.library.itechlibrary.service.MailTemplateService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailTemplateServiceImpl implements MailTemplateService {
 
+    private final TemplateRepository templateRepository;
+
     @Value("${template.confirm-link}")
     private String confirmLink;
 
@@ -24,9 +28,26 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     private String host;
 
     @Override
-    public String fillTemplate(User user, Template template) {
+    public Template getAndFillTemplate(User user, String templateName) {
+
+        Template template = getByName(templateName);
 
         String templateText = template.getText();
+
+        if(templateName.equals("MAIL_CONFIRMATION_TEMPLATE")){
+
+            templateText = getFilledTextOfConfirmationTemplate(user, templateText);
+
+        }
+
+        template.setText(templateText);
+
+        return template;
+    }
+
+
+
+    private String getFilledTextOfConfirmationTemplate(User user, String templateText) {
 
         if (templateText.contains(MailTemplateConstant.CONFIRMATION_LINK)) {
 
@@ -50,5 +71,12 @@ public class MailTemplateServiceImpl implements MailTemplateService {
         }
 
         return templateText;
+    }
+
+    private Template getByName(String templateName){
+
+        return templateRepository.findByName(templateName)
+                .orElseThrow(() -> new NotFoundException("Template has not found by name " + templateName));
+
     }
 }

@@ -123,3 +123,8 @@ application-data:
       surname: Kuzmianok
       corpEmail: sergey.kuzmianok@itechart-group.com
       isActive: true
+    -
+      name: Katsiaryna
+      surname: Yashchanka
+      corpEmail: k.yashchanka@itechart-group.com
+      isActive: true

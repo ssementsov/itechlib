@@ -5,5 +5,5 @@ import by.library.itechlibrary.entity.User;
 
 public interface MailTemplateService {
 
-    String fillTemplate(User user, Template template);
+    Template getAndFillTemplate(User user, String templateName);
 }
