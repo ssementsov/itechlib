@@ -28,6 +28,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}  
       - name: Build and push images
         run: |
-           docker-compose  --env-file .env -f "docker-compose.yml" up -d --build
+           docker-compose  --env-file .env -f "docker-compose.aws.yml" up -d --build
            docker-compose push           
       
