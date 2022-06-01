@@ -6,4 +6,6 @@ public interface SchedulerService {
 
     void checkBookingsAndBlockUsersDidNotReturnBook();
 
+    void checkBookingsForRemindReturnDate();
+
 }
