@@ -32,4 +32,12 @@ public class SchedulerController {
         schedulerService.deleteNotActivatedConfirmationData();
 
     }
+
+    @ApiOperation("Find bookings and send remind notifications to readers")
+    @PutMapping("/bookings-reminder")
+    public void checkBookingsForRemindReturnDate() {
+
+        schedulerService.checkBookingsForRemindReturnDate();
+
+    }
 }
