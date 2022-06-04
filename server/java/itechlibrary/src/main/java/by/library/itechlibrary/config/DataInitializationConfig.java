@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Set;
 
-@ConditionalOnExpression("${idDevelopment} == false")
+@ConditionalOnExpression("${isDevelopment} == false")
 @Configuration
 @Data
 @RequiredArgsConstructor
@@ -33,14 +33,15 @@ public class DataInitializationConfig {
 
         List<User> propertyUsers = userMapper.mapUserListFromBaseUserInfos(users);
         propertyUsers.forEach(x -> x.setRoles(Set.of(UserRoleConstant.BOOK_READER_ROLE)));
+        propertyUsers.forEach(this::saveUser);
 
-        for (User propertyUser : propertyUsers) {
+    }
 
-            if (userRepository.findByCorpEmail(propertyUser.getCorpEmail()).isEmpty()) {
+    private void saveUser(User propertyUser) {
+        if (userRepository.findByCorpEmail(propertyUser.getCorpEmail()).isEmpty()) {
 
-                userRepository.save(propertyUser);
+            userRepository.save(propertyUser);
 
-            }
         }
     }
 }

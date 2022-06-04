@@ -2,8 +2,11 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.CategoryConstant;
 import by.library.itechlibrary.constant.LanguageConstant;
-import by.library.itechlibrary.constant.PaginationConstant;
+import by.library.itechlibrary.constant.PredicateConstant;
 import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
+import by.library.itechlibrary.dto.criteria.SearchCriteria;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import by.library.itechlibrary.entity.Category;
 import by.library.itechlibrary.entity.Language;
@@ -11,11 +14,14 @@ import by.library.itechlibrary.entity.SuggestedBook;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.NotNewObjectException;
 import by.library.itechlibrary.mapper.SuggestedBookMapper;
+import by.library.itechlibrary.mapper.criteria.SearchCriteriaMapper;
 import by.library.itechlibrary.repository.SuggestedBookRepository;
+import by.library.itechlibrary.repository.predicate.SuggestedBookPredicateBuilder;
 import by.library.itechlibrary.service.SuggestedBookService;
 import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.service.VoteService;
 import by.library.itechlibrary.util.PaginationUtil;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,6 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -42,18 +49,21 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
     private final UserService userService;
 
+    private final SuggestedBookPredicateBuilder suggestedBookPredicateBuilder;
+
+    private final SearchCriteriaMapper searchCriteriaMapper;
+
 
     @Override
-    public List<SuggestedBookDto> getAll(int pageNumber, int pageCapacity) {
+    public List<SuggestedBookDto> getAll(List<BaseSearchCriteria> criteria, SortingCriteria parameterInfoDto) {
 
         log.info("Try to get all suggested books.");
 
-        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_SUGGESTED_BOOK);
-        Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(pageable);
-        List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
-        suggestedBookDtoList.forEach(this::setGeneralAmountVote);
+        BooleanExpression suggestedBookPredicate = getBooleanExpressionPredicate(criteria);
+        Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
+        Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(suggestedBookPredicate, pageable);
 
-        return suggestedBookDtoList;
+        return getSuggestedBookDtoList(suggestedBooks);
     }
 
     @Override
@@ -120,10 +130,24 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         return updatedSuggestedBookDto;
     }
 
+    private BooleanExpression getBooleanExpressionPredicate(List<BaseSearchCriteria> criteria) {
+
+        List<SearchCriteria> searchCriteriaList = searchCriteriaMapper
+                .getSearchCriteriaList(criteria, PredicateConstant.EQUALS_CRITERIA_OPERATOR);
+
+        return suggestedBookPredicateBuilder.with(searchCriteriaList).build();
+    }
+
     private SuggestedBook findById(long id) {
 
         return suggestedBookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Suggested book was not found by id = " + id));
+    }
+
+    private List<SuggestedBookDto> getSuggestedBookDtoList(Page<SuggestedBook> suggestedBooks) {
+        List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
+        suggestedBookDtoList.forEach(this::setGeneralAmountVote);
+        return suggestedBookDtoList;
     }
 
     private void checkId(SuggestedBook suggestedBook) {

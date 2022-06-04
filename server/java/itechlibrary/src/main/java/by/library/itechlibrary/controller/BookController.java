@@ -1,5 +1,6 @@
 package by.library.itechlibrary.controller;
 
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 
@@ -28,9 +28,9 @@ public class BookController {
     @GetMapping
     @ApiOperation("get all books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getBooks(@PathParam("pageNumber") int pageNumber, @PathParam("pageCapacity") int pageCapacity) {
+    public List<WithOwnerBookDto> getBooks(SortingCriteria sortingCriteria) {
 
-        return bookService.getAll(pageNumber, pageCapacity);
+        return bookService.getAll(sortingCriteria);
     }
 
     @GetMapping("/{id}")
@@ -44,10 +44,9 @@ public class BookController {
     @GetMapping("/users")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getUsersBook(@PathParam("pageNumber") int pageNumber,
-                                               @PathParam("pageCapacity") int pageCapacity) {
+    public List<WithOwnerBookDto> getUsersBook(SortingCriteria sortingCriteria) {
 
-        return bookService.getOwnersBook(pageNumber, pageCapacity);
+        return bookService.getOwnersBook(sortingCriteria);
     }
 
     @GetMapping("/users/bookings")

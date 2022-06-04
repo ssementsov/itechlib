@@ -59,7 +59,7 @@ cron:
   check-bookings: "30 00 00 * * *"
   check-bookings-remind-finish-date: "00 00 00 * * *"
 
-idDevelopment: false
+isDevelopment: false
 
 application-data:
   users:
