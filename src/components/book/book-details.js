@@ -80,7 +80,7 @@ const BookDetails = (props) => {
             .catch(() => {
                 defaultErrorSnackbar();
             })
-    }, [isRejectedToAssign])
+    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen])
 
     useEffect(() => {
         if (isAssigned) {

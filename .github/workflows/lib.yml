@@ -29,5 +29,5 @@ jobs:
       - name: Build and push images
         run: |
            docker-compose  --env-file .env -f "docker-compose.aws.yml" up -d --build
-           docker-compose push           
+           docker-compose -f "docker-compose.aws.yml" push           
       
