@@ -22,6 +22,8 @@
         <jjwt.version>0.9.1</jjwt.version>
         <spring-security-oauth2-autoconfigure.version>2.6.1</spring-security-oauth2-autoconfigure.version>
         <commons-math3.version>3.6.1</commons-math3.version>
+        <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
+        <querydsl-jpa.version>5.0.0</querydsl-jpa.version>
     </properties>
     <dependencies>
 
@@ -159,12 +161,12 @@
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-apt</artifactId>
-            <version>5.0.0</version>
+            <version>${querydsl-jpa.version}</version>
         </dependency>
         <dependency>
             <groupId>com.querydsl</groupId>
             <artifactId>querydsl-jpa</artifactId>
-            <version>5.0.0</version>
+            <version>${querydsl-jpa.version}</version>
         </dependency>
 
     </dependencies>
@@ -174,7 +176,7 @@
             <plugin>
                 <groupId>com.mysema.maven</groupId>
                 <artifactId>apt-maven-plugin</artifactId>
-                <version>1.1.3</version>
+                <version>${apt-maven-plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>
