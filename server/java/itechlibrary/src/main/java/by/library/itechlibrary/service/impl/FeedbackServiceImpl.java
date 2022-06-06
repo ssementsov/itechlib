@@ -1,6 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.PaginationConstant;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.entity.Feedback;
 import by.library.itechlibrary.repository.FeedbackRepository;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +24,9 @@ public class FeedbackServiceImpl implements FeedbackService {
     private final FeedbackRepository feedbackRepository;
 
     @Override
-    public List<FeedbackResponseDto> getAll(long bookId, int pageNumber, int pageCapacity) {
+    public List<FeedbackResponseDto> getAll(SortingCriteria parameterInfoDto, long bookId) {
 
-        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_FEEDBACK);
+        Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
         List<Feedback> feedbackList = feedbackRepository.findAllByBookId(bookId, pageable);
 
         return mapToFeedbackResponseDtoList(feedbackList);

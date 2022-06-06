@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public interface BookService {
 
-    List<WithOwnerBookDto> getAll(int pageNumber, int pageCapacity);
+    List<WithOwnerBookDto> getAll(SortingCriteria sortingCriteria);
 
     FullBookDto update(WithLikAndStatusBookDto bookDto);
 
@@ -18,7 +19,7 @@ public interface BookService {
 
     FullBookDto getByIdFullVersion(long id);
 
-    List<WithOwnerBookDto> getOwnersBook(int pageNumber, int pageCapacity);
+    List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto);
 
     List<ResponseOwnBookDto> getCurrentUsersBookedBooks();
 
