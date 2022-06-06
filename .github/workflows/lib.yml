@@ -2,11 +2,8 @@ name: CI
 on:
   push:
     branches: 
-      - Development
+      - Devops
       
-#env: 
- #     DOCKER_HUB_USER: ${{secrets.DOCKERHUB_USERNAME}}
-  #    DOCKER_HUB_PASS: ${{secrets.DOCKERHUB_TOKEN}}      
 
 jobs:
   build_and_push_images:
