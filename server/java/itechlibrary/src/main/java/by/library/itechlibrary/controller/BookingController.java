@@ -1,5 +1,6 @@
 package by.library.itechlibrary.controller;
 
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
@@ -14,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -109,10 +109,9 @@ public class BookingController {
     @ApiOperation("get feedback list by book id")
     @ResponseStatus(HttpStatus.OK)
     public List<FeedbackResponseDto> getFeedbackListByBookId(@RequestParam("bookId") long bookId,
-                                                             @PathParam("pageNumber") int pageNumber,
-                                                             @PathParam("pageCapacity") int pageCapacity) {
+                                                             SortingCriteria sortingCriteria) {
 
-        return feedbackService.getAll(bookId, pageNumber, pageCapacity);
+        return feedbackService.getAll(sortingCriteria, bookId);
     }
 }
 

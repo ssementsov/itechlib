@@ -25,7 +25,7 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
         return getSecurityUserDetails(corpEmail);
     }
 
-    public void setUserDetailsToContext(String corpEmail){
+    public void setUserDetailsToContext(String corpEmail) {
 
         SecurityUserDetails securityUserDetails = getSecurityUserDetails(corpEmail);
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(securityUserDetails, null, securityUserDetails.getAuthorities());
@@ -33,15 +33,14 @@ public class SecurityUserDetailsServiceImpl implements UserDetailsService {
 
     }
 
-    public long getCurrentUserId(){
+    public long getCurrentUserId() {
 
         SecurityUserDetails user = (SecurityUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return user.getId();
-
     }
 
-    private SecurityUserDetails getSecurityUserDetails(String corpEmail){
+    private SecurityUserDetails getSecurityUserDetails(String corpEmail) {
 
         User userEntity = userRepository.findByCorpEmail(corpEmail)
                 .orElseThrow(() -> new NotFoundException("User has not been found by corpEmail " + corpEmail));

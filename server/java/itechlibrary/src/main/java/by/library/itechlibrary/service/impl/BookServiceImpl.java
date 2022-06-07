@@ -1,7 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.PaginationConstant;
 import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
@@ -57,11 +57,11 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    public List<WithOwnerBookDto> getAll(int pageNumber, int pageCapacity) {
+    public List<WithOwnerBookDto> getAll(SortingCriteria sortingCriteria) {
 
         log.info("Try to find all books");
 
-        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_BOOK);
+        Pageable pageable = PaginationUtil.getPageable(sortingCriteria);
         Page<Book> books = bookRepository.findAll(pageable);
 
         return bookMapper.mapWithOwnerBookDtoList(books.getContent());
@@ -123,11 +123,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<WithOwnerBookDto> getOwnersBook(int pageNumber, int pageCapacity) {
+    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
 
         log.info("Try get books by user id.");
 
-        Pageable pageable = PaginationUtil.getPageable(pageNumber, pageCapacity, PaginationConstant.SORT_BY_DATE_BOOK);
+        Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
         long ownerId = securityUserDetailsService.getCurrentUserId();
         List<Book> books = bookRepository.findAllByOwnerId(ownerId, pageable);
 
