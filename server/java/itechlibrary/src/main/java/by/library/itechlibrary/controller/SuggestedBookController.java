@@ -1,9 +1,8 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
-import by.library.itechlibrary.dto.criteria.SearchCriteria;
-import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.service.SuggestedBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 
 @RestController

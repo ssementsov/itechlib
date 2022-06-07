@@ -179,7 +179,7 @@ public class UserServiceImpl implements UserService {
             user.setConfirmationData(confirmationDataService.create());
             user.setGoogleEmail(googleEmail);
             Template template = mailTemplateService.getByName( MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
-            String filedTemplateText =  mailTemplateService.getAndFillConfirmationTemplateFromUser(user, MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
+            String filedTemplateText =  mailTemplateService.getAndFillConfirmationTemplateFromUser(user, template.getText());
             mailNotificationService.sent(user, template, filedTemplateText);
 
             return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_SENT;

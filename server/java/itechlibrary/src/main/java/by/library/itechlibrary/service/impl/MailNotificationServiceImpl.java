@@ -6,7 +6,6 @@ import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.repository.MailNotificationRepository;
 import by.library.itechlibrary.service.ConfirmationDataService;
 import by.library.itechlibrary.service.MailNotificationService;
-import by.library.itechlibrary.service.MailTemplateService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +46,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
         trySetDataMimeMessage(user, notification, mimeMessage);
-
         emailSender.send(mimeMessage);
 
     }
