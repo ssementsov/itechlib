@@ -35,6 +35,9 @@ public interface SuggestedBookRepository extends JpaRepository<SuggestedBook, Lo
     Page<SuggestedBook> findAll(Predicate predicate, Pageable pageable);
 
     @EntityGraph(attributePaths = {"language", "status", "category", "creator"})
+    Page<SuggestedBook> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator"})
     SuggestedBook save(SuggestedBook suggestedBook);
 
 }
