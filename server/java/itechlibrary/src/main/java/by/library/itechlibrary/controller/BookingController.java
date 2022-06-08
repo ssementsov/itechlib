@@ -10,6 +10,7 @@ import by.library.itechlibrary.service.FeedbackService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -86,11 +87,11 @@ public class BookingController {
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")
-    @PutMapping("/update-finish-date")
-    @ApiOperation("update booking")
+    @PutMapping("/finish-date")
+    @ApiOperation("update booking finish date")
     @ResponseStatus(HttpStatus.OK)
     public BookingResponseDto updateBookingFinishDate(@RequestParam("bookingId") long bookingId,
-                                                      @RequestParam("newFinishDate") LocalDate newFinishDate) {
+                                                      @RequestParam("newFinishDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate newFinishDate) {
 
         return bookingService.updateFinishDate(bookingId, newFinishDate);
     }
