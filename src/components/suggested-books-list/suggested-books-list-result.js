@@ -26,12 +26,26 @@ const createOptions = (option) => {
     );
 };
 
+const StyledSelect = (props) => {
+    const {children, ...rest} = props;
+    return (
+        <TextField
+            sx={{ width: '130px', marginLeft: '25px' }}
+            size="small"
+            select
+            variant="outlined"
+            {...rest}
+        >
+            {children}
+        </TextField>
+    )
+}
+
 const SuggestedBooksListResults = (props) => {
     const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } = props;
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-    const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] =
-        useBoolean();
+    const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] = useBoolean();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
     const { ...rest } = useVoting(
         suggestedBooks,
@@ -39,6 +53,7 @@ const SuggestedBooksListResults = (props) => {
         suggestedBook,
         setSuggestedBook
     );
+    const [languageSortField, setLanguageSortField] = useState()
 
     const viewSuggestedBookInfo = (bookId) => {
         SuggestionAPI.getSuggestedBook(bookId)
@@ -159,26 +174,18 @@ const SuggestedBooksListResults = (props) => {
                         sx={{ display: 'flex', paddingBottom: '16px' }}
                     >
                         <Typography variant="h6">Filter by:</Typography>
-                        <TextField
-                            sx={{ width: '130px', marginLeft: '25px' }}
+                        <StyledSelect
                             name="language"
                             label="Language"
-                            size="small"
-                            select
-                            variant="outlined"
                         >
                             {languageFilters.map(createOptions)}
-                        </TextField>
-                        <TextField
-                            sx={{ width: '130px', marginLeft: '25px' }}
+                        </StyledSelect>
+                        <StyledSelect
                             name="category"
                             label="Category"
-                            size="small"
-                            select
-                            variant="outlined"
                         >
                             {categoryFilters.map(createOptions)}
-                        </TextField>
+                        </StyledSelect>
                     </Grid>
                     <Grid
                         alignItems="center"

@@ -7,12 +7,11 @@ import { useInfiniteScroll } from './../utils/infinite-scroll-hook';
 
 const SuggestedBooksCatalogue = () => {
     const [suggestedBooks, setSuggestedBooks] = useState([]);
-    const { isLoaded, setIsLoaded } = useInfiniteScroll(
-        SuggestionAPI.getSuggestedBooksList,
-        suggestedBooks,
-        setSuggestedBooks,
-        9
-    );
+    const requestApi = (currentPage) => SuggestionAPI.getSuggestedBooksList([{
+        field: 'language.name',
+        value: 'ALL'
+    }], currentPage);
+    const { isLoaded, setIsLoaded } = useInfiniteScroll(requestApi, suggestedBooks, setSuggestedBooks);
 
     if (!isLoaded) {
         return (
