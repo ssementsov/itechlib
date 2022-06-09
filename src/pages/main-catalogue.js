@@ -7,7 +7,8 @@ import { ProgressLinear } from '../common/UI/progressLinear';
 
 const MainCatalogue = () => {
     const [books, setBooks] = useState([]);
-    const { isLoaded, setIsLoaded } = useInfiniteScroll(BooksAPI.getAllBooks, books, setBooks, 15);
+    const requestApi = (currentPage) => BooksAPI.getAllBooks(currentPage);
+    const { isLoaded, setIsLoaded } = useInfiniteScroll(requestApi, books, setBooks);
 
     if (!isLoaded) {
         return <ProgressLinear/>;

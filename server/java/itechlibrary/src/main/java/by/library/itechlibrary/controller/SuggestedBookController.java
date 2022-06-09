@@ -26,7 +26,7 @@ public class SuggestedBookController {
     @PostMapping("/all")
     @ApiOperation("get all suggested books by criteria, max capacity is 50")
     @ResponseStatus(HttpStatus.OK)
-    public List<SuggestedBookDto> getAll(@RequestBody List<BaseSearchCriteria> criteria, SortingCriteria sortingCriteria) {
+    public List<SuggestedBookDto> getAll(@RequestBody(required = false) List<BaseSearchCriteria> criteria, SortingCriteria sortingCriteria) {
 
         return suggestedBookService.getAll(criteria, sortingCriteria);
     }

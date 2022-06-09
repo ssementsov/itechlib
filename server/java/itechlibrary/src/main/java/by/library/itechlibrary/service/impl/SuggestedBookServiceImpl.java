@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -59,9 +58,19 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         log.info("Try to get all suggested books.");
 
-        BooleanExpression suggestedBookPredicate = getBooleanExpressionPredicate(criteria);
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
-        Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(suggestedBookPredicate, pageable);
+        Page<SuggestedBook> suggestedBooks;
+
+        if (criteria == null) {
+
+           suggestedBooks = suggestedBookRepository.findAll(pageable);
+
+        } else {
+
+            BooleanExpression suggestedBookPredicate = getBooleanExpressionPredicate(criteria);
+            suggestedBooks = suggestedBookRepository.findAll(suggestedBookPredicate, pageable);
+
+        }
 
         return getSuggestedBookDtoList(suggestedBooks);
     }

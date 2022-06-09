@@ -14,13 +14,8 @@ function FeedbacksPage() {
     const router = useRouter();
     const [feedbacks, setFeedbacks] = useState([]);
     const bookId = router.query.id;
-    const { isLoaded } = useInfiniteScroll(
-        BookingsAPI.getFeedbacks,
-        feedbacks,
-        setFeedbacks,
-        30,
-        bookId
-    );
+    const requestApi = (currentPage) => BookingsAPI.getFeedbacks(bookId, currentPage);
+    const { isLoaded } = useInfiniteScroll(requestApi, feedbacks, setFeedbacks);
 
     if (!isLoaded) {
         return <ProgressLinear/>;
