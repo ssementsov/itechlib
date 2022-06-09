@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 30052022-add-data-to-template
+      author: maksim_maevsky
+      changes:
+        sqlFile:
+          dbms:  'postgresql'
+          path:  /db/changelog/v.1.0/sql-import/import-data.sql
+          stripComments:  true
