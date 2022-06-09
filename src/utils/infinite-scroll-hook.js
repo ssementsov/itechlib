@@ -59,5 +59,7 @@ export const useInfiniteScroll = (api, items, setItems) => {
     return {
         isLoaded: isLoaded,
         setIsLoaded: setIsLoaded,
+        setEmptyPage: setEmptyPage,
+        setCurrentPage: setCurrentPage,
     };
 };

@@ -42,18 +42,14 @@ const StyledSelect = (props) => {
 }
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } = props;
+    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks, onFiltering } = props;
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] = useBoolean();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
-    const { ...rest } = useVoting(
-        suggestedBooks,
-        onUpdateSuggestedBooks,
-        suggestedBook,
-        setSuggestedBook
-    );
-    const [languageSortField, setLanguageSortField] = useState()
+    const { ...rest } = useVoting(suggestedBooks, onUpdateSuggestedBooks, suggestedBook, setSuggestedBook);
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const viewSuggestedBookInfo = (bookId) => {
         SuggestionAPI.getSuggestedBook(bookId)
@@ -177,12 +173,22 @@ const SuggestedBooksListResults = (props) => {
                         <StyledSelect
                             name="language"
                             label="Language"
+                            value={selectedLanguage}
+                            onChange={(e) => {
+                                setSelectedLanguage(e.target.value);
+                                onFiltering(e.target.value, e.target.name);
+                            }}
                         >
                             {languageFilters.map(createOptions)}
                         </StyledSelect>
                         <StyledSelect
                             name="category"
                             label="Category"
+                            value={selectedCategory}
+                            onChange={(e) => {
+                                setSelectedCategory(e.target.value);
+                                onFiltering(e.target.value, e.target.name);
+                            }}
                         >
                             {categoryFilters.map(createOptions)}
                         </StyledSelect>
