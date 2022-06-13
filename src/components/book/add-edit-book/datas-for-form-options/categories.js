@@ -1,11 +1,26 @@
-import { category } from "../../../../common/constants/category-constants";
+import { category } from '../../../../common/constants/category-constants';
 export const categories = [
-  {
-    value: category.professional.name,
-    label: "Professional",
-  },
-  {
-    value: category.fiction.name,
-    label: "Fiction",
-  },
+    {
+        value: category.professional.name,
+        label: 'Professional',
+    },
+    {
+        value: category.fiction.name,
+        label: 'Fiction',
+    },
+];
+
+export const categoryFilters = [
+    {
+        value: 'ALL',
+        label: 'All',
+    },
+    {
+        value: category.professional.name,
+        label: 'Professional',
+    },
+    {
+        value: category.fiction.name,
+        label: 'Fiction',
+    },
 ];

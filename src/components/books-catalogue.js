@@ -33,6 +33,7 @@ const BooksCatalogue = (props) => {
         isMyBooks,
         isSuggestedBooksList,
         isBooksInUseList,
+        onFiltering,
     } = props;
     const router = useRouter();
     const isNotSuggestedBooksPage = router.pathname !== SUGGESTED_BOOKS_PATH;
@@ -241,6 +242,7 @@ const BooksCatalogue = (props) => {
                                 isStartedSearch={isStartedSearch}
                                 suggestedBooks={suggestedBooks}
                                 onUpdateSuggestedBooks={onUpdateSuggestedBooks}
+                                onFiltering={onFiltering}
                             />
                         )}
                         {isBooksInUseList && <BooksInUseListResults books={searchedBooksInUse} />}
@@ -264,6 +266,7 @@ BooksCatalogue.propTypes = {
     onUpdateSuggestedBooks: PropTypes.func,
     onUpdateLoadingStatus: PropTypes.func,
     isSuggestedBooksList: PropTypes.bool,
+    onFiltering: PropTypes.func,
 };
 
 export default BooksCatalogue;

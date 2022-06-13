@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import StyledModal from '../styled-modal';
 import SelectFileButton from '../common/select-file-button';
 import { theme } from '../../theme/index';
+import { PrimaryButton } from '../../common/UI/buttons/primary-button';
+import { SecondaryButton } from '../../common/UI/buttons/secondary-button';
 
 const SelectImageModal = (props) => {
     const { onClose, open, onSelect, urlImage, isAllowedImage, onUpload, title, description } =
@@ -28,16 +30,11 @@ const SelectImageModal = (props) => {
                         >
                             <img height="200px" src={urlImage} alt="book cover" />
                         </Box>
-                        <Button
-                            onClick={onUpload}
-                            variant="contained"
+                        <PrimaryButton
+                            title='Upload image'
                             component="span"
-                            color="primary"
-                            fullWidth
-                            size="large"
-                        >
-                            Upload image
-                        </Button>
+                            onClick={onUpload}
+                        />
                     </>
                 ) : (
                     <>
@@ -55,19 +52,10 @@ const SelectImageModal = (props) => {
                     </>
                 )}
 
-                <Button
+                <SecondaryButton
+                    title='Cancel'
                     onClick={onClose}
-                    fullWidth
-                    size="large"
-                    sx={{
-                        my: '20px',
-                        borderWidth: '1px',
-                        borderStyle: 'solid',
-                        borderColor: 'primary',
-                    }}
-                >
-                    Cancel
-                </Button>
+                />
             </Box>
         </StyledModal>
     );

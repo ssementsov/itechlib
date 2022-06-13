@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import {
-    Box,
-    Button,
-    FormControlLabel,
-    Rating,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, FormControlLabel, Rating, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
+import { PrimaryButton } from './../../../common/UI/buttons/primary-button';
+import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
 
 const ReturnBookModal = (props) => {
     const { open, onClose, onReturn } = props;
@@ -118,30 +113,16 @@ const ReturnBookModal = (props) => {
                     />
                 </Box>
                 <Box sx={{ py: 2, mt: 4 }}>
-                    <Button
+                    <PrimaryButton
+                        title='Submit'
+                        type="submit"
                         disabled={isDisabledSubmit}
-                        color="primary"
-                        fullWidth
-                        size="large"
+                    />
+                    <SecondaryButton
+                        title='Skip'
                         type="submit"
-                        variant="contained"
-                    >
-                        Submit
-                    </Button>
-                    <Button
                         disabled={isDisabledSkip}
-                        fullWidth
-                        size="large"
-                        type="submit"
-                        sx={{
-                            my: '20px',
-                            borderWidth: '1px',
-                            borderStyle: 'solid',
-                            borderColor: 'primary',
-                        }}
-                    >
-                        Skip
-                    </Button>
+                    />
                 </Box>
             </form>
         </StyledModal>

@@ -2,15 +2,16 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { Box, Container, Grid, Button, Typography } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import BookDetails from '../../../components/book/book-details';
 import UploadImageCard from '../../../components/upload-image-card';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
 import { LOGIN_PATH } from '../../../common/constants/route-constants';
 import { YOU_CAN_UPLOAD_IMAGE } from './../../../common/constants/warning-messages';
+import { ProgressLinear } from '../../../common/UI/progressLinear';
+import { GoBackButton } from './../../../common/UI/buttons/go-back-button';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
@@ -85,11 +86,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     ]);
 
     if (!isLoaded) {
-        return (
-            <Typography sx={{ my: 8, mx: 4 }} variant="h4">
-                Loading...
-            </Typography>
-        );
+        return <ProgressLinear/>;
     } else {
         return (
             <>
@@ -104,16 +101,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                         pb: 8,
                     }}
                 >
-                    <Button
-                        onClick={() => router.back()}
-                        component="a"
-                        startIcon={<ArrowBackIcon fontSize="small" />}
-                        sx={{
-                            ml: 2,
-                        }}
-                    >
-                        Back
-                    </Button>
+                    <GoBackButton/>
                     <Container
                         maxWidth="lg"
                         sx={{
