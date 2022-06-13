@@ -1,5 +1,6 @@
 package by.library.itechlibrary.dto.book;
 
+import by.library.itechlibrary.constant.RegexConstant;
 import by.library.itechlibrary.dto.BookStatusDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,9 +15,8 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class WithLikAndStatusBookDto extends BaseBookDto {
 
-
     @Max(2048)
-    @Pattern(regexp = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)")
+    @Pattern(regexp = RegexConstant.URL_REGEX)
     private String link;
 
     @NotNull

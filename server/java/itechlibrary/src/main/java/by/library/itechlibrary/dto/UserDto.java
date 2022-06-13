@@ -1,5 +1,6 @@
 package by.library.itechlibrary.dto;
 
+import by.library.itechlibrary.constant.RegexConstant;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -17,12 +18,12 @@ public class UserDto {
 
     private String surname;
 
-    @Email(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@itechart-group.com", message = "Wrong corp mail")
+    @Email(regexp = RegexConstant.USER_CORP_EMAIL_REGEX, message = "Wrong corp mail")
     @Size(min = 24, max = 50)
     @NotNull
     private String corpEmail;
 
-    @Email(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@gmail.com", message = "Wrong google mail")
+    @Email(regexp = RegexConstant.USER_GOOGLE_EMAIL_REGEX, message = "Wrong google mail")
     @Size(min = 24, max = 50)
     private String googleEmail;
 
