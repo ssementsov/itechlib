@@ -6,7 +6,7 @@ import AddEditSuggestedBookFormBox from './add-edit-suggested-book-form-box';
 export default function AddSuggestedBookModal(props) {
     const { open, onClose, onCreate } = props;
     return (
-        <StyledModal open={open} onClose={onClose}>
+        <StyledModal isSticky open={open} onClose={onClose}>
             <AddEditSuggestedBookFormBox
                 title={'Suggest a book'}
                 buttonName={'Submit'}

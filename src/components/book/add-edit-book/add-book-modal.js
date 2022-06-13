@@ -6,7 +6,7 @@ import StyledModal from '../../styled-modal';
 export default function AddBookModal(props) {
     const { onCreate, open, onClose } = props;
     return (
-        <StyledModal open={open} onClose={onClose}>
+        <StyledModal isSticky open={open} onClose={onClose}>
             <AddEditBookFormBox
                 title={'Add New Book'}
                 buttonName={'Add'}

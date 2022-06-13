@@ -24,7 +24,7 @@ const SuggestedBooksCatalogue = () => {
                 setCurrentPage(1);
                 setSuggestedBooks([...res.data]);
             })
-    }, [filters])
+    }, [filters, setCurrentPage, setEmptyPage])
 
     const generateFilters = (value, name) => {
         const newFilter = {

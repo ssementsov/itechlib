@@ -58,7 +58,14 @@ export const DashboardLayout = (props) => {
                     defaultErrorSnackbar();
                 }
             });
-    }, [dispatch, setAvatarData, setIsLoadingAvatar, uploadAvatar, setUser]);
+    }, [
+        dispatch,
+        setAvatarData,
+        setIsLoadingAvatar,
+        uploadAvatar,
+        setUser,
+        defaultErrorSnackbar,
+        router]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
