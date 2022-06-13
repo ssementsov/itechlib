@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-change-validation-param.yaml
+      relativeToChangelogFile: true
