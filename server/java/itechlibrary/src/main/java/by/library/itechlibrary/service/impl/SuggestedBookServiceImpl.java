@@ -164,9 +164,9 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         return suggestedBooks;
     }
 
-    private void setVoteCount(SuggestedBookVoteCounter suggestedBookVoteCounter, String VoteTypeName) {
+    private void setVoteCount(SuggestedBookVoteCounter suggestedBookVoteCounter, String voteTypeName) {
 
-        switch (VoteTypeName) {
+        switch (voteTypeName) {
 
             case VoteConstant.VOTE_TYPE_POSITIVE_NAME:
 
