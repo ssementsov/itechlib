@@ -3,16 +3,20 @@ package by.library.itechlibrary.service.impl;
 import by.library.itechlibrary.constant.CategoryConstant;
 import by.library.itechlibrary.constant.LanguageConstant;
 import by.library.itechlibrary.constant.PredicateConstant;
-import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.constant.vote.VoteConstant;
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
-import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
+import by.library.itechlibrary.dto.suggested_book.NewSuggestedBookDto;
+import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.entity.Category;
 import by.library.itechlibrary.entity.Language;
 import by.library.itechlibrary.entity.SuggestedBook;
+import by.library.itechlibrary.entity.vote.SuggestedBookVoteCounter;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.exeption_handler.exception.NotFoundSuggestedBookVoteCounterException;
 import by.library.itechlibrary.exeption_handler.exception.NotNewObjectException;
+import by.library.itechlibrary.exeption_handler.exception.WrongVoteException;
 import by.library.itechlibrary.mapper.SuggestedBookMapper;
 import by.library.itechlibrary.mapper.criteria.SearchCriteriaMapper;
 import by.library.itechlibrary.repository.SuggestedBookRepository;
@@ -31,7 +35,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -73,7 +76,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         SuggestedBook suggestedBook = findById(id);
         SuggestedBookDto suggestedBookDto = suggestedBookMapper.toSuggestedBookDto(suggestedBook);
-        setGeneralAmountVote(suggestedBookDto);
+        setUserVoteType(suggestedBookDto);
 
         return suggestedBookDto;
     }
@@ -89,11 +92,11 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
     @Transactional
     @Override
-    public SuggestedBookDto create(SuggestedBookDto suggestedBookDto) {
+    public SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto) {
 
         log.info("Try to save suggested book.");
 
-        SuggestedBook suggestedBook = suggestedBookMapper.toSuggestedBook(suggestedBookDto);
+        SuggestedBook suggestedBook = suggestedBookMapper.toSuggestedBookFromNewSuggestedBookDto(suggestedBookDto);
         checkLanguageAndCategory(suggestedBook);
         checkId(suggestedBook);
 
@@ -105,6 +108,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         log.info("Try to set current date.");
 
         suggestedBook.setCreateDate(LocalDateTime.now());
+        suggestedBook.setSuggestedBookVoteCounter(new SuggestedBookVoteCounter());
 
         log.info("Try to save suggested book.");
 
@@ -122,12 +126,57 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         SuggestedBook newSuggestedBook = suggestedBookMapper.toSuggestedBook(suggestedBookDto);
         long suggestedBookId = newSuggestedBook.getId();
         SuggestedBook oldSuggestedBook = findById(suggestedBookId);
+
         newSuggestedBook.setCreator(oldSuggestedBook.getCreator());
         newSuggestedBook = suggestedBookRepository.save(newSuggestedBook);
+
         SuggestedBookDto updatedSuggestedBookDto = suggestedBookMapper.toSuggestedBookDto(newSuggestedBook);
-        setGeneralAmountVote(updatedSuggestedBookDto);
+        setUserVoteType(updatedSuggestedBookDto);
 
         return updatedSuggestedBookDto;
+    }
+
+    @Override
+    public void addVoteCount(String voteTypeName, long suggestedBookId) {
+
+        SuggestedBook suggestedBook = findById(suggestedBookId);
+        setVoteCount(suggestedBook.getSuggestedBookVoteCounter(), voteTypeName);
+        suggestedBookRepository.save(suggestedBook);
+
+    }
+
+    private void setVoteCount(SuggestedBookVoteCounter suggestedBookVoteCounter, String VoteTypeName) {
+
+        switch (VoteTypeName) {
+
+            case VoteConstant.VOTE_TYPE_POSITIVE_NAME:
+
+                setPositiveVote(suggestedBookVoteCounter);
+                break;
+
+            case VoteConstant.VOTE_TYPE_NEGATIVE_NAME:
+
+                setNegativeVote(suggestedBookVoteCounter);
+                break;
+
+            default:
+                throw new WrongVoteException("Wrong vote type name.");
+
+        }
+    }
+
+    private void setNegativeVote(SuggestedBookVoteCounter suggestedBookVoteCounter) {
+        int currentNegativeCount = suggestedBookVoteCounter.getNegativeCount();
+        int newNegativeCount = currentNegativeCount + VoteConstant.VOTE_STEP;
+
+        suggestedBookVoteCounter.setNegativeCount(newNegativeCount);
+    }
+
+    private void setPositiveVote(SuggestedBookVoteCounter suggestedBookVoteCounter) {
+        int currentPositiveCount = suggestedBookVoteCounter.getPositiveCount();
+        int newPositiveCount = currentPositiveCount + VoteConstant.VOTE_STEP;
+
+        suggestedBookVoteCounter.setPositiveCount(newPositiveCount);
     }
 
     private BooleanExpression getBooleanExpressionPredicate(List<BaseSearchCriteria> criteria) {
@@ -145,8 +194,10 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
     }
 
     private List<SuggestedBookDto> getSuggestedBookDtoList(Page<SuggestedBook> suggestedBooks) {
+
         List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
-        suggestedBookDtoList.forEach(this::setGeneralAmountVote);
+        suggestedBookDtoList.forEach(this::setUserVoteType);
+
         return suggestedBookDtoList;
     }
 
@@ -214,11 +265,20 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         }
     }
 
-    private void setGeneralAmountVote(SuggestedBookDto suggestedBookDto) {
+    private void setUserVoteType(SuggestedBookDto suggestedBookDto) {
 
-        long id = suggestedBookDto.getId();
-        GeneralAmountVoteDto generalAmountVoteDto = voteService.countObjectVotes(id);
-        suggestedBookDto.setAmountVote(generalAmountVoteDto);
+        long suggestedBookDtoId = suggestedBookDto.getId();
 
+        String voteTypeName = voteService.getCurrentUserVoteTypeName(suggestedBookDtoId);
+
+        if (suggestedBookDto.getSuggestedBookVoteCounter() != null) {
+
+            suggestedBookDto.getSuggestedBookVoteCounter().setCurrentUserVoteType(voteTypeName);
+
+        } else {
+
+            throw new NotFoundSuggestedBookVoteCounterException("SuggestedBookVoteCounter is null for suggested book id = " + suggestedBookDto.getId());
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.dto.suggested_book.NewSuggestedBookDto;
+import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.service.SuggestedBookService;
@@ -26,7 +27,7 @@ public class SuggestedBookController {
     @PostMapping("/all")
     @ApiOperation("get all suggested books by criteria, max capacity is 50")
     @ResponseStatus(HttpStatus.OK)
-    public List<SuggestedBookDto> getAll(@RequestBody List<BaseSearchCriteria> criteria, SortingCriteria sortingCriteria) {
+    public List<SuggestedBookDto> getAll(@RequestBody(required = false) List<BaseSearchCriteria> criteria, SortingCriteria sortingCriteria) {
 
         return suggestedBookService.getAll(criteria, sortingCriteria);
     }
@@ -43,7 +44,7 @@ public class SuggestedBookController {
     @PostMapping
     @ApiOperation("create new suggested book")
     @ResponseStatus(HttpStatus.CREATED)
-    public SuggestedBookDto create(@Valid @RequestBody SuggestedBookDto suggestedBookDto) {
+    public SuggestedBookDto create(@Valid @RequestBody NewSuggestedBookDto suggestedBookDto) {
 
         return suggestedBookService.create(suggestedBookDto);
     }

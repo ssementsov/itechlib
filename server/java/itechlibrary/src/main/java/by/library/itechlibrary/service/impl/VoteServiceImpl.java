@@ -2,7 +2,6 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.vote.VoteConstant;
 import by.library.itechlibrary.dto.vote.VoteDto;
-import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
 import by.library.itechlibrary.entity.vote.Vote;
 import by.library.itechlibrary.entity.vote.VoteObjectType;
 import by.library.itechlibrary.entity.vote.VoteType;
@@ -33,7 +32,7 @@ public class VoteServiceImpl implements VoteService {
 
 
     @Override
-    public void vote(VoteDto voteDto) {
+    public Vote vote(VoteDto voteDto) {
 
         log.info("Try to map voteDto to vote.");
 
@@ -43,33 +42,30 @@ public class VoteServiceImpl implements VoteService {
 
         log.info("Try to save vote.");
 
-        voteRepository.save(vote);
+        return voteRepository.save(vote);
 
     }
 
     @Override
-    public GeneralAmountVoteDto countObjectVotes(long objectId){
+    public String getCurrentUserVoteTypeName(long objectId){
 
         log.info("Try to count positive and negative votes");
 
-        GeneralAmountVoteDto generalAmountVoteDto = new GeneralAmountVoteDto();
-
-        int positive = voteRepository.countVoteByVoteObjectIdAndVoteTypeName(objectId, VoteConstant.VOTE_TYPE_POSITIVE_NAME);
-        int negative = voteRepository.countVoteByVoteObjectIdAndVoteTypeName(objectId, VoteConstant.VOTE_TYPE_NEGATIVE_NAME);
-        generalAmountVoteDto.setPositive(positive);
-        generalAmountVoteDto.setNegative(negative);
-        setCurrentUserVote(generalAmountVoteDto, objectId);
-
-        return generalAmountVoteDto;
+        return setCurrentUserVote(objectId);
     }
 
-    private void setCurrentUserVote(GeneralAmountVoteDto generalAmountVoteDto, long objectId){
+    private String setCurrentUserVote(long objectId){
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        getVoteByUserIdAndVoteObjectId(currentUserId, objectId)
-                .ifPresent(x -> generalAmountVoteDto.setCurrentUserVote(x.getVoteType().getName()));
+        Optional<Vote> voteOptional = getVoteByUserIdAndVoteObjectId(currentUserId, objectId);
 
+        if(voteOptional.isPresent()){
+
+            return voteOptional.get().getVoteType().getName();
+        }
+
+        return "";
     }
 
     private void checkVote(Vote vote){

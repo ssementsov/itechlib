@@ -1,6 +1,8 @@
-package by.library.itechlibrary.dto;
+package by.library.itechlibrary.dto.suggested_book;
 
-import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
+import by.library.itechlibrary.dto.CategoryDto;
+import by.library.itechlibrary.dto.LanguageDto;
+import by.library.itechlibrary.dto.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,9 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SuggestedBookDto {
-
-    private long id;
+public class NewSuggestedBookDto {
 
     @NotNull
     private String title;
@@ -26,16 +26,12 @@ public class SuggestedBookDto {
 
     private String link;
 
-    private LocalDateTime createDate;
-
+    @NotNull
     private LanguageDto language;
 
+    @NotNull
     private CategoryDto category;
 
     private SuggestedBookStatusDto status;
-
-    private UserDto creator;
-
-    private GeneralAmountVoteDto amountVote;
 
 }
