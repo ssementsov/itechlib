@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14062022-add-sb-count-vote
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: sb_vote_count
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: positive_count
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: negative_count
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 14062022-add-sb-count-vote-to-suggested-book
+      author: maksim_maevsky
+      changes:
+        - addColumn:
+            tableName: suggested_book
+            columns:
+              - column:
+                  name: sb_vote_count_id
+                  type: BIGINT
+
+  - changeSet:
+      id: 14062022-add-ForeignKeyConstraint-sb-count-vote-to-suggested-book
+      author: maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: sb_vote_count_id
+            baseTableName: suggested_book
+            constraintName: fk_suggested_book_sb_count_vote
+            referencedColumnNames: id
+            referencedTableName: sb_vote_count

@@ -1,12 +1,12 @@
 package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.vote.VoteDto;
-import by.library.itechlibrary.dto.vote.GeneralAmountVoteDto;
+import by.library.itechlibrary.entity.vote.Vote;
 
 public interface VoteService {
 
-    void vote(VoteDto voteDto);
+    Vote vote(VoteDto voteDto);
 
-    GeneralAmountVoteDto countObjectVotes(long objectId);
+    String getCurrentUserVoteTypeName(long objectId);
 
 }
