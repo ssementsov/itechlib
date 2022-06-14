@@ -39,8 +39,7 @@ jobs:
 
       - name: Deploy
         run: |  
-           ls
-          # docker-compose down
-          # if [[ $( docker images | grep itechlib/library_service | wc -l ) -gt 0 ]]; then docker rmi $(docker images -q itechlib/library_service); fi 
-          # docker-compose --env-file ~/.env up -d
-          # docker exec postgres bash -c "psql -U postgres -d itech_lib -c 'UPDATE DATABASECHANGELOGLOCK SET LOCKED=false, LOCKGRANTED=null, LOCKEDBY=null where ID=1;'"
+           docker-compose  --env-file .env.production -f "docker-compose.aws.yml" down
+           if [[ $( docker images | grep itechlib/library_service | wc -l ) -gt 0 ]]; then docker rmi $(docker images -q itechlib/library_service); fi 
+           docker-compose  --env-file .env.production -f "docker-compose.aws.yml" up -d
+           docker exec postgres bash -c "psql -U postgres -d itech_lib -c 'UPDATE DATABASECHANGELOGLOCK SET LOCKED=false, LOCKGRANTED=null, LOCKEDBY=null where ID=1;'"
