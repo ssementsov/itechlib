@@ -9,34 +9,38 @@ on:
   #    DOCKER_HUB_PASS: ${{secrets.DOCKERHUB_TOKEN}}      
 
 jobs:
-  Build_and_push_images:
-    env: 
-      DOCKER_HUB_USER: ${{secrets.DOCKERHUB_USERNAME}}
-      DOCKER_HUB_PASS: ${{secrets.DOCKERHUB_TOKEN}}   
-    runs-on: ubuntu-latest
+ # Build_and_push_images:
+ #   env: 
+ #     DOCKER_HUB_USER: ${{secrets.DOCKERHUB_USERNAME}}
+ #     DOCKER_HUB_PASS: ${{secrets.DOCKERHUB_TOKEN}}   
+ #   runs-on: ubuntu-latest
+ #   steps:
+ #     - name: Checkout code
+ #       uses: actions/checkout@v3
+ #     - uses: actions/setup-node@v3
+ #       with:
+ #         node-version: 16 
+ #       
+ #     - name: Login to DockerHub
+ #       uses: docker/login-action@v1
+ #       with:
+ #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+ #         password: ${{ secrets.DOCKERHUB_TOKEN }}  
+ #     - name: Build and push images
+ #       run: |
+ #          docker-compose  --env-file .env -f "docker-compose.aws.yml" up -d --build
+ #          docker-compose -f "docker-compose.aws.yml" push  
+  Deploy_on_VM:
+ #   needs: Build_and_push_images          
+    runs-on: self-hosted    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16 
-        
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}  
-      - name: Build and push images
-        run: |
-           docker-compose  --env-file .env -f "docker-compose.aws.yml" up -d --build
-           docker-compose -f "docker-compose.aws.yml" push  
-  Deploy_on_VM:
-    needs: Build_and_push_images          
-    runs-on: self-hosted    
-    steps:
+
       - name: Deploy
         run: |  
-           docker-compose down
-           if [[ $( docker images | grep itechlib/library_service | wc -l ) -gt 0 ]]; then docker rmi $(docker images -q itechlib/library_service); fi 
-           docker-compose --env-file ~/.env up -d
-           docker exec postgres bash -c "psql -U postgres -d itech_lib -c 'UPDATE DATABASECHANGELOGLOCK SET LOCKED=false, LOCKGRANTED=null, LOCKEDBY=null where ID=1;'"
+           ls
+          # docker-compose down
+          # if [[ $( docker images | grep itechlib/library_service | wc -l ) -gt 0 ]]; then docker rmi $(docker images -q itechlib/library_service); fi 
+          # docker-compose --env-file ~/.env up -d
+          # docker exec postgres bash -c "psql -U postgres -d itech_lib -c 'UPDATE DATABASECHANGELOGLOCK SET LOCKED=false, LOCKGRANTED=null, LOCKEDBY=null where ID=1;'"
