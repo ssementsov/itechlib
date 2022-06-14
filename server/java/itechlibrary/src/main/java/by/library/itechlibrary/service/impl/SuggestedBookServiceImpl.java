@@ -62,9 +62,10 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         log.info("Try to get all suggested books.");
 
-        BooleanExpression suggestedBookPredicate = getBooleanExpressionPredicate(criteria);
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
-        Page<SuggestedBook> suggestedBooks = suggestedBookRepository.findAll(suggestedBookPredicate, pageable);
+        Page<SuggestedBook> suggestedBooks;
+
+        suggestedBooks = checkCriteriaAndGetPage(criteria, pageable);
 
         return getSuggestedBookDtoList(suggestedBooks);
     }
@@ -143,6 +144,24 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         setVoteCount(suggestedBook.getSuggestedBookVoteCounter(), voteTypeName);
         suggestedBookRepository.save(suggestedBook);
 
+    }
+
+    private Page<SuggestedBook> checkCriteriaAndGetPage(List<BaseSearchCriteria> criteria, Pageable pageable) {
+
+        Page<SuggestedBook> suggestedBooks;
+
+        if (criteria == null) {
+
+            suggestedBooks = suggestedBookRepository.findAll(pageable);
+
+        } else {
+
+            BooleanExpression suggestedBookPredicate = getBooleanExpressionPredicate(criteria);
+            suggestedBooks = suggestedBookRepository.findAll(suggestedBookPredicate, pageable);
+
+        }
+
+        return suggestedBooks;
     }
 
     private void setVoteCount(SuggestedBookVoteCounter suggestedBookVoteCounter, String VoteTypeName) {

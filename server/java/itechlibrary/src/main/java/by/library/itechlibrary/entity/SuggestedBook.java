@@ -48,7 +48,7 @@ public class SuggestedBook {
     @JoinColumn(name = "user_id")
     private User creator;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "sb_vote_count_id", referencedColumnName = "id")
     private SuggestedBookVoteCounter suggestedBookVoteCounter;
 
