@@ -30,7 +30,8 @@ jobs:
         run: |
            docker-compose  --env-file .env -f "docker-compose.aws.yml" up -d --build
            docker-compose -f "docker-compose.aws.yml" push  
-  Deploy_on_VM:           
+  Deploy_on_VM:
+    needs: Build_and_push_images          
     runs-on: self-hosted    
     steps:
       - name: Deploy
@@ -38,3 +39,4 @@ jobs:
            docker-compose down
            if [[ $( docker images | grep itechlib/library_service | wc -l ) -gt 0 ]]; then docker rmi $(docker images -q itechlib/library_service); fi 
            docker-compose --env-file ~/.env up -d
+           docker exec postgres bash -c "psql -U postgres -d itech_lib -c 'UPDATE DATABASECHANGELOGLOCK SET LOCKED=false, LOCKGRANTED=null, LOCKEDBY=null where ID=1;'"
