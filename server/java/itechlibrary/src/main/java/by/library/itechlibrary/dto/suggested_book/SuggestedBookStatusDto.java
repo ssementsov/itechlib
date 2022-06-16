@@ -1,4 +1,4 @@
-package by.library.itechlibrary.dto;
+package by.library.itechlibrary.dto.suggested_book;
 
 import lombok.Data;
 

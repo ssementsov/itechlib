@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 13062022-add-validation-to-corp-email
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName: corp_email
+            newDataType: VARCHAR(50)
+            tableName: user
+  - changeSet:
+      id: 13062022-add-validation-to-book-title
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName: title
+            newDataType: VARCHAR(255)
+            tableName: book
+  - changeSet:
+      id: 13062022-add-validation-to-book-author
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName: author
+            newDataType: VARCHAR(500)
+            tableName: book
+  - changeSet:
+      id: 13062022-add-validation-to-book-description
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName: description
+            newDataType: VARCHAR(500)
+            tableName: book
+  - changeSet:
+      id: 13062022-add-validation-to-feedback-text
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName: text
+            newDataType: VARCHAR(250)
+            tableName: feedback
+  - changeSet:
+      id: 13062022-add-validation-to-suggested-book-comment
+      author: maksim_maevsky
+      changes:
+        - modifyDataType:
+            columnName: comment
+            newDataType: VARCHAR(250)
+            tableName: suggested_book

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class VoteDto {
 
-    private long id;
-
     private VoteTypeDto voteType;
 
     private VoteObjectTypeDto voteObjectType;

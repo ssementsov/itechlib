@@ -1,5 +1,6 @@
 package by.library.itechlibrary.entity;
 
+import by.library.itechlibrary.entity.vote.SuggestedBookVoteCounter;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,5 +47,9 @@ public class SuggestedBook {
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "user_id")
     private User creator;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "sb_vote_count_id", referencedColumnName = "id")
+    private SuggestedBookVoteCounter suggestedBookVoteCounter;
 
 }
