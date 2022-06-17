@@ -15,7 +15,6 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class WithLikAndStatusBookDto extends BaseBookDto {
 
-    @Max(2048)
     @Pattern(regexp = RegexConstant.URL_REGEX)
     private String link;
 
