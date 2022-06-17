@@ -9,7 +9,7 @@ import { useCustomSnackbar } from './custom-snackbar-hook';
 
 export const useVoting = (books, setBooks, book, setBook) => {
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-
+console.log(book)
     const negativeVoteHandler = (e, bookId) => {
         e.stopPropagation();
         const vote = new Vote(0, bookId, voteObjectTypes.suggestedBook, voteType.negative);
@@ -33,16 +33,18 @@ export const useVoting = (books, setBooks, book, setBook) => {
                             : book;
                     })
                 );
-                setBook({
-                    ...book,
-                    suggestedBookVoteCounter: {
-                        negativeCount: book.suggestedBookVoteCounter.negativeCount + 1,
-                        positiveCount: book.suggestedBookVoteCounter.positiveCount || 0,
-                        currentUserVoteType:
-                            book.suggestedBookVoteCounter.currentUserVoteType ||
-                            voteType.negative.name,
-                    },
-                });
+                if(book.length) {
+                    setBook({
+                        ...book,
+                        suggestedBookVoteCounter: {
+                            negativeCount: book.suggestedBookVoteCounter.negativeCount + 1,
+                            positiveCount: book.suggestedBookVoteCounter.positiveCount || 0,
+                            currentUserVoteType:
+                                book.suggestedBookVoteCounter.currentUserVoteType ||
+                                voteType.negative.name,
+                        },
+                    });
+                }
             })
             .catch((err) => {
                 if (err.response.data.message === isAlreadyVotedMessage) {
@@ -67,7 +69,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                                   ...book,
                                   suggestedBookVoteCounter: {
                                       negativeCount:
-                                          book.suggestedBookVoteCounter.negativeCount || 0,
+                                          book.suggestedBookVoteCounter.negativeCount,
                                       positiveCount:
                                           book.suggestedBookVoteCounter.positiveCount + 1,
                                       currentUserVoteType:
@@ -78,16 +80,18 @@ export const useVoting = (books, setBooks, book, setBook) => {
                             : book
                     )
                 );
-                setBook({
-                    ...book,
-                    suggestedBookVoteCounter: {
-                        negativeCount: book.suggestedBookVoteCounter.negativeCount || 0,
-                        positiveCount: book.suggestedBookVoteCounter.positiveCount + 1,
-                        currentUserVoteType:
-                            book.suggestedBookVoteCounter.currentUserVoteType ||
-                            voteType.positive.name,
-                    },
-                });
+                if(book.length) {
+                    setBook({
+                        ...book,
+                        suggestedBookVoteCounter: {
+                            negativeCount: book.suggestedBookVoteCounter.negativeCount,
+                            positiveCount: book.suggestedBookVoteCounter.positiveCount + 1,
+                            currentUserVoteType:
+                                book.suggestedBookVoteCounter.currentUserVoteType ||
+                                voteType.positive.name,
+                        },
+                    });
+                }
             })
             .catch((err) => {
                 if (err.response.data.message === isAlreadyVotedMessage) {
