@@ -7,7 +7,7 @@ export class Book {
     categoryName = '',
     languageId = '',
     languageName = '',
-    link = '',
+    link = null,
     statusId = '',
     statusName = '',
     description = ''

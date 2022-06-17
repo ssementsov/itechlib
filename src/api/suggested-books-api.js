@@ -1,25 +1,23 @@
 import { api } from './api';
 import { EntityTypes } from '../common/constants/api-constants';
-import { SortDirection, SortFields } from '../common/constants/sorting-constants';
 
 export const SuggestionAPI = {
     createSuggestedBook(model) {
         return api.Client.post(`/${EntityTypes.suggestedBooks}`, model);
     },
     getSuggestedBooksList(
+        requestFieldsForFiltering,
         requestFieldsForSorting,
-        pageNumber,
+        pageNumber = 0,
         count = 9,
-        sortField = SortFields.createDate,
-        sortDirection = SortDirection.desc
     ) {
-        const filters = requestFieldsForSorting.length ? requestFieldsForSorting : null;
+        const filters = requestFieldsForFiltering.length ? requestFieldsForFiltering : null;
         return api.Client.post(`/${EntityTypes.suggestedBooks}/all`, filters, {
             params: {
                 pageNumber: pageNumber,
                 pageCapacity: count,
-                sortDirection: sortDirection,
-                sortField: sortField,
+                sortDirection: requestFieldsForSorting.sortDirection,
+                sortField: requestFieldsForSorting.sortField,
             },
         });
     },

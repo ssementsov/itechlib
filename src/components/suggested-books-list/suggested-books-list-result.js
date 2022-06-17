@@ -42,7 +42,7 @@ const StyledSelect = (props) => {
 }
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks, onFiltering } = props;
+    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks, onFiltering, onSorting } = props;
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] = useBoolean();
@@ -94,7 +94,7 @@ const SuggestedBooksListResults = (props) => {
             default:
                 idLanguage = '';
         }
-
+        const comment = suggestedBook.comment ? suggestedBook.comment : null
         const editedBook = new SuggestedBook(
             newBook.id,
             newBook.title,
@@ -106,7 +106,7 @@ const SuggestedBooksListResults = (props) => {
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             newBook.link,
-            newBook.comment
+            comment
         );
 
         SuggestionAPI.changeBookInfo(editedBook)
@@ -204,7 +204,7 @@ const SuggestedBooksListResults = (props) => {
                         }}
                     >
                         <Typography variant="h6">Sort by:</Typography>
-                        <SortButton title="Popularity" />
+                        <SortButton title="Popularity" onSorting={onSorting} />
                     </Grid>
                 </Grid>
                 <Divider sx={{ mb: 2 }} />

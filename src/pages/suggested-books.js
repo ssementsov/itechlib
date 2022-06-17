@@ -5,11 +5,13 @@ import BooksCatalogue from '../components/books-catalogue';
 import { SuggestionAPI } from './../api/suggested-books-api';
 import { useInfiniteScroll } from './../utils/infinite-scroll-hook';
 import { ProgressLinear } from '../common/UI/progressLinear';
+import {SortFields, SortDirection} from '../common/constants/sorting-constants';
 
 const SuggestedBooksCatalogue = () => {
     const [suggestedBooks, setSuggestedBooks] = useState([]);
     const [filters, setFilters] = useState([]);
-    const requestApi = (currentPage) => SuggestionAPI.getSuggestedBooksList(filters, currentPage);
+    const [sortings, setSortings] = useState({sortDirection: SortDirection.desc, sortField: SortFields.createDate})
+    const requestApi = (currentPage) => SuggestionAPI.getSuggestedBooksList(filters, sortings, currentPage);
     const {
         isLoaded,
         setIsLoaded,
@@ -18,13 +20,13 @@ const SuggestedBooksCatalogue = () => {
     } = useInfiniteScroll(requestApi, suggestedBooks, setSuggestedBooks);
 
     useEffect(() => {
-        SuggestionAPI.getSuggestedBooksList(filters, 0)
+        SuggestionAPI.getSuggestedBooksList(filters, sortings)
             .then(res => {
                 setEmptyPage(false);
                 setCurrentPage(1);
                 setSuggestedBooks([...res.data]);
             })
-    }, [filters])
+    }, [filters, sortings])
 
     const generateFilters = (value, name) => {
         const newFilter = {
@@ -74,6 +76,7 @@ const SuggestedBooksCatalogue = () => {
                 onUpdateSuggestedBooks={setSuggestedBooks}
                 onUpdateLoadingStatus={setIsLoaded}
                 onFiltering={generateFilters}
+                onSorting={setSortings}
             />
         );
     }
