@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import StyledModal from '../../styled-modal';
+import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
+import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
 
 const DeleteModal = (props) => {
     const { onDelete, onClose, open, title } = props;
@@ -14,29 +16,14 @@ const DeleteModal = (props) => {
                 </Typography>
             </Box>
             <Box sx={{ py: 2 }}>
-                <Button
+                <PrimaryButton
+                    title='Yes'
                     onClick={onDelete}
-                    color="primary"
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                >
-                    Yes
-                </Button>
-                <Button
+                />
+                <SecondaryButton
+                    title='Cancel'
                     onClick={onClose}
-                    fullWidth
-                    size="large"
-                    sx={{
-                        my: '20px',
-                        borderWidth: '1px',
-                        borderStyle: 'solid',
-                        borderColor: 'primary',
-                    }}
-                >
-                    Cancel
-                </Button>
+                />
             </Box>
         </StyledModal>
     );

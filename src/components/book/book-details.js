@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
-import { titles } from './../../common/constants/book-page-titles-constants';
+import { titles } from '../../common/constants/book-page-titles-constants';
 import { styled } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
@@ -31,7 +31,7 @@ import { bookStatus } from '../../common/constants/book-status-constants';
 import { language } from '../../common/constants/language-constants';
 import { category } from '../../common/constants/category-constants';
 import { Book } from '../../models/book-model';
-import { Booking } from './../../models/booking-model';
+import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
 import { BookingsAPI } from './../../api/bookings-api';
 import { useBoolean } from '../../utils/boolean-hook';
@@ -40,6 +40,7 @@ import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-wo
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getDate } from '../../utils/functions/get-date';
+import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useSelector } from 'react-redux';
 
 const TblCell = styled(TableCell)(() => ({
@@ -348,26 +349,25 @@ const BookDetails = (props) => {
                     </Button>
                     {!isOwner && (
                         <>
-                            {isAssigned ? (
-                                <Button
+                            {isAssigned
+                                ? <PrimaryButton
+                                    title={'Return the book'}
+                                    size='small'
+                                    fullWidth={false}
                                     onClick={setReturnButtonOpen}
-                                    aria-label="assign"
-                                    color="primary"
-                                    variant="contained"
-                                >
-                                    Return the book
-                                </Button>
-                            ) : (
-                                <Button
+                                />
+                                : <PrimaryButton
+                                    title={'Assign to me'}
+                                    size='small'
+                                    fullWidth={false}
                                     onClick={assignBookHandler}
-                                    aria-label="assign"
-                                    color="primary"
-                                    variant="contained"
-                                    disabled={book.status.name !== bookStatus.available.name}
-                                >
-                                    Assign to me
-                                </Button>
-                            )}
+                                    disabled={
+                                        book.status.name !== bookStatus.available.name
+                                            ? true
+                                            : false
+                                    }
+                                />
+                            }
                         </>
                     )}
                 </Box>

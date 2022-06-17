@@ -63,9 +63,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         log.info("Try to get all suggested books.");
 
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
-        Page<SuggestedBook> suggestedBooks;
-
-        suggestedBooks = checkCriteriaAndGetPage(criteria, pageable);
+        Page<SuggestedBook> suggestedBooks = checkCriteriaAndGetPage(criteria, pageable);
 
         return getSuggestedBookDtoList(suggestedBooks);
     }

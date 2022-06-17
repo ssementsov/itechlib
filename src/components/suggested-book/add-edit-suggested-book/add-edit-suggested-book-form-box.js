@@ -15,7 +15,7 @@ const AddEditSuggestedBookFormBox = (props) => {
             language: book.language?.name || '',
             category: book.category?.name || '',
             author: book.author,
-            comment: book.comment,
+            comment: book.comment || '',
             id: book.id,
             link: book.link,
         };

@@ -13,6 +13,7 @@ import {
 import { Search as SearchIcon } from '../../icons/search';
 import AddBookModal from './../book/add-edit-book/add-book-modal';
 import AddSuggestedBookModal from '../suggested-book/add-edit-suggested-book/add-suggested-book-modal';
+import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 
 const BooksListToolbar = (props) => {
     const { onCreate, setSearch, search, open, onOpen, onClose, title } = props;
@@ -46,13 +47,12 @@ const BooksListToolbar = (props) => {
                     <Button onClick={onOpen.suggest} sx={{ mr: 1 }}>
                         Suggest a book
                     </Button>
-                    <Button
+                    <PrimaryButton
+                        title='Add a book'
+                        size='medium'
+                        fullWidth={false}
                         onClick={onOpen.add}
-                        color="primary"
-                        variant="contained"
-                    >
-                        Add a book
-                    </Button>
+                    />
                 </Box>
             </Box>
             <Box sx={{ mt: 3 }}>

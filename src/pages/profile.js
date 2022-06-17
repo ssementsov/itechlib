@@ -1,9 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
-import { Box, Container, Grid, Button, Typography } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 import { UserAPI } from '../api/user-api';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
@@ -12,6 +11,8 @@ import { LOGIN_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { YOU_CAN_UPLOAD_IMAGE } from './../common/constants/warning-messages';
+import { ProgressLinear } from '../common/UI/progressLinear';
+import { GoBackButton } from './../common/UI/buttons/go-back-button';
 
 function ProfilePage() {
     const router = useRouter();
@@ -80,11 +81,7 @@ function ProfilePage() {
     ]);
 
     if (!isLoaded) {
-        return (
-            <Typography sx={{ my: 8, mx: 4 }} variant="h4">
-                Loading...
-            </Typography>
-        );
+        return <ProgressLinear/>;
     } else {
         return (
             <>
@@ -99,16 +96,7 @@ function ProfilePage() {
                         pb: 8,
                     }}
                 >
-                    <Button
-                        onClick={() => router.back()}
-                        component="a"
-                        startIcon={<ArrowBackIcon fontSize="small" />}
-                        sx={{
-                            ml: 2,
-                        }}
-                    >
-                        Back
-                    </Button>
+                    <GoBackButton/>
                     <Container
                         maxWidth="lg"
                         sx={{
