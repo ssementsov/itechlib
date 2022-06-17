@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: db.changelog-add-sb-vote-count.yaml
       relativeToChangelogFile: true
+  - include:
+      file: db.changelog-book-description-nullble-true.yaml
+      relativeToChangelogFile: true
