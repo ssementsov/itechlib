@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -15,12 +16,14 @@ public class BaseBookDto {
 
     private long id;
 
+    @Size(min = 2, max = 255)
     @NotNull
     private String title;
 
-    @NotNull
+    @Size(min = 10, max = 500)
     private String description;
 
+    @Size(min = 2, max = 500)
     @NotNull
     private String author;
 

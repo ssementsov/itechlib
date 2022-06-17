@@ -21,12 +21,18 @@ const createOptions = (option) => {
 };
 
 const StyledTextField = (props) => {
-    const { children, ...rest } = props;
+    const {children, ...rest} = props;
     return (
-        <TextField fullWidth margin="dense" name="title" variant="outlined" {...rest}>
+        <TextField
+            fullWidth
+            margin="dense"
+            name="title"
+            variant="outlined"
+            {...rest}
+        >
             {children}
         </TextField>
-    );
+    )
 };
 
 const MultipurposeBookForm = (props) => {
@@ -69,6 +75,7 @@ const MultipurposeBookForm = (props) => {
                     <CloseIcon onClick={onClose} />
                 </Box>
             </Box>
+
             <form onSubmit={formik.handleSubmit}>
                 <StyledTextField
                     error={Boolean(formik.touched.title && formik.errors.title)}

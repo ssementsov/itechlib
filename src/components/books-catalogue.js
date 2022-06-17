@@ -34,6 +34,7 @@ const BooksCatalogue = (props) => {
         isSuggestedBooksList,
         isBooksInUseList,
         onFiltering,
+        onSorting,
     } = props;
     const router = useRouter();
     const isNotSuggestedBooksPage = router.pathname !== SUGGESTED_BOOKS_PATH;
@@ -102,6 +103,8 @@ const BooksCatalogue = (props) => {
                 idStatus = bookStatus.available.id;
         }
 
+        const link = newBook.link ? newBook.link : null;
+
         const createdBook = new Book(
             0,
             newBook.title,
@@ -110,7 +113,7 @@ const BooksCatalogue = (props) => {
             newBook.category,
             idLanguage,
             newBook.language,
-            newBook.link,
+            link,
             idStatus,
             newBook.status,
             newBook.description
@@ -161,7 +164,7 @@ const BooksCatalogue = (props) => {
             default:
                 idLanguage = 0;
         }
-
+        const comment = suggestedBook.comment ? suggestedBook.comment : null
         const newSuggestedBook = new SuggestedBook(
             0,
             suggestedBook.title,
@@ -173,7 +176,7 @@ const BooksCatalogue = (props) => {
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             suggestedBook.link,
-            suggestedBook.comment
+            comment
         );
 
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
@@ -243,6 +246,7 @@ const BooksCatalogue = (props) => {
                                 suggestedBooks={suggestedBooks}
                                 onUpdateSuggestedBooks={onUpdateSuggestedBooks}
                                 onFiltering={onFiltering}
+                                onSorting={onSorting}
                             />
                         )}
                         {isBooksInUseList && <BooksInUseListResults books={searchedBooksInUse} />}

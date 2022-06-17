@@ -9,4 +9,5 @@ export const SortFields = {
     author: 'author',
     language: 'language.name',
     createDate: 'createDate',
+    popularity: 'suggestedBookVoteCounter.positiveCount'
 }

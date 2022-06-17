@@ -1,6 +1,7 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.dto.SuggestedBookDto;
+import by.library.itechlibrary.dto.suggested_book.NewSuggestedBookDto;
+import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 
@@ -14,8 +15,10 @@ public interface SuggestedBookService {
 
     void remove(long id);
 
-    SuggestedBookDto create(SuggestedBookDto suggestedBookDto);
+    SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto);
 
     SuggestedBookDto update(SuggestedBookDto suggestedBookDto);
+
+    void addVoteCount(String voteTypeName, long suggestedBookId);
 
 }

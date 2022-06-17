@@ -1,8 +1,8 @@
 package by.library.itechlibrary.repository.predicate;
 
 import by.library.itechlibrary.constant.PredicateConstant;
-import by.library.itechlibrary.entity.SuggestedBook;
 import by.library.itechlibrary.dto.criteria.SearchCriteria;
+import by.library.itechlibrary.entity.SuggestedBook;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathBuilder;

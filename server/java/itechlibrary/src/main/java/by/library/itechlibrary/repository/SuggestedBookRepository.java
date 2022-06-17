@@ -22,22 +22,23 @@ public interface SuggestedBookRepository extends JpaRepository<SuggestedBook, Lo
         QuerydslPredicateExecutor<SuggestedBook>, QuerydslBinderCustomizer<QSuggestedBook> {
 
     @Override
-    default public void customize(
+    default void customize(
             QuerydslBindings bindings, QSuggestedBook root) {
         bindings.bind(String.class)
                 .first((SingleValueBinding<StringPath, String>) StringExpression::containsIgnoreCase);
     }
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
     Optional<SuggestedBook> findById(long id);
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
     Page<SuggestedBook> findAll(Predicate predicate, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
     Page<SuggestedBook> findAll(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
+
     SuggestedBook save(SuggestedBook suggestedBook);
 
 }
