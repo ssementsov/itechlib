@@ -1,5 +1,6 @@
 package by.library.itechlibrary.dto.suggested_book;
 
+import by.library.itechlibrary.constant.RegexConstant;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
 import by.library.itechlibrary.dto.UserDto;
@@ -8,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -26,6 +28,7 @@ public class SuggestedBookDto {
     @Size(min = 10, max = 250)
     private String comment;
 
+    @Pattern(regexp = RegexConstant.URL_REGEX)
     private String link;
 
     private LocalDateTime createDate;
