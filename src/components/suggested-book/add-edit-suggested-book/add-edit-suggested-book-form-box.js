@@ -1,13 +1,15 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { Box, Container } from '@mui/material';
-import { CloseIcon } from '../../../icons/close-icon';
+import { Box } from '@mui/material';
 import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { types } from '../../../types';
+import { useTheme } from '@mui/material/styles';
 
 const AddEditSuggestedBookFormBox = (props) => {
     const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
+    const theme = useTheme();
+
     let newBook;
     if (book) {
         newBook = {
@@ -35,7 +37,7 @@ const AddEditSuggestedBookFormBox = (props) => {
 
         if (
             value.link &&
-            !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
+            !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z\d+&@#%=~_|$?!:,.]*\)|[-A-Z\d+&@#%=~_|$?!:,.])/i.test(
                 value.link
             )
         ) {
@@ -76,37 +78,29 @@ const AddEditSuggestedBookFormBox = (props) => {
     return (
         <>
             <Box
-                component="main"
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    flexGrow: 1,
+                    flexDirection: 'column',
                     minHeight: '100%',
+                    [theme.breakpoints.down('md')]: {
+                        minWidth: '320px'
+                    },
+                    [theme.breakpoints.down('sm')]: {
+                        fontSize: '1.5rem',
+                        paddingLeft: 0,
+                        paddingRight: 0,
+                        minWidth: '280px'
+                    },
                 }}
             >
-                <Container maxWidth="sm">
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            right: 22,
-                            top: 22,
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <CloseIcon
-                            onClick={onClose}
-                            sx={{
-                                justifySelf: 'flex-end',
-                            }}
-                        />
-                    </Box>
-                    <MultipurposeBookForm
-                        formik={formik}
-                        title={title}
-                        buttonName={buttonName}
-                        isSuggestForm={open}
-                    />
-                </Container>
+                <MultipurposeBookForm
+                    formik={formik}
+                    title={title}
+                    buttonName={buttonName}
+                    isSuggestForm={open}
+                    onClose={onClose}
+                />
             </Box>
         </>
     );
