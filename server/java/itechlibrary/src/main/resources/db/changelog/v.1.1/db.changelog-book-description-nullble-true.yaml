@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17062022-add-book-description-nullble
+      author: maksim_maevsky
+      changes:
+        - dropNotNullConstraint:
+            columnDataType: VARCHAR(500)
+            columnName: description
+            tableName: book
