@@ -21,10 +21,9 @@ public class BaseBookDto {
     private String title;
 
     @Size(min = 10, max = 500)
-    @NotNull
     private String description;
 
-    @Size(min = 10, max = 500)
+    @Size(min = 2, max = 500)
     @NotNull
     private String author;
 
