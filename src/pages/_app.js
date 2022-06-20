@@ -1,8 +1,7 @@
 import Head from 'next/head';
 import { useState, useCallback } from 'react';
-
-import { LocalizationProvider } from '@mui/x-date-pickers';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../theme';
