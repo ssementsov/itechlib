@@ -9,7 +9,7 @@ import { useCustomSnackbar } from './custom-snackbar-hook';
 
 export const useVoting = (books, setBooks, book, setBook) => {
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-console.log(book)
+
     const negativeVoteHandler = (e, bookId) => {
         e.stopPropagation();
         const vote = new Vote(0, bookId, voteObjectTypes.suggestedBook, voteType.negative);
