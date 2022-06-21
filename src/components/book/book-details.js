@@ -21,7 +21,7 @@ import {
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
 import { titles } from '../../common/constants/book-page-titles-constants';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
 import AssignBookModal from '../book/assign-book/assign-book-modal';
@@ -56,6 +56,7 @@ const LIMIT_COUNT_NOTIFICATIONS = 5;
 const BookDetails = (props) => {
     const { book, onUpdate, isAssigned, assignHandler } = props;
     const router = useRouter();
+    const theme = useTheme();
     const corpEmail = localStorage.getItem('corpEmail');
     let isOwner = book.owner.corpEmail === corpEmail;
     const inUseStatus = book.status.name === bookStatus.inUse.name;
@@ -264,7 +265,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.link}</TblCell>
                                         <TblCell>
-                                            {book.link === '' ? (
+                                            {!book.link ? (
                                                 'No link yet'
                                             ) : (
                                                 <Link
@@ -305,14 +306,14 @@ const BookDetails = (props) => {
                                                     title={`Reader: ${book.bookingInfoDto?.nameOfReader}`}
                                                     placement="right"
                                                 >
-                                                    <Typography sx={{ width: '170px' }}>
+                                                    <Typography sx={{ width: '170px', fontSize: theme.typography.body2 }}>
                                                         {`${toLowerCaseExceptFirstLetter(
                                                             book.status.name
                                                         )} till ${bookingEndDate}`}
                                                     </Typography>
                                                 </Tooltip>
                                             ) : (
-                                                <Typography sx={{ width: '170px' }}>
+                                                <Typography sx={{ width: '170px', fontSize: theme.typography.body2 }}>
                                                     {toLowerCaseExceptFirstLetter(book.status.name)}
                                                 </Typography>
                                             )}

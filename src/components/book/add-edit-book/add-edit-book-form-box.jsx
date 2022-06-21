@@ -41,7 +41,7 @@ const AddEditBookFormBox = (props) => {
             language: '',
             description: '',
             link: '',
-            status: '',
+            status: 'AVAILABLE',
             reader: '',
             startDate: null,
             finishDate: null,
@@ -92,7 +92,6 @@ const AddEditBookFormBox = (props) => {
                 .min(10, 'Description must be 10 or more symbols')
                 .max(500, 'Description must be 500 or less symbols')
                 .required('Description is required'),
-            status: Yup.string().required('Status is required'),
         }),
         validate,
         onSubmit: async (values) => {

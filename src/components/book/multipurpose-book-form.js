@@ -1,6 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, MenuItem, TextField, Typography } from '@mui/material';
+import {
+    Box,
+    FormControlLabel,
+    MenuItem,
+    RadioGroup,
+    TextField,
+    Tooltip,
+    Typography,
+    Zoom,
+} from '@mui/material';
 import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
@@ -10,9 +19,9 @@ import { UploadBookCoverField } from './upload-book-cover-field';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { CloseIcon } from '../../icons/close-icon';
 import { useTheme } from '@mui/material/styles';
+import Radio from '@mui/material/Radio';
 
 const createOptions = (option) => {
-    if (option.value === 'IN USE') return null;
     return (
         <MenuItem key={option.value} value={option.value}>
             {option.label}
@@ -21,23 +30,18 @@ const createOptions = (option) => {
 };
 
 const StyledTextField = (props) => {
-    const {children, ...rest} = props;
+    const { children, ...rest } = props;
     return (
-        <TextField
-            fullWidth
-            margin="dense"
-            name="title"
-            variant="outlined"
-            {...rest}
-        >
+        <TextField fullWidth margin="dense" name="title" variant="outlined" {...rest}>
             {children}
         </TextField>
-    )
+    );
 };
 
 const MultipurposeBookForm = (props) => {
     const { formik, title, buttonName, isSuggestForm, inEditMode = false, onClose } = props;
     const theme = useTheme();
+
     return (
         <>
             <Box
@@ -152,18 +156,38 @@ const MultipurposeBookForm = (props) => {
                     value={formik.values.link}
                 />
                 {!isSuggestForm && (
-                    <StyledTextField
-                        error={Boolean(formik.touched.status && formik.errors.status)}
-                        helperText={formik.touched.status && formik.errors.status}
+                    <RadioGroup
                         name="status"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        label="Status*"
-                        select
                         value={formik.values.status}
+                        onChange={formik.handleChange}
                     >
-                        {statuses.map(createOptions)}
-                    </StyledTextField>
+                        {statuses.map((status) => {
+                            return (
+                                <Tooltip
+                                    key={status.label}
+                                    title={status.title}
+                                    placement="top-end"
+                                    TransitionComponent={Zoom}
+                                    arrow
+                                    componentsProps={{
+                                        tooltip: {
+                                            sx: {
+                                                fontSize: theme.typography.body2,
+                                            },
+                                        },
+                                    }}
+                                >
+                                    <FormControlLabel
+                                        value={status.value}
+                                        control={<Radio />}
+                                        label={status.label}
+                                        labelPlacement="end"
+                                        sx={{fontSize: theme.typography.body1}}
+                                    />
+                                </Tooltip>
+                            );
+                        })}
+                    </RadioGroup>
                 )}
 
                 {formik.values.status === bookStatus.inUse.name && (
