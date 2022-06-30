@@ -3,6 +3,7 @@ package by.library.itechlibrary.dto.suggested_book;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
 import by.library.itechlibrary.dto.UserDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,7 @@ public class SuggestedBookDto {
 
     private String link;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
 
     @NotNull
