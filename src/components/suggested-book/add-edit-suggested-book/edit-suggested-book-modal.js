@@ -7,7 +7,7 @@ import { types } from '../../../types';
 export default function EditSuggestedBookModal(props) {
     const { book, open, onClose, onEdit } = props;
     return (
-        <StyledModal open={open} onClose={onClose}>
+        <StyledModal isSticky open={open} onClose={onClose}>
             <AddEditSuggestedBookFormBox
                 title={'Edit Book Information'}
                 buttonName={'Save'}

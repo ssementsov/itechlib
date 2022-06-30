@@ -5,7 +5,7 @@ import { StyledDeleteIcon } from '../../icons/styled-delete-icon';
 import classes from './upload-book-cover-field.module.css';
 import { theme } from '../../theme';
 import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages';
-import { MAX_SIZE } from './../../common/constants/file-size';
+import { MAX_SIZE } from '../../common/constants/file-size';
 import { limitFileNameLength } from '../../utils/functions/limit-file-name-length';
 
 export const UploadBookCoverField = (props) => {
@@ -58,7 +58,10 @@ export const UploadBookCoverField = (props) => {
             </div>
             <Typography
                 variant="caption"
-                color={isAllowedImage ? 'textSecondary' : theme.palette.error.main}
+                color={theme.palette.error.main}
+                sx={{
+                    display: isAllowedImage ? 'none' : 'block'
+                }}
             >
                 {YOU_CAN_UPLOAD_IMAGE}
             </Typography>

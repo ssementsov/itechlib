@@ -7,7 +7,7 @@ import StyledModal from '../../styled-modal';
 export default function EditBookModal(props) {
     const { onEdit, book, open, onClose } = props;
     return (
-        <StyledModal open={open} onClose={onClose}>
+        <StyledModal isSticky open={open} onClose={onClose}>
             <AddEditBookFormBox
                 title={'Edit Book Information'}
                 buttonName={'Save'}

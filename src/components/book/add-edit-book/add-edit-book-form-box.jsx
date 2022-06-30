@@ -2,10 +2,18 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { types } from '../../../types';
 import * as Yup from 'yup';
-import { Box, Container } from '@mui/material';
-import { CloseIcon } from '../../../icons/close-icon';
+import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
 import { bookStatus } from '../../../common/constants/book-status-constants';
+import { styled } from '@mui/material/styles';
+
+const StyledBox = styled(Box)({
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100%',
+    paddingTop: '0'
+});
 
 const AddEditBookFormBox = (props) => {
     const { onClose, onCreate, onEdit, title, buttonName, book, ...rest } = props;
@@ -33,7 +41,7 @@ const AddEditBookFormBox = (props) => {
             language: '',
             description: '',
             link: '',
-            status: '',
+            status: 'AVAILABLE',
             reader: '',
             startDate: null,
             finishDate: null,
@@ -84,7 +92,6 @@ const AddEditBookFormBox = (props) => {
                 .min(10, 'Description must be 10 or more symbols')
                 .max(500, 'Description must be 500 or less symbols')
                 .required('Description is required'),
-            status: Yup.string().required('Status is required'),
         }),
         validate,
         onSubmit: async (values) => {
@@ -98,39 +105,15 @@ const AddEditBookFormBox = (props) => {
 
     return (
         <>
-            <Box
-                component="main"
-                sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexGrow: 1,
-                    minHeight: '100%',
-                }}
-            >
-                <Container maxWidth="sm">
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            right: 22,
-                            top: 22,
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <CloseIcon
-                            onClick={onClose}
-                            sx={{
-                                justifySelf: 'flex-end',
-                            }}
-                        />
-                    </Box>
-                    <MultipurposeBookForm
-                        formik={formik}
-                        title={title}
-                        buttonName={buttonName}
-                        {...rest}
-                    />
-                </Container>
-            </Box>
+            <StyledBox>
+                <MultipurposeBookForm
+                    formik={formik}
+                    title={title}
+                    buttonName={buttonName}
+                    onClose={onClose}
+                    {...rest}
+                />
+            </StyledBox>
         </>
     );
 };

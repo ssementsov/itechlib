@@ -5,16 +5,22 @@ export const SuggestionAPI = {
     createSuggestedBook(model) {
         return api.Client.post(`/${EntityTypes.suggestedBooks}`, model);
     },
-
-    getSuggestedBooksList(pageNumber, count) {
-        return api.Client.get(`/${EntityTypes.suggestedBooks}`, {
+    getSuggestedBooksList(
+        requestFieldsForFiltering,
+        requestFieldsForSorting,
+        pageNumber = 0,
+        count = 9,
+    ) {
+        const filters = requestFieldsForFiltering.length ? requestFieldsForFiltering : null;
+        return api.Client.post(`/${EntityTypes.suggestedBooks}/all`, filters, {
             params: {
                 pageNumber: pageNumber,
                 pageCapacity: count,
+                sortDirection: requestFieldsForSorting.sortDirection,
+                sortField: requestFieldsForSorting.sortField,
             },
         });
     },
-
     getSuggestedBook(bookId) {
         return api.Client.get(`/${EntityTypes.suggestedBooks}/${bookId}`);
     },

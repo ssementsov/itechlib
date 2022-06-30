@@ -20,25 +20,31 @@ export const useVoting = (books, setBooks, book, setBook) => {
                         return book.id === bookId
                             ? {
                                   ...book,
-                                  amountVote: {
-                                      negative: book.amountVote ? book.amountVote.negative + 1 : 1,
-                                      positive: book.amountVote?.positive || 0,
-                                      currentUserVote:
-                                          book.amountVote?.currentUserVote ||
+                                  suggestedBookVoteCounter: {
+                                      negativeCount:
+                                          book.suggestedBookVoteCounter.negativeCount + 1,
+                                      positiveCount:
+                                          book.suggestedBookVoteCounter.positiveCount || 0,
+                                      currentUserVoteType:
+                                          book.suggestedBookVoteCounter.currentUserVoteType ||
                                           voteType.negative.name,
                                   },
                               }
                             : book;
                     })
                 );
-                setBook({
-                    ...book,
-                    amountVote: {
-                        negative: book.amountVote ? book.amountVote.negative + 1 : 1,
-                        positive: book.amountVote?.positive || 0,
-                        currentUserVote: book.amountVote?.currentUserVote || voteType.negative.name,
-                    },
-                });
+                if(book.length) {
+                    setBook({
+                        ...book,
+                        suggestedBookVoteCounter: {
+                            negativeCount: book.suggestedBookVoteCounter.negativeCount + 1,
+                            positiveCount: book.suggestedBookVoteCounter.positiveCount || 0,
+                            currentUserVoteType:
+                                book.suggestedBookVoteCounter.currentUserVoteType ||
+                                voteType.negative.name,
+                        },
+                    });
+                }
             })
             .catch((err) => {
                 if (err.response.data.message === isAlreadyVotedMessage) {
@@ -61,25 +67,31 @@ export const useVoting = (books, setBooks, book, setBook) => {
                         book.id === bookId
                             ? {
                                   ...book,
-                                  amountVote: {
-                                      negative: book.amountVote?.negative || 0,
-                                      positive: book.amountVote ? book.amountVote.positive + 1 : 1,
-                                      currentUserVote:
-                                          book.amountVote?.currentUserVote ||
+                                  suggestedBookVoteCounter: {
+                                      negativeCount:
+                                          book.suggestedBookVoteCounter.negativeCount,
+                                      positiveCount:
+                                          book.suggestedBookVoteCounter.positiveCount + 1,
+                                      currentUserVoteType:
+                                          book.suggestedBookVoteCounter.currentUserVoteType ||
                                           voteType.positive.name,
                                   },
                               }
                             : book
                     )
                 );
-                setBook({
-                    ...book,
-                    amountVote: {
-                        negative: book.amountVote?.negative || 0,
-                        positive: book.amountVote ? book.amountVote.positive + 1 : 1,
-                        currentUserVote: book.amountVote?.currentUserVote || voteType.positive.name,
-                    },
-                });
+                if(book.length) {
+                    setBook({
+                        ...book,
+                        suggestedBookVoteCounter: {
+                            negativeCount: book.suggestedBookVoteCounter.negativeCount,
+                            positiveCount: book.suggestedBookVoteCounter.positiveCount + 1,
+                            currentUserVoteType:
+                                book.suggestedBookVoteCounter.currentUserVoteType ||
+                                voteType.positive.name,
+                        },
+                    });
+                }
             })
             .catch((err) => {
                 if (err.response.data.message === isAlreadyVotedMessage) {

@@ -11,6 +11,7 @@ import {
     MAIN_CATALOGUE_PATH,
 } from '../common/constants/route-constants';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { PrimaryButton } from '../common/UI/buttons/primary-button';
 
 const Register = () => {
     const router = useRouter();
@@ -172,16 +173,11 @@ const Register = () => {
                                 mb: 2,
                             }}
                         >
-                            <Button
-                                color="primary"
-                                fullWidth
-                                size="large"
+                            <PrimaryButton
+                                title='Confirm corporate email'
                                 type="submit"
-                                variant="contained"
                                 disabled={disabledCorp}
-                            >
-                                Confirm corporate email
-                            </Button>
+                            />
                         </Box>
                     </form>
                     <Box

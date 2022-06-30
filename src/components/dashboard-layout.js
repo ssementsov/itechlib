@@ -10,6 +10,8 @@ import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { userSlice } from "../store/reducers/UserSlice";
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
+import { ProgressSpinner } from '../common/UI/progressSpinner';
+import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,6 +30,7 @@ export const DashboardLayout = (props) => {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const { setAvatarData, uploadAvatar, setIsLoadingAvatar } = avatarSlice.actions;
+    const { defaultErrorSnackbar } = useCustomSnackbar();
     const { setUser } = userSlice.actions;
 
     useEffect(() => {
@@ -48,9 +51,21 @@ export const DashboardLayout = (props) => {
                 }
             })
             .catch((err) => {
-                console.log(err);
+                if (err.response?.status === 403) {
+                    router.replace(LOGIN_PATH);
+                    localStorage.removeItem('token');
+                } else {
+                    defaultErrorSnackbar();
+                }
             });
-    }, [dispatch, setAvatarData, setIsLoadingAvatar, uploadAvatar, setUser]);
+    }, [
+        dispatch,
+        setAvatarData,
+        setIsLoadingAvatar,
+        uploadAvatar,
+        setUser,
+        defaultErrorSnackbar,
+        router]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -65,7 +80,7 @@ export const DashboardLayout = (props) => {
     }, [router]);
 
     if (!loaded) {
-        return <div></div>;
+        return <ProgressSpinner/>;
     }
 
     return (

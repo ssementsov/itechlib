@@ -1,12 +1,20 @@
 import { api } from './api';
 import { EntityTypes } from '../common/constants/api-constants';
+import { SortDirection, SortFields } from "../common/constants/sorting-constants";
 
 export const BooksAPI = {
-    getAllBooks(pageNumber, count) {
+    getAllBooks(
+        pageNumber,
+        count = 15,
+        sortField = SortFields.createDate,
+        sortDirection = SortDirection.desc
+    ) {
         return api.Client.get(`/${EntityTypes.books}`, {
             params: {
                 pageNumber: pageNumber,
                 pageCapacity: count,
+                sortDirection: sortDirection,
+                sortField: sortField
             },
         });
     },
@@ -26,11 +34,18 @@ export const BooksAPI = {
     removeBook(id) {
         return api.Client.delete(`/${EntityTypes.books}/${id}`);
     },
-    getOwnerBooks(pageNumber, count) {
+    getOwnerBooks(
+        pageNumber,
+        count = 15,
+        sortField = SortFields.createDate,
+        sortDirection = SortDirection.desc
+    ) {
         return api.Client.get(`/${EntityTypes.books}/users/`, {
             params: {
                 pageNumber: pageNumber,
                 pageCapacity: count,
+                sortDirection: sortDirection,
+                sortField: sortField
             },
         });
     },

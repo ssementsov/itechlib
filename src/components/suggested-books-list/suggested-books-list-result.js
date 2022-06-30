@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Button, Card, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Card, Divider, Grid, MenuItem, Typography, TextField } from '@mui/material';
 import { SuggestedBookCard } from './suggested-book-card';
 import { types } from '../../types/index.js';
 import SuggestedBookModal from '../suggested-book/suggested-book-modal';
@@ -14,21 +14,42 @@ import { category } from '../../common/constants/category-constants';
 import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 import { useVoting } from '../../utils/vote-hook';
+import { languageFilters } from '../book/add-edit-book/datas-for-form-options/languages';
+import { categoryFilters } from '../book/add-edit-book/datas-for-form-options/categories';
+import { SortButton } from '../../common/constants/UI/SortButton';
+
+const createOptions = (option) => {
+    return (
+        <MenuItem key={option.value} value={option.value}>
+            {option.label}
+        </MenuItem>
+    );
+};
+
+const StyledSelect = (props) => {
+    const {children, ...rest} = props;
+    return (
+        <TextField
+            sx={{ width: '130px', marginLeft: '25px' }}
+            size="small"
+            select
+            variant="outlined"
+            {...rest}
+        >
+            {children}
+        </TextField>
+    )
+}
 
 const SuggestedBooksListResults = (props) => {
-    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks } = props;
+    const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks, onFiltering, onSorting } = props;
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
-    const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] =
-        useBoolean();
+    const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] = useBoolean();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
-    const { ...rest } = useVoting(
-        suggestedBooks,
-        onUpdateSuggestedBooks,
-        suggestedBook,
-        setSuggestedBook
-    );
-    const filters = ['CATEGORY', 'LANGUAGE', 'POPULARITY'];
+    const { ...rest } = useVoting(suggestedBooks, onUpdateSuggestedBooks, suggestedBook, setSuggestedBook);
+    const [selectedLanguage, setSelectedLanguage] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const viewSuggestedBookInfo = (bookId) => {
         SuggestionAPI.getSuggestedBook(bookId)
@@ -73,7 +94,7 @@ const SuggestedBooksListResults = (props) => {
             default:
                 idLanguage = '';
         }
-
+        const comment = suggestedBook.comment ? suggestedBook.comment : null
         const editedBook = new SuggestedBook(
             newBook.id,
             newBook.title,
@@ -85,7 +106,7 @@ const SuggestedBooksListResults = (props) => {
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             newBook.link,
-            newBook.comment
+            comment
         );
 
         SuggestionAPI.changeBookInfo(editedBook)
@@ -141,22 +162,51 @@ const SuggestedBooksListResults = (props) => {
                     padding: '15px',
                 }}
             >
-                <Stack
-                    spacing={2}
-                    direction="row"
-                    sx={{
-                        justifyContent: 'space-evenly',
-                        padding: '5px 0 10px',
-                    }}
-                >
-                    {filters.map((filter) => {
-                        return (
-                            <Button variant="text" color="info" key={filter}>
-                                {filter}
-                            </Button>
-                        );
-                    })}
-                </Stack>
+                <Grid container spacing={2} columns={16}>
+                    <Grid
+                        alignItems="center"
+                        item
+                        xs={10}
+                        sx={{ display: 'flex', paddingBottom: '16px' }}
+                    >
+                        <Typography variant="h6">Filter by:</Typography>
+                        <StyledSelect
+                            name="language"
+                            label="Language"
+                            value={selectedLanguage}
+                            onChange={(e) => {
+                                setSelectedLanguage(e.target.value);
+                                onFiltering(e.target.value, e.target.name);
+                            }}
+                        >
+                            {languageFilters.map(createOptions)}
+                        </StyledSelect>
+                        <StyledSelect
+                            name="category"
+                            label="Category"
+                            value={selectedCategory}
+                            onChange={(e) => {
+                                setSelectedCategory(e.target.value);
+                                onFiltering(e.target.value, e.target.name);
+                            }}
+                        >
+                            {categoryFilters.map(createOptions)}
+                        </StyledSelect>
+                    </Grid>
+                    <Grid
+                        alignItems="center"
+                        item
+                        xs={6}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                            paddingBottom: '16px',
+                        }}
+                    >
+                        <Typography variant="h6">Sort by:</Typography>
+                        <SortButton title="Popularity" onSorting={onSorting} />
+                    </Grid>
+                </Grid>
                 <Divider sx={{ mb: 2 }} />
                 {books.length ? (
                     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
