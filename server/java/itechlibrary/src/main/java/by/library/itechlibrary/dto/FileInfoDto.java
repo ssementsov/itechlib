@@ -1,5 +1,6 @@
 package by.library.itechlibrary.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class FileInfoDto {
 
     private byte[] fileData;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate date;
 
 }

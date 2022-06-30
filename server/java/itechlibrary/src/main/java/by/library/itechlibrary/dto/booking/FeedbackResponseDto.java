@@ -1,6 +1,7 @@
 package by.library.itechlibrary.dto.booking;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,7 @@ public class FeedbackResponseDto {
     private String userFullName;
 
     @NotNull
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate date;
 
 }
