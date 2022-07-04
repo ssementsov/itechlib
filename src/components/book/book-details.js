@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { types } from './../../types/index';
 import {
@@ -42,6 +42,8 @@ import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
 import { getDate } from '../../utils/functions/get-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useSelector } from 'react-redux';
+import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
+import { formatISO } from 'date-fns';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -64,25 +66,26 @@ const BookDetails = (props) => {
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
+    const [isProlongateButtonOpen, setProlongateButtonOpen, setProlongateButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
     const bookingEndDate = getDate(book.bookingInfoDto?.bookingEndDate);
-    const readerId = useSelector(state => state.user.isUser.id);
+    const readerId = useSelector((state) => state.user.isUser.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
-
+    console.log(book);
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
-            .then(res => {
-                if(res.data === LIMIT_COUNT_NOTIFICATIONS) {
-                    setIsRejectedToAssign(true);
-                } else {
-                    setIsRejectedToAssign(false);
-                }
-                setAssignButtonOpen();
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
-            })
-    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen])
+        .then((res) => {
+            if (res.data === LIMIT_COUNT_NOTIFICATIONS) {
+                setIsRejectedToAssign(true);
+            } else {
+                setIsRejectedToAssign(false);
+            }
+            setAssignButtonOpen();
+        })
+        .catch(() => {
+            defaultErrorSnackbar();
+        });
+    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen]);
 
     useEffect(() => {
         if (isAssigned) {
@@ -98,15 +101,15 @@ const BookDetails = (props) => {
     const deleteBook = () => {
         if (book.status.name === bookStatus.available.name) {
             BooksAPI.removeBook(book.id)
-                .then(() => {
-                    router.back();
-                    enqueueSnackbar('Your book has been deleted successfully!', {
-                        variant: 'success',
-                    });
-                })
-                .catch(() => {
-                    defaultErrorSnackbar();
+            .then(() => {
+                router.back();
+                enqueueSnackbar('Your book has been deleted successfully!', {
+                    variant: 'success',
                 });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
         } else {
             enqueueSnackbar('You can only delete books which are currently in “Available” status', {
                 variant: 'error',
@@ -143,56 +146,62 @@ const BookDetails = (props) => {
             newBook.link,
             idStatus,
             newBook.status,
-            newBook.description
+            newBook.description,
         );
         BooksAPI.changeBookInfo(editedBook)
-            .then((res) => {
-                setEditButtonClose();
-                onUpdate(res.data);
-                enqueueSnackbar('Your book has been updated successfully!', {
-                    variant: 'success',
-                });
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
+        .then((res) => {
+            setEditButtonClose();
+            onUpdate(res.data);
+            enqueueSnackbar('Your book has been updated successfully!', {
+                variant: 'success',
             });
+        })
+        .catch(() => {
+            defaultErrorSnackbar();
+        });
     };
 
     const assignBook = ({ startDate, finishDate }) => {
-        const booking = new Booking(true, 0, book.id, startDate, finishDate);
+        const startDateFormatISO = formatISO(startDate, { representation: 'date' });
+        const finishDateFormatISO = formatISO(finishDate, { representation: 'date' });
+        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO);
         BookingsAPI.createBooking(booking)
-            .then((res) => {
-                onUpdate(res.data.book);
-                setAssignButtonClose();
-                assignHandler(true);
-                enqueueSnackbar('The book was assigned to you successfully!', {
-                    variant: 'success',
-                });
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
+        .then((res) => {
+            onUpdate(res.data.book);
+            setAssignButtonClose();
+            assignHandler(true);
+            enqueueSnackbar('The book was assigned to you successfully!', {
+                variant: 'success',
             });
+        })
+        .catch(() => {
+            defaultErrorSnackbar();
+        });
+    };
+
+    const prolongateReading = () => {
+        console.log('prolongate');
     };
 
     const returnBook = (body) => {
         let bookingId = localStorage.getItem('bookingId');
         BookingsAPI.cancelBooking(bookingId, body)
-            .then(() => {
-                localStorage.removeItem('bookingId');
-                setReturnButtonClose();
-                assignHandler(false);
-                enqueueSnackbar(
-                    !body.feedback && !body.rate
-                        ? 'Your book was returned successfully!'
-                        : 'Thank you for feedback. Read on!',
-                    {
-                        variant: 'success',
-                    }
-                );
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+        .then(() => {
+            localStorage.removeItem('bookingId');
+            setReturnButtonClose();
+            assignHandler(false);
+            enqueueSnackbar(
+                !body.feedback && !body.rate
+                    ? 'Your book was returned successfully!'
+                    : 'Thank you for feedback. Read on!',
+                {
+                    variant: 'success',
+                },
+            );
+        })
+        .catch(() => {
+            defaultErrorSnackbar();
+        });
     };
 
     return (
@@ -215,6 +224,11 @@ const BookDetails = (props) => {
                 onClose={setAssignButtonClose}
                 isRejectedToAssign={isRejectedToAssign}
             />
+            <ProlongateReadingModal
+                onProlongate={prolongateReading}
+                open={isProlongateButtonOpen}
+                onClose={setProlongateButtonClose}
+            />
             <ReturnBookModal
                 open={isReturnButtonOpen}
                 onClose={setReturnButtonClose}
@@ -227,11 +241,11 @@ const BookDetails = (props) => {
                     action={
                         isOwner && (
                             <>
-                                <IconButton onClick={setDeleteButtonOpen} aria-label="delete">
-                                    <DarkDeleteIcon fontSize="small" />
+                                <IconButton onClick={setDeleteButtonOpen} aria-label='delete'>
+                                    <DarkDeleteIcon fontSize='small' />
                                 </IconButton>
-                                <IconButton onClick={setEditButtonOpen} aria-label="edit">
-                                    <EditIcon fontSize="small" />
+                                <IconButton onClick={setEditButtonOpen} aria-label='edit'>
+                                    <EditIcon fontSize='small' />
                                 </IconButton>
                             </>
                         )
@@ -270,9 +284,9 @@ const BookDetails = (props) => {
                                             ) : (
                                                 <Link
                                                     href={book.link}
-                                                    underline="hover"
-                                                    target="_blank"
-                                                    rel="noopener"
+                                                    underline='hover'
+                                                    target='_blank'
+                                                    rel='noopener'
                                                 >
                                                     {'Open site'}
                                                 </Link>
@@ -282,13 +296,13 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.rate}</TblCell>
                                         <TblCell>
-                                            <Tooltip title={book.rate} placement="right">
+                                            <Tooltip title={book.rate} placement='right'>
                                                 <span>
                                                     <Rating
                                                         precision={0.5}
-                                                        name="read-only"
+                                                        name='read-only'
                                                         value={calculateRate(book.rate)}
-                                                        size="small"
+                                                        size='small'
                                                         readOnly
                                                         sx={{
                                                             ml: '-3px',
@@ -304,16 +318,26 @@ const BookDetails = (props) => {
                                             {inUseStatus ? (
                                                 <Tooltip
                                                     title={`Reader: ${book.bookingInfoDto?.nameOfReader}`}
-                                                    placement="right"
+                                                    placement='right'
                                                 >
-                                                    <Typography sx={{ width: '170px', fontSize: theme.typography.body2 }}>
+                                                    <Typography
+                                                        sx={{
+                                                            width: '170px',
+                                                            fontSize: theme.typography.body2,
+                                                        }}
+                                                    >
                                                         {`${toLowerCaseExceptFirstLetter(
-                                                            book.status.name
+                                                            book.status.name,
                                                         )} till ${bookingEndDate}`}
                                                     </Typography>
                                                 </Tooltip>
                                             ) : (
-                                                <Typography sx={{ width: '170px', fontSize: theme.typography.body2 }}>
+                                                <Typography
+                                                    sx={{
+                                                        width: '170px',
+                                                        fontSize: theme.typography.body2,
+                                                    }}
+                                                >
                                                     {toLowerCaseExceptFirstLetter(book.status.name)}
                                                 </Typography>
                                             )}
@@ -350,14 +374,23 @@ const BookDetails = (props) => {
                     </Button>
                     {!isOwner && (
                         <>
-                            {isAssigned
-                                ? <PrimaryButton
-                                    title={'Return the book'}
-                                    size='small'
-                                    fullWidth={false}
-                                    onClick={setReturnButtonOpen}
-                                />
-                                : <PrimaryButton
+                            {isAssigned ? (
+                                <>
+                                    <Button
+                                        onClick={setProlongateButtonOpen}
+                                        sx={{ mr: 1 }}
+                                    >
+                                        Prolongate reading
+                                    </Button>
+                                    <PrimaryButton
+                                        title={'Return the book'}
+                                        size='small'
+                                        fullWidth={false}
+                                        onClick={setReturnButtonOpen}
+                                    />
+                                </>
+                            ) : (
+                                <PrimaryButton
                                     title={'Assign to me'}
                                     size='small'
                                     fullWidth={false}
@@ -368,7 +401,7 @@ const BookDetails = (props) => {
                                             : false
                                     }
                                 />
-                            }
+                            )}
                         </>
                     )}
                 </Box>
