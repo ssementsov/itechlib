@@ -12,7 +12,7 @@ export const categories = [
 
 export const categoryFilters = [
     {
-        value: 'ALL',
+        value: '',
         label: 'All',
     },
     {

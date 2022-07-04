@@ -35,7 +35,7 @@ const SuggestedBooksCatalogue = () => {
         }
         setFilters(prevFilterList => {
             if(prevFilterList.length === 0) {
-                if(value === 'ALL') {
+                if(!value) {
                     return prevFilterList;
                 } else {
                     return [...prevFilterList, newFilter];
@@ -52,10 +52,10 @@ const SuggestedBooksCatalogue = () => {
                         } else {
                             return filter
                         }
-                    }).filter(filter => filter.value !== 'ALL')
+                    }).filter(filter => filter.value !== '')
                     return newFilterList
                 } else {
-                    if(value === 'ALL') {
+                    if(!value) {
                         return prevFilterList;
                     } else {
                         return [...prevFilterList, newFilter];
