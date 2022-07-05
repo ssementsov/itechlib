@@ -35,7 +35,7 @@ const SuggestedBooksCatalogue = () => {
         }
         setFilters(prevFilterList => {
             if(prevFilterList.length === 0) {
-                if(value === '') {
+                if(!value) {
                     return prevFilterList;
                 } else {
                     return [...prevFilterList, newFilter];
@@ -55,7 +55,7 @@ const SuggestedBooksCatalogue = () => {
                     }).filter(filter => filter.value !== '')
                     return newFilterList
                 } else {
-                    if(value === '') {
+                    if(!value) {
                         return prevFilterList;
                     } else {
                         return [...prevFilterList, newFilter];
