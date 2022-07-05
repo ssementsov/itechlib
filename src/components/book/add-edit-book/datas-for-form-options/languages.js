@@ -12,7 +12,7 @@ export const languages = [
 
 export const languageFilters = [
     {
-        value: 'ALL',
+        value: '',
         label: 'All',
     },
     {
