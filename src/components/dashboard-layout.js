@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
@@ -12,6 +12,7 @@ import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
 import { ProgressSpinner } from '../common/UI/progressSpinner';
 import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { endOfDay, isSameHour, isSameMinute, differenceInMilliseconds, getTime } from 'date-fns';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -32,6 +33,40 @@ export const DashboardLayout = (props) => {
     const { setAvatarData, uploadAvatar, setIsLoadingAvatar } = avatarSlice.actions;
     const { defaultErrorSnackbar } = useCustomSnackbar();
     const { setUser } = userSlice.actions;
+
+    useEffect(() => {
+        const now = new Date();
+        const dayEnd = endOfDay(now);
+        const timeToEndDay = differenceInMilliseconds(dayEnd, now);
+        console.log(timeToEndDay)
+        setTimeout(() => {
+            console.log(new Date())
+            router.replace(LOGIN_PATH);
+            localStorage.removeItem('token');
+        }, timeToEndDay)
+        // const redirectionTimer = setInterval(() => {
+        //     const now = new Date();
+        //     const dayEnd = endOfDay(now);
+        //     const timeToEndDay = differenceInMilliseconds(dayEnd, now)
+        //     const resultHour = isSameHour(now, dayEnd);
+        //     const resultMin = isSameMinute(now, dayEnd);
+        //     console.log(timeToEndDay)
+        //     if(timeToEndDay < 1000) {
+        //         console.log('time to end day', new Date())
+        //         router.replace(LOGIN_PATH);
+        //         localStorage.removeItem('token');
+        //     }
+        //     if(resultHour && resultMin) {
+        //         console.log('the same', new Date())
+        //         router.replace(LOGIN_PATH);
+        //         localStorage.removeItem('token');
+        //     }
+        // }, 1000);
+        //
+        // return (() => {
+        //     clearInterval(redirectionTimer);
+        // })
+    },[])
 
     useEffect(() => {
         const token = localStorage.getItem('token');
