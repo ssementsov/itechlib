@@ -1,7 +1,7 @@
 package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.vote.VoteDto;
-import by.library.itechlibrary.fasade.SuggestedBookVoteFacade;
+import by.library.itechlibrary.fasade.SuggestedBookFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class VoteController {
 
-    private final SuggestedBookVoteFacade suggestedBookVoteFacade;
+    private final SuggestedBookFacade suggestedBookFacade;
 
 
     @PreAuthorize("hasRole('BOOK_READER')")
@@ -26,7 +26,7 @@ public class VoteController {
     @ResponseStatus(HttpStatus.CREATED)
     public void vote(@Valid @RequestBody VoteDto voteDto) {
 
-        suggestedBookVoteFacade.vote(voteDto);
+        suggestedBookFacade.vote(voteDto);
 
     }
 }
