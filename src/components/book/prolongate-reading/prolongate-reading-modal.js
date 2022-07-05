@@ -10,16 +10,16 @@ const initValue = {
     finishDate: null,
 };
 
+const minDate = add(new Date(), {
+    days: 1,
+});
+
+const maxDate = add(new Date(), {
+    months: 1,
+});
+
 export const ProlongateReadingModal = (props) => {
     const { onProlongate, open, onClose } = props;
-
-    const minDate = add(new Date(), {
-        days: 1,
-    });
-
-    const maxDate = add(new Date(), {
-        months: 1,
-    });
 
     function validate(value) {
         let error = {};

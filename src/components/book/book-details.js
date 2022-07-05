@@ -39,11 +39,11 @@ import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
-import { getDate } from '../../utils/functions/get-date';
+import { getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
-import { formatISO } from 'date-fns';
+import { formatISO, format, parseISO } from 'date-fns';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -68,10 +68,10 @@ const BookDetails = (props) => {
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isProlongateButtonOpen, setProlongateButtonOpen, setProlongateButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
-    const bookingEndDate = getDate(book.bookingInfoDto?.bookingEndDate);
+    const bookingEndDate = getFormatedDate(book.bookingInfoDto?.bookingEndDate);
     const readerId = useSelector((state) => state.user.isUser.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
-    console.log(book);
+
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
         .then((res) => {
