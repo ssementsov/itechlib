@@ -43,7 +43,7 @@ import { getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
-import { formatISO, format, parseISO } from 'date-fns';
+import { formatISO, format, parseISO, isAfter, add } from 'date-fns';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -56,7 +56,7 @@ const TblCell = styled(TableCell)(() => ({
 const LIMIT_COUNT_NOTIFICATIONS = 5;
 
 const BookDetails = (props) => {
-    const { book, onUpdate, isAssigned, assignHandler } = props;
+    const { book, bookingInfo, onUpdate, onUpdateBookingInfo, isAssigned, assignHandler } = props;
     const router = useRouter();
     const theme = useTheme();
     const corpEmail = localStorage.getItem('corpEmail');
@@ -68,9 +68,12 @@ const BookDetails = (props) => {
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isProlongateButtonOpen, setProlongateButtonOpen, setProlongateButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
-    const bookingEndDate = getFormatedDate(book.bookingInfoDto?.bookingEndDate);
     const readerId = useSelector((state) => state.user.isUser.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
+    const bookingStartDate = parseISO(bookingInfo.startDate);
+    const bookingEndDate = getFormatedDate(bookingInfo.finishDate);
+    const lastDateToProlongate = add(bookingStartDate, { months: 1 });
+    const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
 
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
@@ -86,17 +89,6 @@ const BookDetails = (props) => {
             defaultErrorSnackbar();
         });
     }, [defaultErrorSnackbar, readerId, setAssignButtonOpen]);
-
-    useEffect(() => {
-        if (isAssigned) {
-            let bookId = {
-                bookId: Number(router.query.id),
-            };
-            BookingsAPI.getCurrentBooking(bookId).then((res) => {
-                localStorage.setItem('bookingId', res.data.id);
-            });
-        }
-    }, [isAssigned, router.query.id]);
 
     const deleteBook = () => {
         if (book.status.name === bookStatus.available.name) {
@@ -179,12 +171,23 @@ const BookDetails = (props) => {
         });
     };
 
-    const prolongateReading = () => {
-        console.log('prolongate');
+    const prolongateReading = (bookingId, finishDate) => {
+        const newFinishDateFormatISO = formatISO(finishDate, { representation: 'date' });
+        BookingsAPI.updateBookingFinishedDate(bookingId, newFinishDateFormatISO)
+        .then(res => {
+            onUpdateBookingInfo(res.data);
+            setProlongateButtonClose();
+            enqueueSnackbar(`Reading period has been prolongate till ${format(finishDate, 'MM.dd.yyyy')}`, {
+                variant: 'success',
+            });
+        })
+        .catch(() => {
+            defaultErrorSnackbar();
+        });
     };
 
     const returnBook = (body) => {
-        let bookingId = localStorage.getItem('bookingId');
+        let bookingId = bookingInfo.id;
         BookingsAPI.cancelBooking(bookingId, body)
         .then(() => {
             localStorage.removeItem('bookingId');
@@ -228,6 +231,7 @@ const BookDetails = (props) => {
                 onProlongate={prolongateReading}
                 open={isProlongateButtonOpen}
                 onClose={setProlongateButtonClose}
+                bookingInfo={bookingInfo}
             />
             <ReturnBookModal
                 open={isReturnButtonOpen}
@@ -377,6 +381,7 @@ const BookDetails = (props) => {
                             {isAssigned ? (
                                 <>
                                     <Button
+                                        disabled={isDisabledProlongateButton}
                                         onClick={setProlongateButtonOpen}
                                         sx={{ mr: 1 }}
                                     >
@@ -414,7 +419,15 @@ BookDetails.propTypes = {
     isAssigned: PropTypes.bool,
     assignHandler: PropTypes.func,
     onUpdate: PropTypes.func,
+    onUpdateBookingInfo: PropTypes.func,
     book: types.bookTypes,
+    bookingInfo: PropTypes.shape({
+        book: types.bookTypes,
+        id: PropTypes.number,
+        startDate: PropTypes.string,
+        finishDate: PropTypes.string,
+        active: PropTypes.bool
+    })
 };
 
 export default BookDetails;

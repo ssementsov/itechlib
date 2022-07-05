@@ -7,7 +7,9 @@ const BoxForDate = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     mt: 1,
+    width: '500px',
     [theme.breakpoints.down('md')]: {
+        width: 'auto',
         justifyContent: 'center',
         alignItems: 'space-between',
         flexWrap: 'wrap',

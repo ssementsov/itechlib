@@ -3,23 +3,24 @@ import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
 import { useFormik } from 'formik';
 import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
-import { add } from 'date-fns';
-
-const initValue = {
-    startDate: new Date(),
-    finishDate: null,
-};
-
-const minDate = add(new Date(), {
-    days: 1,
-});
-
-const maxDate = add(new Date(), {
-    months: 1,
-});
+import { add, parseISO } from 'date-fns';
 
 export const ProlongateReadingModal = (props) => {
-    const { onProlongate, open, onClose } = props;
+    const { onProlongate, open, onClose, bookingInfo } = props;
+    const bookingId = bookingInfo.id;
+    const startDate = parseISO(bookingInfo.startDate);
+
+    const minDate = add(new Date(), {
+        days: 1,
+    });
+    const maxDate = add(startDate, {
+        months: 1,
+    });
+
+    const initValue = {
+        startDate: bookingInfo.startDate,
+        finishDate: null,
+    };
 
     function validate(value) {
         let error = {};
@@ -36,7 +37,7 @@ export const ProlongateReadingModal = (props) => {
             actions.resetForm({
                 values: initValue,
             });
-            onProlongate(values);
+            onProlongate(bookingId, values.finishDate);
         },
     });
 
@@ -57,4 +58,5 @@ ProlongateReadingModal.propTypes = {
     onProlongate: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
+    startDate: PropTypes.string
 };
