@@ -12,12 +12,15 @@ import { LOGIN_PATH } from '../../../common/constants/route-constants';
 import { YOU_CAN_UPLOAD_IMAGE } from './../../../common/constants/warning-messages';
 import { ProgressLinear } from '../../../common/UI/progressLinear';
 import { GoBackButton } from './../../../common/UI/buttons/go-back-button';
+import { BookingsAPI } from '../../../api/bookings-api';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
     const id = router.query.id;
     const [book, setBook] = useState([]);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [bookingInfo, setBookingInfo] = useState([]);
+    const [isLoadedBookInfo, setIsLoadedBookInfo] = useState(false);
+    const [isLoadedBookingInfo, setIsLoadedBookingInfo] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
     const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
     const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
@@ -58,7 +61,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                         ? assignHandler(true)
                         : assignHandler(false);
                     setBook(res.data);
-                    setIsLoaded(true);
+                    setIsLoadedBookInfo(true);
                     const bookCover = res.data.fileInfo;
                     if (bookCover) {
                         setIsUploadedBookCover(true);
@@ -85,7 +88,22 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
         router,
     ]);
 
-    if (!isLoaded) {
+    useEffect(() => {
+        if (isAssigned && isLoadedBookInfo) {
+            let bookId = {
+                bookId: book.id,
+            };
+            BookingsAPI.getCurrentBooking(bookId).then((res) => {
+                setBookingInfo(res.data);
+                setIsLoadedBookingInfo(true);
+            });
+        }
+    }, [isAssigned, isLoadedBookInfo]);
+
+    if (
+        !(isLoadedBookInfo && isLoadedBookingInfo) && isAssigned ||
+        !(isLoadedBookInfo)
+    ) {
         return <ProgressLinear/>;
     } else {
         return (
@@ -125,7 +143,9 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                             <Grid item lg={8} md={8} xs={12}>
                                 <BookDetails
                                     onUpdate={setBook}
+                                    onUpdateBookingInfo={setBookingInfo}
                                     book={book}
+                                    bookingInfo={bookingInfo}
                                     isAssigned={isAssigned}
                                     assignHandler={assignHandler}
                                     isOwner={isOwner}
