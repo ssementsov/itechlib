@@ -34,4 +34,7 @@ export const BookingsAPI = {
     getCountActiveBookings(readerId) {
         return api.Client.get(`/${EntityTypes.bookings}/readers/${readerId}/count`)
     },
+    updateBookingFinishedDate(bookingId, newFinishDate) {
+        return api.Client.put(`/${EntityTypes.bookings}/finish-date?bookingId=${bookingId}&newFinishDate=${newFinishDate}`)
+    }
 };

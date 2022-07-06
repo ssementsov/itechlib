@@ -19,7 +19,7 @@ import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
 import { calculateRate } from '../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { trimmedString } from '../../utils/functions/trim-long-string';
-import { getDate } from '../../utils/functions/get-date';
+import { getFormatedDate } from '../../utils/functions/get-formated-date';
 
 const StyledTableCell = styled(TableCell)(() => ({ width: 115, textAlign: 'center' }));
 
@@ -74,7 +74,7 @@ const BooksInUseListResults = ({ books, isStartedSearch }) => {
                                                 </Tooltip>
                                             </StyledTableCell>
                                             <StyledTableCell>
-                                                {getDate(book.baseBookingInfo.bookingEndDate)}
+                                                {getFormatedDate(book.baseBookingInfo.bookingEndDate)}
                                             </StyledTableCell>
                                         </TableRow>
                                     );

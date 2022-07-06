@@ -267,7 +267,7 @@ public class BookingServiceImpl implements BookingService {
 
     private void setReviewInfo(Booking booking, Short rate, String feedbackText) {
 
-        if (rate != null) {
+        if (rate != null && rate != (short) 0) {
 
             booking.setRate(rate);
             recountingBookRate(booking);
