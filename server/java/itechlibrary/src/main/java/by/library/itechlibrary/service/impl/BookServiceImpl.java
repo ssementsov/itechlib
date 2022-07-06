@@ -1,20 +1,22 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.StatusConstant;
-import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
 import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
 import by.library.itechlibrary.mapper.BookMapper;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
+import by.library.itechlibrary.pojo.BookUpdatedInfo;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
@@ -32,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -42,16 +45,6 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     private final BookMapper bookMapper;
-
-    private final BookingInfoMapper bookingInfoMapper;
-
-    private final UserService userService;
-
-    private final BookingService bookingService;
-
-    private final FileInfoService fileInfoService;
-
-    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
 
     private final ResponseOwnBookDtoComparator responseOwnBookDtoComparator;
 
@@ -67,9 +60,8 @@ public class BookServiceImpl implements BookService {
         return bookMapper.mapWithOwnerBookDtoList(books.getContent());
     }
 
-    @Transactional
     @Override
-    public FullBookDto update(WithLikAndStatusBookDto bookDto) {
+    public BookUpdatedInfo update(WithLikAndStatusBookDto bookDto, long currentUserId) {
 
         log.info("Try to update book");
 
@@ -77,17 +69,20 @@ public class BookServiceImpl implements BookService {
         Book updatedBook = bookMapper.toBook(bookDto);
         updatedBook.setFileInfo(book.getFileInfo());
         updatedBook.setOwner(book.getOwner());
-        updateStatus(book.getStatus(), updatedBook.getStatus(), updatedBook.getId(), updatedBook.getOwner().getId());
+        checkCurrentUserIsOwner(updatedBook.getOwner().getId(), currentUserId);
 
         log.info("Try to save updated book");
 
         bookRepository.save(updatedBook);
 
-        return bookMapper.toFullBookDto(updatedBook);
+        FullBookDto fullBookDto = bookMapper.toFullBookDto(updatedBook);
+        boolean isDisableBooking = updateStatus(book.getStatus(), updatedBook.getStatus());
+
+        return new BookUpdatedInfo(fullBookDto, isDisableBooking);
     }
 
     @Override
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser) {
 
         log.info("Try to map bookDto to book");
 
@@ -96,8 +91,8 @@ public class BookServiceImpl implements BookService {
         log.info("Try to set data and save book");
 
         setDate(book);
-        setCurrentUserToOwner(book);
-        setFileInfo(multipartFile, book);
+        setCurrentUserToOwner(book, currentUser);
+        fileInfo.ifPresent(book::setFileInfo);
         book = bookRepository.save(book);
 
         return bookMapper.toWithOwnerBookDto(book);
@@ -110,48 +105,32 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to map book to bookAndIsReaderDto");
 
-        FullBookDto fullBookDto = bookMapper.toFullBookDto(book);
-
-        if (book.getStatus().getName().equals(StatusConstant.IN_USE)) {
-
-            BookingInfo bookingInfo = bookingService.getBookingInfo(id);
-            fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
-
-        }
-
-        return fullBookDto;
+        return  bookMapper.toFullBookDto(book);
     }
 
     @Override
-    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
+    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
 
         log.info("Try get books by user id.");
 
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
-        long ownerId = securityUserDetailsService.getCurrentUserId();
         List<Book> books = bookRepository.findAllByOwnerId(ownerId, pageable);
 
         return bookMapper.mapWithOwnerBookDtoList(books);
     }
 
     @Override
-    public List<ResponseOwnBookDto> getCurrentUsersBookedBooks() {
+    public List<ResponseOwnBookDto> getCurrentUsersBookedBooks(long currentUserId) {
 
         log.info("Try to get current users books.");
 
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
         List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
         List<ResponseOwnBookDto> responseOwnBookDtoList = bookMapper.mapToResponseOwnBookDtoList(currentBooks);
-
-        responseOwnBookDtoList.forEach(x -> x.setBaseBookingInfo(bookingInfoMapper
-                .mapToBaseBookingInfoDto(bookingService.getBaseBookingInfo(x.getId()))));
-
         responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
 
         return responseOwnBookDtoList;
     }
 
-    @Transactional
     @Override
     public void remove(long id) {
 
@@ -170,54 +149,50 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    @Transactional
     @Override
-    public void attachFile(MultipartFile multipartFile, long bookId) {
+    public void attachFile(Optional<FileInfo> fileInfo, long bookId, long currentUserId) {
 
         log.info("Try to find book by id");
 
         Book book = findById(bookId);
-        checkCurrentUserIsOwner(book.getOwner().getId());
-        setFileInfo(multipartFile, book);
+        checkCurrentUserIsOwner(book.getOwner().getId(), currentUserId);
+        fileInfo.ifPresent(book::setFileInfo);
 
     }
 
-    @Transactional
     @Override
-    public void removedAttachedFile(long fileId) {
+    public void removedAttachedFile(long fileId, long currentUserId) {
 
         Book book = bookRepository.findByFileInfoId(fileId)
                 .orElseThrow(() -> new NotFoundException("Book was not find!!!"));
-
-        checkCurrentUserIsOwner(book.getOwner().getId());
+        checkCurrentUserIsOwner(book.getOwner().getId(), currentUserId);
 
         log.info("Try to removed file.");
 
         book.setFileInfo(null);
-        fileInfoService.removeById(fileId);
 
     }
 
-    private void updateStatus(BookStatus oldBookStatus, BookStatus newBookStatus, long bookId, long ownerId) {
+    private boolean updateStatus(BookStatus oldBookStatus, BookStatus newBookStatus) {
 
         log.info("Try to check permission for changing status.");
-
-        checkCurrentUserIsOwner(ownerId);
 
         if (oldBookStatus.getName().equals(StatusConstant.IN_USE) && !newBookStatus.getName().equals(StatusConstant.IN_USE)) {
 
             log.info("Disable current booking for for changing status from IN USE.");
 
-            bookingService.disableCurrentBooking(bookId);
+            return true;
 
         }
+
+        return false;
     }
 
-    private void checkCurrentUserIsOwner(long ownerId) {
+    private void checkCurrentUserIsOwner(long ownerId, long currentUserId) {
 
         log.info("Try to check by current user.");
 
-        if (securityUserDetailsService.getCurrentUserId() != ownerId) {
+        if (currentUserId != ownerId) {
 
             throw new WrongCurrentUserException("Current user is not owner");
         }
@@ -235,12 +210,11 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private void setCurrentUserToOwner(Book book) {
+    private void setCurrentUserToOwner(Book book, User currentUser) {
 
         if (book.getOwner() == null) {
 
-            long currentUserId = securityUserDetailsService.getCurrentUserId();
-            book.setOwner(userService.getUserById(currentUserId));
+            book.setOwner(currentUser);
 
         }
     }
@@ -251,15 +225,5 @@ public class BookServiceImpl implements BookService {
 
         return bookRepository
                 .findById(id).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
-    }
-
-    private void setFileInfo(MultipartFile multipartFile, Book book) {
-
-        if (multipartFile != null) {
-
-            FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
-            book.setFileInfo(fileInfo);
-
-        }
     }
 }
