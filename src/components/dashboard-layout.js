@@ -38,12 +38,12 @@ export const DashboardLayout = (props) => {
         const now = new Date();
         const dayEnd = endOfDay(now);
         const timeToEndDay = differenceInMilliseconds(dayEnd, now);
-        console.log(timeToEndDay)
+
         setTimeout(() => {
             console.log(new Date())
             router.replace(LOGIN_PATH);
             localStorage.removeItem('token');
-        }, timeToEndDay)
+        }, timeToEndDay - 300000)
         // const redirectionTimer = setInterval(() => {
         //     const now = new Date();
         //     const dayEnd = endOfDay(now);
