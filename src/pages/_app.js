@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
