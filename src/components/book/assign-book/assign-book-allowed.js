@@ -1,8 +1,5 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import DatePicker from '@mui/lab/DatePicker';
 import { add } from 'date-fns';
 import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
 
