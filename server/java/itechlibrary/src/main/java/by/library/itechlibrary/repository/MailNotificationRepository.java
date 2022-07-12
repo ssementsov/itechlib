@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MailNotificationRepository extends JpaRepository<MailNotification, Long> {
 
-    @EntityGraph(attributePaths = {"template", "user"})
+    @EntityGraph(attributePaths = {"template", "user", "user.roles"})
     MailNotification save(MailNotification notification);
 
 }
