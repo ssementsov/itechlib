@@ -1,9 +1,10 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
+import by.library.itechlibrary.fasade.BookFacade;
 import by.library.itechlibrary.service.BookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,14 +24,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService bookService;
+    private final BookFacade bookFacade;
 
     @GetMapping
     @ApiOperation("get all books")
     @ResponseStatus(HttpStatus.OK)
     public List<WithOwnerBookDto> getBooks(SortingCriteria sortingCriteria) {
 
-        return bookService.getAll(sortingCriteria);
+        return bookFacade.getAll(sortingCriteria);
     }
 
     @GetMapping("/{id}")
@@ -38,7 +39,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public FullBookDto getBookById(@PathVariable("id") long id) {
 
-        return bookService.getByIdFullVersion(id);
+        return bookFacade.getByIdFullVersion(id);
     }
 
     @GetMapping("/users")
@@ -46,7 +47,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public List<WithOwnerBookDto> getUsersBook(SortingCriteria sortingCriteria) {
 
-        return bookService.getOwnersBook(sortingCriteria);
+        return bookFacade.getOwnersBook(sortingCriteria);
     }
 
     @GetMapping("/users/bookings")
@@ -54,7 +55,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public List<ResponseOwnBookDto> getCurrentUsersBookedBooks() {
 
-        return bookService.getCurrentUsersBookedBooks();
+        return bookFacade.getCurrentUsersBookedBooks();
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")
@@ -64,7 +65,7 @@ public class BookController {
     public WithOwnerBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
                                     @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
 
-        return bookService.save(withOwnerBookDto, multipartFile);
+        return bookFacade.save(withOwnerBookDto, multipartFile);
     }
 
 
@@ -73,7 +74,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public FullBookDto updateBook(@Valid @RequestBody WithOwnerBookDto withOwnerBookDto) {
 
-        return bookService.update(withOwnerBookDto);
+        return bookFacade.update(withOwnerBookDto);
     }
 
     @DeleteMapping("/{id}")
@@ -81,7 +82,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public void removeBook(@PathVariable long id) {
 
-        bookService.remove(id);
+        bookFacade.remove(id);
 
     }
 
@@ -91,7 +92,7 @@ public class BookController {
     public void updateImageBook(@RequestPart(value = "file") final MultipartFile multipartFile,
                                 @RequestPart(name = "bookId") long bookId) {
 
-        bookService.attachFile(multipartFile, bookId);
+        bookFacade.attachFile(multipartFile, bookId);
 
     }
 
@@ -100,7 +101,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.OK)
     public void removedPhotoBook(@PathVariable long fileId) {
 
-        bookService.removedAttachedFile(fileId);
+        bookFacade.removedAttachedFile(fileId);
 
     }
 }

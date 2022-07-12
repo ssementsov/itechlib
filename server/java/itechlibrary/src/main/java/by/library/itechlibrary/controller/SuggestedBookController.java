@@ -4,6 +4,7 @@ import by.library.itechlibrary.dto.suggested_book.NewSuggestedBookDto;
 import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
+import by.library.itechlibrary.fasade.SuggestedBookFacade;
 import by.library.itechlibrary.service.SuggestedBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,12 +25,14 @@ public class SuggestedBookController {
 
     private final SuggestedBookService suggestedBookService;
 
+    private final SuggestedBookFacade suggestedBookFacade;
+
     @PostMapping("/all")
     @ApiOperation("get all suggested books by criteria, max capacity is 50")
     @ResponseStatus(HttpStatus.OK)
     public List<SuggestedBookDto> getAll(@RequestBody(required = false) List<BaseSearchCriteria> criteria, SortingCriteria sortingCriteria) {
 
-        return suggestedBookService.getAll(criteria, sortingCriteria);
+        return suggestedBookFacade.getAll(criteria, sortingCriteria);
     }
 
     @GetMapping("/{id}")
@@ -37,7 +40,7 @@ public class SuggestedBookController {
     @ResponseStatus(HttpStatus.OK)
     public SuggestedBookDto getById(@PathVariable("id") long id) {
 
-        return suggestedBookService.getById(id);
+        return suggestedBookFacade.getById(id);
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")
@@ -46,7 +49,7 @@ public class SuggestedBookController {
     @ResponseStatus(HttpStatus.CREATED)
     public SuggestedBookDto create(@Valid @RequestBody NewSuggestedBookDto suggestedBookDto) {
 
-        return suggestedBookService.create(suggestedBookDto);
+        return suggestedBookFacade.create(suggestedBookDto);
     }
 
     @PutMapping
@@ -54,7 +57,7 @@ public class SuggestedBookController {
     @ResponseStatus(HttpStatus.OK)
     public SuggestedBookDto update(@Valid @RequestBody SuggestedBookDto suggestedBookDto) {
 
-        return suggestedBookService.update(suggestedBookDto);
+        return suggestedBookFacade.update(suggestedBookDto);
     }
 
     @DeleteMapping("/{id}")

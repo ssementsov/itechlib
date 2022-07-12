@@ -12,6 +12,7 @@ import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.entity.Category;
 import by.library.itechlibrary.entity.Language;
 import by.library.itechlibrary.entity.SuggestedBook;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.vote.SuggestedBookVoteCounter;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundSuggestedBookVoteCounterException;
@@ -46,12 +47,6 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
     private final SuggestedBookMapper suggestedBookMapper;
 
-    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
-
-    private final VoteService voteService;
-
-    private final UserService userService;
-
     private final SuggestedBookPredicateBuilder suggestedBookPredicateBuilder;
 
     private final SearchCriteriaMapper searchCriteriaMapper;
@@ -65,7 +60,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
         Page<SuggestedBook> suggestedBooks = checkCriteriaAndGetPage(criteria, pageable);
 
-        return getSuggestedBookDtoList(suggestedBooks);
+        return suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
     }
 
     @Override
@@ -74,10 +69,8 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         log.info("Try to get suggested book by id.");
 
         SuggestedBook suggestedBook = findById(id);
-        SuggestedBookDto suggestedBookDto = suggestedBookMapper.toSuggestedBookDto(suggestedBook);
-        setUserVoteType(suggestedBookDto);
 
-        return suggestedBookDto;
+        return suggestedBookMapper.toSuggestedBookDto(suggestedBook);
     }
 
     @Override
@@ -89,9 +82,8 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
     }
 
-    @Transactional
     @Override
-    public SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto) {
+    public SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto, User user) {
 
         log.info("Try to save suggested book.");
 
@@ -101,8 +93,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
 
         log.info("Try to set current user.");
 
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
-        suggestedBook.setCreator(userService.getUserById(currentUserId));
+        suggestedBook.setCreator(user);
 
         log.info("Try to set current date.");
 
@@ -129,10 +120,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         newSuggestedBook.setCreator(oldSuggestedBook.getCreator());
         newSuggestedBook = suggestedBookRepository.save(newSuggestedBook);
 
-        SuggestedBookDto updatedSuggestedBookDto = suggestedBookMapper.toSuggestedBookDto(newSuggestedBook);
-        setUserVoteType(updatedSuggestedBookDto);
-
-        return updatedSuggestedBookDto;
+        return suggestedBookMapper.toSuggestedBookDto(newSuggestedBook);
     }
 
     @Override
@@ -142,6 +130,20 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         setVoteCount(suggestedBook.getSuggestedBookVoteCounter(), voteTypeName);
         suggestedBookRepository.save(suggestedBook);
 
+    }
+
+    @Override
+    public void setUserVoteType(SuggestedBookDto suggestedBookDto,  String voteTypeName) {
+
+        if (suggestedBookDto.getSuggestedBookVoteCounter() != null) {
+
+            suggestedBookDto.getSuggestedBookVoteCounter().setCurrentUserVoteType(voteTypeName);
+
+        } else {
+
+            throw new NotFoundSuggestedBookVoteCounterException("SuggestedBookVoteCounter is null for suggested book id = " + suggestedBookDto.getId());
+
+        }
     }
 
     private Page<SuggestedBook> checkCriteriaAndGetPage(List<BaseSearchCriteria> criteria, Pageable pageable) {
@@ -210,13 +212,6 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
                 .orElseThrow(() -> new NotFoundException("Suggested book was not found by id = " + id));
     }
 
-    private List<SuggestedBookDto> getSuggestedBookDtoList(Page<SuggestedBook> suggestedBooks) {
-
-        List<SuggestedBookDto> suggestedBookDtoList = suggestedBookMapper.mapSuggestedBookDtoList(suggestedBooks.getContent());
-        suggestedBookDtoList.forEach(this::setUserVoteType);
-
-        return suggestedBookDtoList;
-    }
 
     private void checkId(SuggestedBook suggestedBook) {
 
@@ -279,23 +274,6 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         if (!CategoryConstant.categories.contains(category)) {
 
             throw new NotFoundException("Category has not been found.");
-        }
-    }
-
-    private void setUserVoteType(SuggestedBookDto suggestedBookDto) {
-
-        long suggestedBookDtoId = suggestedBookDto.getId();
-
-        String voteTypeName = voteService.getCurrentUserVoteTypeName(suggestedBookDtoId);
-
-        if (suggestedBookDto.getSuggestedBookVoteCounter() != null) {
-
-            suggestedBookDto.getSuggestedBookVoteCounter().setCurrentUserVoteType(voteTypeName);
-
-        } else {
-
-            throw new NotFoundSuggestedBookVoteCounterException("SuggestedBookVoteCounter is null for suggested book id = " + suggestedBookDto.getId());
-
         }
     }
 }
