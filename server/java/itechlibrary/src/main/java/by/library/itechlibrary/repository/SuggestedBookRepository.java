@@ -28,16 +28,16 @@ public interface SuggestedBookRepository extends JpaRepository<SuggestedBook, Lo
                 .first((SingleValueBinding<StringPath, String>) StringExpression::containsIgnoreCase);
     }
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "creator.roles", "suggestedBookVoteCounter"})
     Optional<SuggestedBook> findById(long id);
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "creator.roles", "suggestedBookVoteCounter"})
     Page<SuggestedBook> findAll(Predicate predicate, Pageable pageable);
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "creator.roles", "suggestedBookVoteCounter"})
     Page<SuggestedBook> findAll(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "suggestedBookVoteCounter"})
+    @EntityGraph(attributePaths = {"language", "status", "category", "creator", "creator.roles", "suggestedBookVoteCounter"})
 
     SuggestedBook save(SuggestedBook suggestedBook);
 
