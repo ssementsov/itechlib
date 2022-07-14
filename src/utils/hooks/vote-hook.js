@@ -1,10 +1,10 @@
-import { Vote } from '../models/vote-model';
+import { Vote } from '../../models/vote-model';
 import {
     voteObjectTypes,
     voteType,
     isAlreadyVotedMessage,
-} from '../common/constants/vote-constants';
-import { VoteAPI } from '../api/vote-api';
+} from '../../common/constants/vote-constants';
+import { VoteAPI } from '../../api/vote-api';
 import { useCustomSnackbar } from './custom-snackbar-hook';
 
 export const useVoting = (books, setBooks, book, setBook) => {

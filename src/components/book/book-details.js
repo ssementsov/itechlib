@@ -34,16 +34,19 @@ import { Book } from '../../models/book-model';
 import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
 import { BookingsAPI } from './../../api/bookings-api';
-import { useBoolean } from '../../utils/boolean-hook';
+import { useBoolean } from '../../utils/hooks/boolean-hook';
 import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
-import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
 import { getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
 import { formatISO, format, parseISO, isAfter, add } from 'date-fns';
+import { BlockingModal } from '../../common/UI/modals/blocking-modal';
+import { userRoles } from '../../common/constants/user-roles-constants';
+import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -68,7 +71,7 @@ const BookDetails = (props) => {
     const [isAssignButtonOpen, setAssignButtonOpen, setAssignButtonClose] = useBoolean();
     const [isProlongateButtonOpen, setProlongateButtonOpen, setProlongateButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
-    const readerId = useSelector((state) => state.user.isUser.id);
+    const readerId = useSelector((state) => state.user.user.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
     const bookingStartDate = parseISO(bookingInfo.startDate);
     const bookingEndDate = getFormatedDate(bookingInfo.finishDate);
@@ -207,6 +210,13 @@ const BookDetails = (props) => {
         });
     };
 
+    //overdue booking
+    const {
+        isBlockingModalOpen,
+        setBlockingModalClose,
+        handleBlockingOrAction,
+    } = useOverdueBookingBlocking();
+
     return (
         <>
             <EditBookModal
@@ -237,6 +247,10 @@ const BookDetails = (props) => {
                 open={isReturnButtonOpen}
                 onClose={setReturnButtonClose}
                 onReturn={returnBook}
+            />
+            <BlockingModal
+                open={isBlockingModalOpen}
+                onClose={setBlockingModalClose}
             />
 
             <Card>
@@ -382,7 +396,7 @@ const BookDetails = (props) => {
                                 <>
                                     <Button
                                         disabled={isDisabledProlongateButton}
-                                        onClick={setProlongateButtonOpen}
+                                        onClick={() => handleBlockingOrAction(setProlongateButtonOpen)}
                                         sx={{ mr: 1 }}
                                     >
                                         Prolongate reading
@@ -399,7 +413,7 @@ const BookDetails = (props) => {
                                     title={'Assign to me'}
                                     size='small'
                                     fullWidth={false}
-                                    onClick={assignBookHandler}
+                                    onClick={() => handleBlockingOrAction(assignBookHandler)}
                                     disabled={
                                         book.status.name !== bookStatus.available.name
                                             ? true
@@ -426,8 +440,8 @@ BookDetails.propTypes = {
         id: PropTypes.number,
         startDate: PropTypes.string,
         finishDate: PropTypes.string,
-        active: PropTypes.bool
-    })
+        active: PropTypes.bool,
+    }),
 };
 
 export default BookDetails;

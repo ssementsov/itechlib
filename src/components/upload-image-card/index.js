@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 import SelectImageModal from './select-image-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import HiddenBookCoverTools from './hidden-book-cover-tools';
-import { useBoolean } from '../../utils/boolean-hook';
+import { useBoolean } from '../../utils/hooks/boolean-hook';
 import styles from './upload-image-card.module.css';
 import StyledCard from './styled-card';
 import { useDispatch } from 'react-redux';

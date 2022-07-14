@@ -10,7 +10,7 @@ import {
     LOGIN_PATH,
     MAIN_CATALOGUE_PATH,
 } from '../common/constants/route-constants';
-import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
 
 const Register = () => {

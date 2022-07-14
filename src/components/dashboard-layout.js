@@ -11,7 +11,7 @@ import { userSlice } from "../store/reducers/UserSlice";
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
 import { ProgressSpinner } from '../common/UI/progressSpinner';
-import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { endOfDay, differenceInMilliseconds } from 'date-fns';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({

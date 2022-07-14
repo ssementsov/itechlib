@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import { DashboardLayout } from '../components/dashboard-layout';
 import BooksCatalogue from '../components/books-catalogue';
 import { SuggestionAPI } from './../api/suggested-books-api';
-import { useInfiniteScroll } from './../utils/infinite-scroll-hook';
+import { useInfiniteScroll } from '../utils/hooks/infinite-scroll-hook';
 import { ProgressLinear } from '../common/UI/progressLinear';
 import {SortFields, SortDirection} from '../common/constants/sorting-constants';
 

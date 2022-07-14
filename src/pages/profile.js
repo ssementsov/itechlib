@@ -5,7 +5,7 @@ import { Box, Container, Grid } from '@mui/material';
 import { UserAPI } from '../api/user-api';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImageCard from '../components/upload-image-card';
-import { useCustomSnackbar } from './../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import ProfileDetails from './../components/profile/profile-details';
 import { LOGIN_PATH } from '../common/constants/route-constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';

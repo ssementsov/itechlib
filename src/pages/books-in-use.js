@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DashboardLayout } from '../components/dashboard-layout';
-import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { fetchBooksInUse } from '../store/reducers/BooksInUseSlice';
 import BooksCatalogue from './../components/books-catalogue';
 import { ProgressLinear } from '../common/UI/progressLinear';

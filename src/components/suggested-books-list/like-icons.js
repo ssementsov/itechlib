@@ -8,6 +8,8 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import style from './like-icons.module.css';
 import { types } from '../../types';
 import { voteType } from '../../common/constants/vote-constants';
+import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
+import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 
 export const LikeIcons = (props) => {
     const { isView, book, onNegativeVote, onPositiveVote } = props;
@@ -17,33 +19,49 @@ export const LikeIcons = (props) => {
     const isPositiveVoted = book.suggestedBookVoteCounter.currentUserVoteType === voteType.positive.name;
     let theme = useTheme();
 
+    //overdue booking
+    const {
+        isBlockingModalOpen,
+        setBlockingModalClose,
+        handleBlockingOrAction,
+    } = useOverdueBookingBlocking();
+
     return (
-        <div className={isView ? style.likeIconInfoArea : style.likeIconArea}>
-            <span style={{ color: theme.palette.info.main }}>{negativeVote}</span>
-            <IconButton
-                color="info"
-                aria-label="thumb down"
-                component="span"
-                sx={{ padding: '0 8px' }}
-                onClick={(e) => onNegativeVote(e, book.id)}
-            >
-                {isNegativeVoted ? <ThumbDownIcon /> : <ThumbDownAltOutlinedIcon />}
-            </IconButton>
-            <span style={{ color: theme.palette.info.main }}>{positiveVote}</span>
-            <IconButton
-                color="info"
-                aria-label="thumb up"
-                component="span"
-                sx={{ padding: '0 8px' }}
-                onClick={(e) => onPositiveVote(e, book.id)}
-            >
-                {isPositiveVoted ? (
-                    <ThumbUpIcon sx={{ color: theme.palette.primary.main }} />
-                ) : (
-                    <ThumbUpAltOutlinedIcon />
-                )}
-            </IconButton>
-        </div>
+        <>
+            <BlockingModal
+                open={isBlockingModalOpen}
+                onClose={setBlockingModalClose}
+            />
+            <div className={isView ? style.likeIconInfoArea : style.likeIconArea}>
+                <span style={{ color: theme.palette.info.main }}>{negativeVote}</span>
+                <IconButton
+                    color='info'
+                    aria-label='thumb down'
+                    component='span'
+                    sx={{ padding: '0 8px' }}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        handleBlockingOrAction(e, () => onNegativeVote(e, book.id));
+                    }}
+                >
+                    {isNegativeVoted ? <ThumbDownIcon /> : <ThumbDownAltOutlinedIcon />}
+                </IconButton>
+                <span style={{ color: theme.palette.info.main }}>{positiveVote}</span>
+                <IconButton
+                    color='info'
+                    aria-label='thumb up'
+                    component='span'
+                    sx={{ padding: '0 8px' }}
+                    onClick={(e) => handleBlockingOrAction(e, () => onPositiveVote(e, book.id))}
+                >
+                    {isPositiveVoted ? (
+                        <ThumbUpIcon sx={{ color: theme.palette.primary.main }} />
+                    ) : (
+                        <ThumbUpAltOutlinedIcon />
+                    )}
+                </IconButton>
+            </div>
+        </>
     );
 };
 
