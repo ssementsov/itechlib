@@ -39,10 +39,7 @@ export const LikeIcons = (props) => {
                     aria-label='thumb down'
                     component='span'
                     sx={{ padding: '0 8px' }}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleBlockingOrAction(e, () => onNegativeVote(e, book.id));
-                    }}
+                    onClick={(e) => handleBlockingOrAction(() => onNegativeVote(e, book.id), e)}
                 >
                     {isNegativeVoted ? <ThumbDownIcon /> : <ThumbDownAltOutlinedIcon />}
                 </IconButton>
@@ -52,7 +49,7 @@ export const LikeIcons = (props) => {
                     aria-label='thumb up'
                     component='span'
                     sx={{ padding: '0 8px' }}
-                    onClick={(e) => handleBlockingOrAction(e, () => onPositiveVote(e, book.id))}
+                    onClick={(e) => handleBlockingOrAction(() => onPositiveVote(e, book.id), e)}
                 >
                     {isPositiveVoted ? (
                         <ThumbUpIcon sx={{ color: theme.palette.primary.main }} />

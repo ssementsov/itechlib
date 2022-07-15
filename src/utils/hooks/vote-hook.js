@@ -33,7 +33,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                             : book;
                     })
                 );
-                if(book.length) {
+                if(Object.values(book).length) {
                     setBook({
                         ...book,
                         suggestedBookVoteCounter: {
@@ -80,7 +80,7 @@ export const useVoting = (books, setBooks, book, setBook) => {
                             : book
                     )
                 );
-                if(book.length) {
+                if(Object.values(book).length) {
                     setBook({
                         ...book,
                         suggestedBookVoteCounter: {

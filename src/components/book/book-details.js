@@ -41,12 +41,13 @@ import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/r
 import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
 import { getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
 import { formatISO, format, parseISO, isAfter, add } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
+import { userSlice } from '../../store/reducers/UserSlice';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -61,10 +62,14 @@ const LIMIT_COUNT_NOTIFICATIONS = 5;
 const BookDetails = (props) => {
     const { book, bookingInfo, onUpdate, onUpdateBookingInfo, isAssigned, assignHandler } = props;
     const router = useRouter();
+    const dispatch = useDispatch();
     const theme = useTheme();
     const corpEmail = localStorage.getItem('corpEmail');
     let isOwner = book.owner.corpEmail === corpEmail;
     const inUseStatus = book.status.name === bookStatus.inUse.name;
+    const roles = useSelector(state => state.user.user.roles);
+    const isNoRoles = roles?.length === 0;
+    const { updateUserRoles } = userSlice.actions;
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
@@ -193,7 +198,9 @@ const BookDetails = (props) => {
         let bookingId = bookingInfo.id;
         BookingsAPI.cancelBooking(bookingId, body)
         .then(() => {
-            localStorage.removeItem('bookingId');
+            if(isNoRoles) {
+                dispatch(updateUserRoles(userRoles.reader))
+            }
             setReturnButtonClose();
             assignHandler(false);
             enqueueSnackbar(
