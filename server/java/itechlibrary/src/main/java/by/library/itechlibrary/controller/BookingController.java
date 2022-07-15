@@ -105,7 +105,6 @@ public class BookingController {
 
     }
 
-    @PreAuthorize("hasRole('BOOK_READER')")
     @GetMapping("/feedback")
     @ApiOperation("get feedback list by book id")
     @ResponseStatus(HttpStatus.OK)
