@@ -19,7 +19,7 @@ public interface BookingService {
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
-    BookingResponseDto save(BookingDto bookingDto);
+    BookingResponseDto save(BookingDto bookingDto, long currentUserId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
@@ -27,7 +27,7 @@ public interface BookingService {
 
     void returnBooking(ReviewDto reviewDto, long id);
 
-    BookingInfo getBookingInfo(long bookId);
+    BookingInfo getBookingInfo(long bookId, long currentUserId);
 
     void disableCurrentBooking(long bookId);
 

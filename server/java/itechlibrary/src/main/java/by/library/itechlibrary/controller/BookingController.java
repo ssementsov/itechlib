@@ -5,6 +5,7 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.fasade.BookingFacade;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FeedbackService;
 import io.swagger.annotations.Api;
@@ -28,6 +29,8 @@ public class BookingController {
     private final BookingService bookingService;
 
     private final FeedbackService feedbackService;
+
+    private final BookingFacade bookingFacade;
 
 
     @GetMapping("/readers/{readerId}")
@@ -83,7 +86,7 @@ public class BookingController {
     @ResponseStatus(HttpStatus.CREATED)
     public BookingResponseDto addBook(@Valid @RequestBody BookingDto bookingDto) {
 
-        return bookingService.save(bookingDto);
+        return bookingFacade.save(bookingDto);
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")

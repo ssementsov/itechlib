@@ -37,7 +37,8 @@ public class SuggestedBookFacadeImpl implements SuggestedBookFacade {
     @Override
     public void vote(VoteDto voteDto) {
 
-        Vote vote = voteService.vote(voteDto);
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+        Vote vote = voteService.vote(voteDto, currentUserId);
         String voteTypeName = vote.getVoteType().getName();
         suggestedBookService.addVoteCount(voteTypeName, vote.getVoteObjectId());
 
@@ -82,7 +83,8 @@ public class SuggestedBookFacadeImpl implements SuggestedBookFacade {
 
     private void getVoteTypeAndSetToSuggestedBook(SuggestedBookDto suggestedBookDto) {
 
-        String voteTypeName = voteService.getCurrentUserVoteTypeName(suggestedBookDto.getId());
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+        String voteTypeName = voteService.getCurrentUserVoteTypeName(suggestedBookDto.getId(), currentUserId);
         suggestedBookService.setUserVoteType(suggestedBookDto, voteTypeName);
 
     }

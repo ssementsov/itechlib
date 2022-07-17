@@ -4,7 +4,6 @@ import by.library.itechlibrary.entity.MailNotification;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.repository.MailNotificationRepository;
-import by.library.itechlibrary.service.ConfirmationDataService;
 import by.library.itechlibrary.service.MailNotificationService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +29,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     private final JavaMailSender emailSender;
 
     private final MailNotificationRepository mailNotificationRepository;
-
-    private final ConfirmationDataService confirmationDataService;
 
     @Value("${spring.mail.username}")
     private String fromMail;
