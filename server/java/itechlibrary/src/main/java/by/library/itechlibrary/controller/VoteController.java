@@ -1,7 +1,7 @@
 package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.vote.VoteDto;
-import by.library.itechlibrary.fasade.SuggestedBookFacade;
+import by.library.itechlibrary.facade.SuggestedBookFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

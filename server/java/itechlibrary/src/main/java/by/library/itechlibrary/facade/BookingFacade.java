@@ -1,4 +1,4 @@
-package by.library.itechlibrary.fasade;
+package by.library.itechlibrary.facade;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;

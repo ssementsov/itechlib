@@ -5,7 +5,7 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
-import by.library.itechlibrary.fasade.BookingFacade;
+import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FeedbackService;
 import io.swagger.annotations.Api;

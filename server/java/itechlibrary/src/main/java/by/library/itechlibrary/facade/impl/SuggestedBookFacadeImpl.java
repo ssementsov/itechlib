@@ -1,4 +1,4 @@
-package by.library.itechlibrary.fasade.impl;
+package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
@@ -7,7 +7,7 @@ import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.vote.VoteDto;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.vote.Vote;
-import by.library.itechlibrary.fasade.SuggestedBookFacade;
+import by.library.itechlibrary.facade.SuggestedBookFacade;
 import by.library.itechlibrary.service.SuggestedBookService;
 import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.service.VoteService;
@@ -15,8 +15,8 @@ import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -35,6 +35,7 @@ public class SuggestedBookFacadeImpl implements SuggestedBookFacade {
 
 
     @Override
+    @Transactional
     public void vote(VoteDto voteDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
@@ -71,8 +72,8 @@ public class SuggestedBookFacadeImpl implements SuggestedBookFacade {
         return suggestedBookDtoList;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
