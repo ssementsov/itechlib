@@ -1,4 +1,4 @@
-package by.library.itechlibrary.fasade.impl;
+package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
@@ -9,7 +9,7 @@ import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
-import by.library.itechlibrary.fasade.BookFacade;
+import by.library.itechlibrary.facade.BookFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
 import by.library.itechlibrary.service.BookService;
@@ -44,8 +44,9 @@ public class BookFacadeImpl implements BookFacade {
 
     private final BookingInfoMapper bookingInfoMapper;
 
-    @Transactional
+
     @Override
+    @Transactional
     public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
@@ -55,8 +56,8 @@ public class BookFacadeImpl implements BookFacade {
         return bookService.save(withOwnerBookDto, fileInfo, currentUser);
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void removedAttachedFile(long fileId) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
@@ -66,6 +67,7 @@ public class BookFacadeImpl implements BookFacade {
     }
 
     @Override
+    @Transactional
     public void attachFile(MultipartFile multipartFile, long bookId) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
@@ -75,6 +77,7 @@ public class BookFacadeImpl implements BookFacade {
     }
 
     @Override
+    @Transactional
     public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
@@ -83,6 +86,7 @@ public class BookFacadeImpl implements BookFacade {
     }
 
     @Override
+    @Transactional
     public List<ResponseOwnBookDto> getCurrentUsersBookedBooks() {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
@@ -93,8 +97,8 @@ public class BookFacadeImpl implements BookFacade {
         return responseOwnBookDtoList;
     }
 
-    @Transactional
     @Override
+    @Transactional
     public FullBookDto update(WithLikAndStatusBookDto bookDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
@@ -110,13 +114,15 @@ public class BookFacadeImpl implements BookFacade {
     }
 
     @Override
+    @Transactional
     public FullBookDto getByIdFullVersion(long id) {
 
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         if (fullBookDto.getStatus().getName().equals(StatusConstant.IN_USE)) {
 
-            BookingInfo bookingInfo = bookingService.getBookingInfo(id);
+            BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
             fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }

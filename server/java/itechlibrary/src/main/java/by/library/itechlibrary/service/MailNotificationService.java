@@ -1,9 +1,8 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.entity.Template;
-import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.pojo.MailNotificationInfo;
 
 public interface MailNotificationService {
 
-    void sent(User user, Template template, String filedTemplateText);
+    void sent(MailNotificationInfo mailNotificationInfo);
 }

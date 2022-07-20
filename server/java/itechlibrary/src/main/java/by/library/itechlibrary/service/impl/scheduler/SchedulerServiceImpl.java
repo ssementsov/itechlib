@@ -2,10 +2,8 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
-import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.ConfirmationData;
-import by.library.itechlibrary.entity.Template;
-import by.library.itechlibrary.entity.UserRole;
+import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
 import by.library.itechlibrary.service.MailNotificationService;
@@ -61,7 +59,14 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         if (!bookings.isEmpty()) {
 
-            bookings.forEach(this::checkAndDeleteRole);
+            bookings.forEach(booking -> {
+
+                if (checkAndDeleteRole(booking)) {
+
+                    fillTemplateAndSentEmailNotification(booking, MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME);
+
+                }
+            });
 
         }
 
@@ -82,15 +87,26 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
+    private void fillTemplateAndSentEmailNotification(Booking booking, String templateName) {
+
+        User user = booking.getReader();
+        Template template = mailTemplateService.getByName(templateName);
+        String filedTemplateText = mailTemplateService.getAndFillConfirmationTemplateFromUser(user, template.getText());
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
+
+        mailNotificationService.sent(mailNotificationInfo);
+    }
+
     private void getTemplateAndSendNotification(Booking booking) {
 
         Template template = mailTemplateService.getByName(MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME);
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
-        mailNotificationService.sent(booking.getReader(), template, filedTemplateText);
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
+        mailNotificationService.sent(mailNotificationInfo);
 
     }
 
-    private void checkAndDeleteRole(Booking booking) {
+    private boolean checkAndDeleteRole(Booking booking) {
 
         Set<UserRole> roles = booking.getReader().getRoles();
 
@@ -100,8 +116,11 @@ public class SchedulerServiceImpl implements SchedulerService {
 
             roles.remove(UserRoleConstant.BOOK_READER_ROLE);
             booking.getReader().setRoles(roles);
+            return true;
 
         }
+
+        return false;
     }
 
     private void checkAndDelete(List<ConfirmationData> confirmationDataList) {

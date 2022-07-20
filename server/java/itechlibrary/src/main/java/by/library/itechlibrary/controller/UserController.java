@@ -4,6 +4,7 @@ package by.library.itechlibrary.controller;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.dto.UserProfileDto;
+import by.library.itechlibrary.facade.UserFacade;
 import by.library.itechlibrary.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,13 +24,14 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+    private final UserFacade userFacade;
 
     @PostMapping("/check")
     @ApiOperation("check emails and connect two emails")
     @ResponseStatus(HttpStatus.OK)
-    public String checkCorporateAndGoogleEmails(@Valid @RequestBody EmailCheckerDto emailCheckerDto) {
+    public void checkCorporateAndGoogleEmails(@Valid @RequestBody EmailCheckerDto emailCheckerDto) {
 
-        return userService.checkEmails(emailCheckerDto);
+        userFacade.checkEmails(emailCheckerDto);
 
     }
 
@@ -72,7 +74,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public void addPhoto(@RequestPart(value = "file") final MultipartFile multipartFile) {
 
-        userService.attachPhoto(multipartFile);
+        userFacade.attachPhoto(multipartFile);
 
     }
 
@@ -81,7 +83,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public void removedPhoto(@PathVariable long fileId) {
 
-        userService.removePhoto(fileId);
+        userFacade.removePhoto(fileId);
 
     }
 }

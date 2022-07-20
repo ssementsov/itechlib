@@ -28,16 +28,13 @@ public class VoteServiceImpl implements VoteService {
 
     private final VoteRepository voteRepository;
 
-    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
-
-
     @Override
-    public Vote vote(VoteDto voteDto) {
+    public Vote vote(VoteDto voteDto, long currentUserId) {
 
         log.info("Try to map voteDto to vote.");
 
         Vote vote = voteMapper.toVote(voteDto);
-        setDateAndUserId(vote);
+        setDateAndUserId(vote, currentUserId);
         checkVote(vote);
 
         log.info("Try to save vote.");
@@ -47,16 +44,14 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public String getCurrentUserVoteTypeName(long objectId){
+    public String getCurrentUserVoteTypeName(long objectId, long currentUserId){
 
         log.info("Try to count positive and negative votes");
 
-        return setCurrentUserVote(objectId);
+        return setCurrentUserVote(objectId, currentUserId);
     }
 
-    private String setCurrentUserVote(long objectId){
-
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
+    private String setCurrentUserVote(long objectId, long currentUserId){
 
         Optional<Vote> voteOptional = getVoteByUserIdAndVoteObjectId(currentUserId, objectId);
 
@@ -103,12 +98,12 @@ public class VoteServiceImpl implements VoteService {
         }
     }
 
-    private void setDateAndUserId(Vote vote) {
+    private void setDateAndUserId(Vote vote, long currentUserId) {
 
         log.info("Set date time and current user id to vote.");
 
         vote.setDate(LocalDateTime.now());
-        vote.setUserId(securityUserDetailsService.getCurrentUserId());
+        vote.setUserId(currentUserId);
 
     }
 
