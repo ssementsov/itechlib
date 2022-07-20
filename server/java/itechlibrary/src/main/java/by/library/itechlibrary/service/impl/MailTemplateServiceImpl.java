@@ -29,7 +29,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
     public String getAndFillConfirmationTemplateFromUser(User user, String templateText) {
 
         return getFilledTextOfTemplateFromUserInfo(user, templateText);
-
     }
 
     @Override
@@ -43,7 +42,6 @@ public class MailTemplateServiceImpl implements MailTemplateService {
 
         return templateRepository.findByName(templateName)
                 .orElseThrow(() -> new NotFoundException("Template has not found by name " + templateName));
-
     }
 
     private String getFilledTextOfTemplateFromUserInfo(User user, String templateText) {

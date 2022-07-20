@@ -3,8 +3,8 @@ package by.library.itechlibrary.service.impl;
 import by.library.itechlibrary.entity.MailNotification;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.MailNotificationRepository;
-import by.library.itechlibrary.service.ConfirmationDataService;
 import by.library.itechlibrary.service.MailNotificationService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +31,6 @@ public class MailNotificationServiceImpl implements MailNotificationService {
 
     private final MailNotificationRepository mailNotificationRepository;
 
-    private final ConfirmationDataService confirmationDataService;
-
     @Value("${spring.mail.username}")
     private String fromMail;
 
@@ -40,24 +38,24 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Async("threadPoolTaskExecutor")
     @Transactional
     @Override
-    public void sent(User user, Template template, String filedTemplateText) {
+    public void sent(MailNotificationInfo mailNotificationInfo) {
 
-        MailNotification notification = getMailNotification(user, template, filedTemplateText);
+        MailNotification notification = getMailNotification(mailNotificationInfo);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        trySetDataMimeMessage(user, notification, mimeMessage);
+        trySetDataMimeMessage(mailNotificationInfo.getUser().getGoogleEmail(), notification, mimeMessage);
         emailSender.send(mimeMessage);
 
     }
 
-    private void trySetDataMimeMessage(User user, MailNotification notification, MimeMessage mimeMessage) {
+    private void trySetDataMimeMessage(String googleEmail, MailNotification notification, MimeMessage mimeMessage) {
 
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
         try {
 
             helper.setText(notification.getText(), true);
-            helper.setTo(user.getGoogleEmail());
+            helper.setTo(googleEmail);
             helper.setSubject(notification.getSubject());
             helper.setFrom(notification.getFrom());
 
@@ -68,16 +66,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
-    private MailNotification getMailNotification(User user, Template template, String filedTemplateText) {
+    private MailNotification getMailNotification(MailNotificationInfo mailNotificationInfo) {
 
         MailNotification notification = new MailNotification();
 
         notification.setFrom(fromMail);
-        notification.setTo(user.getGoogleEmail());
-        notification.setSubject(template.getSubject());
-        notification.setTemplate(template);
-        notification.setText(filedTemplateText);
-        notification.setUser(user);
+        notification.setTo(mailNotificationInfo.getUser().getGoogleEmail());
+        notification.setSubject(mailNotificationInfo.getTemplate().getSubject());
+        notification.setTemplate(mailNotificationInfo.getTemplate());
+        notification.setText(mailNotificationInfo.getFiledTemplateText());
+        notification.setUser(mailNotificationInfo.getUser());
         notification.setDate(LocalDateTime.now());
 
         return notification;

@@ -4,7 +4,7 @@ import by.library.itechlibrary.dto.suggested_book.NewSuggestedBookDto;
 import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
-import by.library.itechlibrary.fasade.SuggestedBookFacade;
+import by.library.itechlibrary.facade.SuggestedBookFacade;
 import by.library.itechlibrary.service.SuggestedBookService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

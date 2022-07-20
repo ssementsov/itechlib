@@ -1,24 +1,21 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.MailConfirmationConstant;
-import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.ValidationPatternConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.UserDto;
 import by.library.itechlibrary.dto.UserProfileDto;
 import by.library.itechlibrary.entity.FileInfo;
-import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.UserMapper;
 import by.library.itechlibrary.pojo.SecurityUserDetails;
 import by.library.itechlibrary.repository.UserRepository;
-import by.library.itechlibrary.service.*;
+import by.library.itechlibrary.service.ConfirmationDataService;
+import by.library.itechlibrary.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -34,18 +31,11 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    private final MailNotificationService mailNotificationService;
-
     private final ConfirmationDataService confirmationDataService;
-
-    private final FileInfoService fileInfoService;
-
-    private final MailTemplateService mailTemplateService;
 
 
     @Override
-    @Transactional
-    public String checkEmails(EmailCheckerDto emailCheckerDto) {
+    public User checkEmails(EmailCheckerDto emailCheckerDto) {
 
         log.info("Try to check corp email.");
 
@@ -54,8 +44,9 @@ public class UserServiceImpl implements UserService {
 
         log.info("Try to check and set google email.");
 
-        return checkAndSetGoogleEmail(user, googleEmail);
+        checkAndSetGoogleEmail(user, googleEmail);
 
+        return user;
     }
 
     @Override
@@ -110,12 +101,11 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void attachPhoto(MultipartFile multipartFile) {
+    public void attachPhoto(FileInfo fileInfo) {
 
         log.info("Try to attach new photo to current user");
 
         User user = getCurrentUser();
-        FileInfo fileInfo = fileInfoService.getFileInfo(multipartFile);
         user.setFileInfo(fileInfo);
 
     }
@@ -131,7 +121,6 @@ public class UserServiceImpl implements UserService {
         currentUser.setFileInfo(null);
 
         userRepository.save(currentUser);
-        fileInfoService.removeById(fileId);
 
     }
 
@@ -171,24 +160,19 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private String checkAndSetGoogleEmail(User user, String googleEmail) {
+    private void checkAndSetGoogleEmail(User user, String googleEmail) {
 
         if (user.getGoogleEmail() == null || (user.getConfirmationData() != null && !user.getConfirmationData().isActivated())) {
 
             checkAndDeleteOldConfirmationData(user);
             user.setConfirmationData(confirmationDataService.create());
             user.setGoogleEmail(googleEmail);
-            Template template = mailTemplateService.getByName( MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
-            String filedTemplateText =  mailTemplateService.getAndFillConfirmationTemplateFromUser(user, template.getText());
-            mailNotificationService.sent(user, template, filedTemplateText);
-
-            return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_SENT;
 
         } else if (!user.getGoogleEmail().equals(googleEmail)) {
 
             throw new WrongGoogleEmailException("This User already has a different google address.");
 
-        } else return MailConfirmationConstant.CONFIRMATION_MAIL_WAS_NOT_SENT;
+        }
     }
 
     private void checkAndDeleteOldConfirmationData(User user) {

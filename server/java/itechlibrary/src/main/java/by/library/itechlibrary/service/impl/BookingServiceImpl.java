@@ -37,8 +37,6 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingMapper bookingMapper;
 
-    private final SecurityUserDetailsServiceImpl securityUserDetailsService;
-
     private final BookRepository bookRepository;
 
 
@@ -54,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto save(BookingDto bookingDto) {
+    public BookingResponseDto save(BookingDto bookingDto, long currentUserId) {
 
         if (bookingDto.getId() == 0) {
 
@@ -62,7 +60,7 @@ public class BookingServiceImpl implements BookingService {
 
             Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             checkAndSetDates(booking);
-            setCurrentUser(booking);
+            setCurrentUser(booking, currentUserId);
             checkLimitOfActiveBookings(booking.getReader().getId());
             setBookAndChangeStatus(booking, StatusConstant.IN_USE_BOOK_STATUS);
 
@@ -141,13 +139,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfo getBookingInfo(long bookId) {
+    public BookingInfo getBookingInfo(long bookId , long currentUserId) {
 
         log.info("Try to find active booking by book id = {}", bookId);
 
         Optional<Booking> bookingOptional = getActiveByBookId(bookId);
 
-        return checkAndBuildBookingInfo(bookId, bookingOptional);
+        return checkAndBuildBookingInfo(bookId, bookingOptional, currentUserId);
     }
 
     @Override
@@ -225,7 +223,7 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional) {
+    private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional, long currentUserId) {
 
         if (bookingOptional.isPresent()) {
 
@@ -233,7 +231,7 @@ public class BookingServiceImpl implements BookingService {
 
             Booking currentBooking = bookingOptional.get();
             setFullNameReaderToBookingInfo(bookingInfo, currentBooking);
-            checkAndSetCurrentUserIsReader(bookingInfo, currentBooking);
+            checkAndSetCurrentUserIsReader(bookingInfo, currentBooking.getReader().getId(), currentUserId);
             bookingInfo.setBookingEndDate(currentBooking.getFinishDate());
 
             return bookingInfo;
@@ -241,9 +239,9 @@ public class BookingServiceImpl implements BookingService {
         } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
     }
 
-    private void checkAndSetCurrentUserIsReader(BookingInfo bookingInfo, Booking booking) {
+    private void checkAndSetCurrentUserIsReader(BookingInfo bookingInfo, long bookingReaderId, long currentUserId) {
 
-        if (securityUserDetailsService.getCurrentUserId() == booking.getReader().getId()) {
+        if (currentUserId == bookingReaderId) {
 
             bookingInfo.setCurrentUserReader(true);
         }
@@ -322,11 +320,10 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private void setCurrentUser(Booking booking) {
+    private void setCurrentUser(Booking booking, long currentUserId) {
 
         log.info("Try to find current user and set to booking");
 
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
         User user = new User();
         user.setId(currentUserId);
         booking.setReader(user);

@@ -5,8 +5,8 @@ import by.library.itechlibrary.entity.vote.Vote;
 
 public interface VoteService {
 
-    Vote vote(VoteDto voteDto);
+    Vote vote(VoteDto voteDto, long currentUserId);
 
-    String getCurrentUserVoteTypeName(long objectId);
+    String getCurrentUserVoteTypeName(long objectId, long currentUserId);
 
 }
