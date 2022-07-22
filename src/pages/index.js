@@ -67,7 +67,7 @@ const Register = () => {
         })
             .then((res) => {
                 localStorage.setItem('googleEmail', googleEmail);
-                if (res.data === 'CONFIRMATION_MAIL_WAS_SENT') {
+                if (!res.data) {
                     setDisabledGoogle(true);
                     enqueueSnackbar(
                         'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
