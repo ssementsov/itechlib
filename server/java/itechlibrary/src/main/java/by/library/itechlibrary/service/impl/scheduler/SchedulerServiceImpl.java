@@ -91,7 +91,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         User user = booking.getReader();
         Template template = mailTemplateService.getByName(templateName);
-        String filedTemplateText = mailTemplateService.getAndFillConfirmationTemplateFromUser(user, template.getText());
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
 
         mailNotificationService.sent(mailNotificationInfo);

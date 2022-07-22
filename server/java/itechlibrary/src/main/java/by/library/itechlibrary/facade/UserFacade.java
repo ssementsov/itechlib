@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserFacade {
 
-    void checkEmails(EmailCheckerDto emailCheckerDto);
+    boolean isActiveUserAndCheckEmails(EmailCheckerDto emailCheckerDto);
 
     void attachPhoto(MultipartFile multipartFile);
 

@@ -29,9 +29,9 @@ public class UserController {
     @PostMapping("/check")
     @ApiOperation("check emails and connect two emails")
     @ResponseStatus(HttpStatus.OK)
-    public void checkCorporateAndGoogleEmails(@Valid @RequestBody EmailCheckerDto emailCheckerDto) {
+    public boolean checkCorporateAndGoogleEmails(@Valid @RequestBody EmailCheckerDto emailCheckerDto) {
 
-        userFacade.checkEmails(emailCheckerDto);
+       return userFacade.isActiveUserAndCheckEmails(emailCheckerDto);
 
     }
 
