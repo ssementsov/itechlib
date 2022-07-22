@@ -4,19 +4,19 @@ import { Card, Divider, Grid, MenuItem, Typography, TextField } from '@mui/mater
 import { SuggestedBookCard } from './suggested-book-card';
 import { types } from '../../types/index.js';
 import SuggestedBookModal from '../suggested-book/suggested-book-modal';
-import { useBoolean } from '../../utils/boolean-hook';
+import { useBoolean } from '../../utils/hooks/boolean-hook';
 import { SuggestionAPI } from '../../api/suggested-books-api';
-import { useCustomSnackbar } from '../../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 import EditSuggestedBookModal from './../suggested-book/add-edit-suggested-book/edit-suggested-book-modal';
 import { SuggestedBook } from '../../models/suggested-book-model';
 import { category } from '../../common/constants/category-constants';
 import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
-import { useVoting } from '../../utils/vote-hook';
+import { useVoting } from '../../utils/hooks/vote-hook';
 import { languageFilters } from '../book/add-edit-book/datas-for-form-options/languages';
 import { categoryFilters } from '../book/add-edit-book/datas-for-form-options/categories';
-import { SortButton } from '../../common/constants/UI/SortButton';
+import { SortButton } from '../../common/UI/SortButton';
 
 const createOptions = (option) => {
     return (

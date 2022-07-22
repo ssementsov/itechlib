@@ -10,7 +10,7 @@ import {
     LOGIN_PATH,
     MAIN_CATALOGUE_PATH,
 } from '../common/constants/route-constants';
-import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
 
 const Register = () => {
@@ -67,7 +67,7 @@ const Register = () => {
         })
             .then((res) => {
                 localStorage.setItem('googleEmail', googleEmail);
-                if (res.data === 'CONFIRMATION_MAIL_WAS_SENT') {
+                if (!res.data) {
                     setDisabledGoogle(true);
                     enqueueSnackbar(
                         'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',

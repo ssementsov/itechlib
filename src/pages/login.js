@@ -8,7 +8,7 @@ import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
 import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { api } from '../api/api';
-import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { useDispatch } from 'react-redux';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 

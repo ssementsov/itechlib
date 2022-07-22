@@ -7,18 +7,18 @@ import { DashboardLayout } from '../../../components/dashboard-layout';
 import BookDetails from '../../../components/book/book-details';
 import UploadImageCard from '../../../components/upload-image-card';
 import { BooksAPI } from '../../../api/books-api';
-import { useCustomSnackbar } from './../../../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../../../utils/hooks/custom-snackbar-hook';
 import { LOGIN_PATH } from '../../../common/constants/route-constants';
-import { YOU_CAN_UPLOAD_IMAGE } from './../../../common/constants/warning-messages';
+import { YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants/warning-messages';
 import { ProgressLinear } from '../../../common/UI/progressLinear';
-import { GoBackButton } from './../../../common/UI/buttons/go-back-button';
+import { GoBackButton } from '../../../common/UI/buttons/go-back-button';
 import { BookingsAPI } from '../../../api/bookings-api';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
     const id = router.query.id;
     const [book, setBook] = useState([]);
-    const [bookingInfo, setBookingInfo] = useState([]);
+    const [bookingInfo, setBookingInfo] = useState({});
     const [isLoadedBookInfo, setIsLoadedBookInfo] = useState(false);
     const [isLoadedBookingInfo, setIsLoadedBookingInfo] = useState(false);
     const [isOwner, setIsOwner] = useState(false);

@@ -18,7 +18,7 @@ import { titles } from '../../common/constants/book-page-titles-constants';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { LikeIcons } from '../suggested-books-list/like-icons';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
-import { useBoolean } from '../../utils/boolean-hook';
+import { useBoolean } from '../../utils/hooks/boolean-hook';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 
 const TblCell = styled(TableCell)(() => ({
@@ -119,7 +119,7 @@ export default function SuggestedBookInfo(props) {
                         </TableRow>
                     </TableBody>
                 </Table>
-                <LikeIcons isView={true} book={book} {...rest} />
+                <LikeIcons isView book={book} {...rest} />
             </CardContent>
         </>
     );

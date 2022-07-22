@@ -14,9 +14,17 @@ import { Search as SearchIcon } from '../../icons/search';
 import AddBookModal from './../book/add-edit-book/add-book-modal';
 import AddSuggestedBookModal from '../suggested-book/add-edit-suggested-book/add-suggested-book-modal';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
+import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
+import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 
 const BooksListToolbar = (props) => {
     const { onCreate, setSearch, search, open, onOpen, onClose, title } = props;
+    //overdue booking
+    const {
+        isBlockingModalOpen,
+        setBlockingModalClose,
+        handleBlockingOrAction,
+    } = useOverdueBookingBlocking();
 
     return (
         <Box>
@@ -30,6 +38,10 @@ const BooksListToolbar = (props) => {
                 open={open.suggest}
                 onClose={onClose.suggest}
             />
+            <BlockingModal
+                open={isBlockingModalOpen}
+                onClose={setBlockingModalClose}
+            />
 
             <Box
                 sx={{
@@ -40,18 +52,21 @@ const BooksListToolbar = (props) => {
                     m: -1,
                 }}
             >
-                <Typography sx={{ m: 1 }} variant="h4">
+                <Typography sx={{ m: 1 }} variant='h4'>
                     {title}
                 </Typography>
                 <Box sx={{ m: 1, display: 'flex' }}>
-                    <Button onClick={onOpen.suggest} sx={{ mr: 1 }}>
+                    <Button
+                        onClick={() => handleBlockingOrAction(onOpen.suggest)}
+                        sx={{ mr: 1 }}
+                    >
                         Suggest a book
                     </Button>
                     <PrimaryButton
                         title='Add a book'
                         size='medium'
                         fullWidth={false}
-                        onClick={onOpen.add}
+                        onClick={() => handleBlockingOrAction(onOpen.add)}
                     />
                 </Box>
             </Box>
@@ -60,25 +75,25 @@ const BooksListToolbar = (props) => {
                     <CardContent>
                         <Box>
                             <TextField
-                                name="search"
-                                type="text"
+                                name='search'
+                                type='text'
                                 onChange={(e) => setSearch(e.target.value)}
                                 value={search}
                                 fullWidth
                                 InputProps={{
                                     startAdornment: (
-                                        <InputAdornment position="start">
+                                        <InputAdornment position='start'>
                                             <SvgIcon
-                                                color="action"
-                                                fontSize="small"
+                                                color='action'
+                                                fontSize='small'
                                             >
                                                 <SearchIcon />
                                             </SvgIcon>
                                         </InputAdornment>
                                     ),
                                 }}
-                                placeholder="Search a book"
-                                variant="outlined"
+                                placeholder='Search a book'
+                                variant='outlined'
                             />
                         </Box>
                     </CardContent>
