@@ -33,9 +33,12 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     @Transactional
-    public void checkEmails(EmailCheckerDto emailCheckerDto) {
+    public boolean isActiveUserAndCheckEmails(EmailCheckerDto emailCheckerDto) {
 
         User user = userService.checkEmails(emailCheckerDto);
+
+        if(user.getConfirmationData().isActivated()) return true;
+
         Template template = mailTemplateService.getByName(MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
         String filedTemplateText = mailTemplateService.getAndFillConfirmationTemplateFromUser(user, template.getText());
 
@@ -43,6 +46,7 @@ public class UserFacadeImpl implements UserFacade {
 
         mailNotificationService.sent(mailNotificationInfo);
 
+        return false;
     }
 
     @Override

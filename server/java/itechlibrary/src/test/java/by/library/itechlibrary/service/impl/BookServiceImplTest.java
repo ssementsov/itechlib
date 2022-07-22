@@ -131,7 +131,7 @@ class BookServiceImplTest {
 
         Mockito.verify(bookMapper, Mockito.times(1)).toFullBookDto(book);
         Mockito.verify(securityUserDetailsService, Mockito.times(0)).getCurrentUserId();
-        Mockito.verify(bookingService, Mockito.times(0)).getBookingInfo(bookId);
+//        Mockito.verify(bookingService, Mockito.times(0)).getBookingInfo(bookId);
         Mockito.verify(bookRepository, Mockito.times(1)).findById(bookId);
 
     }
