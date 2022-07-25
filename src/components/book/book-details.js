@@ -185,7 +185,7 @@ const BookDetails = (props) => {
         .then(res => {
             onUpdateBookingInfo(res.data);
             setProlongateButtonClose();
-            enqueueSnackbar(`Reading period has been prolongate till ${format(finishDate, 'MM.dd.yyyy')}`, {
+            enqueueSnackbar(`Reading period has been prolongated till ${format(finishDate, 'MM.dd.yyyy')}`, {
                 variant: 'success',
             });
         })
