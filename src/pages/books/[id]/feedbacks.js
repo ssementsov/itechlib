@@ -6,7 +6,7 @@ import { DashboardLayout } from '../../../components/dashboard-layout';
 import Feedback from '../../../components/feedback';
 import { BookingsAPI } from './../../../api/bookings-api';
 import { theme } from './../../../theme/index';
-import { useInfiniteScroll } from './../../../utils/infinite-scroll-hook';
+import { useInfiniteScroll } from '../../../utils/hooks/infinite-scroll-hook';
 import { ProgressLinear } from '../../../common/UI/progressLinear';
 import { GoBackButton } from './../../../common/UI/buttons/go-back-button';
 

@@ -10,8 +10,9 @@ import {
     LOGIN_PATH,
     MAIN_CATALOGUE_PATH,
 } from '../common/constants/route-constants';
-import { useCustomSnackbar } from '../utils/custom-snackbar-hook';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
+import * as Yup from "yup";
 
 const Register = () => {
     const router = useRouter();
@@ -24,7 +25,7 @@ const Register = () => {
         let error = {};
         if (!value.email) {
             error.email = 'Email is required';
-        } else if (!/^[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
+        } else if (!/^[A-Z0-9._%+-]+\.+[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
             error.email = 'Please enter correct corporate email';
         }
         return error;
@@ -33,6 +34,12 @@ const Register = () => {
         initialValues: {
             email: '',
         },
+        validationSchema: Yup.object({
+            email: Yup.string()
+                .trim()
+                .min(24, 'Email must be 24 or more symbols')
+                .max(50, 'Email must be 50 or less symbols')
+        }),
         validate,
         onSubmit: (value) => {
             UserAPI.checkCorpEmail(value.email)
@@ -67,7 +74,7 @@ const Register = () => {
         })
             .then((res) => {
                 localStorage.setItem('googleEmail', googleEmail);
-                if (res.data === 'CONFIRMATION_MAIL_WAS_SENT') {
+                if (!res.data) {
                     setDisabledGoogle(true);
                     enqueueSnackbar(
                         'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',

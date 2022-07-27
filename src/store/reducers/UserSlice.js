@@ -1,14 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    isUser: {}
+    user: {
+        id: 0,
+        name: '',
+        surname: '',
+        corpEmail: '',
+        googleEmail: '',
+        roles: [],
+        fileInfo: null,
+    },
 };
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
         setUser(state, action) {
-            state.isUser = action.payload;
+            state.user = action.payload;
+        },
+        updateUserRoles(state, action) {
+            state.user.roles.push(action.payload);
         },
     },
 });

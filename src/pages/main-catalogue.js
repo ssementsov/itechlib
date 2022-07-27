@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { BooksAPI } from '../api/books-api';
 import BooksCatalogue from '../components/books-catalogue';
-import { useInfiniteScroll } from '../utils/infinite-scroll-hook';
+import { useInfiniteScroll } from '../utils/hooks/infinite-scroll-hook';
 import { ProgressLinear } from '../common/UI/progressLinear';
 
 const MainCatalogue = () => {
