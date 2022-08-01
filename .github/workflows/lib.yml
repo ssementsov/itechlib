@@ -45,4 +45,5 @@ jobs:
            docker-compose  --env-file .env.production -f "docker-compose.aws_run.yml" down
            if [[ $( docker images | grep itechlib/library_service | wc -l ) -gt 0 ]]; then docker rmi $(docker images -q itechlib/library_service); fi 
            docker-compose  --env-file .env.production -f "docker-compose.aws_run.yml" up -d
+           sleep 15
            docker exec postgres bash -c "psql -U itechlib -d itech_lib -c 'UPDATE DATABASECHANGELOGLOCK SET LOCKED=false, LOCKGRANTED=null, LOCKEDBY=null where ID=1;'"
