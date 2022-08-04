@@ -2,6 +2,7 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
+import by.library.itechlibrary.dto.UserProfileDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
@@ -9,9 +10,11 @@ import by.library.itechlibrary.repository.ConfirmationDataRepository;
 import by.library.itechlibrary.service.MailNotificationService;
 import by.library.itechlibrary.service.MailTemplateService;
 import by.library.itechlibrary.service.SchedulerService;
+import by.library.itechlibrary.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,10 @@ public class SchedulerServiceImpl implements SchedulerService {
     private final MailTemplateService mailTemplateService;
 
     private final MailNotificationService mailNotificationService;
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    private final UserService userService;
 
 
     @Override
@@ -84,6 +91,19 @@ public class SchedulerServiceImpl implements SchedulerService {
         LocalDate maxFinishDate = LocalDate.now().plusDays(3);
         List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(maxFinishDate);
         bookings.forEach(this::getTemplateAndSendNotification);
+
+    }
+
+    @Scheduled(fixedRate = 5000)
+    public void testWebSocket() {
+
+//        UserProfileDto userProfileDto = userService.getCurrentUserProfileDto();
+//        String corpEmail = userProfileDto.getCorpEmail();
+
+        log.info("Try to send message by webSocket");
+
+        simpMessagingTemplate.convertAndSendToUser("maksim.mayeuski@itechart-group.com", "/queue", "Hello Max");
+        simpMessagingTemplate.convertAndSendToUser("liubou.zhyhalka@itechart-group.com", "/queue", "Hello Liuba");
 
     }
 

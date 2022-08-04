@@ -1,7 +1,6 @@
 package by.library.itechlibrary.dto;
 
 import by.library.itechlibrary.constant.RegexConstant;
-import by.library.itechlibrary.entity.UserRole;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
