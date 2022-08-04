@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04082022-add-internal-notification
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: internal_notification
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: text
+                  type: VARCHAR(2000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: link
+                  type: VARCHAR(2048)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+
+
+  - changeSet:
+      id: 04082022-add-internal-notification-user
+      author: maksim_maevsky
+      changes:
+        - createTable:
+            tableName: users_internal_notifications
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: internal_notification_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id:  04082022-add-ForeignKeyConstraint-user-id-to-internal-notification-user
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: users_internal_notifications
+            constraintName: fk_internal-notification-user_user
+            referencedColumnNames: id
+            referencedTableName: user
+
+
+  - changeSet:
+      id:  15122021-add-ForeignKeyConstraint-internal-notification-to-nternal-notification-user
+      author:  maksim_maevsky
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: internal_notification_id
+            baseTableName: users_internal_notifications
+            constraintName: fk_internal-notification-user-internal-notification
+            referencedColumnNames: id
+            referencedTableName: internal_notification

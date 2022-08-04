@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-internal-notification.yaml
+      relativeToChangelogFile: true
