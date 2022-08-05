@@ -14,6 +14,8 @@ import Logout from '@mui/icons-material/Logout';
 import { GoogleLogout } from 'react-google-login';
 import { LOGIN_PATH, PROFILE_PATH } from '../common/constants/route-constants';
 import { useSelector } from 'react-redux';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -71,6 +73,18 @@ export const DashboardNavbar = (props) => {
             setAvatar(avatartUrl);
         }
     }, [avatarData, isLoadingAvatar]);
+
+    useEffect(() => {
+        const socket = new SockJS('http://localhost:8089/api/queue');
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
+        function onConnected() {
+            console.log("its working");
+        }
+        function onError() {
+            console.log("its not working");
+        }
+    }, [])
 
     return (
         <>
