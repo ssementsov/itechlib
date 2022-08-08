@@ -3,7 +3,7 @@ package by.library.itechlibrary.dto.suggested_book;
 import by.library.itechlibrary.constant.RegexConstant;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
-import by.library.itechlibrary.dto.UserDto;
+import by.library.itechlibrary.dto.user.UserDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;

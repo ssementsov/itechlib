@@ -1,8 +1,9 @@
 package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.EmailCheckerDto;
-import by.library.itechlibrary.dto.UserDto;
-import by.library.itechlibrary.dto.UserProfileDto;
+import by.library.itechlibrary.dto.user.UserDto;
+import by.library.itechlibrary.dto.user.UserPlainDto;
+import by.library.itechlibrary.dto.user.UserProfileDto;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.User;
 
@@ -26,5 +27,7 @@ public interface UserService {
     void removePhoto(long fileId);
 
     UserProfileDto getCurrentUserProfileDto();
+
+    List<UserPlainDto> getAllActiveUserPlainDto();
 
 }
