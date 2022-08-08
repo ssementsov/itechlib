@@ -79,10 +79,9 @@ const BookDetails = (props) => {
     const readerId = useSelector((state) => state.user.user.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
     const bookingStartDate = parseISO(bookingInfo.startDate);
-    const bookingEndDate = getFormatedDate(bookingInfo.finishDate);
+    const bookingEndDate = getFormatedDate(book.bookingInfoDto?.bookingEndDate);
     const lastDateToProlongate = add(bookingStartDate, { months: 1 });
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
-
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
         .then((res) => {
@@ -421,11 +420,7 @@ const BookDetails = (props) => {
                                     size='small'
                                     fullWidth={false}
                                     onClick={() => handleBlockingOrAction(assignBookHandler)}
-                                    disabled={
-                                        book.status.name !== bookStatus.available.name
-                                            ? true
-                                            : false
-                                    }
+                                    disabled={book.status.name !== bookStatus.available.name}
                                 />
                             )}
                         </>

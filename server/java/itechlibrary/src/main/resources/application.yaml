@@ -116,7 +116,7 @@ application-data:
     -
       name: TestName
       surname: TestSurname
-      corpEmail: testitechlib@itechart-group.com
+      corpEmail: test.itechlib@itechart-group.com
       isActive: true
     -
       name: Sergey
