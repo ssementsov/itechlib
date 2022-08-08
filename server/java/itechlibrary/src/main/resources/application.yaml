@@ -128,3 +128,8 @@ application-data:
       surname: Yashchanka
       corpEmail: k.yashchanka@itechart-group.com
       isActive: true
+    -
+      name: Vladimir
+      surname: Egorov
+      corpEmail: Vladzimir.Egorov@itechart-group.com
+      isActive: true
