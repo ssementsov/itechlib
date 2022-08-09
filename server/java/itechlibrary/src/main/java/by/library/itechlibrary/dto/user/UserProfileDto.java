@@ -1,5 +1,6 @@
-package by.library.itechlibrary.dto;
+package by.library.itechlibrary.dto.user;
 
+import by.library.itechlibrary.dto.FileInfoDto;
 import lombok.Data;
 
 @Data

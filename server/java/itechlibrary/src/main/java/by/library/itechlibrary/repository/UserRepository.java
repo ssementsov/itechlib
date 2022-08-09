@@ -22,4 +22,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = {"confirmationData", "roles"})
     List<User> findAllByGoogleEmailNotNull();
 
+    List<User> findByIsActiveTrue();
+
 }
