@@ -133,3 +133,8 @@ application-data:
       surname: Egorov
       corpEmail: Vladzimir.Egorov@itechart-group.com
       isActive: true
+    -
+      name: Tester
+      surname: Testovich
+      corpEmail: Vladzimir.Egorov@itechart-group.com
+      isActive: true

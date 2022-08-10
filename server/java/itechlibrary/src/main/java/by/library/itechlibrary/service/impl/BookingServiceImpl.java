@@ -52,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto save(BookingDto bookingDto, long currentUserId) {
+    public BookingResponseDto save(BookingDto bookingDto, long readerId) {
 
         if (bookingDto.getId() == 0) {
 
@@ -60,9 +60,9 @@ public class BookingServiceImpl implements BookingService {
 
             Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             checkAndSetDates(booking);
-            setCurrentUser(booking, currentUserId);
+            setReader(booking, readerId);
             checkLimitOfActiveBookings(booking.getReader().getId());
-            setBookAndChangeStatus(booking, StatusConstant.IN_USE_BOOK_STATUS);
+            setBookAndChangeItsStatus(booking);
 
             booking = bookingRepository.save(booking);
 
@@ -115,6 +115,14 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toNewBookingResponseDto(booking);
     }
 
+    @Override
+    public Booking findByIdWithoutMapping(long id) {
+
+        log.info("Try to find booking by id = {}.", id);
+
+        return findBookingById(id);
+    }
+
     @Transactional
     @Override
     public BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
@@ -139,7 +147,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfo getBookingInfo(long bookId , long currentUserId) {
+    public BookingInfo getBookingInfo(long bookId, long currentUserId) {
 
         log.info("Try to find active booking by book id = {}", bookId);
 
@@ -320,12 +328,12 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private void setCurrentUser(Booking booking, long currentUserId) {
+    private void setReader(Booking booking, long readerId) {
 
         log.info("Try to find current user and set to booking");
 
         User user = new User();
-        user.setId(currentUserId);
+        user.setId(readerId);
         booking.setReader(user);
 
     }
@@ -357,7 +365,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void setBookAndChangeStatus(Booking booking, BookStatus bookStatus) {
+    private void setBookAndChangeItsStatus(Booking booking) {
 
         long bookId = booking.getBook().getId();
         Book book = bookRepository
@@ -365,7 +373,11 @@ public class BookingServiceImpl implements BookingService {
 
         if (book.getStatus().getName().equals(StatusConstant.AVAILABLE)) {
 
-            book.setStatus(bookStatus);
+            book.setStatus(StatusConstant.IN_USE_BOOK_STATUS);
+            booking.setBook(book);
+
+        } else if (book.getStatus().getName().equals(StatusConstant.AWAITING)) {
+
             booking.setBook(book);
 
         } else {
@@ -375,4 +387,3 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 }
-

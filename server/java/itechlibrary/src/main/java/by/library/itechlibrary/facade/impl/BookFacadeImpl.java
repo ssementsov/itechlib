@@ -1,20 +1,29 @@
 package by.library.itechlibrary.facade.impl;
 
+import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForReaderDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
+import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
+import by.library.itechlibrary.exeption_handler.exception.WrongDtoDataException;
 import by.library.itechlibrary.facade.BookFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
+import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FileInfoService;
+import by.library.itechlibrary.service.MailNotificationService;
+import by.library.itechlibrary.service.MailTemplateService;
 import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -40,20 +50,40 @@ public class BookFacadeImpl implements BookFacade {
 
     private final BookingService bookingService;
 
+    private final MailTemplateService mailTemplateService;
+
     private final FileInfoService fileInfoService;
 
     private final BookingInfoMapper bookingInfoMapper;
 
+    private final MailNotificationService mailNotificationService;
+
 
     @Override
     @Transactional
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile) {
+    public WithOwnerBookDto save(WithOwnerBookDto bookDto,
+                                 BookingForReaderDto bookingForReaderDto,
+                                 MultipartFile multipartFile) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         User currentUser = userService.getUserById(currentUserId);
+        WithOwnerBookDto withOwnerBookDto = bookService.save(bookDto, fileInfo, currentUser);
 
-        return bookService.save(withOwnerBookDto, fileInfo, currentUser);
+        if (withOwnerBookDto.getStatus().getName().equals(StatusConstant.AWAITING)) {
+
+            if (Objects.isNull(bookingForReaderDto)) {
+                throw new WrongDtoDataException("BookingForReaderDto cannot be null for booking during book creation");
+            }
+
+            BookingDto bookingDto = buildBookingDtoForAwaitingBook(withOwnerBookDto.getId(), bookingForReaderDto);
+            long savedBookingId = bookingService.save(bookingDto, bookingForReaderDto.getReaderId()).getId();
+            Booking booking = bookingService.findByIdWithoutMapping(savedBookingId);
+
+            fillTemplateAndSentEmailNotification(booking, MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
+        }
+
+        return withOwnerBookDto;
     }
 
     @Override
@@ -152,5 +182,24 @@ public class BookFacadeImpl implements BookFacade {
         }
 
         return Optional.empty();
+    }
+
+    private BookingDto buildBookingDtoForAwaitingBook(Long bookId, BookingForReaderDto bookingForReaderDto) {
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setBookId(bookId);
+        bookingDto.setStartDate(bookingForReaderDto.getStartDate());
+        bookingDto.setFinishDate(bookingForReaderDto.getFinishDate());
+        bookingDto.setActive(false);
+        return bookingDto;
+    }
+
+    private void fillTemplateAndSentEmailNotification(Booking booking, String templateName) {
+
+        User user = booking.getReader();
+        Template template = mailTemplateService.getByName(templateName);
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
+
+        mailNotificationService.sent(mailNotificationInfo);
     }
 }

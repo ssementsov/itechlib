@@ -3,6 +3,7 @@ package by.library.itechlibrary.service;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
@@ -19,11 +20,12 @@ public interface BookingService {
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
-    BookingResponseDto save(BookingDto bookingDto, long currentUserId);
+    BookingResponseDto save(BookingDto bookingDto, long readerId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
     BookingResponseDto findById(long id);
+    Booking findByIdWithoutMapping(long id);
 
     void returnBooking(ReviewDto reviewDto, long id);
 
