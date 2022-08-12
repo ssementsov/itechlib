@@ -77,7 +77,7 @@ public class BookFacadeImpl implements BookFacade {
 
             MailNotificationInfo mailNotificationInfo =
                     new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
-            mailNotificationService.sent(mailNotificationInfo);
+            mailNotificationService.sent(mailNotificationInfo,false);
         }
 
         return withOwnerBookDto;
