@@ -1,6 +1,8 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.Booking;
@@ -9,6 +11,7 @@ import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingService {
 
@@ -21,6 +24,8 @@ public interface BookingService {
     BookingResponseDto findCurrentByBookId(long bookId);
 
     BookingResponseDto save(BookingDto bookingDto, long readerId);
+
+    Optional<Booking> save(WithOwnerBookDto bookDto, BookingForTargetReaderDto bookingForTargetReaderDto);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 

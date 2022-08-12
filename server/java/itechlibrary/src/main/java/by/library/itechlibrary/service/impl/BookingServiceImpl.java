@@ -3,13 +3,24 @@ package by.library.itechlibrary.service.impl;
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
+import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
-import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.Booking;
+import by.library.itechlibrary.entity.Feedback;
+import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.UserRole;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
-import by.library.itechlibrary.exeption_handler.exception.*;
+import by.library.itechlibrary.exeption_handler.exception.BookingBookException;
+import by.library.itechlibrary.exeption_handler.exception.BookingBookLimitException;
+import by.library.itechlibrary.exeption_handler.exception.NotActiveBookingException;
+import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
+import by.library.itechlibrary.exeption_handler.exception.WrongDateException;
+import by.library.itechlibrary.exeption_handler.exception.WrongDtoDataException;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.repository.BookingRepository;
@@ -20,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,6 +50,8 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
 
     private final BookRepository bookRepository;
+
+    private final EntityManager entityManager;
 
 
     @Override
@@ -73,6 +87,31 @@ public class BookingServiceImpl implements BookingService {
             throw new WrongDtoDataException("Wrong BookingDto id," +
                     " when saving new booking, id should be equals 0.");
 
+        }
+    }
+
+    @Transactional
+    @Override
+    public Optional<Booking> save(WithOwnerBookDto bookDto, BookingForTargetReaderDto bookingForTargetReaderDto) {
+
+        if (bookDto.getStatus().getName().equals(StatusConstant.ACCEPTANCE_AWAITING)) {
+
+            log.info("Try to map bookingForTargetReaderDto and save booking.");
+
+            Booking booking = bookingMapper
+                    .toBookingFromBookingForTargetReaderDto(bookingForTargetReaderDto, bookDto.getId());
+
+            checkAndSetDates(booking);
+            checkLimitOfActiveBookings(booking.getReader().getId());
+            setBookAndChangeItsStatus(booking);
+
+            booking = bookingRepository.saveAndFlush(booking);
+            entityManager.refresh(booking);
+            return Optional.of(booking);
+
+        } else {
+
+            return Optional.empty();
         }
     }
 
@@ -371,12 +410,14 @@ public class BookingServiceImpl implements BookingService {
         Book book = bookRepository
                 .findById(bookId).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
 
+        String bookStatusName = book.getStatus().getName();
+
         if (book.getStatus().getName().equals(StatusConstant.AVAILABLE)) {
 
             book.setStatus(StatusConstant.IN_USE_BOOK_STATUS);
             booking.setBook(book);
 
-        } else if (book.getStatus().getName().equals(StatusConstant.AWAITING)) {
+        } else if (bookStatusName.equals(StatusConstant.ACCEPTANCE_AWAITING)) {
 
             booking.setBook(book);
 

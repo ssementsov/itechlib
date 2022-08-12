@@ -1,6 +1,7 @@
 package by.library.itechlibrary.mapper;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Booking;
 import org.mapstruct.IterableMapping;
@@ -20,6 +21,11 @@ public interface BookingMapper {
     @Mapping(source = "bookId", target = "book.id")
     @Named(value = "BookingDto")
     Booking toBookingFromBookingDto(BookingDto bookingDto);
+
+    @Mapping(source = "bookId", target = "book.id")
+    @Mapping(source = "bookingForTargetReaderDto.readerId", target = "reader.id")
+    @Named(value = "toBookingFromBookingForTargetReaderDto")
+    Booking toBookingFromBookingForTargetReaderDto(BookingForTargetReaderDto bookingForTargetReaderDto, Long bookId);
 
     @IterableMapping(qualifiedByName = "booking")
     List<BookingDto> mapBookingDtoListBookings(List<Booking> bookings);
