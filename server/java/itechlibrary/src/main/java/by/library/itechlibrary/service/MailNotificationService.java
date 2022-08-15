@@ -4,6 +4,6 @@ import by.library.itechlibrary.pojo.MailNotificationInfo;
 
 public interface MailNotificationService {
 
-    void sent(MailNotificationInfo mailNotificationInfo, boolean personalEmail);
+    void sent(MailNotificationInfo mailNotificationInfo, boolean isCorporateEmail);
 
 }

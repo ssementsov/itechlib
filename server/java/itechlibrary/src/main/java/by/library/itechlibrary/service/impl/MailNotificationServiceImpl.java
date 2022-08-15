@@ -36,14 +36,14 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Async("threadPoolTaskExecutor")
     @Transactional
     @Override
-    public void sent(MailNotificationInfo mailNotificationInfo, boolean personalEmail) {
+    public void sent(MailNotificationInfo mailNotificationInfo, boolean isCorporateEmail) {
 
         MailNotification notification = getMailNotification(mailNotificationInfo);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        String email = personalEmail
-                ? mailNotificationInfo.getUser().getGoogleEmail()
-                : mailNotificationInfo.getUser().getCorpEmail();
+        String email = isCorporateEmail
+                ? mailNotificationInfo.getUser().getCorpEmail()
+                : mailNotificationInfo.getUser().getGoogleEmail();
 
         trySetDataMimeMessage(email, notification, mimeMessage);
         emailSender.send(mimeMessage);

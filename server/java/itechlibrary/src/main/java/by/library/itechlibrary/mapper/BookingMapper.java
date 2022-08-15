@@ -22,10 +22,10 @@ public interface BookingMapper {
     @Named(value = "BookingDto")
     Booking toBookingFromBookingDto(BookingDto bookingDto);
 
-    @Mapping(source = "bookId", target = "book.id")
-    @Mapping(source = "bookingForTargetReaderDto.readerId", target = "reader.id")
-    @Named(value = "toBookingFromBookingForTargetReaderDto")
-    Booking toBookingFromBookingForTargetReaderDto(BookingForTargetReaderDto bookingForTargetReaderDto, Long bookId);
+    @Named(value = "bookingForTargetReaderDtoToBookingDto")
+    BookingDto bookingForTargetReaderDtoToBookingDto(BookingForTargetReaderDto bookingForTargetReaderDto,
+                                                     boolean isActive,
+                                                     Long bookId);
 
     @IterableMapping(qualifiedByName = "booking")
     List<BookingDto> mapBookingDtoListBookings(List<Booking> bookings);

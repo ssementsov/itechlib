@@ -86,9 +86,14 @@ public class BookServiceImpl implements BookService {
         setDate(book);
         setCurrentUserToOwner(book, currentUser);
         fileInfo.ifPresent(book::setFileInfo);
-        book = bookRepository.saveAndFlush(book);
+        book = bookRepository.save(book);
 
         return bookMapper.toWithOwnerBookDto(book);
+    }
+
+    @Override
+    public Book getById(long id) {
+        return findById(id);
     }
 
     @Override

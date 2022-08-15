@@ -2,8 +2,10 @@ package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookingFacade;
+import by.library.itechlibrary.service.BookService;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,13 @@ public class BookingFacadeImpl implements BookingFacade {
 
     private final BookingService bookingService;
 
+    private final BookService bookService;
+
     @Override
     @Transactional
     public BookingInfo getBookingInfo(long bookId) {
 
-        Long currentUserId = securityUserDetailsService.getCurrentUserId();
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         return bookingService.getBookingInfo(bookId, currentUserId);
     }
@@ -34,8 +38,9 @@ public class BookingFacadeImpl implements BookingFacade {
     @Transactional
     public BookingResponseDto save(BookingDto bookingDto) {
 
-        Long currentUserId = securityUserDetailsService.getCurrentUserId();
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+        Book book = bookService.getById(bookingDto.getBookId());
 
-        return bookingService.save(bookingDto, currentUserId);
+        return bookingService.save(bookingDto, book, currentUserId);
     }
 }

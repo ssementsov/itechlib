@@ -44,7 +44,7 @@ public class UserFacadeImpl implements UserFacade {
 
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo,true);
+        mailNotificationService.sent(mailNotificationInfo,false);
 
         return false;
     }
