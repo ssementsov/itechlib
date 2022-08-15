@@ -1,23 +1,22 @@
-import React from 'react';
-import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
+import {useRouter} from 'next/router';
 import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
+import {styled} from '@mui/material/styles';
+import {AppBar, Avatar, Box, IconButton, Toolbar} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HoverMenu from 'material-ui-popup-state/HoverMenu';
-import { usePopupState, bindHover, bindMenu } from 'material-ui-popup-state/hooks';
+import {bindHover, bindMenu, usePopupState} from 'material-ui-popup-state/hooks';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Logout from '@mui/icons-material/Logout';
-import { GoogleLogout } from 'react-google-login';
-import { LOGIN_PATH, PROFILE_PATH } from '../common/constants/route-constants';
-import { useSelector } from 'react-redux';
+import {GoogleLogout} from 'react-google-login';
+import {LOGIN_PATH, PROFILE_PATH} from '../common/constants/route-constants';
+import {useSelector} from 'react-redux';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
-const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
+const DashboardNavbarRoot = styled(AppBar)(({theme}) => ({
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[3],
 }));
@@ -54,7 +53,7 @@ export const DashboardNavbar = (props) => {
     const router = useRouter();
     const avatarData = useSelector((state) => state.avatar.avatarData);
     const isLoadingAvatar = useSelector((state) => state.avatar.isLoadingAvatar);
-    const { onSidebarOpen, ...other } = props;
+    const {onSidebarOpen, ...other} = props;
     const [avatar, setAvatar] = useState('');
 
     const popupState = usePopupState({
@@ -75,12 +74,14 @@ export const DashboardNavbar = (props) => {
     }, [avatarData, isLoadingAvatar]);
 
     useEffect(() => {
-        const socket = new SockJS('http://localhost:8089/api/queue');
+        const socket = new SockJS('http://localhost:8089/api/mywebsockets');
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, onConnected, onError);
+
         function onConnected() {
             console.log("its working");
         }
+
         function onError() {
             console.log("its not working");
         }
@@ -116,11 +117,11 @@ export const DashboardNavbar = (props) => {
                             },
                         }}
                     >
-                        <MenuIcon fontSize="small" />
+                        <MenuIcon fontSize="small"/>
                     </IconButton>
-                    <Box sx={{ flexGrow: 1 }} />
+                    <Box sx={{flexGrow: 1}}/>
                     {!isLoadingAvatar && (
-                        <IconButton {...bindHover(popupState)} size="small" sx={{ ml: 2 }}>
+                        <IconButton {...bindHover(popupState)} size="small" sx={{ml: 2}}>
                             <Avatar
                                 src={avatar}
                                 sx={{
@@ -133,9 +134,9 @@ export const DashboardNavbar = (props) => {
                     )}
                     <HoverMenu
                         {...bindMenu(popupState)}
-                        PaperProps={{ ...styleForMenu }}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                        PaperProps={{...styleForMenu}}
+                        anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                        transformOrigin={{vertical: 'top', horizontal: 'right'}}
                     >
                         <MenuItem
                             onClick={() => {
@@ -143,9 +144,9 @@ export const DashboardNavbar = (props) => {
                                 router.push(PROFILE_PATH);
                             }}
                         >
-                            <Avatar src={avatar} /> Profile
+                            <Avatar src={avatar}/> Profile
                         </MenuItem>
-                        <Divider />
+                        <Divider/>
                         <GoogleLogout
                             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                             buttonText="Logout"
@@ -155,7 +156,7 @@ export const DashboardNavbar = (props) => {
                             render={(renderProps) => (
                                 <MenuItem onClick={renderProps.onClick}>
                                     <ListItemIcon>
-                                        <Logout fontSize="small" />
+                                        <Logout fontSize="small"/>
                                     </ListItemIcon>
                                     Logout
                                 </MenuItem>

@@ -14,6 +14,7 @@ import by.library.itechlibrary.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -94,6 +95,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
+    @MessageMapping("/room")
     @Scheduled(fixedRate = 5000)
     public void testWebSocket() {
 
@@ -102,8 +104,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         log.info("Try to send message by webSocket");
 
-        simpMessagingTemplate.convertAndSendToUser("maksim.mayeuski@itechart-group.com", "/queue", "Hello Max");
-        simpMessagingTemplate.convertAndSendToUser("liubou.zhyhalka@itechart-group.com", "/queue", "Hello Liuba");
+        simpMessagingTemplate.convertAndSend("/topic/hi", "Hello Max");
 
     }
 

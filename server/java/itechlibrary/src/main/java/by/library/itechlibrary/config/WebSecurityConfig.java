@@ -30,7 +30,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs"
-
     };
 
     public WebSecurityConfig(JwtFilter jwtFilter) {
@@ -48,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/login/**", "/js/**", "/error**", "/users/check/**",
-                        "/users/confirm/**", "/suggested-books/**", "/auth/**").permitAll()
+                        "/users/confirm/**", "/suggested-books/**", "/auth/**", "/user/queue/**", "/mywebsockets/**", "/topic/**").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
