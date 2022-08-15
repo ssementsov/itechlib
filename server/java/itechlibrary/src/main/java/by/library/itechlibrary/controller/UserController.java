@@ -2,8 +2,9 @@ package by.library.itechlibrary.controller;
 
 
 import by.library.itechlibrary.dto.EmailCheckerDto;
-import by.library.itechlibrary.dto.UserDto;
-import by.library.itechlibrary.dto.UserProfileDto;
+import by.library.itechlibrary.dto.user.UserDto;
+import by.library.itechlibrary.dto.user.UserPlainDto;
+import by.library.itechlibrary.dto.user.UserProfileDto;
 import by.library.itechlibrary.facade.UserFacade;
 import by.library.itechlibrary.service.UserService;
 import io.swagger.annotations.Api;
@@ -58,6 +59,14 @@ public class UserController {
     public List<UserDto> getConfirmedUsers() {
 
         return userService.getConfirmedUsers();
+    }
+
+    @GetMapping("/all-active")
+    @ApiOperation("get all active users")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserPlainDto> getActiveUsers() {
+
+        return userService.getAllActiveUserPlainDto();
     }
 
     @GetMapping("/confirm/google")

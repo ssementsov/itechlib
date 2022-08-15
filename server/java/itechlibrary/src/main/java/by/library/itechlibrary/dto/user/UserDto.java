@@ -1,4 +1,4 @@
-package by.library.itechlibrary.dto;
+package by.library.itechlibrary.dto.user;
 
 import by.library.itechlibrary.constant.RegexConstant;
 import lombok.Data;
