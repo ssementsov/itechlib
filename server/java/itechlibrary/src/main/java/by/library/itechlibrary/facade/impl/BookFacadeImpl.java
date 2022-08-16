@@ -64,9 +64,7 @@ public class BookFacadeImpl implements BookFacade {
 
     @Override
     @Transactional
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto,
-                                 BookingForTargetReaderDto bookingForTargetReaderDto,
-                                 MultipartFile multipartFile) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
@@ -178,19 +176,13 @@ public class BookFacadeImpl implements BookFacade {
         return Optional.empty();
     }
 
-    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto,
-                                                       String bookStatusName,
-                                                       long bookId) {
+    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
 
         if (bookStatusName.equals(StatusConstant.ACCEPTANCE_AWAITING)) {
 
-            BookingDto bookingDto = bookingMapper
-                    .bookingForTargetReaderDtoToBookingDto(bookingForUserDto, false, bookId);
-
+            BookingDto bookingDto = bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, false, bookId);
             Book book = bookService.getById(bookId);
-            BookingResponseDto bookingResponseDto = bookingService
-                    .save(bookingDto, book, bookingForUserDto.getReaderId());
-
+            BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
 
             sendEmailForAcceptanceByReader(booking);
@@ -200,12 +192,8 @@ public class BookFacadeImpl implements BookFacade {
     private void sendEmailForAcceptanceByReader(Booking booking) {
 
         Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
-
-        String filedTemplateText = mailTemplateService
-                .getAndFillTemplateFromBookingInfo(booking, template.getText());
-
-        MailNotificationInfo mailNotificationInfo =
-                new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
 
         mailNotificationService.sent(mailNotificationInfo, true);
     }

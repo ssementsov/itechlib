@@ -76,8 +76,7 @@ public class BookingServiceImpl implements BookingService {
             checkLimitOfActiveBookings(booking.getReader().getId());
             setBookAndChangeItsStatus(booking, book);
 
-            booking = bookingRepository.save(booking);
-            entityManager.refresh(booking);
+            booking = getSavedAndRefreshed(booking);
 
             return bookingMapper.toNewBookingResponseDto(booking);
 
@@ -396,5 +395,11 @@ public class BookingServiceImpl implements BookingService {
             throw new BookingBookException("Book is not available or in use now");
 
         }
+    }
+
+    private Booking getSavedAndRefreshed(Booking booking) {
+        booking = bookingRepository.save(booking);
+        entityManager.refresh(booking);
+        return booking;
     }
 }
