@@ -49,12 +49,14 @@ const styleForMenu = {
     },
 };
 
+
 export const DashboardNavbar = (props) => {
     const router = useRouter();
     const avatarData = useSelector((state) => state.avatar.avatarData);
     const isLoadingAvatar = useSelector((state) => state.avatar.isLoadingAvatar);
     const {onSidebarOpen, ...other} = props;
     const [avatar, setAvatar] = useState('');
+    const [socket, setSocket] = useState();
 
     const popupState = usePopupState({
         variant: 'popover',
@@ -74,17 +76,32 @@ export const DashboardNavbar = (props) => {
     }, [avatarData, isLoadingAvatar]);
 
     useEffect(() => {
-        const socket = new SockJS('http://localhost:8089/api/mywebsockets');
-        const stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
+        const sock = new SockJS('http://localhost:8089/api/mywebsockets');
+        sock.onopen = function() {
+            console.log('open');
+            sock.send('test');
+        };
 
-        function onConnected() {
-            console.log("its working");
-        }
+        sock.onmessage = function(e) {
+            console.log('message', e.data);
+            sock.close();
+        };
 
-        function onError() {
-            console.log("its not working");
-        }
+        sock.onclose = function() {
+            console.log('close');
+        };
+
+        setSocket(sock)
+        // const stompClient = Stomp.over(sock);
+        // stompClient.connect({}, onConnected, onError);
+        //
+        // function onConnected() {
+        //     console.log("its working");
+        // }
+        //
+        // function onError() {
+        //     console.log("its not working");
+        // }
     }, [])
 
     return (
@@ -120,6 +137,13 @@ export const DashboardNavbar = (props) => {
                         <MenuIcon fontSize="small"/>
                     </IconButton>
                     <Box sx={{flexGrow: 1}}/>
+                    <button onClick={() => {
+                        const message = 'Some message';
+                        socket.send(message)
+                    }}
+                    >
+                        Socket
+                    </button>
                     {!isLoadingAvatar && (
                         <IconButton {...bindHover(popupState)} size="small" sx={{ml: 2}}>
                             <Avatar
