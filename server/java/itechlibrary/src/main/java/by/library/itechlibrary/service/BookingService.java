@@ -1,6 +1,7 @@
 package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.Book;
@@ -39,4 +40,5 @@ public interface BookingService {
 
     int getCountActiveBookings(long readerId);
 
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
 }

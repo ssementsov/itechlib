@@ -4,21 +4,13 @@ import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
-import by.library.itechlibrary.entity.Book;
-import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.Feedback;
-import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.entity.UserRole;
+import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
-import by.library.itechlibrary.exeption_handler.exception.BookingBookException;
-import by.library.itechlibrary.exeption_handler.exception.BookingBookLimitException;
-import by.library.itechlibrary.exeption_handler.exception.NotActiveBookingException;
-import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
-import by.library.itechlibrary.exeption_handler.exception.WrongDateException;
-import by.library.itechlibrary.exeption_handler.exception.WrongDtoDataException;
+import by.library.itechlibrary.exeption_handler.exception.*;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.repository.BookingRepository;
@@ -33,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -203,6 +196,18 @@ public class BookingServiceImpl implements BookingService {
             booking.setActive(false);
 
         }
+    }
+
+    @Override
+    public BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId) {
+
+        if (Objects.isNull(bookingForUserDto)) {
+
+            throw new WrongDtoDataException("BookingForTargetReaderDto cannot be null when trying to get BookingDto from it.");
+
+        }
+
+        return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, false, bookId);
     }
 
     private void tryToReturnBooking(ReviewDto reviewDto, long id, Booking booking) {

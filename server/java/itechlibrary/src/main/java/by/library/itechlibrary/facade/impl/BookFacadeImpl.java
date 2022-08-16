@@ -10,23 +10,14 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
-import by.library.itechlibrary.entity.Book;
-import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.FileInfo;
-import by.library.itechlibrary.entity.Template;
-import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
-import by.library.itechlibrary.service.BookService;
-import by.library.itechlibrary.service.BookingService;
-import by.library.itechlibrary.service.FileInfoService;
-import by.library.itechlibrary.service.MailNotificationService;
-import by.library.itechlibrary.service.MailTemplateService;
-import by.library.itechlibrary.service.UserService;
+import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -180,7 +171,7 @@ public class BookFacadeImpl implements BookFacade {
 
         if (bookStatusName.equals(StatusConstant.ACCEPTANCE_AWAITING)) {
 
-            BookingDto bookingDto = bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, false, bookId);
+            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
             Book book = bookService.getById(bookId);
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
