@@ -2,7 +2,6 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
-import by.library.itechlibrary.dto.UserProfileDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
