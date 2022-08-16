@@ -1,8 +1,11 @@
 package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
@@ -19,11 +22,13 @@ public interface BookingService {
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
-    BookingResponseDto save(BookingDto bookingDto, long currentUserId);
+    BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
     BookingResponseDto findById(long id);
+
+    Booking findByIdWithoutMapping(long id);
 
     void returnBooking(ReviewDto reviewDto, long id);
 
@@ -35,4 +40,5 @@ public interface BookingService {
 
     int getCountActiveBookings(long readerId);
 
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
 }

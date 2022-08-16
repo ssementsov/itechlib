@@ -10,18 +10,13 @@ import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
 import by.library.itechlibrary.mapper.BookMapper;
-import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
-import by.library.itechlibrary.service.BookingService;
-import by.library.itechlibrary.service.FileInfoService;
-import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.util.PaginationUtil;
 import by.library.itechlibrary.util.ResponseOwnBookDtoComparator;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +89,11 @@ public class BookServiceImpl implements BookService {
         book = bookRepository.save(book);
 
         return bookMapper.toWithOwnerBookDto(book);
+    }
+
+    @Override
+    public Book getById(long id) {
+        return findById(id);
     }
 
     @Override

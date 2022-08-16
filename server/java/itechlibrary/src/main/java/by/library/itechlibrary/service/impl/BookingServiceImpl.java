@@ -4,6 +4,7 @@ import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.*;
@@ -20,9 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.util.Precision;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -39,6 +42,8 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookRepository bookRepository;
 
+    private final EntityManager entityManager;
+
 
     @Override
     public List<BookingResponseDto> findAllByReaderId(long id) {
@@ -52,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto save(BookingDto bookingDto, long currentUserId) {
+    public BookingResponseDto save(BookingDto bookingDto, Book book, long readerId) {
 
         if (bookingDto.getId() == 0) {
 
@@ -60,11 +65,11 @@ public class BookingServiceImpl implements BookingService {
 
             Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             checkAndSetDates(booking);
-            setCurrentUser(booking, currentUserId);
+            setReader(booking, readerId);
             checkLimitOfActiveBookings(booking.getReader().getId());
-            setBookAndChangeStatus(booking, StatusConstant.IN_USE_BOOK_STATUS);
+            setBookAndChangeItsStatus(booking, book);
 
-            booking = bookingRepository.save(booking);
+            booking = getSavedAndRefreshed(booking);
 
             return bookingMapper.toNewBookingResponseDto(booking);
 
@@ -115,6 +120,14 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toNewBookingResponseDto(booking);
     }
 
+    @Override
+    public Booking findByIdWithoutMapping(long id) {
+
+        log.info("Try to find booking by id = {}.", id);
+
+        return findBookingById(id);
+    }
+
     @Transactional
     @Override
     public BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
@@ -139,7 +152,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfo getBookingInfo(long bookId , long currentUserId) {
+    public BookingInfo getBookingInfo(long bookId, long currentUserId) {
 
         log.info("Try to find active booking by book id = {}", bookId);
 
@@ -183,6 +196,18 @@ public class BookingServiceImpl implements BookingService {
             booking.setActive(false);
 
         }
+    }
+
+    @Override
+    public BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId) {
+
+        if (Objects.isNull(bookingForUserDto)) {
+
+            throw new WrongDtoDataException("BookingForTargetReaderDto cannot be null when trying to get BookingDto from it.");
+
+        }
+
+        return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, false, bookId);
     }
 
     private void tryToReturnBooking(ReviewDto reviewDto, long id, Booking booking) {
@@ -320,12 +345,12 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private void setCurrentUser(Booking booking, long currentUserId) {
+    private void setReader(Booking booking, long readerId) {
 
         log.info("Try to find current user and set to booking");
 
         User user = new User();
-        user.setId(currentUserId);
+        user.setId(readerId);
         booking.setReader(user);
 
     }
@@ -357,15 +382,17 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void setBookAndChangeStatus(Booking booking, BookStatus bookStatus) {
+    private void setBookAndChangeItsStatus(Booking booking, Book book) {
 
-        long bookId = booking.getBook().getId();
-        Book book = bookRepository
-                .findById(bookId).orElseThrow(() -> new NotFoundException("Book was not find!!!"));
+        String bookStatusName = book.getStatus().getName();
 
-        if (book.getStatus().getName().equals(StatusConstant.AVAILABLE)) {
+        if (bookStatusName.equals(StatusConstant.AVAILABLE)) {
 
-            book.setStatus(bookStatus);
+            book.setStatus(StatusConstant.IN_USE_BOOK_STATUS);
+            booking.setBook(book);
+
+        } else if (bookStatusName.equals(StatusConstant.ACCEPTANCE_AWAITING)) {
+
             booking.setBook(book);
 
         } else {
@@ -374,5 +401,10 @@ public class BookingServiceImpl implements BookingService {
 
         }
     }
-}
 
+    private Booking getSavedAndRefreshed(Booking booking) {
+        booking = bookingRepository.save(booking);
+        entityManager.refresh(booking);
+        return booking;
+    }
+}
