@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-add-booking-acceptance-status.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-booking-acceptance-status-data.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-booking-acceptance.yml
+      relativeToChangelogFile: true

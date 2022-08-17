@@ -1,5 +1,6 @@
 package by.library.itechlibrary.controller;
 
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -90,6 +91,15 @@ public class BookingController {
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")
+    @PostMapping("/acceptance")
+    @ApiOperation("Accept booking request by assigned reader")
+    @ResponseStatus(HttpStatus.OK)
+    public BookingAcceptanceDto acceptBooking(BookingAcceptanceDto bookingAcceptanceDto){
+
+        return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
+    }
+
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PutMapping("/finish-date")
     @ApiOperation("update booking finish date")
     @ResponseStatus(HttpStatus.OK)
@@ -117,4 +127,3 @@ public class BookingController {
         return feedbackService.getAll(sortingCriteria, bookId);
     }
 }
-

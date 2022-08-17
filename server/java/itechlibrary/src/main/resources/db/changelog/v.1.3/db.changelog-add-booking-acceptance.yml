@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17082022-add-booking-acceptance-table
+      author: vladimir_egorov
+      changes:
+        - createTable:
+            tableName: booking_acceptance
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+              - column:
+                  name: comment
+                  type: VARCHAR(100)
+              - column:
+                  name: book_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status_id
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+
+        - changeSet:
+            id: 17082022-add-ForeignKeyConstraint-book-to-booking-acceptance
+            author: vladimir_egorov
+            changes:
+              - addForeignKeyConstraint:
+                  baseColumnNames: book_id
+                  baseTableName: booking_acceptance
+                  constraintName: fk_book_booking_acceptance
+                  referencedColumnNames: id
+                  referencedTableName: book
+
+        - changeSet:
+            id: 17082022-add-ForeignKeyConstraint-user-to-booking-acceptance
+            author: vladimir_egorov
+            changes:
+              - addForeignKeyConstraint:
+                  baseColumnNames: user_id
+                  baseTableName: booking_acceptance
+                  constraintName: fk_user_booking_acceptance
+                  referencedColumnNames: id
+                  referencedTableName: user
+
+        - changeSet:
+            id: 17082022-add-ForeignKeyConstraint-status-to-booking-acceptance
+            author: vladimir_egorov
+            changes:
+              - addForeignKeyConstraint:
+                  baseColumnNames: status_id
+                  baseTableName: booking_acceptance
+                  constraintName: fk_status_booking_acceptance
+                  referencedColumnNames: id
+                  referencedTableName: booking_acceptance_status

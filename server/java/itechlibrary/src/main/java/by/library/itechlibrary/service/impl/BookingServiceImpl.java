@@ -1,7 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
+import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.BookingConstant;
-import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -82,6 +82,17 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public Booking update(Booking booking) {
+        return updateBooking(booking);
+    }
+
+    @Override
+    public void makeActive(Booking booking) {
+        booking.setActive(true);
+        updateBooking(booking);
+    }
+
+    @Override
     public List<BookingResponseDto> findAllByBookId(long bookId) {
 
         log.info("Try to find bookings by book id = {}.", bookId);
@@ -89,6 +100,26 @@ public class BookingServiceImpl implements BookingService {
         List<Booking> bookings = bookingRepository.findAllByBookId(bookId);
 
         return bookingMapper.mapBookingResponseDtoList(bookings);
+    }
+
+    @Override
+    public Booking findOneByBookId(long bookId) {
+
+        log.info("Try to find one booking by book id = {}.", bookId);
+
+        List<Booking> bookingList = bookingRepository.findAllByBookId(bookId);
+
+        int countOneElement = 1;
+
+        if (bookingList.size() > countOneElement) {
+
+            throw new BookingBookException(
+                    String.format("Can't get only one booking for book with id %d: the count of bookings for this book is more than one", bookId)
+            );
+        }
+
+        return bookingList.stream().findFirst()
+                .orElseThrow(() -> new BookingBookException("Can't find booking for book with id " + bookId));
     }
 
     @Override
@@ -214,7 +245,7 @@ public class BookingServiceImpl implements BookingService {
 
         if (booking.isActive()) {
 
-            booking.getBook().setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
+            booking.getBook().setStatus(BookStatusConstant.AVAILABLE_BOOK_STATUS);
             checkAndSetUserRoles(booking);
             booking.setActive(false);
             setReviewInfo(booking, reviewDto.getRate(), reviewDto.getFeedback());
@@ -331,6 +362,18 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
+    private Booking updateBooking(Booking booking) {
+
+        log.info("Try to update booking.");
+
+        if (booking.getId() <= 0) {
+
+            throw new WrongEntityDataException("Wrong Booking id, when updating the booking, the id cannot be equal to 0.");
+        }
+
+        return bookingRepository.save(booking);
+    }
+
     private Booking findBookingById(long id) {
 
         return bookingRepository.findById(id)
@@ -386,12 +429,12 @@ public class BookingServiceImpl implements BookingService {
 
         String bookStatusName = book.getStatus().getName();
 
-        if (bookStatusName.equals(StatusConstant.AVAILABLE)) {
+        if (bookStatusName.equals(BookStatusConstant.AVAILABLE)) {
 
-            book.setStatus(StatusConstant.IN_USE_BOOK_STATUS);
+            book.setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
             booking.setBook(book);
 
-        } else if (bookStatusName.equals(StatusConstant.ACCEPTANCE_AWAITING)) {
+        } else if (bookStatusName.equals(BookStatusConstant.ACCEPTANCE_AWAITING)) {
 
             booking.setBook(book);
 

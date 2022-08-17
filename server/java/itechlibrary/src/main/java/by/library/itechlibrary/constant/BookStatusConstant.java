@@ -2,9 +2,9 @@ package by.library.itechlibrary.constant;
 
 import by.library.itechlibrary.entity.BookStatus;
 
-public final class StatusConstant {
+public final class BookStatusConstant {
 
-    private StatusConstant() {
+    private BookStatusConstant() {
     }
 
     public static final String AVAILABLE = "AVAILABLE";

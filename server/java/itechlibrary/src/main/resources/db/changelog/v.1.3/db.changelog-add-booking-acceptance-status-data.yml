@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17082022-add-data-to-booking-acceptance-status
+      author: vladimir_egorov
+      changes:
+        sqlFile:
+          dbms: 'postgresql'
+          path: /db/changelog/v.1.3/sql-import/import-data.sql
+          stripComments: true
