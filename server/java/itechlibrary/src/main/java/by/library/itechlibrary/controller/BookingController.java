@@ -95,7 +95,7 @@ public class BookingController {
     @PostMapping("/acceptance")
     @ApiOperation("accept booking request by assigned reader")
     @ResponseStatus(HttpStatus.OK)
-    public FullBookDto acceptBooking(BookingAcceptanceDto bookingAcceptanceDto){
+    public FullBookDto acceptBooking(@RequestBody BookingAcceptanceDto bookingAcceptanceDto){
 
         return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
     }
