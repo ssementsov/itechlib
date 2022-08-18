@@ -65,6 +65,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     const bookCover = res.data.fileInfo;
                     if (bookCover) {
                         setIsUploadedBookCover(true);
+                        setIsUpdatedBookCover(false);
                     }
                 })
                 .catch((err) => {
@@ -98,7 +99,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                 setIsLoadedBookingInfo(true);
             });
         }
-    }, [isAssigned, isLoadedBookInfo]);
+    }, [book.id, isAssigned, isLoadedBookInfo]);
 
     if (
         !(isLoadedBookInfo && isLoadedBookingInfo) && isAssigned ||
@@ -130,8 +131,6 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                             <Grid item lg={4} md={4} xs={12}>
                                 <UploadImageCard
                                     isUploadedImage={isUploadedBookCover}
-                                    onUpdate={setIsUpdatedBookCover}
-                                    onUpload={setIsUploadedBookCover}
                                     data={book}
                                     isOwner={isOwner}
                                     onAdd={addBookCover}
