@@ -2,8 +2,9 @@ package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.ValidationPatternConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
-import by.library.itechlibrary.dto.UserDto;
-import by.library.itechlibrary.dto.UserProfileDto;
+import by.library.itechlibrary.dto.user.UserDto;
+import by.library.itechlibrary.dto.user.UserPlainDto;
+import by.library.itechlibrary.dto.user.UserProfileDto;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.exeption_handler.exception.*;
@@ -97,6 +98,14 @@ public class UserServiceImpl implements UserService {
         User user = getCurrentUser();
 
         return userMapper.mapToUserProfileDto(user);
+    }
+
+    @Override
+    public List<UserPlainDto> getAllActiveUserPlainDto() {
+
+        List<User> users = userRepository.findByIsActiveTrue();
+
+        return userMapper.mapUserPlainDtoList(users);
     }
 
     @Transactional

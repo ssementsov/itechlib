@@ -3,6 +3,7 @@ package by.library.itechlibrary.controller;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.facade.BookFacade;
 import io.swagger.annotations.Api;
@@ -62,9 +63,10 @@ public class BookController {
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
     public WithOwnerBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
+                                    @Valid @RequestPart(required = false) BookingForTargetReaderDto bookingForTargetReaderDto,
                                     @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
 
-        return bookFacade.save(withOwnerBookDto, multipartFile);
+        return bookFacade.save(withOwnerBookDto, bookingForTargetReaderDto, multipartFile);
     }
 
 

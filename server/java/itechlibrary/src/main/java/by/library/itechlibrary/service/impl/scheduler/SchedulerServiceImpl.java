@@ -2,7 +2,11 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
-import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.Booking;
+import by.library.itechlibrary.entity.ConfirmationData;
+import by.library.itechlibrary.entity.Template;
+import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.UserRole;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
@@ -94,7 +98,7 @@ public class SchedulerServiceImpl implements SchedulerService {
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo);
+        mailNotificationService.sent(mailNotificationInfo, true);
     }
 
     private void getTemplateAndSendNotification(Booking booking) {
@@ -102,7 +106,7 @@ public class SchedulerServiceImpl implements SchedulerService {
         Template template = mailTemplateService.getByName(MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME);
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
-        mailNotificationService.sent(mailNotificationInfo);
+        mailNotificationService.sent(mailNotificationInfo, true);
 
     }
 

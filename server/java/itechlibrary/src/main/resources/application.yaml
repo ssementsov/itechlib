@@ -116,7 +116,7 @@ application-data:
     -
       name: TestName
       surname: TestSurname
-      corpEmail: testitechlib@itechart-group.com
+      corpEmail: test.itechlib@itechart-group.com
       isActive: true
     -
       name: Sergey
@@ -127,4 +127,14 @@ application-data:
       name: Katsiaryna
       surname: Yashchanka
       corpEmail: k.yashchanka@itechart-group.com
+      isActive: true
+    -
+      name: Vladimir
+      surname: Egorov
+      corpEmail: Vladzimir.Egorov@itechart-group.com
+      isActive: true
+    -
+      name: Alina
+      surname: Sukolen
+      corpEmail: alina.sukolen@itechart-group.com
       isActive: true

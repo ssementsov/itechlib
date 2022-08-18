@@ -1,6 +1,6 @@
 package by.library.itechlibrary.dto.book;
 
-import by.library.itechlibrary.dto.UserDto;
+import by.library.itechlibrary.dto.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

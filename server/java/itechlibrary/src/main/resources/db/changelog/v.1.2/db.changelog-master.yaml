@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-add-book-statuses.yaml
+      relativeToChangelogFile: true
