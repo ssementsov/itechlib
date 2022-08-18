@@ -1,11 +1,12 @@
 package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.criteria.SortingCriteria;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FeedbackService;
@@ -92,9 +93,9 @@ public class BookingController {
 
     @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping("/acceptance")
-    @ApiOperation("Accept booking request by assigned reader")
+    @ApiOperation("accept booking request by assigned reader")
     @ResponseStatus(HttpStatus.OK)
-    public BookingAcceptanceDto acceptBooking(BookingAcceptanceDto bookingAcceptanceDto){
+    public FullBookDto acceptBooking(BookingAcceptanceDto bookingAcceptanceDto){
 
         return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
     }

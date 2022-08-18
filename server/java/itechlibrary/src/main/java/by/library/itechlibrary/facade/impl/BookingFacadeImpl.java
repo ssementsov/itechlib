@@ -3,7 +3,7 @@ package by.library.itechlibrary.facade.impl;
 import by.library.itechlibrary.constant.BookingAcceptanceStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.BookingAcceptanceResponseDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Book;
@@ -59,11 +59,11 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     @Transactional
-    public BookingAcceptanceResponseDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
+    public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
         long bookId = bookingAcceptanceDto.getBookId();
         Book book = bookService.getById(bookId);
-        BookingAcceptanceResponseDto bookingAcceptanceResponse = bookingAcceptanceService.save(bookingAcceptanceDto, book);
+        bookingAcceptanceService.save(bookingAcceptanceDto, book);
 
         Booking booking = bookingService.findOneByBookId(bookId);
 
@@ -72,7 +72,7 @@ public class BookingFacadeImpl implements BookingFacade {
             sendBookAcceptanceEmail(booking);
         }
 
-        return bookingAcceptanceResponse;
+        return bookService.getByIdFullVersion(bookId);
     }
 
     private void sendBookAcceptanceEmail(Booking booking) {
