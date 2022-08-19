@@ -20,15 +20,15 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllByBookId(long id);
 
-    Booking findOneByBookId(long id);
+    BookingDto findAwaitingConfirmationByBookId(long id);
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
     BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 
-    Booking update(Booking booking);
+    BookingResponseDto update(BookingDto bookingDto, Book book, long readerId);
 
-    void makeActive(Booking booking);
+    Booking update(Booking booking);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
@@ -46,5 +46,5 @@ public interface BookingService {
 
     int getCountActiveBookings(long readerId);
 
-    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId);
 }

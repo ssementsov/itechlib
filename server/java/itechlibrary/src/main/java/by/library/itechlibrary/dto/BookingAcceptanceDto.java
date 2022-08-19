@@ -19,6 +19,6 @@ public class BookingAcceptanceDto {
     private long authorId;
 
     @NotNull
-    private BookingAcceptanceStatusDto status;
+    private StatusDto bookingStatus;
 
 }

@@ -20,6 +20,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
     List<Booking> findAllByBookId(long bookId);
 
+    @Query("select b from Booking b where b.status.name = 'AWAITING CONFIRMATION' and b.book.id = :bookId")
+    Optional<Booking> findAwaitingConfirmationByBookId(long bookId);
+
     @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
     @Query("select b from Booking b where b.reader.id = :readerId and" +
             " b.startDate <= :currentDate and b.finishDate >= :currentDate")

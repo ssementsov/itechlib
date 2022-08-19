@@ -1,7 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.constant.BookingAcceptanceStatusConstant;
+import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingAcceptanceResponseDto;
 import by.library.itechlibrary.entity.Book;
@@ -45,7 +45,7 @@ public class BookingAcceptanceServiceImpl implements BookingAcceptanceService {
 
         checkBookStatus(book);
 
-        if (acceptanceStatusName.contains(BookingAcceptanceStatusConstant.ACCEPTED)) {
+        if (acceptanceStatusName.contains(BookingStatusConstant.ACCEPTED)) {
 
             book.setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
 

@@ -1,6 +1,6 @@
 package by.library.itechlibrary.facade.impl;
 
-import by.library.itechlibrary.constant.BookingAcceptanceStatusConstant;
+import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
@@ -12,7 +12,10 @@ import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
-import by.library.itechlibrary.service.*;
+import by.library.itechlibrary.service.BookService;
+import by.library.itechlibrary.service.BookingService;
+import by.library.itechlibrary.service.MailNotificationService;
+import by.library.itechlibrary.service.MailTemplateService;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +37,6 @@ public class BookingFacadeImpl implements BookingFacade {
     private final MailTemplateService mailTemplateService;
 
     private final MailNotificationService mailNotificationService;
-
-    private final BookingAcceptanceService bookingAcceptanceService;
-
 
     @Override
     @Transactional
@@ -62,14 +62,15 @@ public class BookingFacadeImpl implements BookingFacade {
     public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
         long bookId = bookingAcceptanceDto.getBookId();
+        long readerId = bookingAcceptanceDto.getAuthorId();
         Book book = bookService.getById(bookId);
-        bookingAcceptanceService.save(bookingAcceptanceDto, book);
 
-        Booking booking = bookingService.findOneByBookId(bookId);
+        BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
+        BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, readerId);
 
-        if (bookingAcceptanceDto.getStatus().getName().equals(BookingAcceptanceStatusConstant.ACCEPTED)) {
-            bookingService.makeActive(booking);
-            sendBookAcceptanceEmail(booking);
+        if (bookingAcceptanceDto.getBookingStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
+//            bookingService.makeActive(booking);
+//            sendBookAcceptanceEmail(booking);
         }
 
         return bookService.getByIdFullVersion(bookId);

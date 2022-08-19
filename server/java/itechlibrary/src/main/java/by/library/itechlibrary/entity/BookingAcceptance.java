@@ -28,7 +28,7 @@ public class BookingAcceptance {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "status_id", referencedColumnName = "id")
-    private BookingAcceptanceStatus status;
+    private BookingStatus status;
 
     @Column(name = "comment")
     private String comment;

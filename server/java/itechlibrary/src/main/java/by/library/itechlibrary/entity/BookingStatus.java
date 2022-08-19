@@ -7,11 +7,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "booking_acceptance_status")
+@Table(name = "booking_status")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingAcceptanceStatus {
+public class BookingStatus {
 
     @Id
     @Column(name = "id")
