@@ -1,9 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 17082022-add-data-to-booking-acceptance-status
+      id: 22082022-add-data-to-booking-status
       author: vladimir_egorov
       changes:
         sqlFile:
           dbms: 'postgresql'
-          path: /db/changelog/v.1.3/sql-import/import-data.sql
+          path: /db/changelog/v.1.3/sql-import/import-booking-status-data.sql
           stripComments: true

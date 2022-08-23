@@ -6,5 +6,5 @@ import by.library.itechlibrary.entity.Book;
 
 public interface BookingAcceptanceService {
 
-    BookingAcceptanceResponseDto save(BookingAcceptanceDto bookingAcceptanceDto, Book book);
+    BookingAcceptanceResponseDto save(BookingAcceptanceDto bookingAcceptanceDto, Book book, long authorId);
 }

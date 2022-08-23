@@ -62,12 +62,12 @@ public class BookingFacadeImpl implements BookingFacade {
     public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
         long bookId = bookingAcceptanceDto.getBookId();
-        long readerId = bookingAcceptanceDto.getAuthorId();
+        long readerId = securityUserDetailsService.getCurrentUserId();
 
         Book book = bookService.getById(bookId);
         BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
         Booking resolvedBooking = bookingService.resolveAssignedBooking(bookingDto, book, readerId, bookingAcceptanceDto.getStatus());
-        bookingAcceptanceService.save(bookingAcceptanceDto, book);
+        bookingAcceptanceService.save(bookingAcceptanceDto, book, readerId);
 
         Booking booking = bookingService.findByIdWithoutMapping(resolvedBooking.getId());
 

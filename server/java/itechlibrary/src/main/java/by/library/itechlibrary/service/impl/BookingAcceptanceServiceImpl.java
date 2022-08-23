@@ -22,9 +22,9 @@ public class BookingAcceptanceServiceImpl implements BookingAcceptanceService {
 
 
     @Override
-    public BookingAcceptanceResponseDto save(BookingAcceptanceDto acceptanceDto, Book book) {
+    public BookingAcceptanceResponseDto save(BookingAcceptanceDto acceptanceDto, Book book, long authorId) {
 
-        BookingAcceptance bookingAcceptance = acceptanceMapper.toBookingAcceptanceFromBookingAcceptanceDto(acceptanceDto);
+        BookingAcceptance bookingAcceptance = acceptanceMapper.toBookingAcceptanceFromBookingAcceptanceDto(acceptanceDto, authorId);
         BookingAcceptance savedBookingAcceptance = acceptanceRepository.save(bookingAcceptance);
 
         return acceptanceMapper.toBookingAcceptanceResponseDtoFromBookingAcceptance(savedBookingAcceptance);

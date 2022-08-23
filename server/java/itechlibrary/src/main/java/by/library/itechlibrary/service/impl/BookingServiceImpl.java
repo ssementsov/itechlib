@@ -65,7 +65,9 @@ public class BookingServiceImpl implements BookingService {
 
             log.info("Try to map bookingDto and save booking.");
 
-            Booking booking = saveBooking(bookingDto, book, readerId);
+            Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
+            fillBookingFields(booking, book, readerId);
+            booking = getSavedAndRefreshed(booking);
 
             return bookingMapper.toNewBookingResponseDto(booking);
 
@@ -252,16 +254,12 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, isActive, bookId);
     }
 
-    private Booking saveBooking(BookingDto bookingDto, Book book, long readerId) {
-
-        Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
+    private void fillBookingFields(Booking booking, Book book, long readerId) {
         checkAndSetDates(booking);
         setReader(booking, readerId);
         checkLimitOfActiveBookings(booking.getReader().getId());
         setBookAndChangeItsStatus(booking, book);
         chooseBookingActivity(booking);
-
-        return getSavedAndRefreshed(booking);
     }
 
     private void tryToReturnBooking(ReviewDto reviewDto, long id, Booking booking) {
@@ -391,7 +389,10 @@ public class BookingServiceImpl implements BookingService {
 
             log.info("Try to map bookingDto and update booking.");
 
-            return saveBooking(bookingDto, book, readerId);
+            Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
+            fillBookingFields(booking, book, readerId);
+
+            return bookingRepository.save(booking);
 
         } else {
 

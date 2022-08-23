@@ -16,10 +16,6 @@ public class BookingAcceptanceDto {
     @NotNull
     private long bookId;
 
-    @Min(1)
-    @NotNull
-    private long authorId;
-
     @NotNull
     private BookingStatusDto status;
 

@@ -1,17 +1,21 @@
 databaseChangeLog:
   - changeSet:
-      id: 17082022-add-booking-acceptance-status-table
+      id: 22082022-add-booking-status-table
       author: vladimir_egorov
       changes:
         - createTable:
-            tableName: booking_acceptance_status
+            tableName: booking_status
             columns:
               - column:
                   name: id
                   type: SMALLINT
                   autoIncrement: true
                   constraints:
+                    nullable: false
+                    unique: true
                     primaryKey: true
               - column:
                   name: name
                   type: VARCHAR(50)
+                  constraints:
+                    nullable: false
