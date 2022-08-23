@@ -29,6 +29,8 @@ public interface BookService {
 
     List<ResponseOwnBookDto> getCurrentUsersBookedBooks(long currentUserId);
 
+    void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList);
+
     void remove(long id);
 
     void attachFile(Optional<FileInfo> fileInfo, long bookId, long currentUserId);
