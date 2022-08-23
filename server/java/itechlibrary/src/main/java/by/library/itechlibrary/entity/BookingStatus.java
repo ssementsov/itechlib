@@ -1,5 +1,6 @@
 package by.library.itechlibrary.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +21,4 @@ public class BookingStatus {
 
     @Column(name = "name")
     private String name;
-
 }

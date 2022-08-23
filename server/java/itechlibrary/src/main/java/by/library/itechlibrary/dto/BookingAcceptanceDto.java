@@ -13,12 +13,14 @@ import javax.validation.constraints.NotNull;
 public class BookingAcceptanceDto {
 
     @Min(1)
+    @NotNull
     private long bookId;
 
     @Min(1)
+    @NotNull
     private long authorId;
 
     @NotNull
-    private StatusDto bookingStatus;
+    private BookingStatusDto status;
 
 }

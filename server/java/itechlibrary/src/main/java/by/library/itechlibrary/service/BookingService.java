@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -18,17 +19,19 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllCurrentsByReaderId(long id);
 
+    Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto);
+
     List<BookingResponseDto> findAllByBookId(long id);
 
-    BookingDto findAwaitingConfirmationByBookId(long id);
+    Booking findOneByBookId(long id);
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
+    BookingDto findAwaitingConfirmationByBookId(long bookId);
+
     BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 
-    BookingResponseDto update(BookingDto bookingDto, Book book, long readerId);
-
-    Booking update(Booking booking);
+    Booking update(BookingDto bookingDto, Book book, long readerId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
@@ -46,5 +49,5 @@ public interface BookingService {
 
     int getCountActiveBookings(long readerId);
 
-    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId);
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
 }

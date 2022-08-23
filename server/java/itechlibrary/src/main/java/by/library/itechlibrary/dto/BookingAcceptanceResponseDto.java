@@ -10,5 +10,4 @@ import lombok.NoArgsConstructor;
 public class BookingAcceptanceResponseDto extends BookingAcceptanceDto{
 
     private long id;
-
 }

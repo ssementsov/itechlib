@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 22082022-make-status-of-booking-nullable-false.yml
+      author: vladimir_egorov
+      changes:
+        - addNotNullConstraint:
+            columnDataType: SMALLINT
+            tableName: booking
+            columnName: status_id

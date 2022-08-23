@@ -1,6 +1,6 @@
 package by.library.itechlibrary.dto.booking;
 
-import by.library.itechlibrary.entity.BookingStatus;
+import by.library.itechlibrary.dto.BookingStatusDto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -23,7 +23,6 @@ public class BookingForTargetReaderDto {
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate finishDate;
 
-    @NotNull
-    private BookingStatus status;
+    private BookingStatusDto status;
 
 }

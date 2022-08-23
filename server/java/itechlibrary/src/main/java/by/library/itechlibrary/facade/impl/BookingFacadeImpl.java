@@ -12,10 +12,7 @@ import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
-import by.library.itechlibrary.service.BookService;
-import by.library.itechlibrary.service.BookingService;
-import by.library.itechlibrary.service.MailNotificationService;
-import by.library.itechlibrary.service.MailTemplateService;
+import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +34,9 @@ public class BookingFacadeImpl implements BookingFacade {
     private final MailTemplateService mailTemplateService;
 
     private final MailNotificationService mailNotificationService;
+
+    private final BookingAcceptanceService bookingAcceptanceService;
+
 
     @Override
     @Transactional
@@ -63,14 +63,18 @@ public class BookingFacadeImpl implements BookingFacade {
 
         long bookId = bookingAcceptanceDto.getBookId();
         long readerId = bookingAcceptanceDto.getAuthorId();
+
         Book book = bookService.getById(bookId);
-
         BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
-        BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, readerId);
+        Booking resolvedBooking = bookingService.resolveAssignedBooking(bookingDto, book, readerId, bookingAcceptanceDto.getStatus());
+        bookingAcceptanceService.save(bookingAcceptanceDto, book);
 
-        if (bookingAcceptanceDto.getBookingStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
-//            bookingService.makeActive(booking);
-//            sendBookAcceptanceEmail(booking);
+        Booking booking = bookingService.findByIdWithoutMapping(resolvedBooking.getId());
+
+        if (bookingAcceptanceDto.getStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
+
+            sendBookAcceptanceEmail(booking);
+
         }
 
         return bookService.getByIdFullVersion(bookId);
@@ -82,6 +86,6 @@ public class BookingFacadeImpl implements BookingFacade {
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, true);
+        mailNotificationService.sent(mailNotificationInfo, false);
     }
 }

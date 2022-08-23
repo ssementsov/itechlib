@@ -37,6 +37,7 @@ public class Booking {
     private Feedback feedback;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE})
+    @JoinColumn(name = "status_id")
     private BookingStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH})

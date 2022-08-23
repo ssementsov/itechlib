@@ -4,6 +4,7 @@ import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
+import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -64,10 +65,9 @@ public class BookingServiceImpl implements BookingService {
 
             log.info("Try to map bookingDto and save booking.");
 
-            Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
-            Booking saveBooking = saveBooking(booking, book, readerId);
+            Booking booking = saveBooking(bookingDto, book, readerId);
 
-            return bookingMapper.toNewBookingResponseDto(saveBooking);
+            return bookingMapper.toNewBookingResponseDto(booking);
 
         } else {
 
@@ -79,20 +79,17 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto update(BookingDto bookingDto, Book book, long readerId){
+    public Booking update(BookingDto bookingDto, Book book, long readerId) {
+        return updateBooking(bookingDto, book, readerId);
+    }
 
-        log.info("Try to map bookingDto and update booking.");
+    @Transactional
+    @Override
+    public Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto) {
 
-        if (bookingDto.getId() <= 0) {
+        bookingDto.setStatus(bookingStatusDto);
 
-            throw new WrongEntityDataException("Wrong BookingDto id, when updating the booking, the id cannot be less than 1.");
-
-        }
-
-        Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
-        Booking updatedBooking = saveBooking(booking, book, readerId);
-
-        return bookingMapper.toNewBookingResponseDto(updatedBooking);
+        return updateBooking(bookingDto, book, readerId);
     }
 
     @Override
@@ -106,14 +103,23 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto findAwaitingConfirmationByBookId(long bookId) {
+    public Booking findOneByBookId(long bookId) {
 
-        log.info("Try to find booking with status 'AWAITING CONFIRMATION' by book id = {}.", bookId);
+        log.info("Try to find one booking by book id = {}.", bookId);
 
-        Booking booking = bookingRepository.findAwaitingConfirmationByBookId(bookId)
-                .orElseThrow(() -> new BookingBookException("Can't find booking with status 'AWAITING CONFIRMATION' for book with id " + bookId));
+        List<Booking> bookingList = bookingRepository.findAllByBookId(bookId);
 
-        return bookingMapper.toBookingDtoFromBooking(booking);
+        int countOneElement = 1;
+
+        if (bookingList.size() > countOneElement) {
+
+            throw new BookingBookException(
+                    String.format("Can't get only one booking for book with id %d: the count of bookings for this book is more than one", bookId)
+            );
+        }
+
+        return bookingList.stream().findFirst()
+                .orElseThrow(() -> new BookingBookException("Can't find booking for book with id " + bookId));
     }
 
     @Override
@@ -122,6 +128,17 @@ public class BookingServiceImpl implements BookingService {
         Booking currentBooking = findByBookingId(bookId);
 
         return bookingMapper.toNewBookingResponseDto(currentBooking);
+    }
+
+    @Override
+    public BookingDto findAwaitingConfirmationByBookId(long bookId) {
+
+        Booking booking = bookingRepository.findAwaitingConfirmationByBookId(bookId)
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("Can't find booking by book id %d with status 'AWAITING CONFIRMATION'.", bookId)
+                ));
+
+        return bookingMapper.toBookingDtoFromBooking(booking);
     }
 
     @Override
@@ -224,7 +241,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId) {
+    public BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId) {
 
         if (Objects.isNull(bookingForUserDto)) {
 
@@ -232,7 +249,19 @@ public class BookingServiceImpl implements BookingService {
 
         }
 
-        return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, true, bookId);
+        return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, isActive, bookId);
+    }
+
+    private Booking saveBooking(BookingDto bookingDto, Book book, long readerId) {
+
+        Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
+        checkAndSetDates(booking);
+        setReader(booking, readerId);
+        checkLimitOfActiveBookings(booking.getReader().getId());
+        setBookAndChangeItsStatus(booking, book);
+        chooseBookingActivity(booking);
+
+        return getSavedAndRefreshed(booking);
     }
 
     private void tryToReturnBooking(ReviewDto reviewDto, long id, Booking booking) {
@@ -332,6 +361,19 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
+    private void checkLimitOfActiveBookings(long userId) {
+
+        List<Booking> bookings = bookingRepository.findByReaderIdAndActiveIsTrue(userId);
+
+        if (bookings.size() >= BookingConstant.ACTIVE_BOOKINGS_LIMIT) {
+
+            log.info("Number of active bookings is exceeded");
+
+            throw new BookingBookLimitException("You can have maximum count active bookings.");
+
+        }
+    }
+
     private void recountingBookRate(Booking booking) {
 
         List<Short> rateList = bookingRepository.getRatesByBookId(booking.getBook().getId());
@@ -343,21 +385,28 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
+    private Booking updateBooking(BookingDto bookingDto, Book book, long readerId) {
+
+        if (bookingDto.getId() > 0) {
+
+            log.info("Try to map bookingDto and update booking.");
+
+            return saveBooking(bookingDto, book, readerId);
+
+        } else {
+
+            throw new WrongDtoDataException("Wrong BookingDto id," +
+                    " when updating booking, id should be greater than 0.");
+
+        }
+    }
+
     private Booking findBookingById(long id) {
 
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("The booking was not find by id = " + id));
     }
 
-    private Booking saveBooking(Booking booking, Book book, long readerId) {
-
-        checkAndSetDates(booking);
-        setReader(booking, readerId);
-        checkLimitOfActiveBookings(booking.getReader().getId());
-        setBookAndChangeItsStatus(booking, book);
-
-        return getSavedAndRefreshed(booking);
-    }
 
     private void checkAndSetDates(Booking booking) {
 
@@ -374,55 +423,6 @@ public class BookingServiceImpl implements BookingService {
         user.setId(readerId);
         booking.setReader(user);
 
-    }
-
-    private void checkLimitOfActiveBookings(long userId) {
-
-        List<Booking> bookings = bookingRepository.findByReaderIdAndActiveIsTrue(userId);
-
-        if (bookings.size() >= BookingConstant.ACTIVE_BOOKINGS_LIMIT) {
-
-            log.info("Number of active bookings is exceeded");
-
-            throw new BookingBookLimitException("You can have maximum count active bookings.");
-
-        }
-    }
-
-    private void setBookAndChangeItsStatus(Booking booking, Book book) {
-
-        determineBookStatus(booking, book);
-        booking.setBook(book);
-    }
-
-    private void determineBookStatus(Booking booking, Book book) {
-
-        String bookingStatusName = booking.getStatus().getName();
-        String bookStatusName = book.getStatus().getName();
-
-        if (bookStatusName.equals(BookStatusConstant.AVAILABLE) && bookingStatusName.equals(BookingStatusConstant.NOT_REQUIRE_CONFIRMATION)) {
-
-            book.setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
-
-        } else if (bookingStatusName.equals(BookingStatusConstant.AWAITING_CONFIRMATION)) {
-
-            book.setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
-
-        } else if(bookStatusName.equals(BookStatusConstant.IN_USE_BOOK_STATUS) && bookingStatusName.equals(BookingStatusConstant.ACCEPTED){
-
-            book.setStatus(BookStatusConstant.);
-
-        }else {
-
-            throw new BookingBookException("Book is not available or in use now");
-
-        }
-    }
-
-    private Booking getSavedAndRefreshed(Booking booking) {
-        booking = bookingRepository.save(booking);
-        entityManager.refresh(booking);
-        return booking;
     }
 
     private void checkAndSetStartDate(Booking booking) {
@@ -450,5 +450,54 @@ public class BookingServiceImpl implements BookingService {
                     " And current date and start date should be before finish date.");
 
         }
+    }
+
+    private void setBookAndChangeItsStatus(Booking booking, Book book) {
+
+        String bookStatusName = book.getStatus().getName();
+        String bookingStatusName = booking.getStatus().getName();
+
+        if (bookStatusName.equals(BookStatusConstant.AVAILABLE) && bookingStatusName.equals(BookingStatusConstant.NOT_REQUIRE_CONFIRMATION)) {
+
+            book.setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
+            booking.setBook(book);
+
+        } else if (bookStatusName.equals(BookStatusConstant.IN_USE) && bookingStatusName.equals((BookingStatusConstant.AWAITING_CONFIRMATION))) {
+
+            booking.setBook(book);
+
+        } else if (bookStatusName.equals(BookStatusConstant.IN_USE) && bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
+
+            booking.setBook(book);
+
+        } else if (bookStatusName.equals(BookStatusConstant.IN_USE) && bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            book.setStatus(BookStatusConstant.NOT_AVAILABLE_BOOK_STATUS);
+            booking.setBook(book);
+
+        } else {
+
+            throw new BookingBookException(
+                    String.format("Incorrect combination of book and booking statuses: book status is %s, booking status is %s",
+                            bookingStatusName, bookingStatusName)
+            );
+
+        }
+    }
+
+    private void chooseBookingActivity(Booking booking) {
+
+        String bookingStatusName = booking.getStatus().getName();
+
+        if (bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
+            booking.setActive(true);
+        }
+
+    }
+
+    private Booking getSavedAndRefreshed(Booking booking) {
+        booking = bookingRepository.save(booking);
+        entityManager.refresh(booking);
+        return booking;
     }
 }

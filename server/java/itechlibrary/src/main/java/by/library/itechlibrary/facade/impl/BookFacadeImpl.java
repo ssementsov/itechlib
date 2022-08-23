@@ -1,7 +1,6 @@
 package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
@@ -63,8 +62,9 @@ public class BookFacadeImpl implements BookFacade {
         User currentUser = userService.getUserById(currentUserId);
         WithOwnerBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
 
+        String bookStatusName = createdBook.getStatus().getName();
         long bookId = createdBook.getId();
-        tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookId);
+        tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, bookId);
 
         return createdBook;
     }
@@ -167,26 +167,25 @@ public class BookFacadeImpl implements BookFacade {
         return Optional.empty();
     }
 
-    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, long bookId) {
+    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookingStatusName, long bookId) {
 
-        if (!bookingForUserDto.getStatus().getName().equals(BookingStatusConstant.AWAITING_CONFIRMATION)) {
-            return;
+        if (bookingStatusName.equals(BookStatusConstant.IN_USE)) {
+
+            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
+            Book book = bookService.getById(bookId);
+            BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
+            Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
+
+            sendEmailAboutAcceptanceByReader(booking);
         }
-
-        BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, bookId);
-        Book book = bookService.getById(bookId);
-        BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
-        Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
-
-        sendEmailForAcceptanceByReader(booking);
     }
 
-    private void sendEmailForAcceptanceByReader(Booking booking) {
+    private void sendEmailAboutAcceptanceByReader(Booking booking) {
 
         Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, true);
+        mailNotificationService.sent(mailNotificationInfo, false);
     }
 }

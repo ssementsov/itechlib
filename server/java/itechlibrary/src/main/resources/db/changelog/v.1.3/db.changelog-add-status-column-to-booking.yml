@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 22082022-add-booking-status-column-to-booking.yml
+      author: vladimir_egorov
+      changes:
+        - addColumn:
+            tableName: booking
+            columns:
+              - column:
+                  name: status_id
+                  type: SMALLINT
+
+  - changeSet:
+      id: 22082022-add-ForeignKeyConstraint-booking-to-booking-status
+      author: vladimir_egorov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: status_id
+            baseTableName: booking
+            constraintName: fk_booking_booking_status
+            referencedColumnNames: id
+            referencedTableName: booking_status

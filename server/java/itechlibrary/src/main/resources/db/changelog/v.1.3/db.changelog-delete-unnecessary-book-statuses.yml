@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 22082022-delete-unnecessary-book-statuses.yml
+      author: vladimir_egorov
+      changes:
+        sqlFile:
+          dbms: 'postgresql'
+          path: /db/changelog/v.1.3/sql-import/delete-unnecessary-book-statuses.sql
+          stripComments: true

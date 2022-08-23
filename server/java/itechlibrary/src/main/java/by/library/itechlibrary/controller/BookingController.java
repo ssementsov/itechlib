@@ -44,7 +44,7 @@ public class BookingController {
     }
 
     @GetMapping("/readers/{readerId}/count")
-    public int getCountActiveBookings(@PathVariable("readerId") long readerId){
+    public int getCountActiveBookings(@PathVariable("readerId") long readerId) {
 
         return bookingService.getCountActiveBookings(readerId);
 
@@ -92,10 +92,10 @@ public class BookingController {
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")
-    @PostMapping("/acceptance")
-    @ApiOperation("accept booking request by assigned reader")
+    @PostMapping("/resolve-assigned")
+    @ApiOperation("Accept booking request by assigned reader")
     @ResponseStatus(HttpStatus.OK)
-    public FullBookDto acceptBooking(@RequestBody BookingAcceptanceDto bookingAcceptanceDto){
+    public FullBookDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
 
         return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
     }

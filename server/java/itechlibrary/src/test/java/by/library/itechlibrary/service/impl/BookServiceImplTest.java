@@ -1,7 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.dto.StatusDto;
+import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
 import by.library.itechlibrary.dto.user.UserDto;
@@ -283,7 +283,7 @@ class BookServiceImplTest {
         book.setTitle("about test");
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(new StatusDto((short) 1, "AVAILABLE"));
+        book.setStatus(new BookingStatusDto((short) 1, "AVAILABLE"));
 
         return book;
     }
@@ -309,7 +309,7 @@ class BookServiceImplTest {
         book.setTitle("about test");
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(new StatusDto((short) 1, "AVAILABLE"));
+        book.setStatus(new BookingStatusDto((short) 1, "AVAILABLE"));
         book.setFileInfo(null);
         book.setBookingInfoDto(getBookingInfoDto());
 
@@ -353,7 +353,7 @@ class BookServiceImplTest {
         book.setTitle("about test");
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(new StatusDto((short) 1, "AVAILABLE"));
+        book.setStatus(new BookingStatusDto((short) 1, "AVAILABLE"));
 
         return book;
     }
