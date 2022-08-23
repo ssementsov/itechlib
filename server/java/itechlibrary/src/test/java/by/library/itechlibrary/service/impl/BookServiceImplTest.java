@@ -1,14 +1,14 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.BookStatusDto;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
-import by.library.itechlibrary.dto.user.UserDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
+import by.library.itechlibrary.dto.user.UserDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -283,7 +283,7 @@ class BookServiceImplTest {
         book.setTitle("about test");
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(new BookingStatusDto((short) 1, "AVAILABLE"));
+        book.setStatus(new BookStatusDto((short) 1, "AVAILABLE"));
 
         return book;
     }
@@ -309,7 +309,7 @@ class BookServiceImplTest {
         book.setTitle("about test");
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(new BookingStatusDto((short) 1, "AVAILABLE"));
+        book.setStatus(new BookStatusDto((short) 1, "AVAILABLE"));
         book.setFileInfo(null);
         book.setBookingInfoDto(getBookingInfoDto());
 
@@ -353,7 +353,7 @@ class BookServiceImplTest {
         book.setTitle("about test");
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(new BookingStatusDto((short) 1, "AVAILABLE"));
+        book.setStatus(new BookStatusDto((short) 1, "AVAILABLE"));
 
         return book;
     }

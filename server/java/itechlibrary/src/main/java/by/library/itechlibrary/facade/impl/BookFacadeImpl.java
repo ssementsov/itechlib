@@ -167,9 +167,9 @@ public class BookFacadeImpl implements BookFacade {
         return Optional.empty();
     }
 
-    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookingStatusName, long bookId) {
+    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
 
-        if (bookingStatusName.equals(BookStatusConstant.IN_USE)) {
+        if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
             BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
             Book book = bookService.getById(bookId);
@@ -186,6 +186,6 @@ public class BookFacadeImpl implements BookFacade {
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, false);
+        mailNotificationService.sent(mailNotificationInfo, true);
     }
 }

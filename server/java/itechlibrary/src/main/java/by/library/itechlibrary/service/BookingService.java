@@ -23,8 +23,6 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllByBookId(long id);
 
-    Booking findOneByBookId(long id);
-
     BookingResponseDto findCurrentByBookId(long bookId);
 
     BookingDto findAwaitingConfirmationByBookId(long bookId);

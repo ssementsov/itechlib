@@ -1,7 +1,7 @@
 package by.library.itechlibrary.dto.book;
 
 import by.library.itechlibrary.constant.RegexConstant;
-import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.BookStatusDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +18,6 @@ public class WithLikAndStatusBookDto extends BaseBookDto {
     private String link;
 
     @NotNull
-    private BookingStatusDto status;
+    private BookStatusDto status;
 
 }

@@ -105,26 +105,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking findOneByBookId(long bookId) {
-
-        log.info("Try to find one booking by book id = {}.", bookId);
-
-        List<Booking> bookingList = bookingRepository.findAllByBookId(bookId);
-
-        int countOneElement = 1;
-
-        if (bookingList.size() > countOneElement) {
-
-            throw new BookingBookException(
-                    String.format("Can't get only one booking for book with id %d: the count of bookings for this book is more than one", bookId)
-            );
-        }
-
-        return bookingList.stream().findFirst()
-                .orElseThrow(() -> new BookingBookException("Can't find booking for book with id " + bookId));
-    }
-
-    @Override
     public BookingResponseDto findCurrentByBookId(long bookId) {
 
         Booking currentBooking = findByBookingId(bookId);
@@ -479,7 +459,7 @@ public class BookingServiceImpl implements BookingService {
         } else {
 
             throw new BookingBookException(
-                    String.format("Incorrect combination of book and booking statuses: book status is %s, booking status is %s",
+                    String.format("Incorrect combination of statuses for create or update booking: book status is %s, booking status is %s",
                             bookingStatusName, bookingStatusName)
             );
 

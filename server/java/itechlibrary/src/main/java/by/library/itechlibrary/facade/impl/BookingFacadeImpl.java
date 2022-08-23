@@ -73,19 +73,19 @@ public class BookingFacadeImpl implements BookingFacade {
 
         if (bookingAcceptanceDto.getStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
 
-            sendBookAcceptanceEmail(booking);
+            sendEmailAboutBookAcceptance(booking);
 
         }
 
         return bookService.getByIdFullVersion(bookId);
     }
 
-    private void sendBookAcceptanceEmail(Booking booking) {
+    private void sendEmailAboutBookAcceptance(Booking booking) {
 
         Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE);
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, false);
+        mailNotificationService.sent(mailNotificationInfo, true);
     }
 }
