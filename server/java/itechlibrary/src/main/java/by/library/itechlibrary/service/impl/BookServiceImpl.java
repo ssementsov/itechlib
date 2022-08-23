@@ -123,10 +123,13 @@ public class BookServiceImpl implements BookService {
         log.info("Try to get current users books.");
 
         List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
-        List<ResponseOwnBookDto> responseOwnBookDtoList = bookMapper.mapToResponseOwnBookDtoList(currentBooks);
-        responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
 
-        return responseOwnBookDtoList;
+        return bookMapper.mapToResponseOwnBookDtoList(currentBooks);
+    }
+
+    @Override
+    public void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList){
+        responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
     }
 
     @Override

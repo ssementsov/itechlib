@@ -106,7 +106,7 @@ public class BookFacadeImpl implements BookFacade {
         List<ResponseOwnBookDto> responseOwnBookDtoList = bookService.getCurrentUsersBookedBooks(currentUserId);
         responseOwnBookDtoList.forEach(x -> x.setBaseBookingInfo(bookingInfoMapper
                 .mapToBaseBookingInfoDto(bookingService.getBaseBookingInfo(x.getId()))));
-
+        bookService.sortResponseOwnBookDtoListByFinishDate(responseOwnBookDtoList);
         return responseOwnBookDtoList;
     }
 
