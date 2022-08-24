@@ -56,6 +56,7 @@ export const DashboardNavbar = (props) => {
     const router = useRouter();
     const avatarData = useSelector((state) => state.avatar.avatarData);
     const isLoadingAvatar = useSelector((state) => state.avatar.isLoadingAvatar);
+    const userId = useSelector(state => state.user.user.id);
     const { onSidebarOpen, ...other } = props;
     const [avatar, setAvatar] = useState('');
 
@@ -80,13 +81,12 @@ export const DashboardNavbar = (props) => {
         stompClient.connect({}, onConnected);
 
         function onConnected() {
-            console.log('working');
-            stompClient.subscribe('/topic/hi', function(greeting) {
+            stompClient.subscribe(`/topic/${userId}`, function(greeting) {
                 console.log(greeting.body);
             });
         }
 
-    }, []);
+    }, [userId]);
 
     return (
         <>
@@ -121,13 +121,6 @@ export const DashboardNavbar = (props) => {
                         <MenuIcon fontSize='small' />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <button onClick={() => {
-                        const message = 'Some message';
-                        socket.send(message);
-                    }}
-                    >
-                        Socket
-                    </button>
                     {!isLoadingAvatar && (
                         <IconButton {...bindHover(popupState)} size='small' sx={{ ml: 2 }}>
                             <Avatar
