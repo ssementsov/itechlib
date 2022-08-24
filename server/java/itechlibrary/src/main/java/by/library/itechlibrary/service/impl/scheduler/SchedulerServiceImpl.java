@@ -13,7 +13,8 @@ import by.library.itechlibrary.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -94,16 +95,11 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
-    @MessageMapping("/room")
     @Scheduled(fixedRate = 5000)
     public void testWebSocket() {
 
-//        UserProfileDto userProfileDto = userService.getCurrentUserProfileDto();
-//        String corpEmail = userProfileDto.getCorpEmail();
-
         log.info("Try to send message by webSocket");
-
-        simpMessagingTemplate.convertAndSend("/topic/hi", "Hello Max");
+        simpMessagingTemplate.convertAndSend("/topic/6", "Hello i am id 6");
 
     }
 
