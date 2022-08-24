@@ -1,7 +1,7 @@
 package by.library.itechlibrary.dto.booking;
 
+import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
-import by.library.itechlibrary.entity.BookingStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -25,7 +25,7 @@ public class BookingResponseDto {
     private WithOwnerBookDto book;
 
     @NotNull
-    private BookingStatus status;
+    private BookingStatusDto status;
 
     private boolean isActive;
 
