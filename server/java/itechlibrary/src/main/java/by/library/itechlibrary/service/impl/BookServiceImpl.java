@@ -1,6 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
@@ -139,7 +139,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to delete book by id {}", id);
 
-        if (!book.getStatus().getName().equals(StatusConstant.IN_USE)) {
+        if (!book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
             bookRepository.deleteById(id);
 
@@ -178,7 +178,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to check permission for changing status.");
 
-        if (oldBookStatus.getName().equals(StatusConstant.IN_USE) && !newBookStatus.getName().equals(StatusConstant.IN_USE)) {
+        if (oldBookStatus.getName().equals(BookStatusConstant.IN_USE) && !newBookStatus.getName().equals(BookStatusConstant.IN_USE)) {
 
             log.info("Disable current booking for for changing status from IN USE.");
 

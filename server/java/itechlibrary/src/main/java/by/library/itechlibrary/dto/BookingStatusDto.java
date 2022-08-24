@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookStatusDto {
+public class BookingStatusDto {
 
     @Min(1)
     @NotNull

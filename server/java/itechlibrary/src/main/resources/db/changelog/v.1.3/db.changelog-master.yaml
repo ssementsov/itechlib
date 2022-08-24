@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-add-booking-status.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-booking-status-data.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-status-column-to-booking.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-statuses-data-for-booking.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-make-status-of-booking-nullable-false.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-delete-unnecessary-book-statuses.yml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-add-booking-acceptance.yml
+      relativeToChangelogFile: true

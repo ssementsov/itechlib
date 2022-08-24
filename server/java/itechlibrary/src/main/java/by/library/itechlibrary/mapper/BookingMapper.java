@@ -22,6 +22,7 @@ public interface BookingMapper {
     @Named(value = "BookingDto")
     Booking toBookingFromBookingDto(BookingDto bookingDto);
 
+    @Mapping(source = "isActive", target = "active")
     @Named(value = "bookingForTargetReaderDtoToBookingDto")
     BookingDto bookingForTargetReaderDtoToBookingDto(BookingForTargetReaderDto bookingForTargetReaderDto, boolean isActive, Long bookId);
 

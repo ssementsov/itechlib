@@ -5,20 +5,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookStatusDto {
+public class BookingAcceptanceDto {
 
     @Min(1)
     @NotNull
-    private short id;
+    private long bookId;
 
-    @NotBlank
-    private String name;
+    @NotNull
+    private BookingStatusDto status;
 
 }

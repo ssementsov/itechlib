@@ -1,7 +1,7 @@
 package by.library.itechlibrary.facade.impl;
 
+import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
-import by.library.itechlibrary.constant.StatusConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
@@ -133,7 +133,7 @@ public class BookFacadeImpl implements BookFacade {
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        if (fullBookDto.getStatus().getName().equals(StatusConstant.IN_USE)) {
+        if (fullBookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
             BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
             fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
@@ -169,18 +169,18 @@ public class BookFacadeImpl implements BookFacade {
 
     private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
 
-        if (bookStatusName.equals(StatusConstant.ACCEPTANCE_AWAITING)) {
+        if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
             BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
             Book book = bookService.getById(bookId);
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
 
-            sendEmailForAcceptanceByReader(booking);
+            sendEmailAboutAcceptanceByReader(booking);
         }
     }
 
-    private void sendEmailForAcceptanceByReader(Booking booking) {
+    private void sendEmailAboutAcceptanceByReader(Booking booking) {
 
         Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
