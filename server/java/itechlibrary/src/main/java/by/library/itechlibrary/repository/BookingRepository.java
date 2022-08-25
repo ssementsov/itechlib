@@ -14,13 +14,13 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     List<Booking> findAllByReaderId(long readerId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     List<Booking> findAllByBookId(long bookId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     @Query("select b from Booking b where b.reader.id = :readerId and" +
             " b.startDate <= :currentDate and b.finishDate >= :currentDate")
     List<Booking> findAllByReaderIdAndCurrentDate(LocalDate currentDate, long readerId);
@@ -29,14 +29,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b from Booking b where b.book.id = :bookId and b.status.name = 'AWAITING CONFIRMATION' and b.isActive = false")
     Optional<Booking> findAwaitingConfirmationByBookId(long bookId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     Optional<Booking> findById(long id);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status", "status"})
     @Query("select b from Booking b where b.book.id = :bookId and b.isActive = true")
     Optional<Booking> findByBookIdAndActiveIsTrue(long bookId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     @Query("select b from Booking b where b.reader.id = :readerId and b.isActive = true")
     List<Booking> findByReaderIdAndActiveIsTrue(long readerId);
 

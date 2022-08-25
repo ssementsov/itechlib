@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -26,6 +27,8 @@ public interface BookingService {
     BookingResponseDto findCurrentByBookId(long bookId);
 
     BookingDto findAwaitingConfirmationByBookId(long bookId);
+
+    void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto);
 
     BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 

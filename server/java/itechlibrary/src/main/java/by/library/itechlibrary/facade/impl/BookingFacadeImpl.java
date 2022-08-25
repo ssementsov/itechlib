@@ -10,6 +10,7 @@ import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
+import by.library.itechlibrary.exeption_handler.exception.WrongBookingStatusException;
 import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.*;
@@ -61,6 +62,8 @@ public class BookingFacadeImpl implements BookingFacade {
     @Transactional
     public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
+        bookingService.checkDtoForResolveAssignedBooking(bookingAcceptanceDto);
+
         long bookId = bookingAcceptanceDto.getBookId();
         long readerId = securityUserDetailsService.getCurrentUserId();
 
@@ -71,21 +74,35 @@ public class BookingFacadeImpl implements BookingFacade {
 
         Booking booking = bookingService.findByIdWithoutMapping(resolvedBooking.getId());
 
-        if (bookingAcceptanceDto.getStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
-
-            sendEmailAboutBookAcceptance(booking);
-
-        }
+        sendEmailNotification(booking);
 
         return bookService.getByIdFullVersion(bookId);
     }
 
-    private void sendEmailAboutBookAcceptance(Booking booking) {
+    private void sendEmailNotification(Booking booking) {
 
-        Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE);
+        Template template = chooseTemplate(booking.getStatus().getName());
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, true);
+        mailNotificationService.sent(mailNotificationInfo, false);
     }
+
+    private Template chooseTemplate(String bookingStatusName){
+
+        if (bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
+
+            return  mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE);
+
+        } else if (bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            return  mailTemplateService.getByName(MailTemplateConstant.ACCEPTANCE_DECLINED);
+
+        }else {
+
+            throw new WrongBookingStatusException("Incorrect booking status for sending an email about resolving assigned booking.");
+
+        }
+    }
+
 }

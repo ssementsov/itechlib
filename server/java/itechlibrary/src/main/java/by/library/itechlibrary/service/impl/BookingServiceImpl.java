@@ -4,6 +4,7 @@ import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -117,10 +118,29 @@ public class BookingServiceImpl implements BookingService {
 
         Booking booking = bookingRepository.findAwaitingConfirmationByBookId(bookId)
                 .orElseThrow(() -> new NotFoundException(
-                        String.format("Can't find booking by book id %d with status 'AWAITING CONFIRMATION'.", bookId)
+                        String.format("Can't find a booking waiting for confirmation for a book with id %d.", bookId)
                 ));
 
         return bookingMapper.toBookingDtoFromBooking(booking);
+    }
+
+    @Override
+    public void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto) {
+
+        String bookingStatusName = acceptanceDto.getStatus().getName();
+        String comment = acceptanceDto.getComment();
+
+        if (!bookingStatusName.equals(BookingStatusConstant.ACCEPTED) && !bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            throw new WrongBookingStatusException("The booking status must be accepted or declined for the booking assignment to be resolved.");
+
+        }
+
+        if (Objects.isNull(comment) && bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            throw new WrongDtoDataException("The comment must be correct when declining the assigned booking.");
+
+        }
     }
 
     @Override
