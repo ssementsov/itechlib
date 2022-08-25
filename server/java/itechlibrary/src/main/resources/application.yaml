@@ -50,6 +50,8 @@ spring:
 
 template:
   host: ${TEMPLATE_HOST}
+full:
+  host: http://${TEMPLATE_HOST}/
 
 jwt:
   secret: 8b4f7dd2-9884-4b96-af62-66e25441390e

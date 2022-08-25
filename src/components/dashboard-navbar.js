@@ -49,7 +49,7 @@ const styleForMenu = {
     },
 };
 
-const socker = new SockJS('http://localhost:8089/api/mywebsockets');
+const socker = new SockJS('http://localhost:8089/api/internal-message');
 const stompClient = Stomp.over(socker);
 
 export const DashboardNavbar = (props) => {

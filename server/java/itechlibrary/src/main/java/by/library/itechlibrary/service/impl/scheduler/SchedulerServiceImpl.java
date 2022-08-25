@@ -3,6 +3,7 @@ package by.library.itechlibrary.service.impl.scheduler;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.internal_notification.InternalNotification;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
@@ -13,8 +14,6 @@ import by.library.itechlibrary.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -95,11 +94,20 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 15000)
     public void testWebSocket() {
 
+        InternalNotification internalNotification = new InternalNotification((long)1, "Hi i am 1 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
+        InternalNotification internalNotification1 = new InternalNotification((long)2, "Hi i am 2 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
+        InternalNotification internalNotification2 = new InternalNotification((long)3, "Hi i am 3 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
+        InternalNotification internalNotification3 = new InternalNotification((long)4, "Hi i am 4 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
+
+        List<InternalNotification> internalNotificationList = List.of(internalNotification, internalNotification1, internalNotification2, internalNotification3);
+
         log.info("Try to send message by webSocket");
-        simpMessagingTemplate.convertAndSend("/topic/6", "Hello i am id 6");
+
+       internalNotificationList.forEach((x) -> simpMessagingTemplate.convertAndSend("/topic/1", x));
+        internalNotificationList.forEach((x) -> simpMessagingTemplate.convertAndSend("/topic/6", x));
 
     }
 
