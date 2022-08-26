@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { PopupNotificationsList } from './navbar-components/popup-notifications-list';
-import { PopupMenu } from './navbar-components/popup-menu';
+import { PopupNotificationsListWithWebsocket } from './navbar-components/popup-notifications-list';
+import { PopupMenuWithWebsocket } from './navbar-components/popup-menu';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -36,8 +36,8 @@ export const DashboardNavbar = (props) => {
                         <MenuIcon fontSize='small' />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
-                    <PopupNotificationsList />
-                    <PopupMenu />
+                    <PopupNotificationsListWithWebsocket />
+                    <PopupMenuWithWebsocket />
                 </Toolbar>
             </DashboardNavbarRoot>
         </>

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
 import { Badge, IconButton, List, ListItemButton, ListItemText, ListSubheader, Popover } from '@mui/material';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import styles from './popup-notifications-list.module.css';
+import { withWebsocket } from './with-websocket';
 
 const stylePopupItemsList = {
     elevation: 0,
@@ -28,10 +27,8 @@ const stylePopupItemsList = {
     },
 };
 
-const socker = new SockJS('http://localhost:8089/api/internal-message');
-const stompClient = Stomp.over(socker);
-
-export const PopupNotificationsList = () => {
+const PopupNotificationsList = (props) => {
+    const {stompClient} = props;
     const userId = useSelector(state => state.user.user.id);
     const [notifications, setNotifications] = useState([]);
     const notificationsCount = notifications.length;
@@ -48,7 +45,7 @@ export const PopupNotificationsList = () => {
     };
 
     useEffect(() => {
-        if(userId) {
+        if(userId && stompClient) {
             stompClient.connect({}, onConnected);
         }
 
@@ -67,7 +64,7 @@ export const PopupNotificationsList = () => {
             });
         }
 
-    }, [userId]);
+    }, [stompClient, userId]);
 
     return (
         <>
@@ -115,3 +112,5 @@ export const PopupNotificationsList = () => {
         </>
     );
 };
+
+export const PopupNotificationsListWithWebsocket = withWebsocket(PopupNotificationsList);
