@@ -153,7 +153,7 @@ const MultipurposeBookForm = (props) => {
                     name="link"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.link}
+                    value={formik.values.link || ''}
                 />
                 {!isSuggestForm && (
                     <RadioGroup

@@ -12,7 +12,7 @@ import {
 } from '../common/constants/route-constants';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
-import * as Yup from "yup";
+import * as Yup from 'yup';
 
 const Register = () => {
     const router = useRouter();
@@ -30,6 +30,7 @@ const Register = () => {
         }
         return error;
     }
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -38,7 +39,7 @@ const Register = () => {
             email: Yup.string()
                 .trim()
                 .min(24, 'Email must be 24 or more symbols')
-                .max(50, 'Email must be 50 or less symbols')
+                .max(50, 'Email must be 50 or less symbols'),
         }),
         validate,
         onSubmit: (value) => {
@@ -51,7 +52,7 @@ const Register = () => {
                         'Your corporate email was confirmed successfully. You can proceed with your Google account.',
                         {
                             variant: 'success',
-                        }
+                        },
                     );
                 })
                 .catch(() => {
@@ -64,43 +65,45 @@ const Register = () => {
 
     const resGoogleHandlerRegister = (res) => {
         let token = res.tokenId;
-        const responsePayload = jwt_decode(token);
-        let googleEmail = responsePayload.email;
-        let corpEmail = localStorage.getItem('corpEmail');
+        if (token) {
+            const responsePayload = jwt_decode(token);
+            let googleEmail = responsePayload.email;
+            let corpEmail = localStorage.getItem('corpEmail');
 
-        UserAPI.connectGoogleEmail({
-            corpEmail: corpEmail,
-            googleEmail: googleEmail,
-        })
-            .then((res) => {
-                localStorage.setItem('googleEmail', googleEmail);
-                if (!res.data) {
-                    setDisabledGoogle(true);
-                    enqueueSnackbar(
-                        'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
-                        {
-                            variant: 'success',
-                        }
-                    );
-                } else {
-                    router.replace(LOGIN_PATH);
-                }
+            UserAPI.connectGoogleEmail({
+                corpEmail: corpEmail,
+                googleEmail: googleEmail,
             })
-            .catch((error) => {
-                if (
-                    error.response.data.message ===
-                    'This User already has a different google address.'
-                ) {
-                    enqueueSnackbar(
-                        'Please select Google account which You provided on sign up page.',
-                        {
-                            variant: 'error',
-                        }
-                    );
-                } else {
-                    defaultErrorSnackbar();
-                }
-            });
+                .then((res) => {
+                    localStorage.setItem('googleEmail', googleEmail);
+                    if (!res.data) {
+                        setDisabledGoogle(true);
+                        enqueueSnackbar(
+                            'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
+                            {
+                                variant: 'success',
+                            },
+                        );
+                    } else {
+                        router.replace(LOGIN_PATH);
+                    }
+                })
+                .catch((error) => {
+                    if (
+                        error.response.data.message ===
+                        'This User already has a different google address.'
+                    ) {
+                        enqueueSnackbar(
+                            'Please select Google account which You provided on sign up page.',
+                            {
+                                variant: 'error',
+                            },
+                        );
+                    } else {
+                        defaultErrorSnackbar();
+                    }
+                });
+        }
     };
 
     useEffect(() => {
@@ -125,7 +128,7 @@ const Register = () => {
                 <title>Register</title>
             </Head>
             <Box
-                component="main"
+                component='main'
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
@@ -134,7 +137,7 @@ const Register = () => {
                 }}
             >
                 <Container
-                    maxWidth="sm"
+                    maxWidth='sm'
                     sx={{
                         border: '1px solid #838E9F',
                         boxShadow: '2px 2px 4px #838E9F',
@@ -149,9 +152,9 @@ const Register = () => {
                             }}
                         >
                             <Typography
-                                color="textPrimary"
-                                variant="h4"
-                                textAlign="center"
+                                color='textPrimary'
+                                variant='h4'
+                                textAlign='center'
                             >
                                 Sign up
                             </Typography>
@@ -159,20 +162,20 @@ const Register = () => {
                         <TextField
                             disabled={disabledCorp}
                             error={Boolean(
-                                formik.touched.email && formik.errors.email
+                                formik.touched.email && formik.errors.email,
                             )}
                             fullWidth
                             helperText={
                                 formik.touched.email && formik.errors.email
                             }
-                            label="Please enter your corporate email here"
-                            margin="normal"
-                            name="email"
+                            label='Please enter your corporate email here'
+                            margin='normal'
+                            name='email'
                             onBlur={formik.handleBlur}
                             onChange={formik.handleChange}
-                            type="email"
+                            type='email'
                             value={formik.values.email}
-                            variant="outlined"
+                            variant='outlined'
                         />
                         <Box
                             sx={{
@@ -182,7 +185,7 @@ const Register = () => {
                         >
                             <PrimaryButton
                                 title='Confirm corporate email'
-                                type="submit"
+                                type='submit'
                                 disabled={disabledCorp}
                             />
                         </Box>
@@ -198,11 +201,11 @@ const Register = () => {
                             render={(renderProps) => (
                                 <Button
                                     fullWidth
-                                    color="error"
+                                    color='error'
                                     onClick={renderProps.onClick}
                                     disabled={disabledGoogle}
-                                    size="large"
-                                    variant="contained"
+                                    size='large'
+                                    variant='contained'
                                 >
                                     Confirm Google email
                                 </Button>

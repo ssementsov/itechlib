@@ -60,8 +60,14 @@ const ReturnBookModal = (props) => {
                 .trim()
                 .min(10, 'Feedback must be 10 or more symbols')
                 .max(250, 'Feedback must be 250 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE),
         }),
+        validate: (value) => {
+            let error = {};
+            if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.feedback)) {
+                error.feedback = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+            }
+            return error;
+        },
         onSubmit: async (values, actions) => {
             actions.resetForm({
                 values: initValue,

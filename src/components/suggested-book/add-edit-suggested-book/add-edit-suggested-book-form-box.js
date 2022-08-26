@@ -46,6 +46,12 @@ const AddEditSuggestedBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.comment)) {
+            error.comment = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
         return error;
     }
@@ -57,20 +63,17 @@ const AddEditSuggestedBookFormBox = (props) => {
                 .trim()
                 .min(2, 'Title must be 2 or more symbols')
                 .max(255, 'Title must be 255 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Title is required'),
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
-                .max(500, 'Author must be 500 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE),
+                .max(500, 'Author must be 500 or less symbols'),
             category: Yup.string(),
             language: Yup.string(),
             comment: Yup.string()
                 .trim()
                 .min(10, 'Comment must be 10 or more symbols')
-                .max(250, 'Comment must be 250 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE),
+                .max(250, 'Comment must be 250 or less symbols'),
         }),
         validate,
         onSubmit: async (values) => {

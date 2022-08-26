@@ -61,6 +61,12 @@ const AddEditBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
+            error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         } else if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
                 error.reader = 'Reader is required';
@@ -83,13 +89,11 @@ const AddEditBookFormBox = (props) => {
                 .trim()
                 .min(2, 'Title must be 2 or more symbols')
                 .max(255, 'Title must be 255 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Title is required'),
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
                 .max(500, 'Author must be 500 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Author is required'),
             category: Yup.string().required('Category is required'),
             language: Yup.string().required('Language is required'),
@@ -97,7 +101,6 @@ const AddEditBookFormBox = (props) => {
                 .trim()
                 .min(10, 'Description must be 10 or more symbols')
                 .max(500, 'Description must be 500 or less symbols')
-                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Description is required'),
         }),
         validate,
