@@ -5,6 +5,10 @@ import { Box } from '@mui/material';
 import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { types } from '../../../types';
 import { useTheme } from '@mui/material/styles';
+import {
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+} from '../../../common/constants/warning-messages-and-validation';
 
 const AddEditSuggestedBookFormBox = (props) => {
     const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
@@ -42,6 +46,12 @@ const AddEditSuggestedBookFormBox = (props) => {
             )
         ) {
             error.link = 'Please enter correct link';
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.comment)) {
+            error.comment = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
         return error;
     }

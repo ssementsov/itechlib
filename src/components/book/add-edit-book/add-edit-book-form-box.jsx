@@ -6,13 +6,17 @@ import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
 import { bookStatus } from '../../../common/constants/book-status-constants';
 import { styled } from '@mui/material/styles';
+import {
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+} from '../../../common/constants/warning-messages-and-validation';
 
 const StyledBox = styled(Box)({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100%',
-    paddingTop: '0'
+    paddingTop: '0',
 });
 
 const AddEditBookFormBox = (props) => {
@@ -53,10 +57,16 @@ const AddEditBookFormBox = (props) => {
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
-                value.link
+                value.link,
             )
         ) {
             error.link = 'Please enter correct link';
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
+            error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         } else if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
                 error.reader = 'Reader is required';
