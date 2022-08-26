@@ -5,7 +5,7 @@ import { StyledDeleteIcon } from '../../icons/styled-delete-icon';
 import classes from './upload-book-cover-field.module.css';
 import { theme } from '../../theme';
 import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages-and-validation';
-import { MAX_SIZE } from '../../common/constants/file-size';
+import { MAX_SIZE, allowedImagesTypes } from '../../common/constants/file-constants';
 import { limitFileNameLength } from '../../utils/functions/limit-file-name-length';
 
 export const UploadBookCoverField = (props) => {
@@ -16,7 +16,9 @@ export const UploadBookCoverField = (props) => {
     const imageSelectedHandler = (e) => {
         const imgFile = e.target.files[0];
         if (imgFile) {
-            if (imgFile.size > MAX_SIZE) {
+            const allowedImageType = allowedImagesTypes.find(type => type === imgFile.type);
+
+            if (imgFile.size > MAX_SIZE || !allowedImageType) {
                 setIsAllowedImage(false);
                 return;
             } else {

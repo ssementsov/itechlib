@@ -10,7 +10,7 @@ import styles from './upload-image-card.module.css';
 import StyledCard from './styled-card';
 import { useDispatch } from 'react-redux';
 import { avatarSlice } from '../../store/reducers/AvatarSlice';
-import { MAX_SIZE } from '../../common/constants/file-size';
+import { allowedImagesTypes, MAX_SIZE } from '../../common/constants/file-constants';
 
 const UploadImageCard = (props) => {
     const { data, isOwner, onAdd, onDelete, title, description, isUploadedImage } = props;
@@ -35,7 +35,9 @@ const UploadImageCard = (props) => {
     const imageSelectedHandler = (e) => {
         const imgFile = e.target.files[0];
         if (imgFile) {
-            if (imgFile.size > MAX_SIZE) {
+            const allowedImageType = allowedImagesTypes.find(type => type === imgFile.type);
+
+            if (imgFile.size > MAX_SIZE || !allowedImageType) {
                 setIsUrlImage(null);
                 setIsAllowedImage(true);
                 return;
