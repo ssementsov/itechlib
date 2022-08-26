@@ -4,7 +4,7 @@ import { IconButton, Typography } from '@mui/material';
 import { StyledDeleteIcon } from '../../icons/styled-delete-icon';
 import classes from './upload-book-cover-field.module.css';
 import { theme } from '../../theme';
-import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages';
+import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages-and-validation';
 import { MAX_SIZE } from '../../common/constants/file-size';
 import { limitFileNameLength } from '../../utils/functions/limit-file-name-length';
 

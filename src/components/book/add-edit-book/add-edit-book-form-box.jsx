@@ -6,13 +6,17 @@ import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
 import { bookStatus } from '../../../common/constants/book-status-constants';
 import { styled } from '@mui/material/styles';
+import {
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+} from '../../../common/constants/warning-messages-and-validation';
 
 const StyledBox = styled(Box)({
     alignItems: 'center',
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100%',
-    paddingTop: '0'
+    paddingTop: '0',
 });
 
 const AddEditBookFormBox = (props) => {
@@ -53,7 +57,7 @@ const AddEditBookFormBox = (props) => {
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
-                value.link
+                value.link,
             )
         ) {
             error.link = 'Please enter correct link';
@@ -79,11 +83,13 @@ const AddEditBookFormBox = (props) => {
                 .trim()
                 .min(2, 'Title must be 2 or more symbols')
                 .max(255, 'Title must be 255 or less symbols')
+                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Title is required'),
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
                 .max(500, 'Author must be 500 or less symbols')
+                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Author is required'),
             category: Yup.string().required('Category is required'),
             language: Yup.string().required('Language is required'),
@@ -91,6 +97,7 @@ const AddEditBookFormBox = (props) => {
                 .trim()
                 .min(10, 'Description must be 10 or more symbols')
                 .max(500, 'Description must be 500 or less symbols')
+                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Description is required'),
         }),
         validate,

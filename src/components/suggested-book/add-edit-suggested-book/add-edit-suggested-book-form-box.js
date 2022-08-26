@@ -5,6 +5,10 @@ import { Box } from '@mui/material';
 import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { types } from '../../../types';
 import { useTheme } from '@mui/material/styles';
+import {
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+} from '../../../common/constants/warning-messages-and-validation';
 
 const AddEditSuggestedBookFormBox = (props) => {
     const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
@@ -53,17 +57,20 @@ const AddEditSuggestedBookFormBox = (props) => {
                 .trim()
                 .min(2, 'Title must be 2 or more symbols')
                 .max(255, 'Title must be 255 or less symbols')
+                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE)
                 .required('Title is required'),
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
-                .max(500, 'Author must be 500 or less symbols'),
+                .max(500, 'Author must be 500 or less symbols')
+                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE),
             category: Yup.string(),
             language: Yup.string(),
             comment: Yup.string()
                 .trim()
                 .min(10, 'Comment must be 10 or more symbols')
-                .max(250, 'Comment must be 250 or less symbols'),
+                .max(250, 'Comment must be 250 or less symbols')
+                .matches(ONLY_ONE_WHITESPACE_ALLOWED_REGEX, ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE),
         }),
         validate,
         onSubmit: async (values) => {
