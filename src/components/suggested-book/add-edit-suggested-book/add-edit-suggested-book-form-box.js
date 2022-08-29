@@ -42,17 +42,15 @@ const AddEditSuggestedBookFormBox = (props) => {
         if (
             value.link &&
             !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z\d+&@#%=~_|$?!:,.]*\)|[-A-Z\d+&@#%=~_|$?!:,.])/i.test(
-                value.link
+                value.link,
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
-            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
-        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
-            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
-        } else if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.comment)) {
-            error.comment = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
+        error.title = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        error.author = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        error.comment = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.comment) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+
         return error;
     }
 
@@ -94,13 +92,13 @@ const AddEditSuggestedBookFormBox = (props) => {
                     flexDirection: 'column',
                     minHeight: '100%',
                     [theme.breakpoints.down('md')]: {
-                        minWidth: '320px'
+                        minWidth: '320px',
                     },
                     [theme.breakpoints.down('sm')]: {
                         fontSize: '1.5rem',
                         paddingLeft: 0,
                         paddingRight: 0,
-                        minWidth: '280px'
+                        minWidth: '280px',
                     },
                 }}
             >
