@@ -54,23 +54,34 @@ const AddEditBookFormBox = (props) => {
 
     function validate(value) {
         let error = {};
-        error.title = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
-        error.author = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
-        error.description = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
 
         if (
             value.link &&
-            !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
+            !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z\d+&@#%=~_|$?!:,.]*\)|[-A-Z\d+&@#%=~_|$?!:,.])/i.test(
                 value.link,
             )
         ) {
             error.link = 'Please enter correct link';
         }
+        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
+            error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
         if (value.status === bookStatus.inUse.name) {
-            error.reader = !value.reader && 'Reader is required';
-            error.startDate = !value.startDate && 'Date is required';
-            error.finishDate = !value.finishDate && 'Date is required';
-
+            if (!value.reader) {
+                error.reader = 'Reader is required';
+            }
+            if (!value.startDate) {
+                error.startDate = 'Date is required';
+            }
+            if (!value.finishDate) {
+                error.finishDate = 'Date is required';
+            }
         }
 
         return error;

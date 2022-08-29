@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { Box, FormControlLabel, Rating, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
-import { PrimaryButton } from './../../../common/UI/buttons/primary-button';
+import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
 import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
 import {
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
@@ -59,11 +59,13 @@ const ReturnBookModal = (props) => {
             feedback: Yup.string()
                 .trim()
                 .min(10, 'Feedback must be 10 or more symbols')
-                .max(250, 'Feedback must be 250 or less symbols'),
+                .max(250, 'Feedback must be 250 or less symbols')
         }),
         validate: (value) => {
             let error = {};
-            error.feedback = ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.feedback) && ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+            if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.feedback)) {
+                error.feedback =  ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+            }
             return error;
         },
         onSubmit: async (values, actions) => {
