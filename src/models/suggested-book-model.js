@@ -27,7 +27,7 @@ export class SuggestedBook {
             id: statusId,
             name: statusName,
         };
-        this.link = link;
-        this.comment = comment;
+        this.link = link || null;
+        this.comment = comment || null;
     }
 }

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Card, Divider, Grid, MenuItem, Typography, TextField } from '@mui/material';
+import { Card, Divider, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { SuggestedBookCard } from './suggested-book-card';
-import { types } from '../../types/index.js';
+import { types } from '../../types';
 import SuggestedBookModal from '../suggested-book/suggested-book-modal';
 import { useBoolean } from '../../utils/hooks/boolean-hook';
 import { SuggestionAPI } from '../../api/suggested-books-api';
@@ -10,13 +10,12 @@ import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 import EditSuggestedBookModal from './../suggested-book/add-edit-suggested-book/edit-suggested-book-modal';
 import { SuggestedBook } from '../../models/suggested-book-model';
-import { category } from '../../common/constants/category-constants';
-import { language } from '../../common/constants/language-constants';
 import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
 import { useVoting } from '../../utils/hooks/vote-hook';
 import { languageFilters } from '../book/add-edit-book/datas-for-form-options/languages';
 import { categoryFilters } from '../book/add-edit-book/datas-for-form-options/categories';
 import { SortButton } from '../../common/UI/SortButton';
+import { getBookCategoryId, getBookLanguageId } from '../books-catalogue-helpers/get-properties-for-payload';
 
 const createOptions = (option) => {
     return (
@@ -72,41 +71,20 @@ const SuggestedBooksListResults = (props) => {
     };
 
     const editSuggestionBook = (newBook) => {
-        let idCategory;
-        switch (newBook.category) {
-            case category.professional.name:
-                idCategory = category.professional.id;
-                break;
-            case category.fiction.name:
-                idCategory = category.fiction.id;
-                break;
-            default:
-                idCategory = '';
-        }
-        let idLanguage;
-        switch (newBook.language) {
-            case language.english.name:
-                idLanguage = language.english.id;
-                break;
-            case language.russian.name:
-                idLanguage = language.russian.id;
-                break;
-            default:
-                idLanguage = '';
-        }
-        const comment = suggestedBook.comment ? suggestedBook.comment : null
+        const categoryId = getBookCategoryId(newBook);
+        const languageId = getBookLanguageId(newBook);
         const editedBook = new SuggestedBook(
             newBook.id,
             newBook.title,
             newBook.author,
-            idCategory,
+            categoryId,
             newBook.category,
-            idLanguage,
+            languageId,
             newBook.language,
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             newBook.link,
-            comment
+            newBook.comment
         );
 
         SuggestionAPI.changeBookInfo(editedBook)
