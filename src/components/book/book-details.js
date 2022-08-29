@@ -48,6 +48,7 @@ import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 import { userSlice } from '../../store/reducers/UserSlice';
+import { bookingStatus } from '../../common/constants/booking-status-constants';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -163,7 +164,8 @@ const BookDetails = (props) => {
     const assignBook = ({ startDate, finishDate }) => {
         const startDateFormatISO = formatISO(startDate, { representation: 'date' });
         const finishDateFormatISO = formatISO(finishDate, { representation: 'date' });
-        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO);
+        // add condition for booking status
+        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
         BookingsAPI.createBooking(booking)
         .then((res) => {
             onUpdate(res.data.book);
