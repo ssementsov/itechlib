@@ -21,4 +21,26 @@ export const MimeType = {
     ZIP: 'application/zip'
 }
 
-export const allowedImagesTypes = [MimeType.JPG, MimeType.JPEG, MimeType.PNG, MimeType.GIF];
+export const FileType = {
+    XLS: 'xls',
+    XLSX: 'xlsx',
+    DOC: 'docx',
+    DOCX: 'docx',
+    PDF: 'pdf',
+    PNG: 'png',
+    JPG: 'jpg',
+    JPEG: 'jpeg',
+    BMP: 'bmp',
+    TIFF: 'tiff',
+    GIF: 'gif',
+    ODT: 'odt',
+    RTF: 'rtf',
+    TXT: 'txt',
+    PPS: 'pps',
+    PPT: 'ppt',
+    PPTX: 'pptx',
+    ZIP: 'zip',
+}
+
+export const allowedImagesMimeTypes = [MimeType.JPG, MimeType.JPEG, MimeType.PNG, MimeType.GIF];
+export const allowedImagesTypes = [FileType.JPG, FileType.JPEG, FileType.PNG, FileType.GIF];
