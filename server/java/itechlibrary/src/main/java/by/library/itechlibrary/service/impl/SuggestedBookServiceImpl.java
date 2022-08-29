@@ -21,10 +21,9 @@ import by.library.itechlibrary.exeption_handler.exception.WrongVoteException;
 import by.library.itechlibrary.mapper.SuggestedBookMapper;
 import by.library.itechlibrary.mapper.criteria.SearchCriteriaMapper;
 import by.library.itechlibrary.repository.SuggestedBookRepository;
+import by.library.itechlibrary.repository.SuggestedBookVoteCounterRepository;
 import by.library.itechlibrary.repository.predicate.SuggestedBookPredicateBuilder;
 import by.library.itechlibrary.service.SuggestedBookService;
-import by.library.itechlibrary.service.UserService;
-import by.library.itechlibrary.service.VoteService;
 import by.library.itechlibrary.util.PaginationUtil;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +49,8 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
     private final SuggestedBookPredicateBuilder suggestedBookPredicateBuilder;
 
     private final SearchCriteriaMapper searchCriteriaMapper;
+
+    private final SuggestedBookVoteCounterRepository suggestedBookVoteCounterRepository;
 
 
     @Override
@@ -83,11 +84,13 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
     }
 
     @Override
-    public SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto, User user) {
+    public SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto, User user, SuggestedBookVoteCounter suggestedBookVoteCounter) {
 
         log.info("Try to save suggested book.");
 
         SuggestedBook suggestedBook = suggestedBookMapper.toSuggestedBookFromNewSuggestedBookDto(suggestedBookDto);
+        suggestedBook.setSuggestedBookVoteCounter(suggestedBookVoteCounter);
+
         checkLanguageAndCategory(suggestedBook);
         checkId(suggestedBook);
 
@@ -98,7 +101,6 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         log.info("Try to set current date.");
 
         suggestedBook.setCreateDate(LocalDateTime.now());
-        suggestedBook.setSuggestedBookVoteCounter(new SuggestedBookVoteCounter());
 
         log.info("Try to save suggested book.");
 
@@ -118,6 +120,7 @@ public class SuggestedBookServiceImpl implements SuggestedBookService {
         SuggestedBook oldSuggestedBook = findById(suggestedBookId);
 
         newSuggestedBook.setCreator(oldSuggestedBook.getCreator());
+        newSuggestedBook.setSuggestedBookVoteCounter(oldSuggestedBook.getSuggestedBookVoteCounter());
         newSuggestedBook = suggestedBookRepository.save(newSuggestedBook);
 
         return suggestedBookMapper.toSuggestedBookDto(newSuggestedBook);
