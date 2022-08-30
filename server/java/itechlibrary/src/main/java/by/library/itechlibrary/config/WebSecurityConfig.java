@@ -47,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/login/**", "/js/**", "/error**", "/users/check/**",
-                        "/users/confirm/**", "/suggested-books/**", "/auth/**", "/internal-message/**", "/topic/**").permitAll()
+                        "/users/confirm/**", "/suggested-books/**", "/auth/**","/internal-notification/**",
+                        "/internal-message/**", "/topic/**").permitAll()
                 .anyRequest().authenticated()
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
