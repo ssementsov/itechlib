@@ -9,7 +9,6 @@ import {
     CardHeader,
     Grid,
     IconButton,
-    Link,
     Rating,
     Table,
     TableBody,
@@ -28,8 +27,6 @@ import AssignBookModal from '../book/assign-book/assign-book-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import EditBookModal from '../book/add-edit-book/edit-book-modal';
 import { bookStatus } from '../../common/constants/book-status-constants';
-import { language } from '../../common/constants/language-constants';
-import { category } from '../../common/constants/category-constants';
 import { Book } from '../../models/book-model';
 import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
@@ -43,11 +40,18 @@ import { getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
-import { formatISO, format, parseISO, isAfter, add } from 'date-fns';
+import { add, format, formatISO, isAfter, parseISO } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 import { userSlice } from '../../store/reducers/UserSlice';
+import { bookingStatus } from '../../common/constants/booking-status-constants';
+import {
+    getBookCategoryId,
+    getBookLanguageId,
+    getBookStatusId,
+} from '../books-catalogue-helpers/get-properties-for-payload';
+import { CustomLink } from '../../common/UI/custom-link';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -84,31 +88,31 @@ const BookDetails = (props) => {
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
-        .then((res) => {
-            if (res.data === LIMIT_COUNT_NOTIFICATIONS) {
-                setIsRejectedToAssign(true);
-            } else {
-                setIsRejectedToAssign(false);
-            }
-            setAssignButtonOpen();
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
+            .then((res) => {
+                if (res.data === LIMIT_COUNT_NOTIFICATIONS) {
+                    setIsRejectedToAssign(true);
+                } else {
+                    setIsRejectedToAssign(false);
+                }
+                setAssignButtonOpen();
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
     }, [defaultErrorSnackbar, readerId, setAssignButtonOpen]);
 
     const deleteBook = () => {
         if (book.status.name === bookStatus.available.name) {
             BooksAPI.removeBook(book.id)
-            .then(() => {
-                router.back();
-                enqueueSnackbar('Your book has been deleted successfully!', {
-                    variant: 'success',
+                .then(() => {
+                    router.back();
+                    enqueueSnackbar('Your book has been deleted successfully!', {
+                        variant: 'success',
+                    });
+                })
+                .catch(() => {
+                    defaultErrorSnackbar();
                 });
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
         } else {
             enqueueSnackbar('You can only delete books which are currently in “Available” status', {
                 variant: 'error',
@@ -117,103 +121,92 @@ const BookDetails = (props) => {
     };
 
     const editBook = (newBook) => {
-        let idCategory =
-            newBook.category === category.professional.name
-                ? category.professional.id
-                : category.fiction.id;
-        let idLanguage =
-            newBook.language === language.english.name ? language.english.id : language.russian.id;
-        let idStatus;
-        switch (newBook.status) {
-            case bookStatus.notAvailable.name:
-                idStatus = bookStatus.notAvailable.id;
-                break;
-            case bookStatus.inUse.name:
-                idStatus = bookStatus.inUse.id;
-                break;
-            default:
-                idStatus = bookStatus.available.id;
-        }
+        let categoryId = getBookCategoryId(newBook);
+        let languageId = getBookLanguageId(newBook);
+        const idStatus = getBookStatusId(newBook);
+
         const editedBook = new Book(
             newBook.id,
             newBook.title,
             newBook.author,
-            idCategory,
+            categoryId,
             newBook.category,
-            idLanguage,
+            languageId,
             newBook.language,
             newBook.link,
             idStatus,
             newBook.status,
             newBook.description,
         );
+
         BooksAPI.changeBookInfo(editedBook)
-        .then((res) => {
-            setEditButtonClose();
-            onUpdate(res.data);
-            enqueueSnackbar('Your book has been updated successfully!', {
-                variant: 'success',
+            .then((res) => {
+                setEditButtonClose();
+                onUpdate(res.data);
+                enqueueSnackbar('Your book has been updated successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
             });
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
     };
 
     const assignBook = ({ startDate, finishDate }) => {
         const startDateFormatISO = formatISO(startDate, { representation: 'date' });
         const finishDateFormatISO = formatISO(finishDate, { representation: 'date' });
-        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO);
+        // add condition for booking status
+        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
         BookingsAPI.createBooking(booking)
-        .then((res) => {
-            onUpdate(res.data.book);
-            setAssignButtonClose();
-            assignHandler(true);
-            enqueueSnackbar('The book was assigned to you successfully!', {
-                variant: 'success',
+            .then((res) => {
+                onUpdate(res.data.book);
+                setAssignButtonClose();
+                assignHandler(true);
+                enqueueSnackbar('The book was assigned to you successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
             });
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
     };
 
     const prolongateReading = (bookingId, finishDate) => {
         const newFinishDateFormatISO = formatISO(finishDate, { representation: 'date' });
         BookingsAPI.updateBookingFinishedDate(bookingId, newFinishDateFormatISO)
-        .then(res => {
-            onUpdateBookingInfo(res.data);
-            setProlongateButtonClose();
-            enqueueSnackbar(`Reading period has been prolongated till ${format(finishDate, 'MM.dd.yyyy')}`, {
-                variant: 'success',
+            .then(res => {
+                onUpdateBookingInfo(res.data);
+                setProlongateButtonClose();
+                enqueueSnackbar(`Reading period has been prolongated till ${format(finishDate, 'MM.dd.yyyy')}`, {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
             });
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
     };
 
     const returnBook = (body) => {
         let bookingId = bookingInfo.id;
         BookingsAPI.cancelBooking(bookingId, body)
-        .then(() => {
-            if(isNoRoles) {
-                dispatch(updateUserRoles(userRoles.reader))
-            }
-            setReturnButtonClose();
-            assignHandler(false);
-            enqueueSnackbar(
-                !body.feedback && !body.rate
-                    ? 'Your book was returned successfully!'
-                    : 'Thank you for feedback. Read on!',
-                {
-                    variant: 'success',
-                },
-            );
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
+            .then(() => {
+                if (isNoRoles) {
+                    dispatch(updateUserRoles(userRoles.reader));
+                }
+                setReturnButtonClose();
+                assignHandler(false);
+                enqueueSnackbar(
+                    !body.feedback && !body.rate
+                        ? 'Your book was returned successfully!'
+                        : 'Thank you for feedback. Read on!',
+                    {
+                        variant: 'success',
+                    },
+                );
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
     };
 
     //overdue booking
@@ -275,11 +268,7 @@ const BookDetails = (props) => {
                         )
                     }
                 />
-                <CardContent
-                    sx={{
-                        p: 0,
-                    }}
-                >
+                <CardContent sx={{ p: 0 }}>
                     <Grid container spacing={3}>
                         <Grid item md={12} xs={12}>
                             <Table>
@@ -303,18 +292,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.link}</TblCell>
                                         <TblCell>
-                                            {!book.link ? (
-                                                'No link yet'
-                                            ) : (
-                                                <Link
-                                                    href={book.link}
-                                                    underline='hover'
-                                                    target='_blank'
-                                                    rel='noopener'
-                                                >
-                                                    {'Open site'}
-                                                </Link>
-                                            )}
+                                            <CustomLink link={book.link} />
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
@@ -381,13 +359,7 @@ const BookDetails = (props) => {
                     </Grid>
                 </CardContent>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        p: 2,
-                    }}
-                >
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
                     <Button
                         onClick={() =>
                             router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}${FEEDBACKS_PATH}`)

@@ -1,6 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
@@ -10,18 +10,13 @@ import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookStatusException;
 import by.library.itechlibrary.exeption_handler.exception.WrongCurrentUserException;
 import by.library.itechlibrary.mapper.BookMapper;
-import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.service.BookService;
-import by.library.itechlibrary.service.BookingService;
-import by.library.itechlibrary.service.FileInfoService;
-import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.util.PaginationUtil;
 import by.library.itechlibrary.util.ResponseOwnBookDtoComparator;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -99,6 +92,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Book getById(long id) {
+        return findById(id);
+    }
+
+    @Override
     public FullBookDto getByIdFullVersion(long id) {
 
         Book book = findById(id);
@@ -125,10 +123,13 @@ public class BookServiceImpl implements BookService {
         log.info("Try to get current users books.");
 
         List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
-        List<ResponseOwnBookDto> responseOwnBookDtoList = bookMapper.mapToResponseOwnBookDtoList(currentBooks);
-        responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
 
-        return responseOwnBookDtoList;
+        return bookMapper.mapToResponseOwnBookDtoList(currentBooks);
+    }
+
+    @Override
+    public void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList){
+        responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
     }
 
     @Override
@@ -138,7 +139,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to delete book by id {}", id);
 
-        if (!book.getStatus().getName().equals(StatusConstant.IN_USE)) {
+        if (!book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
             bookRepository.deleteById(id);
 
@@ -177,7 +178,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to check permission for changing status.");
 
-        if (oldBookStatus.getName().equals(StatusConstant.IN_USE) && !newBookStatus.getName().equals(StatusConstant.IN_USE)) {
+        if (oldBookStatus.getName().equals(BookStatusConstant.IN_USE) && !newBookStatus.getName().equals(BookStatusConstant.IN_USE)) {
 
             log.info("Disable current booking for for changing status from IN USE.");
 

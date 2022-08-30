@@ -1,10 +1,12 @@
 package by.library.itechlibrary.controller;
 
-import by.library.itechlibrary.dto.criteria.SortingCriteria;
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.FeedbackService;
@@ -42,7 +44,7 @@ public class BookingController {
     }
 
     @GetMapping("/readers/{readerId}/count")
-    public int getCountActiveBookings(@PathVariable("readerId") long readerId){
+    public int getCountActiveBookings(@PathVariable("readerId") long readerId) {
 
         return bookingService.getCountActiveBookings(readerId);
 
@@ -90,6 +92,15 @@ public class BookingController {
     }
 
     @PreAuthorize("hasRole('BOOK_READER')")
+    @PostMapping("/resolve-assigned")
+    @ApiOperation("Accept booking request by assigned reader")
+    @ResponseStatus(HttpStatus.OK)
+    public FullBookDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
+
+        return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
+    }
+
+    @PreAuthorize("hasRole('BOOK_READER')")
     @PutMapping("/finish-date")
     @ApiOperation("update booking finish date")
     @ResponseStatus(HttpStatus.OK)
@@ -117,4 +128,3 @@ public class BookingController {
         return feedbackService.getAll(sortingCriteria, bookId);
     }
 }
-

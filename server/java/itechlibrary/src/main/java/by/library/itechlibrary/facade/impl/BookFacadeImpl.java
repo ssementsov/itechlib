@@ -1,21 +1,23 @@
 package by.library.itechlibrary.facade.impl;
 
-import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.constant.BookStatusConstant;
+import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.booking.BookingDto;
+import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
+import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
-import by.library.itechlibrary.entity.FileInfo;
-import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
+import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
-import by.library.itechlibrary.service.BookService;
-import by.library.itechlibrary.service.BookingService;
-import by.library.itechlibrary.service.FileInfoService;
-import by.library.itechlibrary.service.UserService;
+import by.library.itechlibrary.pojo.MailNotificationInfo;
+import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,20 +42,31 @@ public class BookFacadeImpl implements BookFacade {
 
     private final BookingService bookingService;
 
+    private final MailTemplateService mailTemplateService;
+
     private final FileInfoService fileInfoService;
 
     private final BookingInfoMapper bookingInfoMapper;
 
+    private final BookingMapper bookingMapper;
+
+    private final MailNotificationService mailNotificationService;
+
 
     @Override
     @Transactional
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         User currentUser = userService.getUserById(currentUserId);
+        WithOwnerBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
 
-        return bookService.save(withOwnerBookDto, fileInfo, currentUser);
+        String bookStatusName = createdBook.getStatus().getName();
+        long bookId = createdBook.getId();
+        tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, bookId);
+
+        return createdBook;
     }
 
     @Override
@@ -93,7 +106,7 @@ public class BookFacadeImpl implements BookFacade {
         List<ResponseOwnBookDto> responseOwnBookDtoList = bookService.getCurrentUsersBookedBooks(currentUserId);
         responseOwnBookDtoList.forEach(x -> x.setBaseBookingInfo(bookingInfoMapper
                 .mapToBaseBookingInfoDto(bookingService.getBaseBookingInfo(x.getId()))));
-
+        bookService.sortResponseOwnBookDtoListByFinishDate(responseOwnBookDtoList);
         return responseOwnBookDtoList;
     }
 
@@ -120,7 +133,7 @@ public class BookFacadeImpl implements BookFacade {
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        if (fullBookDto.getStatus().getName().equals(StatusConstant.IN_USE)) {
+        if (fullBookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
             BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
             fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
@@ -152,5 +165,27 @@ public class BookFacadeImpl implements BookFacade {
         }
 
         return Optional.empty();
+    }
+
+    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
+
+        if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
+
+            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
+            Book book = bookService.getById(bookId);
+            BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
+            Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
+
+            sendEmailAboutAcceptanceByReader(booking);
+        }
+    }
+
+    private void sendEmailAboutAcceptanceByReader(Booking booking) {
+
+        Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
+
+        mailNotificationService.sent(mailNotificationInfo, true);
     }
 }

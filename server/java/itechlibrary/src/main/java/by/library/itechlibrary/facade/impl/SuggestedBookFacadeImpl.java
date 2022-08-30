@@ -6,9 +6,11 @@ import by.library.itechlibrary.dto.suggested_book.NewSuggestedBookDto;
 import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.vote.VoteDto;
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.vote.SuggestedBookVoteCounter;
 import by.library.itechlibrary.entity.vote.Vote;
 import by.library.itechlibrary.facade.SuggestedBookFacade;
 import by.library.itechlibrary.service.SuggestedBookService;
+import by.library.itechlibrary.service.SuggestedBookVoteCounterService;
 import by.library.itechlibrary.service.UserService;
 import by.library.itechlibrary.service.VoteService;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
@@ -32,6 +34,8 @@ public class SuggestedBookFacadeImpl implements SuggestedBookFacade {
     private final SecurityUserDetailsServiceImpl securityUserDetailsService;
 
     private final UserService userService;
+
+    private final SuggestedBookVoteCounterService suggestedBookVoteCounterService;
 
 
     @Override
@@ -78,8 +82,9 @@ public class SuggestedBookFacadeImpl implements SuggestedBookFacade {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         User user = userService.getUserById(currentUserId);
+        SuggestedBookVoteCounter suggestedBookVoteCounter = suggestedBookVoteCounterService.create(new SuggestedBookVoteCounter());
 
-        return suggestedBookService.create(suggestedBookDto, user);
+        return suggestedBookService.create(suggestedBookDto, user, suggestedBookVoteCounter);
     }
 
     private void getVoteTypeAndSetToSuggestedBook(SuggestedBookDto suggestedBookDto) {

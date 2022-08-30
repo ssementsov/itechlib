@@ -1,14 +1,14 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.dto.BookStatusDto;
 import by.library.itechlibrary.dto.CategoryDto;
 import by.library.itechlibrary.dto.LanguageDto;
-import by.library.itechlibrary.dto.user.UserDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
+import by.library.itechlibrary.dto.user.UserDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.NotFoundException;
@@ -189,7 +189,7 @@ class BookServiceImplTest {
 
         long bookId = 1;
         Book book = getTestBook();
-        book.setStatus(StatusConstant.IN_USE_BOOK_STATUS);
+        book.setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
         String exceptionMessage = "You can't delete book with status IN USE.";
 
         Mockito.doReturn(Optional.of(book)).when(bookRepository).findById(bookId);
@@ -382,7 +382,7 @@ class BookServiceImplTest {
         book.setBookings(List.of());
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
+        book.setStatus(BookStatusConstant.AVAILABLE_BOOK_STATUS);
 
         return book;
     }

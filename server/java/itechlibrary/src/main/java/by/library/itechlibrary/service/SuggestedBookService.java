@@ -5,6 +5,7 @@ import by.library.itechlibrary.dto.suggested_book.SuggestedBookDto;
 import by.library.itechlibrary.dto.criteria.BaseSearchCriteria;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.entity.vote.SuggestedBookVoteCounter;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface SuggestedBookService {
 
     void remove(long id);
 
-    SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto, User user);
+    SuggestedBookDto create(NewSuggestedBookDto suggestedBookDto, User user, SuggestedBookVoteCounter suggestedBookVoteCounter);
 
     SuggestedBookDto update(SuggestedBookDto suggestedBookDto);
 

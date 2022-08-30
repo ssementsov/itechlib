@@ -1,8 +1,6 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.entity.MailNotification;
-import by.library.itechlibrary.entity.Template;
-import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.MailNotificationRepository;
 import by.library.itechlibrary.service.MailNotificationService;
@@ -38,12 +36,16 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Async("threadPoolTaskExecutor")
     @Transactional
     @Override
-    public void sent(MailNotificationInfo mailNotificationInfo) {
+    public void sent(MailNotificationInfo mailNotificationInfo, boolean isCorporateEmail) {
 
         MailNotification notification = getMailNotification(mailNotificationInfo);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        trySetDataMimeMessage(mailNotificationInfo.getUser().getGoogleEmail(), notification, mimeMessage);
+        String email = isCorporateEmail
+                ? mailNotificationInfo.getUser().getCorpEmail()
+                : mailNotificationInfo.getUser().getGoogleEmail();
+
+        trySetDataMimeMessage(email, notification, mimeMessage);
         emailSender.send(mimeMessage);
 
     }

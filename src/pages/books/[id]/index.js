@@ -9,7 +9,7 @@ import UploadImageCard from '../../../components/upload-image-card';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from '../../../utils/hooks/custom-snackbar-hook';
 import { LOGIN_PATH } from '../../../common/constants/route-constants';
-import { YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants/warning-messages';
+import { YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants/warning-messages-and-validation';
 import { ProgressLinear } from '../../../common/UI/progressLinear';
 import { GoBackButton } from '../../../common/UI/buttons/go-back-button';
 import { BookingsAPI } from '../../../api/bookings-api';
@@ -65,6 +65,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     const bookCover = res.data.fileInfo;
                     if (bookCover) {
                         setIsUploadedBookCover(true);
+                        setIsUpdatedBookCover(false);
                     }
                 })
                 .catch((err) => {
@@ -98,7 +99,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                 setIsLoadedBookingInfo(true);
             });
         }
-    }, [isAssigned, isLoadedBookInfo]);
+    }, [book.id, isAssigned, isLoadedBookInfo]);
 
     if (
         !(isLoadedBookInfo && isLoadedBookingInfo) && isAssigned ||
@@ -130,8 +131,6 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                             <Grid item lg={4} md={4} xs={12}>
                                 <UploadImageCard
                                     isUploadedImage={isUploadedBookCover}
-                                    onUpdate={setIsUpdatedBookCover}
-                                    onUpload={setIsUploadedBookCover}
                                     data={book}
                                     isOwner={isOwner}
                                     onAdd={addBookCover}

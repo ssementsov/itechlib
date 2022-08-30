@@ -7,7 +7,7 @@ export class Book {
     categoryName = '',
     languageId = '',
     languageName = '',
-    link = null,
+    link = '',
     statusId = '',
     statusName = '',
     description = ''
@@ -23,7 +23,7 @@ export class Book {
       id: languageId,
       name: languageName,
     };
-    this.link = link;
+    this.link = link || null;
     this.status = {
       id: statusId,
       name: statusName,

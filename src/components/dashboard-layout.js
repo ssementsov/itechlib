@@ -42,7 +42,7 @@ export const DashboardLayout = (props) => {
             router.replace(LOGIN_PATH);
             localStorage.removeItem('token');
         }, timeToEndDay)
-    },[])
+    },[router])
 
     useEffect(() => {
         const token = localStorage.getItem('token');

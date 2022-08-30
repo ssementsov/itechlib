@@ -3,15 +3,12 @@ import { useRouter } from 'next/router';
 import { Box, Container } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
-import { useState, useMemo } from 'react';
-import { bookStatus } from '../common/constants/book-status-constants';
+import { useMemo, useState } from 'react';
 import { Book } from '../models/book-model';
 import { SuggestedBook } from '../models/suggested-book-model';
 import { BooksAPI } from '../api/books-api';
 import { SuggestionAPI } from '../api/suggested-books-api';
-import { category } from '../common/constants/category-constants';
-import { language } from '../common/constants/language-constants';
-import { suggestedBookStatus } from './../common/constants/suggested-book-status-constants';
+import { suggestedBookStatus } from '../common/constants/suggested-book-status-constants';
 import { useBoolean } from '../utils/hooks/boolean-hook';
 import { PropTypes } from 'prop-types';
 import { types } from '../types';
@@ -20,6 +17,12 @@ import SuggestedBooksListResults from './suggested-books-list/suggested-books-li
 import { SUGGESTED_BOOKS_PATH } from '../common/constants/route-constants';
 import { useSelector } from 'react-redux';
 import BooksInUseListResults from './books-in-use/books-in-use-list-results';
+import {
+    getBookCategoryId,
+    getBookLanguageId,
+    getBookStatusId,
+} from './books-catalogue-helpers/get-properties-for-payload';
+import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-books-list';
 
 const BooksCatalogue = (props) => {
     const {
@@ -45,75 +48,24 @@ const BooksCatalogue = (props) => {
     const booksInUse = useSelector((state) => state.booksInUse.booksInUse);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
 
-    const searchedBooks = useMemo(() => {
-        if (search.length > 1 && books) {
-            setIsStartedSearch(true);
-            return books.filter((book) => {
-                return (
-                    book.author.toLowerCase().includes(search.toLowerCase()) ||
-                    book.title.toLowerCase().includes(search.toLowerCase())
-                );
-            });
-        }
-        return books;
-    }, [books, search]);
-
-    const searchedSuggestedBooks = useMemo(() => {
-        if (search.length > 1 && suggestedBooks) {
-            setIsStartedSearch(true);
-            return suggestedBooks.filter((book) => {
-                return (
-                    book.author.toLowerCase().includes(search.toLowerCase()) ||
-                    book.title.toLowerCase().includes(search.toLowerCase())
-                );
-            });
-        }
-        return suggestedBooks;
-    }, [search, suggestedBooks]);
-
-    const searchedBooksInUse = useMemo(() => {
-        if (search.length > 1 && booksInUse) {
-            setIsStartedSearch(true);
-            return booksInUse.filter((book) => {
-                return (
-                    book.author.toLowerCase().includes(search.toLowerCase()) ||
-                    book.title.toLowerCase().includes(search.toLowerCase())
-                );
-            });
-        }
-        return booksInUse;
-    }, [search, booksInUse]);
+    const searchedBooks = useMemo(() => getFilteredBooksList(search, books, setIsStartedSearch), [books, search]);
+    const searchedSuggestedBooks = useMemo(() => getFilteredBooksList(search, suggestedBooks, setIsStartedSearch), [search, suggestedBooks]);
+    const searchedBooksInUse = useMemo(() => getFilteredBooksList(search, booksInUse, setIsStartedSearch), [search, booksInUse]);
 
     const createBook = (newBook) => {
-        let idCategory =
-            newBook.category === category.professional.name
-                ? category.professional.id
-                : category.fiction.id;
-        let idLanguage =
-            newBook.language === language.english.name ? language.english.id : language.russian.id;
-        let idStatus;
-        switch (newBook.status) {
-            case bookStatus.notAvailable.name:
-                idStatus = bookStatus.notAvailable.id;
-                break;
-            case bookStatus.inUse.name:
-                idStatus = bookStatus.inUse.id;
-                break;
-            default:
-                idStatus = bookStatus.available.id;
-        }
-
-        const link = newBook.link ? newBook.link : null;
+        const categoryId = getBookCategoryId(newBook);
+        const languageId = getBookLanguageId(newBook);
+        const idStatus = getBookStatusId(newBook);
 
         const createdBook = new Book(
             0,
             newBook.title,
             newBook.author,
-            idCategory,
+            categoryId,
             newBook.category,
-            idLanguage,
+            languageId,
             newBook.language,
-            link,
+            newBook.link,
             idStatus,
             newBook.status,
             newBook.description
@@ -142,41 +94,21 @@ const BooksCatalogue = (props) => {
     };
 
     const createSuggestedBook = (suggestedBook) => {
-        let idCategory;
-        switch (suggestedBook.category) {
-            case category.professional.name:
-                idCategory = category.professional.id;
-                break;
-            case category.fiction.name:
-                idCategory = category.fiction.id;
-                break;
-            default:
-                idCategory = 0;
-        }
-        let idLanguage;
-        switch (suggestedBook.language) {
-            case language.english.name:
-                idLanguage = language.english.id;
-                break;
-            case language.russian.name:
-                idLanguage = language.russian.id;
-                break;
-            default:
-                idLanguage = 0;
-        }
-        const comment = suggestedBook.comment ? suggestedBook.comment : null
+        const categoryId = getBookCategoryId(suggestedBook);
+        const languageId = getBookLanguageId(suggestedBook);
+
         const newSuggestedBook = new SuggestedBook(
             0,
             suggestedBook.title,
             suggestedBook.author,
-            idCategory,
+            categoryId,
             suggestedBook.category,
-            idLanguage,
+            languageId,
             suggestedBook.language,
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             suggestedBook.link,
-            comment
+            suggestedBook.comment
         );
 
         SuggestionAPI.createSuggestedBook(newSuggestedBook)

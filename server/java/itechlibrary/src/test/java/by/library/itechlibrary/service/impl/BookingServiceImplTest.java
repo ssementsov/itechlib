@@ -1,14 +1,11 @@
 package by.library.itechlibrary.service.impl;
 
-import by.library.itechlibrary.constant.StatusConstant;
+import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.*;
-import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
-import by.library.itechlibrary.exeption_handler.exception.BookingBookException;
 import by.library.itechlibrary.exeption_handler.exception.NotActiveBookingException;
-import by.library.itechlibrary.exeption_handler.exception.WrongDateException;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.repository.BookingRepository;
@@ -147,7 +144,7 @@ class BookingServiceImplTest {
             BookingDto bookingDto = getBookingDto();
             bookingDto.setId(0);
             Booking booking = getBooking();
-            booking.getBook().setStatus(StatusConstant.IN_USE_BOOK_STATUS);
+            booking.getBook().setStatus(BookStatusConstant.IN_USE_BOOK_STATUS);
             String exceptionMessage = "Book is not available or in use now";
 
             Mockito.doReturn(booking).when(bookingMapper).toBookingFromBookingDto(bookingDto);
@@ -171,7 +168,7 @@ class BookingServiceImplTest {
             BookingDto bookingDto = getBookingDto();
             bookingDto.setId(0);
             Booking booking = getBooking();
-            booking.getBook().setStatus(StatusConstant.NOT_AVAILABLE_BOOK_STATUS);
+            booking.getBook().setStatus(BookStatusConstant.NOT_AVAILABLE_BOOK_STATUS);
             String exceptionMessage = "Book is not available or in use now";
 
             Mockito.doReturn(booking).when(bookingMapper).toBookingFromBookingDto(bookingDto);
@@ -433,7 +430,7 @@ class BookingServiceImplTest {
         book.setBookings(List.of());
         book.setLanguage(language);
         book.setCategory(category);
-        book.setStatus(StatusConstant.AVAILABLE_BOOK_STATUS);
+        book.setStatus(BookStatusConstant.AVAILABLE_BOOK_STATUS);
 
         return book;
     }

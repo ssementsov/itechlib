@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12082022-add-data-to-book-status
+      author: vladimir_egorov
+      changes:
+        sqlFile:
+          dbms: 'postgresql'
+          path: /db/changelog/v.1.2/sql-import/import-data.sql
+          stripComments: true
