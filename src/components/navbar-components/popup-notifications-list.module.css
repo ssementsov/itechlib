@@ -1,0 +1,21 @@
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #121828;
+    background-color: #5048E533;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: 600;
+}
+.notificationsCount {
+    width: 25px;
+    height: 25px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-left: 5px;
+}
