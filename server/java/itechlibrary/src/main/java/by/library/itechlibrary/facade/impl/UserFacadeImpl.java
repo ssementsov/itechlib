@@ -2,6 +2,7 @@ package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
+import by.library.itechlibrary.dto.user.UserProfileDto;
 import by.library.itechlibrary.entity.FileInfo;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
@@ -29,6 +30,8 @@ public class UserFacadeImpl implements UserFacade {
     private final FileInfoService fileInfoService;
 
     private final MailTemplateService mailTemplateService;
+
+    private final UserInternalNotificationService userInternalNotificationService;
 
 
     @Override
@@ -65,5 +68,15 @@ public class UserFacadeImpl implements UserFacade {
         userService.removePhoto(fileId);
         fileInfoService.removeById(fileId);
 
+    }
+
+    @Override
+    public UserProfileDto getCurrentUserProfileDto() {
+
+        UserProfileDto userProfileDto = userService.getCurrentUserProfileDto();
+        boolean isUnReadInternalNotification = userInternalNotificationService.isUnread(userProfileDto.getId());
+        userProfileDto.setUnreadInternalNotification(isUnReadInternalNotification);
+
+        return userProfileDto;
     }
 }

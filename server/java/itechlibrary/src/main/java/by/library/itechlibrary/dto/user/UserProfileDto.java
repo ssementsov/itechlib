@@ -8,4 +8,6 @@ public class UserProfileDto extends UserDto {
 
     private FileInfoDto fileInfo;
 
+    private boolean isUnreadInternalNotification;
+
 }
