@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface UserInternalNotificationRepository extends JpaRepository<UserInternalNotification, Long> {
 
-    List<UserInternalNotification> getAllByUserIdAndReadIsTrue(Long userId);
+    @Query("select uin from UserInternalNotification uin where uin.userId = :userId and uin.isRead = false")
+    List<UserInternalNotification> getByUserIdAndReadIsFalse(Long userId);
 
     @Modifying
     @Query("update UserInternalNotification uin set uin.isRead = true where uin.id = :id")

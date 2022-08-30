@@ -27,7 +27,7 @@ public class UserInternalNotificationServiceImpl implements UserInternalNotifica
 
         log.info("Try get unread userInternalNotification List by user id");
 
-        List<UserInternalNotification> userInternalNotifications = userInternalNotificationRepository.getAllByUserIdAndReadIsTrue(userId);
+        List<UserInternalNotification> userInternalNotifications = userInternalNotificationRepository.getByUserIdAndReadIsFalse(userId);
 
         return userInternalNotificationMapper.mapUserInternalNotificationDtoList(userInternalNotifications);
     }
