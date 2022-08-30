@@ -51,7 +51,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserProfileDto getCurrentUser() {
 
-        return userService.getCurrentUserProfileDto();
+        return userFacade.getCurrentUserProfileDto();
     }
 
     @GetMapping
