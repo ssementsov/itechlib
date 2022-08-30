@@ -32,9 +32,7 @@ export const SuggestedBookCard = (props) => {
                 gutterBottom
                 variant="h5"
                 align="center"
-                sx={{
-                    margin: '20px 0 30px',
-                }}
+                sx={{margin: '20px 0 30px'}}
             >
                 {book.title}
             </Typography>

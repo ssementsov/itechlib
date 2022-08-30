@@ -9,7 +9,6 @@ import {
     CardHeader,
     Grid,
     IconButton,
-    Link,
     Rating,
     Table,
     TableBody,
@@ -52,6 +51,7 @@ import {
     getBookLanguageId,
     getBookStatusId,
 } from '../books-catalogue-helpers/get-properties-for-payload';
+import { CustomLink } from '../../common/UI/custom-link';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -292,18 +292,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.link}</TblCell>
                                         <TblCell>
-                                            {!book.link ? (
-                                                'No link yet'
-                                            ) : (
-                                                <Link
-                                                    href={book.link}
-                                                    underline='hover'
-                                                    target='_blank'
-                                                    rel='noopener'
-                                                >
-                                                    {'Open site'}
-                                                </Link>
-                                            )}
+                                            <CustomLink link={book.link} />
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
