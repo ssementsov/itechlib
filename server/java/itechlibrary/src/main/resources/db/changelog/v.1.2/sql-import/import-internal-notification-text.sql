@@ -1,0 +1,3 @@
+INSERT INTO internal_notification (id, name, text, link) VALUES (1, 'BOOK_ACCEPTANCE_BY_READER','Please accept {BOOK_TITLE} from {OWNER_NAME}', 'http://{HOST}/books/{BOOK_ID}') ON CONFLICT (id) DO NOTHING;
+INSERT INTO internal_notification (id, name, text, link) VALUES (2, 'BOOK_ACCEPTANCE','Your {BOOK_TITLE} has been accepted by {READER_NAME}', 'http://{HOST}/my-books') ON CONFLICT (id) DO NOTHING;
+INSERT INTO internal_notification (id, name, text, link) VALUES (3, 'ACCEPTANCE_DECLINED','Your book {BOOK_TITLE} has been declined by {READER_NAME}', 'http://{HOST}/my-books') ON CONFLICT (id) DO NOTHING;

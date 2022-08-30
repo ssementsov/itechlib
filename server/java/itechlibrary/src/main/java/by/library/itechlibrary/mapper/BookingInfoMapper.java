@@ -30,4 +30,5 @@ public interface BookingInfoMapper {
 
     @IterableMapping(qualifiedByName = "baseBookingInfoDto")
     List<BaseBookingInfoDto> mapToBaseBookingInfoDtoList(List<BaseBookingInfo> baseBookingInfoList);
+
 }

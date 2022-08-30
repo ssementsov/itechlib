@@ -94,20 +94,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
-    @Scheduled(fixedRate = 15000)
     public void testWebSocket() {
 
-        InternalNotification internalNotification = new InternalNotification((long)1, "Hi i am 1 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
-        InternalNotification internalNotification1 = new InternalNotification((long)2, "Hi i am 2 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
-        InternalNotification internalNotification2 = new InternalNotification((long)3, "Hi i am 3 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
-        InternalNotification internalNotification3 = new InternalNotification((long)4, "Hi i am 4 Notification", "https://www.youtube.com/watch?v=A6wEkG4B38E");
-
-        List<InternalNotification> internalNotificationList = List.of(internalNotification, internalNotification1, internalNotification2, internalNotification3);
-
-        log.info("Try to send message by webSocket");
-
-       internalNotificationList.forEach((x) -> simpMessagingTemplate.convertAndSend("/topic/1", x));
-        internalNotificationList.forEach((x) -> simpMessagingTemplate.convertAndSend("/topic/6", x));
+       simpMessagingTemplate.convertAndSend("/topic/6", "");
 
     }
 

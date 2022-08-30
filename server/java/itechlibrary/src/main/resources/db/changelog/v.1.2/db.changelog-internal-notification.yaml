@@ -15,6 +15,11 @@ databaseChangeLog:
                     unique: true
                     primaryKey: true
               - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
                   name: text
                   type: VARCHAR(2000)
                   constraints:
@@ -22,11 +27,6 @@ databaseChangeLog:
               - column:
                   name: link
                   type: VARCHAR(2048)
-                  constraints:
-                    nullable: true
-              - column:
-                  name: creation_date
-                  type: TIMESTAMP
                   constraints:
                     nullable: true
 
@@ -54,6 +54,11 @@ databaseChangeLog:
                   type: BIGINT
                   constraints:
                     nullable: false
+              - column:
+                  name: is_read
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
 
   - changeSet:
       id:  04082022-add-ForeignKeyConstraint-user-id-to-internal-notification-user
@@ -68,7 +73,7 @@ databaseChangeLog:
 
 
   - changeSet:
-      id:  15122021-add-ForeignKeyConstraint-internal-notification-to-nternal-notification-user
+      id:  04082022-add-ForeignKeyConstraint-internal-notification-to-nternal-notification-user
       author:  maksim_maevsky
       changes:
         - addForeignKeyConstraint:
@@ -77,3 +82,12 @@ databaseChangeLog:
             constraintName: fk_internal-notification-user-internal-notification
             referencedColumnNames: id
             referencedTableName: internal_notification
+
+  - changeSet:
+      id: 29082022-add-data-to-internal-notification
+      author: maksim_maevsky
+      changes:
+        sqlFile:
+          dbms:  'postgresql'
+          path:  /db/changelog/v.1.2/sql-import/import-internal-notification-text.sql
+          stripComments:  true

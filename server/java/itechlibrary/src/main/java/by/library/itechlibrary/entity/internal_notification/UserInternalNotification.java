@@ -24,4 +24,7 @@ public class UserInternalNotification {
     @Column(name = "internal_notification_id")
     private Long internalNotificationId;
 
+    @Column(name = "is_read")
+    private boolean isRead;
+
 }

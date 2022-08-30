@@ -19,6 +19,9 @@ public class InternalNotification {
     @Id
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "text")
     private String text;
 
