@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { PopupNotificationsListWithWebsocket } from './navbar-components/popup-notifications-list';
-import { PopupMenuWithWebsocket } from './navbar-components/popup-menu';
+import { PopupMenu } from './navbar-components/popup-menu';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -29,15 +29,13 @@ export const DashboardNavbar = (props) => {
                 >
                     <IconButton
                         onClick={onSidebarOpen}
-                        sx={{
-                            display: { xs: 'inline-flex', lg: 'none' },
-                        }}
+                        sx={{ display: { xs: 'inline-flex', lg: 'none' }}}
                     >
                         <MenuIcon fontSize='small' />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }} />
                     <PopupNotificationsListWithWebsocket />
-                    <PopupMenuWithWebsocket />
+                    <PopupMenu />
                 </Toolbar>
             </DashboardNavbarRoot>
         </>

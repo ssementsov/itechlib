@@ -10,7 +10,6 @@ import Logout from '@mui/icons-material/Logout';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { withWebsocket } from './with-websocket';
 
 const stylesForPopup = {
     elevation: 0,
@@ -40,7 +39,7 @@ const stylesForPopup = {
     },
 };
 
-const PopupMenu = (props) => {
+export const PopupMenu = (props) => {
     const {stompClient} = props;
     const router = useRouter();
     const avatarData = useSelector((state) => state.avatar.avatarData);
@@ -107,5 +106,3 @@ const PopupMenu = (props) => {
         </>
     );
 };
-
-export const PopupMenuWithWebsocket = withWebsocket(PopupMenu);

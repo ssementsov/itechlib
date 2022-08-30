@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Badge, IconButton, List, ListItemButton, ListItemText, ListSubheader, Popover } from '@mui/material';
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import styles from './popup-notifications-list.module.css';
 import { withWebsocket } from './with-websocket';
+import { fetchInternalNotifications } from '../../store/reducers/InternalNotificationsSlice';
 
 const stylePopupItemsList = {
     elevation: 0,
@@ -29,8 +30,10 @@ const stylePopupItemsList = {
 
 const PopupNotificationsList = (props) => {
     const {stompClient} = props;
+    const dispatch = useDispatch();
     const userId = useSelector(state => state.user.user.id);
-    const [notifications, setNotifications] = useState([]);
+    const notifications = useSelector(state => state.internalNotifications.internalNotifications);
+    console.log('notifications', notifications)
     const notificationsCount = notifications.length;
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -38,6 +41,7 @@ const PopupNotificationsList = (props) => {
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
+        dispatch(fetchInternalNotifications(userId))
     };
 
     const handleClose = () => {
@@ -51,16 +55,7 @@ const PopupNotificationsList = (props) => {
 
         function onConnected() {
             stompClient.subscribe(`/topic/${userId}`, function(data) {
-                console.log(data.body);
-                setNotifications(prevState => {
-                    const newNotification = JSON.parse(data.body);
-                    const existedNotification = prevState.find(currentNotification => currentNotification.id === newNotification.id);
-                    if (!existedNotification) {
-                        return [...prevState, JSON.parse(data.body)];
-                    } else {
-                        return prevState;
-                    }
-                });
+                console.log('data.body', data.body);
             });
         }
 
