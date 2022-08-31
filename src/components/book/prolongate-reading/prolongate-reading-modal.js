@@ -17,9 +17,9 @@ export const ProlongateReadingModal = (props) => {
     const { onProlongate, open, onClose, bookingInfo } = props;
     const bookingId = bookingInfo.id;
     const startDate = bookingInfo.startDate && parseISO(bookingInfo.startDate);
+    const finishDate = bookingInfo.finishDate && parseISO(bookingInfo.finishDate);
 
-    const minDatePickerDate = new Date();
-    const minFormikDate = sub(new Date(), { days: 1 });
+    const minDate = finishDate;
     const maxDate = (startDate && add(startDate, { months: 1 })) || new Date();
 
     const initValue = {
@@ -43,7 +43,7 @@ export const ProlongateReadingModal = (props) => {
     const formik = useFormik({
         initialValues: initValue,
         validationSchema: Yup.object({
-            finishDate: Yup.date().min(minFormikDate, dateNotEarlierThan(minDatePickerDate)).max(maxDate, dateNotLaterThan(maxDate)),
+            finishDate: Yup.date().min(minDate, dateNotEarlierThan(minDate)).max(maxDate, dateNotLaterThan(maxDate)),
         }),
         validate,
         onSubmit: async (values, actions) => {
@@ -65,7 +65,7 @@ export const ProlongateReadingModal = (props) => {
             <DatePeriodForm
                 formik={formik}
                 onClose={closeModalHandler}
-                minDate={minDatePickerDate}
+                minDate={minDate}
                 maxDate={maxDate}
                 title={'Prolongate reading'}
             />
