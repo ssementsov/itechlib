@@ -12,7 +12,7 @@ import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { YOU_CAN_UPLOAD_IMAGE } from '../common/constants/warning-messages-and-validation';
 import { ProgressLinear } from '../common/UI/progressLinear';
-import { GoBackButton } from './../common/UI/buttons/go-back-button';
+import { GoBackButton } from '../common/UI/buttons/go-back-button';
 
 function ProfilePage() {
     const router = useRouter();
