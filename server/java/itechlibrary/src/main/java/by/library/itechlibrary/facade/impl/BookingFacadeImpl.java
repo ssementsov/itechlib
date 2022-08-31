@@ -3,7 +3,7 @@ package by.library.itechlibrary.facade.impl;
 import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithBookingStatusBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Book;
@@ -60,7 +60,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     @Transactional
-    public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
+    public WithBookingStatusBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
         bookingService.checkDtoForResolveAssignedBooking(bookingAcceptanceDto);
 
@@ -69,14 +69,17 @@ public class BookingFacadeImpl implements BookingFacade {
 
         Book book = bookService.getById(bookId);
         BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
-        Booking resolvedBooking = bookingService.resolveAssignedBooking(bookingDto, book, readerId, bookingAcceptanceDto.getStatus());
+
+        BookingDto resolvedBookingDto = bookingService.resolveAssignedBooking(bookingDto, book, readerId, bookingAcceptanceDto.getStatus());
         bookingAcceptanceService.save(bookingAcceptanceDto, book, readerId);
 
-        Booking booking = bookingService.findByIdWithoutMapping(resolvedBooking.getId());
-
+        Booking booking = bookingService.findByIdWithoutMapping(resolvedBookingDto.getId());
         sendEmailNotification(booking);
 
-        return bookService.getByIdFullVersion(bookId);
+        WithBookingStatusBookDto withBookingStatusBookDto = bookService.getByIdWithBookingStatus(bookId);
+        withBookingStatusBookDto.setBookingStatus(resolvedBookingDto.getStatus());
+
+        return withBookingStatusBookDto;
     }
 
     private void sendEmailNotification(Booking booking) {

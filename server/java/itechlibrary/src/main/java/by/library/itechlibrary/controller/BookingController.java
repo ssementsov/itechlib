@@ -1,7 +1,7 @@
 package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithBookingStatusBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
@@ -95,7 +95,7 @@ public class BookingController {
     @PostMapping("/resolve-assigned")
     @ApiOperation("Accept or decline booking request by assigned reader")
     @ResponseStatus(HttpStatus.OK)
-    public FullBookDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
+    public WithBookingStatusBookDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
 
         return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
     }

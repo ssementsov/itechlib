@@ -20,7 +20,7 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllCurrentsByReaderId(long id);
 
-    Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto);
+    BookingDto resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto);
 
     List<BookingResponseDto> findAllByBookId(long id);
 

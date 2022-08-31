@@ -2,10 +2,7 @@ package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -55,16 +52,16 @@ public class BookFacadeImpl implements BookFacade {
 
     @Override
     @Transactional
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
+    public WithBookingStatusBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         User currentUser = userService.getUserById(currentUserId);
-        WithOwnerBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
+        WithBookingStatusBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
 
         String bookStatusName = createdBook.getStatus().getName();
         long bookId = createdBook.getId();
-        tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, bookId);
+        tryCreateBookingForAcceptanceByReader(createdBook, bookingForTargetReaderDto, bookStatusName, bookId);
 
         return createdBook;
     }
@@ -167,7 +164,7 @@ public class BookFacadeImpl implements BookFacade {
         return Optional.empty();
     }
 
-    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
+    private void tryCreateBookingForAcceptanceByReader(WithBookingStatusBookDto bookDto, BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
 
         if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
@@ -175,6 +172,8 @@ public class BookFacadeImpl implements BookFacade {
             Book book = bookService.getById(bookId);
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
+
+            bookDto.setBookingStatus(bookingResponseDto.getStatus());
 
             sendEmailAboutAcceptanceByReader(booking);
         }

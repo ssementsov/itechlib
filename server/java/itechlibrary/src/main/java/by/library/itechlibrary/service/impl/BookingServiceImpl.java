@@ -88,11 +88,12 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto) {
+    public BookingDto resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto) {
 
         bookingDto.setStatus(bookingStatusDto);
+        Booking booking = updateBooking(bookingDto, book, readerId);
 
-        return updateBooking(bookingDto, book, readerId);
+        return bookingMapper.toBookingDtoFromBooking(booking);
     }
 
     @Override
