@@ -5,51 +5,32 @@ import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, useMediaQuery } from '@mui/material';
 import { HomePageIcon } from '../icons/home-page-icon';
 import { MyBooksIcon } from '../icons/my-books-icon';
-// import { SettingsIcon } from '../icons/settings-icon';
-// import { HelpIcon } from '../icons/help-icon';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { theme } from '../theme/index';
-import {
-    MAIN_CATALOGUE_PATH,
-    MY_BOOKS_PATH,
-    // REGISTER_PATH,
-    // HELP_PATH,
-    SUGGESTED_BOOKS_PATH,
-    BOOKS_IN_USE,
-} from '../common/constants/route-constants';
+import { BOOKS_IN_USE, MAIN_CATALOGUE_PATH, MY_BOOKS_PATH, SUGGESTED_BOOKS_PATH } from '../common/constants';
 
 const items = [
     {
         href: MAIN_CATALOGUE_PATH,
-        icon: <HomePageIcon fontSize="small" />,
+        icon: <HomePageIcon fontSize='small' />,
         title: 'Home page',
     },
     {
         href: MY_BOOKS_PATH,
-        icon: <MyBooksIcon fontSize="small" />,
+        icon: <MyBooksIcon fontSize='small' />,
         title: 'My books',
     },
     {
         href: SUGGESTED_BOOKS_PATH,
-        icon: <MyBooksIcon fontSize="small" />,
+        icon: <MyBooksIcon fontSize='small' />,
         title: 'Suggested books',
     },
     {
         href: BOOKS_IN_USE,
-        icon: <MyBooksIcon fontSize="small" />,
+        icon: <MyBooksIcon fontSize='small' />,
         title: 'Books in use',
     },
-    // {
-    //     href: REGISTER_PATH,
-    //     icon: <SettingsIcon fontSize="small" />,
-    //     title: 'Settings',
-    // },
-    // {
-    //     href: HELP_PATH,
-    //     icon: <HelpIcon fontSize="small" />,
-    //     title: 'Help',
-    // },
 ];
 
 export const DashboardSidebar = (props) => {

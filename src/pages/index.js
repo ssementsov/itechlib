@@ -1,19 +1,21 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { GoogleLogin } from 'react-google-login';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { UserAPI } from '../api/user-api';
 import jwt_decode from 'jwt-decode';
 import {
+    isRequired,
     LOGIN_PATH,
     MAIN_CATALOGUE_PATH,
-} from '../common/constants/route-constants';
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
+} from '../common/constants';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
 import * as Yup from 'yup';
-import { isRequired, mustBeLessSymbols, mustBeMoreSymbols } from '../common/constants/warning-messages-and-validation';
 
 const Register = () => {
     const router = useRouter();

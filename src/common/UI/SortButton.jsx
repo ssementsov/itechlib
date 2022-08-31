@@ -4,7 +4,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { useTheme } from '@mui/material/styles';
 import { useBoolean } from '../../utils/hooks/boolean-hook';
-import { SortDirection, SortFields } from '../constants/sorting-constants';
+import { SortDirection, SortFields } from '../constants';
 
 export const SortButton = (props) => {
     const { title, onSorting } = props;

@@ -14,7 +14,7 @@ import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
-import { bookStatus } from '../../common/constants/book-status-constants';
+import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { CloseIcon } from '../../icons/close-icon';

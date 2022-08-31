@@ -6,11 +6,12 @@ import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-
 import { add, parseISO, sub } from 'date-fns';
 import * as Yup from 'yup';
 import {
-    dateNotEarlierThan, dateNotLaterThan,
-    INVALID_DATE,
+    dateNotEarlierThan,
+    dateNotLaterThan,
     FORMAT_DATE,
+    INVALID_DATE,
     isRequired,
-} from '../../../common/constants/warning-messages-and-validation';
+} from '../../../common/constants';
 
 export const ProlongateReadingModal = (props) => {
     const { onProlongate, open, onClose, bookingInfo } = props;

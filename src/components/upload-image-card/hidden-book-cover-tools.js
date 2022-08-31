@@ -5,7 +5,7 @@ import { LightDeleteIcon } from '../../icons/light-delete-icon';
 import StyledCard from './styled-card';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { PROFILE_PATH } from '../../common/constants/route-constants';
+import { PROFILE_PATH } from '../../common/constants';
 
 const HiddenBookCoverTools = (props) => {
     const { onUploadButtonOpen, visible, onOpen, isImage } = props;

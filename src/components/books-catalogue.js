@@ -7,13 +7,12 @@ import { useMemo, useState } from 'react';
 import { Book } from '../models/book-model';
 import { SuggestedBook } from '../models/suggested-book-model';
 import { SuggestionAPI } from '../api/suggested-books-api';
-import { suggestedBookStatus } from '../common/constants/suggested-book-status-constants';
+import { bookStatus, SUGGESTED_BOOKS_PATH, suggestedBookStatus } from '../common/constants';
 import { useBoolean } from '../utils/hooks/boolean-hook';
 import { PropTypes } from 'prop-types';
 import { types } from '../types';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
-import { SUGGESTED_BOOKS_PATH } from '../common/constants/route-constants';
 import { useSelector } from 'react-redux';
 import BooksInUseListResults from './books-in-use/books-in-use-list-results';
 import {
@@ -24,7 +23,6 @@ import {
 import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-books-list';
 import { BookingForTargetReader } from '../models/booking-model';
 import { getDateFormatISO } from '../utils/functions/get-formated-date';
-import { bookStatus } from '../common/constants/book-status-constants';
 import { BooksAPI } from '../api/books-api';
 
 const BooksCatalogue = (props) => {

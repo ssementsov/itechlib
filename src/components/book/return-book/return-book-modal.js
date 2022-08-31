@@ -11,7 +11,7 @@ import {
     mustBeMoreSymbols,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-} from '../../../common/constants/warning-messages-and-validation';
+} from '../../../common/constants';
 
 const ReturnBookModal = (props) => {
     const { open, onClose, onReturn } = props;

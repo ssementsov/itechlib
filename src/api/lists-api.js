@@ -1,5 +1,5 @@
 import { api } from './api';
-import { EntityTypes } from '../common/constants/api-constants';
+import { EntityTypes } from '../common/constants';
 
 export const ListsAPI = {
     getUsersList() {

@@ -11,7 +11,7 @@ import {
     TableRow,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { titles } from './../../common/constants/profile-titles-constants';
+import { profileTitles } from '../../common/constants';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -26,7 +26,7 @@ const ProfileDetails = (props) => {
 
     return (
         <Card>
-            <CardHeader title={titles.title} />
+            <CardHeader title={profileTitles.title} />
             <CardContent
                 sx={{
                     p: 0,
@@ -37,19 +37,19 @@ const ProfileDetails = (props) => {
                         <Table>
                             <TableBody>
                                 <TableRow>
-                                    <TblCell>{titles.name}</TblCell>
+                                    <TblCell>{profileTitles.name}</TblCell>
                                     <TblCell>{user.name}</TblCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TblCell>{titles.surname}</TblCell>
+                                    <TblCell>{profileTitles.surname}</TblCell>
                                     <TblCell>{user.surname}</TblCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TblCell>{titles.corpEmail}</TblCell>
+                                    <TblCell>{profileTitles.corpEmail}</TblCell>
                                     <TblCell>{user.corpEmail}</TblCell>
                                 </TableRow>
                                 <TableRow>
-                                    <TblCell>{titles.googleEmail}</TblCell>
+                                    <TblCell>{profileTitles.googleEmail}</TblCell>
                                     <TblCell>{user.googleEmail}</TblCell>
                                 </TableRow>
                             </TableBody>

@@ -1,6 +1,5 @@
 import { api } from './api';
-import { EntityTypes } from '../common/constants/api-constants';
-import { SortDirection, SortFields } from "../common/constants/sorting-constants";
+import { EntityTypes, SortDirection, SortFields } from '../common/constants';
 
 export const BooksAPI = {
     getAllBooks(

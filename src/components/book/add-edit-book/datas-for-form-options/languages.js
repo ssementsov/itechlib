@@ -1,4 +1,4 @@
-import { language } from '../../../../common/constants/language-constants';
+import { language } from '../../../../common/constants';
 export const languages = [
     {
         value: language.russian.name,

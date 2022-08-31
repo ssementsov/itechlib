@@ -1,4 +1,4 @@
-import { bookingStatus } from '../common/constants/booking-status-constants';
+import { bookingStatus } from '../common/constants';
 
 export class Booking {
     constructor(

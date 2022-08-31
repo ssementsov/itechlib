@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
-import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
+import { LOGIN_PATH, ROOT_PATH } from '../common/constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
-import { userSlice } from "../store/reducers/UserSlice";
+import { userSlice } from '../store/reducers/UserSlice';
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
 import { ProgressSpinner } from '../common/UI/progressSpinner';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
-import { endOfDay, differenceInMilliseconds } from 'date-fns';
+import { differenceInMilliseconds, endOfDay } from 'date-fns';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',

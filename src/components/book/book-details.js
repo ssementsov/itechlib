@@ -19,22 +19,27 @@ import {
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import {
+    BOOK_PREVIEW_PAGE_PATH,
+    bookingStatus,
+    bookStatus,
+    FEEDBACKS_PATH,
+    titles,
+    userRoles,
+} from '../../common/constants';
 import { styled, useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
 import AssignBookModal from '../book/assign-book/assign-book-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import EditBookModal from '../book/add-edit-book/edit-book-modal';
-import { bookStatus } from '../../common/constants/book-status-constants';
 import { Book } from '../../models/book-model';
 import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
-import { BookingsAPI } from './../../api/bookings-api';
+import { BookingsAPI } from '../../api/bookings-api';
 import { useBoolean } from '../../utils/hooks/boolean-hook';
-import { calculateRate } from './../../utils/functions/calculate-rate';
+import { calculateRate } from '../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
-import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
 import { getDateFormatISO, getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
@@ -42,10 +47,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
 import { add, format, isAfter, parseISO } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
-import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 import { userSlice } from '../../store/reducers/UserSlice';
-import { bookingStatus } from '../../common/constants/booking-status-constants';
 import {
     getBookCategoryId,
     getBookLanguageId,

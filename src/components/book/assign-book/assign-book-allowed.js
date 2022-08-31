@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { add, sub } from 'date-fns';
 import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
 import {
-    dateNotEarlierThan, dateNotLaterThan,
+    dateNotEarlierThan,
+    dateNotLaterThan,
     FORMAT_DATE,
     INVALID_DATE,
     isRequired,
-} from '../../../common/constants/warning-messages-and-validation';
+} from '../../../common/constants';
 import * as Yup from 'yup';
 
 const initValue = {

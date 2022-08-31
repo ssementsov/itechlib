@@ -1,6 +1,5 @@
 import { api } from './api';
-import { EntityTypes } from '../common/constants/api-constants';
-import {SortDirection, SortFields} from "../common/constants/sorting-constants";
+import { EntityTypes, SortDirection, SortFields } from '../common/constants';
 
 export const BookingsAPI = {
     createBooking(model) {
@@ -19,22 +18,22 @@ export const BookingsAPI = {
         pageNumber,
         count = 30,
         sortField = SortFields.id,
-        sortDirection = SortDirection.asc
-    ){
+        sortDirection = SortDirection.asc,
+    ) {
         return api.Client.get(`/${EntityTypes.bookings}/feedback`, {
             params: {
                 bookId: bookId,
                 pageNumber: pageNumber,
                 pageCapacity: count,
                 sortDirection: sortDirection,
-                sortField: sortField
+                sortField: sortField,
             },
         });
     },
     getCountActiveBookings(readerId) {
-        return api.Client.get(`/${EntityTypes.bookings}/readers/${readerId}/count`)
+        return api.Client.get(`/${EntityTypes.bookings}/readers/${readerId}/count`);
     },
     updateBookingFinishedDate(bookingId, newFinishDate) {
-        return api.Client.put(`/${EntityTypes.bookings}/finish-date?bookingId=${bookingId}&newFinishDate=${newFinishDate}`)
-    }
+        return api.Client.put(`/${EntityTypes.bookings}/finish-date?bookingId=${bookingId}&newFinishDate=${newFinishDate}`);
+    },
 };

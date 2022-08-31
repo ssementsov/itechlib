@@ -1,18 +1,17 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import { UserAPI } from '../api/user-api';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UploadImageCard from '../components/upload-image-card';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import ProfileDetails from './../components/profile/profile-details';
-import { LOGIN_PATH } from '../common/constants/route-constants';
+import { LOGIN_PATH, YOU_CAN_UPLOAD_IMAGE } from '../common/constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { YOU_CAN_UPLOAD_IMAGE } from '../common/constants/warning-messages-and-validation';
 import { ProgressLinear } from '../common/UI/progressLinear';
-import { GoBackButton } from './../common/UI/buttons/go-back-button';
+import { GoBackButton } from '../common/UI/buttons/go-back-button';
 
 function ProfilePage() {
     const router = useRouter();

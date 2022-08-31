@@ -4,19 +4,20 @@ import { types } from '../../../types';
 import * as Yup from 'yup';
 import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
-import { bookStatus } from '../../../common/constants/book-status-constants';
-import { styled } from '@mui/material/styles';
 import {
-    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
-    isRequired,
+    bookStatus,
     dateNotEarlierThan,
     dateNotLaterThan,
     FORMAT_DATE,
-    mustBeMoreSymbols, mustBeLessSymbols,
-} from '../../../common/constants/warning-messages-and-validation';
-import { minStartDate, minFinishDate, maxFinishDate, maxStartDate } from './add-edit-book-helpers/date-pickers-helpers';
-import {INVALID_DATE} from '../../../common/constants/warning-messages-and-validation';
+    INVALID_DATE,
+    isRequired,
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+} from '../../../common/constants';
+import { styled } from '@mui/material/styles';
+import { maxFinishDate, maxStartDate, minFinishDate, minStartDate } from './add-edit-book-helpers/date-pickers-helpers';
 
 const StyledBox = styled(Box)({
     alignItems: 'center',

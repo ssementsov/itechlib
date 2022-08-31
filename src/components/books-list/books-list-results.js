@@ -12,9 +12,8 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import { BOOK_PREVIEW_PAGE_PATH, titles } from '../../common/constants';
 import router from 'next/router';
-import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
 import { calculateRate } from '../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { trimmedString } from '../../utils/functions/trim-long-string';

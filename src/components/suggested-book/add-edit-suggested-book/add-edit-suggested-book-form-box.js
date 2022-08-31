@@ -6,11 +6,12 @@ import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { types } from '../../../types';
 import { useTheme } from '@mui/material/styles';
 import {
-    isRequired, mustBeLessSymbols,
+    isRequired,
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-} from '../../../common/constants/warning-messages-and-validation';
-import {mustBeMoreSymbols} from '../../../common/constants/warning-messages-and-validation';
+} from '../../../common/constants';
 
 const AddEditSuggestedBookFormBox = (props) => {
     const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
