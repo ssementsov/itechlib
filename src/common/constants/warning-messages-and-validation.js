@@ -18,3 +18,9 @@ export const dateNotEarlierThan = (date, isOneMoreDay = false) => {
 export const dateNotLaterThan = (date) => {
     return `Not later than ${getFormatedDate(getDateFormatISO(date))}`
 }
+export const mustBeMoreSymbols = (field, count) => {
+    return `${field} must be ${count} or more symbols`
+}
+export const mustBeLessSymbols = (field, count) => {
+    return `${field} must be ${count} or less symbols`
+}

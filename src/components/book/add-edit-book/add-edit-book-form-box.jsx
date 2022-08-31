@@ -8,7 +8,12 @@ import { bookStatus } from '../../../common/constants/book-status-constants';
 import { styled } from '@mui/material/styles';
 import {
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE, isRequired, dateNotEarlierThan, dateNotLaterThan, FORMAT_DATE,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    isRequired,
+    dateNotEarlierThan,
+    dateNotLaterThan,
+    FORMAT_DATE,
+    mustBeMoreSymbols, mustBeLessSymbols,
 } from '../../../common/constants/warning-messages-and-validation';
 import { minStartDate, minFinishDate, maxFinishDate, maxStartDate } from './add-edit-book-helpers/date-pickers-helpers';
 import {INVALID_DATE} from '../../../common/constants/warning-messages-and-validation';
@@ -100,20 +105,20 @@ const AddEditBookFormBox = (props) => {
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
-                .min(2, 'Title must be 2 or more symbols')
-                .max(255, 'Title must be 255 or less symbols')
+                .min(2, mustBeMoreSymbols('Title', 2))
+                .max(255, mustBeLessSymbols('Title', 255))
                 .required(isRequired('Title')),
             author: Yup.string()
                 .trim()
-                .min(2, 'Author must be 2 or more symbols')
-                .max(500, 'Author must be 500 or less symbols')
+                .min(2, mustBeMoreSymbols('Author', 2))
+                .max(500, mustBeLessSymbols('Author', 500))
                 .required(isRequired('Author')),
             category: Yup.string().required(isRequired('Category')),
             language: Yup.string().required(isRequired('Language')),
             description: Yup.string()
                 .trim()
-                .min(10, 'Description must be 10 or more symbols')
-                .max(500, 'Description must be 500 or less symbols')
+                .min(10, mustBeMoreSymbols('Description', 10))
+                .max(500, mustBeLessSymbols('Description', 500))
                 .required(isRequired('Description')),
             startDate: Yup.date().min(minStartDate, dateNotEarlierThan(minStartDate)).max(maxStartDate, dateNotLaterThan(maxStartDate)),
             finishDate: Yup.date().min(minFinishDate, dateNotEarlierThan(minFinishDate, true)).max(maxFinishDate, dateNotLaterThan(maxFinishDate))

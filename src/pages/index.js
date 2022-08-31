@@ -13,7 +13,7 @@ import {
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
 import * as Yup from 'yup';
-import { isRequired } from '../common/constants/warning-messages-and-validation';
+import { isRequired, mustBeLessSymbols, mustBeMoreSymbols } from '../common/constants/warning-messages-and-validation';
 
 const Register = () => {
     const router = useRouter();
@@ -39,8 +39,8 @@ const Register = () => {
         validationSchema: Yup.object({
             email: Yup.string()
                 .trim()
-                .min(24, 'Email must be 24 or more symbols')
-                .max(50, 'Email must be 50 or less symbols'),
+                .min(24, mustBeMoreSymbols('Email', 24))
+                .max(50, mustBeLessSymbols('Email', 50)),
         }),
         validate,
         onSubmit: (value) => {

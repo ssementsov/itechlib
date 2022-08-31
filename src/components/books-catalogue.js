@@ -6,7 +6,6 @@ import BooksListToolbar from '../components/books-list/books-list-toolbar';
 import { useMemo, useState } from 'react';
 import { Book } from '../models/book-model';
 import { SuggestedBook } from '../models/suggested-book-model';
-import { BooksAPI } from '../api/books-api';
 import { SuggestionAPI } from '../api/suggested-books-api';
 import { suggestedBookStatus } from '../common/constants/suggested-book-status-constants';
 import { useBoolean } from '../utils/hooks/boolean-hook';
@@ -26,6 +25,7 @@ import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-boo
 import { BookingForTargetReader } from '../models/booking-model';
 import { getDateFormatISO } from '../utils/functions/get-formated-date';
 import { bookStatus } from '../common/constants/book-status-constants';
+import { BooksAPI } from '../api/books-api';
 
 const BooksCatalogue = (props) => {
     const {
@@ -71,41 +71,41 @@ const BooksCatalogue = (props) => {
             newBook.link,
             idStatus,
             newBook.status,
-            newBook.description
+            newBook.description,
         );
 
         const newBookFormData = new FormData();
         newBookFormData.append('withOwnerBookDto', JSON.stringify(createdBook));
         newBookFormData.append('file', newBook.file);
 
-        if(newBook.status === bookStatus.inUse.name) {
+        if (newBook.status === bookStatus.inUse.name) {
             const startDateFormatISO = getDateFormatISO(newBook.startDate);
             const finishDateFormatISO = getDateFormatISO(newBook.finishDate);
             const createBookingForTargetReader = new BookingForTargetReader(
                 newBook.reader,
                 startDateFormatISO,
-                finishDateFormatISO
-            )
-            console.log(createBookingForTargetReader)
+                finishDateFormatISO,
+            );
+            console.log(createBookingForTargetReader);
             newBookFormData.append('bookingForTargetReaderDto', JSON.stringify(createBookingForTargetReader));
         }
 
-        // BooksAPI.addBook(newBookFormData)
-        //     .then((res) => {
-        //         setAddButtonClose();
-        //         if (books) {
-        //             const newBooksList = [res.data, ...books];
-        //             onUpdateBooks(newBooksList);
-        //             onUpdateLoadingStatus(true);
-        //         }
-        //         enqueueSnackbar('Your book has been added successfully!', {
-        //             variant: 'success',
-        //         });
-        //     })
-        //     .catch(() => {
-        //         defaultErrorSnackbar();
-        //         onUpdateLoadingStatus(true);
-        //     });
+        BooksAPI.addBook(newBookFormData)
+            .then((res) => {
+                setAddButtonClose();
+                if (books) {
+                    const newBooksList = [res.data, ...books];
+                    onUpdateBooks(newBooksList);
+                    onUpdateLoadingStatus(true);
+                }
+                enqueueSnackbar('Your book has been added successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+                onUpdateLoadingStatus(true);
+            });
     };
 
     const createSuggestedBook = (suggestedBook) => {
@@ -123,7 +123,7 @@ const BooksCatalogue = (props) => {
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             suggestedBook.link,
-            suggestedBook.comment
+            suggestedBook.comment,
         );
 
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
@@ -133,8 +133,8 @@ const BooksCatalogue = (props) => {
                     const previousBooksList =
                         suggestedBooks.length > 8
                             ? suggestedBooks.filter(
-                                  (item) => item.id !== suggestedBooks[suggestedBooks.length - 1].id
-                              )
+                                (item) => item.id !== suggestedBooks[suggestedBooks.length - 1].id,
+                            )
                             : suggestedBooks;
                     const newBooksList = [res.data, ...previousBooksList];
                     onUpdateSuggestedBooks(newBooksList);
@@ -157,7 +157,7 @@ const BooksCatalogue = (props) => {
                 <title>Main catalogue</title>
             </Head>
             <Box
-                component="main"
+                component='main'
                 sx={{
                     flexGrow: 1,
                     py: 8,

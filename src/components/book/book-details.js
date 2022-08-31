@@ -40,7 +40,7 @@ import { getDateFormatISO, getFormatedDate } from '../../utils/functions/get-for
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
-import { add, format, formatISO, isAfter, parseISO } from 'date-fns';
+import { add, format, isAfter, parseISO } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
@@ -125,7 +125,7 @@ const BookDetails = (props) => {
     const openEditBookModalHandler = () => {
         setEditButtonOpen();
         dispatch(fetchUsersList());
-    }
+    };
     const editBook = (newBook) => {
         let categoryId = getBookCategoryId(newBook);
         let languageId = getBookLanguageId(newBook);
@@ -161,7 +161,7 @@ const BookDetails = (props) => {
     const assignBook = ({ startDate, finishDate }) => {
         const startDateFormatISO = getDateFormatISO(startDate);
         const finishDateFormatISO = getDateFormatISO(finishDate);
-        // add condition for booking status
+
         const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
         BookingsAPI.createBooking(booking)
             .then((res) => {
