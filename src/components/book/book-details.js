@@ -36,7 +36,7 @@ import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
-import { getFormatedDate } from '../../utils/functions/get-formated-date';
+import { getDateFormatISO, getFormatedDate } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
@@ -52,6 +52,7 @@ import {
     getBookStatusId,
 } from '../books-catalogue-helpers/get-properties-for-payload';
 import { CustomLink } from '../../common/UI/custom-link';
+import { fetchUsersList } from '../../store/reducers/ListsSlice';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -86,6 +87,7 @@ const BookDetails = (props) => {
     const bookingEndDate = getFormatedDate(book.bookingInfoDto?.bookingEndDate);
     const lastDateToProlongate = add(bookingStartDate, { months: 1 });
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
+
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
             .then((res) => {
@@ -120,6 +122,10 @@ const BookDetails = (props) => {
         }
     };
 
+    const openEditBookModalHandler = () => {
+        setEditButtonOpen();
+        dispatch(fetchUsersList());
+    }
     const editBook = (newBook) => {
         let categoryId = getBookCategoryId(newBook);
         let languageId = getBookLanguageId(newBook);
@@ -153,8 +159,8 @@ const BookDetails = (props) => {
     };
 
     const assignBook = ({ startDate, finishDate }) => {
-        const startDateFormatISO = formatISO(startDate, { representation: 'date' });
-        const finishDateFormatISO = formatISO(finishDate, { representation: 'date' });
+        const startDateFormatISO = getDateFormatISO(startDate);
+        const finishDateFormatISO = getDateFormatISO(finishDate);
         // add condition for booking status
         const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
         BookingsAPI.createBooking(booking)
@@ -172,7 +178,7 @@ const BookDetails = (props) => {
     };
 
     const prolongateReading = (bookingId, finishDate) => {
-        const newFinishDateFormatISO = formatISO(finishDate, { representation: 'date' });
+        const newFinishDateFormatISO = getDateFormatISO(finishDate);
         BookingsAPI.updateBookingFinishedDate(bookingId, newFinishDateFormatISO)
             .then(res => {
                 onUpdateBookingInfo(res.data);
@@ -261,7 +267,7 @@ const BookDetails = (props) => {
                                 <IconButton onClick={setDeleteButtonOpen} aria-label='delete'>
                                     <DarkDeleteIcon fontSize='small' />
                                 </IconButton>
-                                <IconButton onClick={setEditButtonOpen} aria-label='edit'>
+                                <IconButton onClick={openEditBookModalHandler} aria-label='edit'>
                                     <EditIcon fontSize='small' />
                                 </IconButton>
                             </>

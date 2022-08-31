@@ -16,15 +16,24 @@ import AddSuggestedBookModal from '../suggested-book/add-edit-suggested-book/add
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
+import { fetchUsersList } from '../../store/reducers/ListsSlice';
+import { useDispatch } from 'react-redux';
 
 const BooksListToolbar = (props) => {
     const { onCreate, setSearch, search, open, onOpen, onClose, title } = props;
+    const dispatch = useDispatch();
+
     //overdue booking
     const {
         isBlockingModalOpen,
         setBlockingModalClose,
         handleBlockingOrAction,
     } = useOverdueBookingBlocking();
+
+    const openAddBookModalHandler = () => {
+        dispatch(fetchUsersList());
+        onOpen.add();
+    }
 
     return (
         <Box>
@@ -66,7 +75,7 @@ const BooksListToolbar = (props) => {
                         title='Add a book'
                         size='medium'
                         fullWidth={false}
-                        onClick={() => handleBlockingOrAction(onOpen.add)}
+                        onClick={() => handleBlockingOrAction(openAddBookModalHandler)}
                     />
                 </Box>
             </Box>

@@ -23,6 +23,9 @@ import {
     getBookStatusId,
 } from './books-catalogue-helpers/get-properties-for-payload';
 import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-books-list';
+import { BookingForTargetReader } from '../models/booking-model';
+import { getDateFormatISO } from '../utils/functions/get-formated-date';
+import { bookStatus } from '../common/constants/book-status-constants';
 
 const BooksCatalogue = (props) => {
     const {
@@ -75,22 +78,34 @@ const BooksCatalogue = (props) => {
         newBookFormData.append('withOwnerBookDto', JSON.stringify(createdBook));
         newBookFormData.append('file', newBook.file);
 
-        BooksAPI.addBook(newBookFormData)
-            .then((res) => {
-                setAddButtonClose();
-                if (books) {
-                    const newBooksList = [res.data, ...books];
-                    onUpdateBooks(newBooksList);
-                    onUpdateLoadingStatus(true);
-                }
-                enqueueSnackbar('Your book has been added successfully!', {
-                    variant: 'success',
-                });
-            })
-            .catch(() => {
-                defaultErrorSnackbar();
-                onUpdateLoadingStatus(true);
-            });
+        if(newBook.status === bookStatus.inUse.name) {
+            const startDateFormatISO = getDateFormatISO(newBook.startDate);
+            const finishDateFormatISO = getDateFormatISO(newBook.finishDate);
+            const createBookingForTargetReader = new BookingForTargetReader(
+                newBook.reader,
+                startDateFormatISO,
+                finishDateFormatISO
+            )
+            console.log(createBookingForTargetReader)
+            newBookFormData.append('bookingForTargetReaderDto', JSON.stringify(createBookingForTargetReader));
+        }
+
+        // BooksAPI.addBook(newBookFormData)
+        //     .then((res) => {
+        //         setAddButtonClose();
+        //         if (books) {
+        //             const newBooksList = [res.data, ...books];
+        //             onUpdateBooks(newBooksList);
+        //             onUpdateLoadingStatus(true);
+        //         }
+        //         enqueueSnackbar('Your book has been added successfully!', {
+        //             variant: 'success',
+        //         });
+        //     })
+        //     .catch(() => {
+        //         defaultErrorSnackbar();
+        //         onUpdateLoadingStatus(true);
+        //     });
     };
 
     const createSuggestedBook = (suggestedBook) => {

@@ -13,6 +13,7 @@ import {
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
 import * as Yup from 'yup';
+import { isRequired } from '../common/constants/warning-messages-and-validation';
 
 const Register = () => {
     const router = useRouter();
@@ -24,7 +25,7 @@ const Register = () => {
     function validate(value) {
         let error = {};
         if (!value.email) {
-            error.email = 'Email is required';
+            error.email = isRequired('Email');
         } else if (!/^[A-Z0-9._%+-]+\.+[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
             error.email = 'Please enter correct corporate email';
         }

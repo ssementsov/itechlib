@@ -41,10 +41,8 @@ export const DatePeriodForm = (props) => {
                         label="from"
                         renderInput={(params) => (
                             <TextField
-                                sx={{
-                                    width: '200px',
-                                }}
                                 {...params}
+                                sx={{ width: '200px' }}
                             />
                         )}
                     />
@@ -59,14 +57,18 @@ export const DatePeriodForm = (props) => {
                         label="till"
                         renderInput={(params) => (
                             <TextField
+                                {...params}
                                 error={Boolean(
                                     formik.touched.finishDate && formik.errors.finishDate
                                 )}
                                 helperText={formik.touched.finishDate && formik.errors.finishDate}
-                                sx={{
-                                    width: '200px',
+                                onBlur={() => {
+                                    formik.setFieldTouched('finishDate', true);
                                 }}
-                                {...params}
+                                onChange={(value) => {
+                                    formik.setFieldTouched('finishDate', true, !!value);
+                                }}
+                                sx={{ width: '200px' }}
                             />
                         )}
                     />

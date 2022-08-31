@@ -58,10 +58,7 @@ const MultipurposeBookForm = (props) => {
                     color="textPrimary"
                     variant="h4"
                     textAlign="center"
-                    sx={{
-                        mt: 2,
-                        mb: 2,
-                    }}
+                    sx={{ mt: 2, mb: 2 }}
                 >
                     {title}
                 </Typography>
@@ -191,7 +188,7 @@ const MultipurposeBookForm = (props) => {
                 )}
 
                 {formik.values.status === bookStatus.inUse.name && (
-                    <HiddenForm formik={formik} createOptions={createOptions} />
+                    <HiddenForm formik={formik}/>
                 )}
                 {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
                 <Box sx={{ py: 2 }}>

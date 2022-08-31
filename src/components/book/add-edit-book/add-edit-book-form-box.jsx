@@ -8,8 +8,10 @@ import { bookStatus } from '../../../common/constants/book-status-constants';
 import { styled } from '@mui/material/styles';
 import {
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE, isRequired, dateNotEarlierThan, dateNotLaterThan, FORMAT_DATE,
 } from '../../../common/constants/warning-messages-and-validation';
+import { minStartDate, minFinishDate, maxFinishDate, maxStartDate } from './add-edit-book-helpers/date-pickers-helpers';
+import {INVALID_DATE} from '../../../common/constants/warning-messages-and-validation';
 
 const StyledBox = styled(Box)({
     alignItems: 'center',
@@ -63,24 +65,30 @@ const AddEditBookFormBox = (props) => {
         ) {
             error.link = 'Please enter correct link';
         }
-        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
             error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
-        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
             error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
-        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
             error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
         if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
-                error.reader = 'Reader is required';
+                error.reader = isRequired('Reader');
             }
             if (!value.startDate) {
-                error.startDate = 'Date is required';
+                error.startDate = isRequired('Date');
+            }
+            if (value.startDate && value.startDate.toString() === INVALID_DATE) {
+                error.startDate = FORMAT_DATE;
             }
             if (!value.finishDate) {
-                error.finishDate = 'Date is required';
+                error.finishDate = isRequired('Date');
+            }
+            if (value.finishDate && value.finishDate.toString() === INVALID_DATE) {
+                error.finishDate = FORMAT_DATE;
             }
         }
 
@@ -94,19 +102,21 @@ const AddEditBookFormBox = (props) => {
                 .trim()
                 .min(2, 'Title must be 2 or more symbols')
                 .max(255, 'Title must be 255 or less symbols')
-                .required('Title is required'),
+                .required(isRequired('Title')),
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
                 .max(500, 'Author must be 500 or less symbols')
-                .required('Author is required'),
-            category: Yup.string().required('Category is required'),
-            language: Yup.string().required('Language is required'),
+                .required(isRequired('Author')),
+            category: Yup.string().required(isRequired('Category')),
+            language: Yup.string().required(isRequired('Language')),
             description: Yup.string()
                 .trim()
                 .min(10, 'Description must be 10 or more symbols')
                 .max(500, 'Description must be 500 or less symbols')
-                .required('Description is required'),
+                .required(isRequired('Description')),
+            startDate: Yup.date().min(minStartDate, dateNotEarlierThan(minStartDate)).max(maxStartDate, dateNotLaterThan(maxStartDate)),
+            finishDate: Yup.date().min(minFinishDate, dateNotEarlierThan(minFinishDate, true)).max(maxFinishDate, dateNotLaterThan(maxFinishDate))
         }),
         validate,
         onSubmit: async (values) => {
@@ -119,17 +129,15 @@ const AddEditBookFormBox = (props) => {
     });
 
     return (
-        <>
-            <StyledBox>
-                <MultipurposeBookForm
-                    formik={formik}
-                    title={title}
-                    buttonName={buttonName}
-                    onClose={onClose}
-                    {...rest}
-                />
-            </StyledBox>
-        </>
+        <StyledBox>
+            <MultipurposeBookForm
+                formik={formik}
+                title={title}
+                buttonName={buttonName}
+                onClose={onClose}
+                {...rest}
+            />
+        </StyledBox>
     );
 };
 

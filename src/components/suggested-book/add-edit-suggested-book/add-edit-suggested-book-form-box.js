@@ -6,6 +6,7 @@ import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { types } from '../../../types';
 import { useTheme } from '@mui/material/styles';
 import {
+    isRequired,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
 } from '../../../common/constants/warning-messages-and-validation';
@@ -67,7 +68,7 @@ const AddEditSuggestedBookFormBox = (props) => {
                 .trim()
                 .min(2, 'Title must be 2 or more symbols')
                 .max(255, 'Title must be 255 or less symbols')
-                .required('Title is required'),
+                .required(isRequired('Title')),
             author: Yup.string()
                 .trim()
                 .min(2, 'Author must be 2 or more symbols')
