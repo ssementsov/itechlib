@@ -40,4 +40,13 @@ public class UserInternalNotificationServiceImpl implements UserInternalNotifica
         userInternalNotificationRepository.setReadIsTrueById(userInternalNotificationId);
 
     }
+
+    @Override
+    public boolean isUnread(long userId) {
+
+        log.info("Try to find out, has reader unread messages or not.");
+
+        return userInternalNotificationRepository.isUnreadByUserId(userId);
+
+    }
 }

@@ -10,4 +10,5 @@ public interface UserInternalNotificationService {
 
     void markIsRead(Long userInternalNotificationId);
 
+    boolean isUnread(long userId);
 }

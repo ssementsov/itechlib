@@ -25,6 +25,7 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+
     private final UserFacade userFacade;
 
     @PostMapping("/check")
@@ -50,7 +51,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserProfileDto getCurrentUser() {
 
-        return userService.getCurrentUserProfileDto();
+        return userFacade.getCurrentUserProfileDto();
     }
 
     @GetMapping
