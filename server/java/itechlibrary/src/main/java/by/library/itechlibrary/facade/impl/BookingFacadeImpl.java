@@ -1,7 +1,5 @@
 package by.library.itechlibrary.facade.impl;
 
-import by.library.itechlibrary.constant.BookingStatusConstant;
-import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.WithBookingStatusBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
@@ -19,6 +17,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static by.library.itechlibrary.constant.BookingStatusConstant.templateBookingStatusMap;
 
 
 @Service
@@ -91,21 +93,15 @@ public class BookingFacadeImpl implements BookingFacade {
         mailNotificationService.sent(mailNotificationInfo, false);
     }
 
-    private Template chooseTemplate(String bookingStatusName){
+    private Template chooseTemplate(String bookingStatusName) {
 
-        if (bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
+        Optional<String> optionalTemplateName = Optional.ofNullable(templateBookingStatusMap.get(bookingStatusName));
 
-            return  mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE);
+        String templateName = optionalTemplateName.orElseThrow(
+                () -> new WrongBookingStatusException("Incorrect booking status for sending an email about resolving assigned booking.")
+        );
 
-        } else if (bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
-
-            return  mailTemplateService.getByName(MailTemplateConstant.ACCEPTANCE_DECLINED);
-
-        }else {
-
-            throw new WrongBookingStatusException("Incorrect booking status for sending an email about resolving assigned booking.");
-
-        }
+        return mailTemplateService.getByName(templateName);
     }
 
 }
