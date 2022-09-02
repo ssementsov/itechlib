@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BookFacade {
 
-    WithBookingStatusBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile);
+    WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile);
 
     void removedAttachedFile(long fileId);
 

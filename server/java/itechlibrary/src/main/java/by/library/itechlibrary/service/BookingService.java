@@ -20,19 +20,19 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllCurrentsByReaderId(long id);
 
-    BookingDto resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto);
+    Booking resolveAssignedBooking(Booking booking, Book book, BookingStatusDto bookingStatusDto, long readerId);
 
     List<BookingResponseDto> findAllByBookId(long id);
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
-    BookingDto findAwaitingConfirmationByBookId(long bookId);
+    Booking findAwaitingConfirmationByBookId(long bookId);
 
     void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto);
 
     BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 
-    Booking update(BookingDto bookingDto, Book book, long readerId);
+    BookingDto update(BookingDto bookingDto, Book book, long readerId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
@@ -50,5 +50,5 @@ public interface BookingService {
 
     int getCountActiveBookings(long readerId);
 
-    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId);
 }

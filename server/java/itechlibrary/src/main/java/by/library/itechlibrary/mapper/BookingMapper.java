@@ -1,9 +1,11 @@
 package by.library.itechlibrary.mapper;
 
+import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Booking;
+import by.library.itechlibrary.entity.BookingStatus;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,9 +24,8 @@ public interface BookingMapper {
     @Named(value = "BookingDto")
     Booking toBookingFromBookingDto(BookingDto bookingDto);
 
-    @Mapping(source = "isActive", target = "active")
     @Named(value = "bookingForTargetReaderDtoToBookingDto")
-    BookingDto bookingForTargetReaderDtoToBookingDto(BookingForTargetReaderDto bookingForTargetReaderDto, boolean isActive, Long bookId);
+    BookingDto bookingForTargetReaderDtoToBookingDto(BookingForTargetReaderDto bookingForTargetReaderDto, Long bookId);
 
     @IterableMapping(qualifiedByName = "booking")
     List<BookingDto> mapBookingDtoListBookings(List<Booking> bookings);
@@ -43,5 +44,8 @@ public interface BookingMapper {
 
     @IterableMapping(qualifiedByName = "newBookingResponseDto")
     List<Booking> mapBookingDtoListFromBookingResponseDtoList(List<BookingResponseDto> bookingResponseDtos);
+
+    @Named(value = "toBookingStatusFromBookingStatusDto")
+    BookingStatus toBookingStatusFromBookingStatusDto(BookingStatusDto bookingStatusDto);
 
 }

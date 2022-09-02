@@ -52,16 +52,16 @@ public class BookFacadeImpl implements BookFacade {
 
     @Override
     @Transactional
-    public WithBookingStatusBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         User currentUser = userService.getUserById(currentUserId);
-        WithBookingStatusBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
+        WithOwnerBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
 
         String bookStatusName = createdBook.getStatus().getName();
         long bookId = createdBook.getId();
-        tryCreateBookingForAcceptanceByReader(createdBook, bookingForTargetReaderDto, bookStatusName, bookId);
+        tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, bookId);
 
         return createdBook;
     }
@@ -128,9 +128,11 @@ public class BookFacadeImpl implements BookFacade {
     public FullBookDto getByIdFullVersion(long id) {
 
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        if (fullBookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+        String bookStatusName = fullBookDto.getStatus().getName();
+
+        if (bookStatusName.equals(BookStatusConstant.IN_USE) || bookStatusName.equals(BookStatusConstant.NOT_AVAILABLE)) {
 
             BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
             fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
@@ -164,16 +166,14 @@ public class BookFacadeImpl implements BookFacade {
         return Optional.empty();
     }
 
-    private void tryCreateBookingForAcceptanceByReader(WithBookingStatusBookDto bookDto, BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
+    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
 
         if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
-            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
+            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, bookId);
             Book book = bookService.getById(bookId);
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
-
-            bookDto.setBookingStatus(bookingResponseDto.getStatus());
 
             sendEmailAboutAcceptanceByReader(booking);
         }

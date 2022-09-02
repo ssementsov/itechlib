@@ -1,7 +1,7 @@
 package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.book.WithBookingStatusBookDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Book;
@@ -10,6 +10,7 @@ import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.WrongBookingStatusException;
 import by.library.itechlibrary.facade.BookingFacade;
+import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
@@ -40,6 +41,8 @@ public class BookingFacadeImpl implements BookingFacade {
 
     private final BookingAcceptanceService bookingAcceptanceService;
 
+    private final BookingInfoMapper bookingInfoMapper;
+
 
     @Override
     @Transactional
@@ -62,7 +65,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     @Transactional
-    public WithBookingStatusBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
+    public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
         bookingService.checkDtoForResolveAssignedBooking(bookingAcceptanceDto);
 
@@ -70,18 +73,18 @@ public class BookingFacadeImpl implements BookingFacade {
         long readerId = securityUserDetailsService.getCurrentUserId();
 
         Book book = bookService.getById(bookId);
-        BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
+        Booking booking = bookingService.findAwaitingConfirmationByBookId(bookId);
 
-        BookingDto resolvedBookingDto = bookingService.resolveAssignedBooking(bookingDto, book, readerId, bookingAcceptanceDto.getStatus());
+        Booking resolveAssignedBooking = bookingService.resolveAssignedBooking(booking, book, bookingAcceptanceDto.getStatus(), readerId);
         bookingAcceptanceService.save(bookingAcceptanceDto, book, readerId);
 
-        Booking booking = bookingService.findByIdWithoutMapping(resolvedBookingDto.getId());
-        sendEmailNotification(booking);
+        sendEmailNotification(resolveAssignedBooking);
 
-        WithBookingStatusBookDto withBookingStatusBookDto = bookService.getByIdWithBookingStatus(bookId);
-        withBookingStatusBookDto.setBookingStatus(resolvedBookingDto.getStatus());
+        FullBookDto fullBookDto = bookService.getByIdFullVersion(bookId);
+        BookingInfo bookingInfo = bookingService.getBookingInfo(bookId, readerId);
+        fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
-        return withBookingStatusBookDto;
+        return fullBookDto;
     }
 
     private void sendEmailNotification(Booking booking) {

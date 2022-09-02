@@ -72,7 +72,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public WithBookingStatusBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser) {
+    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser) {
 
         log.info("Try to map bookDto to book");
 
@@ -85,7 +85,7 @@ public class BookServiceImpl implements BookService {
         fileInfo.ifPresent(book::setFileInfo);
         book = bookRepository.save(book);
 
-        return bookMapper.toWithBookingStatusBookDto(book);
+        return bookMapper.toWithOwnerBookDto(book);
     }
 
     @Override
