@@ -23,6 +23,7 @@ public class BookingDto {
     @NotNull
     private long bookId;
 
+    @NotNull
     private BookingStatusDto status;
 
     private boolean isActive;
