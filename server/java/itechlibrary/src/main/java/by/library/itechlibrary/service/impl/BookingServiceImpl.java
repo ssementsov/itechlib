@@ -6,6 +6,7 @@ import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -14,6 +15,7 @@ import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.*;
+import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
 import by.library.itechlibrary.repository.BookingAcceptanceRepository;
@@ -48,6 +50,9 @@ public class BookingServiceImpl implements BookingService {
     private final BookRepository bookRepository;
 
     private final BookingAcceptanceRepository bookingAcceptanceRepository;
+
+    private final BookingInfoMapper bookingInfoMapper;
+
 
     private final EntityManager entityManager;
 
@@ -213,11 +218,18 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingInfo getBookingInfo(long bookId, long currentUserId) {
 
-        log.info("Try to find active booking by book id = {}", bookId);
+        return getBookingInfoForUserByBookId(bookId, currentUserId);
+    }
 
-        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
+    @Override
+    public void fillBookWithBookingInfo(WithBookingInfoBookDto book) {
 
-        return checkAndBuildBookingInfo(bookId, bookingOptional, currentUserId);
+        if (book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(book.getId(), book.getOwner().getId());
+            book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
     }
 
     @Override
@@ -307,6 +319,15 @@ public class BookingServiceImpl implements BookingService {
             booking.getReader().setRoles(roles);
 
         }
+    }
+
+    private BookingInfo getBookingInfoForUserByBookId(long bookId, long currentUserId) {
+
+        log.info("Try to find active booking by book id = {}", bookId);
+
+        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
+
+        return checkAndBuildBookingInfo(bookId, bookingOptional, currentUserId);
     }
 
     private Optional<Booking> getActiveByBookId(long bookId) {

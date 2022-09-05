@@ -93,18 +93,7 @@ public class BookFacadeImpl implements BookFacade {
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         List<WithBookingInfoBookDto> ownersBooks = bookService.getOwnersBook(parameterInfoDto, currentUserId);
-
-        for (WithBookingInfoBookDto book : ownersBooks) {
-
-            String bookStatusName = book.getStatus().getName();
-
-            if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
-
-                BookingInfo bookingInfo = bookingService.getBookingInfo(book.getId(), currentUserId);
-                book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
-
-            }
-        }
+        ownersBooks.forEach(bookingService::fillBookWithBookingInfo);
 
         return ownersBooks;
     }

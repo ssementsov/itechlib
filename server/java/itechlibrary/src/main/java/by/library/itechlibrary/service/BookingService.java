@@ -2,6 +2,7 @@ package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -43,6 +44,8 @@ public interface BookingService {
     void returnBooking(ReviewDto reviewDto, long id);
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
+
+    void fillBookWithBookingInfo(WithBookingInfoBookDto book);
 
     void disableCurrentBooking(long bookId);
 
