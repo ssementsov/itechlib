@@ -150,7 +150,7 @@ public class BookingServiceImpl implements BookingService {
 
         }
 
-        if(Objects.nonNull(comment)&& bookingStatusName.equals(BookingStatusConstant.ACCEPTED)){
+        if (Objects.nonNull(comment) && bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
 
             throw new WrongDtoDataException("The comment should be absent when accepting the assigned booking.");
 
@@ -513,7 +513,6 @@ public class BookingServiceImpl implements BookingService {
 
         } else if (bookStatusName.equals(BookStatusConstant.IN_USE) && bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
 
-            book.setStatus(BookStatusConstant.NOT_AVAILABLE_BOOK_STATUS);
             booking.setBook(book);
 
         } else {

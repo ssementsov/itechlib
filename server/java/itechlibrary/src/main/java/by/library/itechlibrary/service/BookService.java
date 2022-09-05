@@ -22,9 +22,7 @@ public interface BookService {
 
     FullBookDto getByIdFullVersion(long id);
 
-    WithBookingStatusBookDto getByIdWithBookingStatus(long id);
-
-    List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId);
+    List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId);
 
     List<ResponseOwnBookDto> getCurrentUsersBookedBooks(long currentUserId);
 

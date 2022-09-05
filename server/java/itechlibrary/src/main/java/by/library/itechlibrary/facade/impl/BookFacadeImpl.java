@@ -88,11 +88,25 @@ public class BookFacadeImpl implements BookFacade {
 
     @Override
     @Transactional
-    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
+    public List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        return bookService.getOwnersBook(parameterInfoDto, currentUserId);
+        List<WithBookingInfoBookDto> ownersBooks = bookService.getOwnersBook(parameterInfoDto, currentUserId);
+
+        for (WithBookingInfoBookDto book : ownersBooks) {
+
+            String bookStatusName = book.getStatus().getName();
+
+            if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
+
+                BookingInfo bookingInfo = bookingService.getBookingInfo(book.getId(), currentUserId);
+                book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+            }
+        }
+
+        return ownersBooks;
     }
 
     @Override
@@ -132,7 +146,7 @@ public class BookFacadeImpl implements BookFacade {
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         String bookStatusName = fullBookDto.getStatus().getName();
 
-        if (bookStatusName.equals(BookStatusConstant.IN_USE) || bookStatusName.equals(BookStatusConstant.NOT_AVAILABLE)) {
+        if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
             BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
             fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));

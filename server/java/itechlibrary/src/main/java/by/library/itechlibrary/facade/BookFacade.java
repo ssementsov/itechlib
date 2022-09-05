@@ -15,7 +15,7 @@ public interface BookFacade {
 
     void attachFile(MultipartFile multipartFile, long bookId);
 
-    List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto);
+    List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto);
 
     List<ResponseOwnBookDto> getCurrentUsersBookedBooks();
 
