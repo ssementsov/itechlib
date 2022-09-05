@@ -14,6 +14,9 @@ public interface BookMapper {
     @Named(value = "book")
     WithOwnerBookDto toWithOwnerBookDto(Book book);
 
+    @Named(value = "toWithBookingInfoBookDto")
+    WithBookingInfoBookDto toWithBookingInfoBookDto(Book book);
+
     @Named(value = "toWithBookingStatusBookDto")
     WithBookingStatusBookDto toWithBookingStatusBookDto(Book book);
 
@@ -22,6 +25,9 @@ public interface BookMapper {
 
     @IterableMapping(qualifiedByName = "book")
     List<WithOwnerBookDto> mapWithOwnerBookDtoList(List<Book> books);
+
+    @IterableMapping(qualifiedByName = "toWithBookingInfoBookDto")
+    List<WithBookingInfoBookDto> mapWithBookingInfoBookDto(List<Book> books);
 
     @IterableMapping(qualifiedByName = "WithOwnerBookDto")
     List<Book> mapBookList(List<WithOwnerBookDto> withOwnerBookDtos);

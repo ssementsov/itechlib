@@ -104,24 +104,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public WithBookingStatusBookDto getByIdWithBookingStatus(long id) {
-
-        Book book = findById(id);
-
-        log.info("Try to map book to WithBookingStatusBookDto");
-
-        return bookMapper.toWithBookingStatusBookDto(book);
-    }
-
-    @Override
-    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
+    public List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
 
         log.info("Try get books by user id.");
 
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
         List<Book> books = bookRepository.findAllByOwnerId(ownerId, pageable);
 
-        return bookMapper.mapWithOwnerBookDtoList(books);
+        return bookMapper.mapWithBookingInfoBookDto(books);
     }
 
     @Override
