@@ -13,7 +13,7 @@ export const ProlongateReadingModal = (props) => {
     const startDate = bookingInfo.startDate && parseISO(bookingInfo.startDate);
     const finishDate = bookingInfo.finishDate && parseISO(bookingInfo.finishDate);
 
-    const minDate = finishDate || new Date();
+    const minDate = (finishDate && add(finishDate, { days: 1 })) || new Date();
     const maxDate = (startDate && add(startDate, { months: 1 })) || new Date();
 
     const initValue = {

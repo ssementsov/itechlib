@@ -165,9 +165,12 @@ const BookDetails = (props) => {
       const finishDateFormatISO = getDateFormatISO(finishDate);
 
       const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
+
       BookingsAPI.createBooking(booking)
          .then((res) => {
-            onUpdate(res.data.book);
+            const {book, ...rest} = res.data
+            onUpdate(book);
+            onUpdateBookingInfo(rest);
             setAssignButtonClose();
             assignHandler(true);
             enqueueSnackbar('The book was assigned to you successfully!', {
@@ -323,7 +326,7 @@ const BookDetails = (props) => {
                                              fontSize: theme.typography.body2,
                                           }}
                                        >
-                                          <InUseStatusBlock bookInfo={book}/>
+                                          <InUseStatusBlock bookingInfo={bookingInfo}/>
                                        </Typography>
                                     </Tooltip>
                                  ) : (

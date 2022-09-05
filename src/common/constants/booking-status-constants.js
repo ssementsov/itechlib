@@ -6,7 +6,7 @@ export const bookingStatus = {
     declined: {
         id: 2,
         name: 'DECLINED',
-        textToChow: 'Acceptance declined'
+        textToShow: 'Acceptance declined'
     },
     awaitingConfirmation: {
         id: 3,
@@ -16,5 +16,6 @@ export const bookingStatus = {
     notRequireConfirmation: {
         id: 4,
         name: 'NOT REQUIRE CONFIRMATION',
+        textToShow: 'In use'
     }
 }
