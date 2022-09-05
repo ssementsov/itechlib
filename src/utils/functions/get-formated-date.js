@@ -7,6 +7,6 @@ export const getFormatedDate = (dateISO) => {
     }
 };
 
-export const getDateFormatISO = (date) => {
+export const getDateFormatISO = (date = new Date()) => {
     return formatISO(date, { representation: 'date' });
 }

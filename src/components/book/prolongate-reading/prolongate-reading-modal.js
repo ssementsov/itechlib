@@ -1,17 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
-import { useFormik } from 'formik';
-import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
-import { add, parseISO, sub } from 'date-fns';
+import {useFormik} from 'formik';
+import {DatePeriodForm} from '../../../common/UI/date-period-form/date-period-form';
+import {add, parseISO} from 'date-fns';
 import * as Yup from 'yup';
-import {
-    dateNotEarlierThan,
-    dateNotLaterThan,
-    FORMAT_DATE,
-    INVALID_DATE,
-    isRequired,
-} from '../../../common/constants';
+import {dateNotEarlierThan, dateNotLaterThan, FORMAT_DATE, INVALID_DATE, isRequired,} from '../../../common/constants';
 
 export const ProlongateReadingModal = (props) => {
     const { onProlongate, open, onClose, bookingInfo } = props;
@@ -19,7 +13,7 @@ export const ProlongateReadingModal = (props) => {
     const startDate = bookingInfo.startDate && parseISO(bookingInfo.startDate);
     const finishDate = bookingInfo.finishDate && parseISO(bookingInfo.finishDate);
 
-    const minDate = finishDate;
+    const minDate = finishDate || new Date();
     const maxDate = (startDate && add(startDate, { months: 1 })) || new Date();
 
     const initValue = {

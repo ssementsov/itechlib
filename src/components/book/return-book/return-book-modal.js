@@ -90,27 +90,19 @@ const ReturnBookModal = (props) => {
                     <FormControlLabel
                         label='Please rate the book'
                         labelPlacement='start'
-                        sx={{
-                            ml: 0,
-                        }}
+                        sx={{ ml: 0 }}
                         control={
                             <Rating
                                 name='rate'
                                 value={formik.values.rate}
                                 size='middle'
                                 onChange={handleChangeRate}
-                                sx={{
-                                    ml: 5,
-                                }}
+                                sx={{ ml: 5 }}
                             />
                         }
                     />
                 </Box>
-                <Box
-                    sx={{
-                        mt: 3,
-                    }}
-                >
+                <Box sx={{ mt: 3 }}>
                     <TextField
                         error={Boolean(formik.touched.feedback && formik.errors.feedback)}
                         helperText={formik.touched.feedback && formik.errors.feedback}

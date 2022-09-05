@@ -1,25 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import DatePicker from '@mui/lab/DatePicker';
-import { Box, MenuItem, TextField, Typography } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
-import { add, sub } from 'date-fns';
+import {Box, MenuItem, TextField, Typography} from '@mui/material';
+import {useTheme} from '@mui/material/styles';
+import {useSelector} from 'react-redux';
+import {add, sub} from 'date-fns';
 
-const createReadersSelectorOptions = (option) => {
+const createReadersSelectorOptions = (reader, user) => {
+    const userFullName = `${user.name} + ' ' + ${user.surname}`;
+    const readerFullName = `${reader.name} + ' ' + ${reader.surname}`;
+
+    if (userFullName === readerFullName) return;
+
     return (
-        <MenuItem key={option.id} value={option.id}>
-            {option.name + ' ' + option.surname}
+        <MenuItem key={reader.id} value={reader.id}>
+            {reader.name + ' ' + reader.surname}
         </MenuItem>
     );
 };
-export const minDate = sub(new Date(), { years: 1 });
-export const maxDate = add(new Date(), { months: 1 });
+export const minDate = sub(new Date(), {years: 1});
+export const maxDate = add(new Date(), {months: 1});
 
-const HiddenForm = ({ formik }) => {
+const HiddenForm = ({formik}) => {
     const theme = useTheme();
     const readers = useSelector(state => state.lists.usersList);
+    const user = useSelector(state => state.user.user);
 
     useEffect(() => {
         formik.setFieldValue('reader', '');
@@ -46,7 +52,7 @@ const HiddenForm = ({ formik }) => {
                 value={formik.values.reader}
                 variant='outlined'
             >
-                {readers.map(createReadersSelectorOptions)}
+                {readers.map(reader => createReadersSelectorOptions(reader, user))}
             </TextField>
             <Box
                 sx={{
@@ -66,7 +72,7 @@ const HiddenForm = ({ formik }) => {
                     alignSelf='center'
                     marginLeft='15px'
                     sx={{
-                        [theme.breakpoints.down('md')]: { mb: 1 },
+                        [theme.breakpoints.down('md')]: {mb: 1},
                     }}
                 >
                     In use*

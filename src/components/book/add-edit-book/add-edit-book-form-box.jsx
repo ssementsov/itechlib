@@ -121,8 +121,8 @@ const AddEditBookFormBox = (props) => {
                 .min(10, mustBeMoreSymbols('Description', 10))
                 .max(500, mustBeLessSymbols('Description', 500))
                 .required(isRequired('Description')),
-            startDate: Yup.date().min(minStartDate, dateNotEarlierThan(minStartDate)).max(maxStartDate, dateNotLaterThan(maxStartDate)),
-            finishDate: Yup.date().min(minFinishDate, dateNotEarlierThan(minFinishDate, true)).max(maxFinishDate, dateNotLaterThan(maxFinishDate))
+            startDate: Yup.date().min(minStartDate, dateNotEarlierThan(minStartDate, true)).max(maxStartDate, dateNotLaterThan(maxStartDate)).nullable(),
+            finishDate: Yup.date().min(minFinishDate, dateNotEarlierThan(minFinishDate, true)).max(maxFinishDate, dateNotLaterThan(maxFinishDate)).nullable()
         }),
         validate,
         onSubmit: async (values) => {

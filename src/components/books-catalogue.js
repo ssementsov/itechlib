@@ -1,29 +1,36 @@
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { Box, Container } from '@mui/material';
+import {useRouter} from 'next/router';
+import {Box, Container} from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
-import { useMemo, useState } from 'react';
-import { Book } from '../models/book-model';
-import { SuggestedBook } from '../models/suggested-book-model';
-import { SuggestionAPI } from '../api/suggested-books-api';
-import { bookStatus, SUGGESTED_BOOKS_PATH, suggestedBookStatus } from '../common/constants';
-import { useBoolean } from '../utils/hooks/boolean-hook';
-import { PropTypes } from 'prop-types';
-import { types } from '../types';
-import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
+import {useMemo, useState} from 'react';
+import {Book} from '../models/book-model';
+import {SuggestedBook} from '../models/suggested-book-model';
+import {SuggestionAPI} from '../api/suggested-books-api';
+import {
+    bookAddedAndAsignedSuccessfully,
+    bookAddedSuccessfully,
+    bookStatus,
+    bookSuggestionAddedSuccessfully,
+    SUGGESTED_BOOKS_PATH,
+    suggestedBookStatus
+} from '../common/constants';
+import {useBoolean} from '../utils/hooks/boolean-hook';
+import {PropTypes} from 'prop-types';
+import {types} from '../types';
+import {useCustomSnackbar} from '../utils/hooks/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import BooksInUseListResults from './books-in-use/books-in-use-list-results';
 import {
     getBookCategoryId,
     getBookLanguageId,
     getBookStatusId,
 } from './books-catalogue-helpers/get-properties-for-payload';
-import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-books-list';
-import { BookingForTargetReader } from '../models/booking-model';
-import { getDateFormatISO } from '../utils/functions/get-formated-date';
-import { BooksAPI } from '../api/books-api';
+import {getFilteredBooksList} from './books-catalogue-helpers/get-filtered-books-list';
+import {BookingForTargetReader} from '../models/booking-model';
+import {getDateFormatISO} from '../utils/functions/get-formated-date';
+import {BooksAPI} from '../api/books-api';
 
 const BooksCatalogue = (props) => {
     const {
@@ -47,7 +54,7 @@ const BooksCatalogue = (props) => {
     const [isAddButtonOpen, setAddButtonOpen, setAddButtonClose] = useBoolean();
     const [isSuggestButtonOpen, setSuggestButtonOpen, setSuggestButtonClose] = useBoolean();
     const booksInUse = useSelector((state) => state.booksInUse.booksInUse);
-    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const {enqueueSnackbar, defaultErrorSnackbar} = useCustomSnackbar();
 
     const searchedBooks = useMemo(() => getFilteredBooksList(search, books, setIsStartedSearch), [books, search]);
     const searchedSuggestedBooks = useMemo(() => getFilteredBooksList(search, suggestedBooks, setIsStartedSearch), [search, suggestedBooks]);
@@ -84,9 +91,12 @@ const BooksCatalogue = (props) => {
                 startDateFormatISO,
                 finishDateFormatISO,
             );
-            console.log(createBookingForTargetReader);
             newBookFormData.append('bookingForTargetReaderDto', JSON.stringify(createBookingForTargetReader));
         }
+
+        const successNotificationMessage = newBook.status === bookStatus.inUse.name
+            ? bookAddedAndAsignedSuccessfully
+            : bookAddedSuccessfully
 
         BooksAPI.addBook(newBookFormData)
             .then((res) => {
@@ -96,7 +106,7 @@ const BooksCatalogue = (props) => {
                     onUpdateBooks(newBooksList);
                     onUpdateLoadingStatus(true);
                 }
-                enqueueSnackbar('Your book has been added successfully!', {
+                enqueueSnackbar(successNotificationMessage, {
                     variant: 'success',
                 });
             })
@@ -141,7 +151,7 @@ const BooksCatalogue = (props) => {
                 if (isNotSuggestedBooksPage) {
                     router.replace(SUGGESTED_BOOKS_PATH);
                 }
-                enqueueSnackbar('Book suggestion has been added successfully!', {
+                enqueueSnackbar(bookSuggestionAddedSuccessfully, {
                     variant: 'success',
                 });
             })
@@ -183,7 +193,7 @@ const BooksCatalogue = (props) => {
                         }}
                         title={title}
                     />
-                    <Box sx={{ mt: 3 }}>
+                    <Box sx={{mt: 3}}>
                         {isSuggestedBooksList && (
                             <SuggestedBooksListResults
                                 books={searchedSuggestedBooks}
@@ -194,7 +204,7 @@ const BooksCatalogue = (props) => {
                                 onSorting={onSorting}
                             />
                         )}
-                        {isBooksInUseList && <BooksInUseListResults books={searchedBooksInUse} />}
+                        {isBooksInUseList && <BooksInUseListResults books={searchedBooksInUse}/>}
                         {(isAllBooks || isMyBooks) && (
                             <BooksListResults
                                 books={searchedBooks}
