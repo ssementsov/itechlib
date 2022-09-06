@@ -36,4 +36,7 @@ export const BookingsAPI = {
     updateBookingFinishedDate(bookingId, newFinishDate) {
         return api.Client.put(`/${EntityTypes.bookings}/finish-date?bookingId=${bookingId}&newFinishDate=${newFinishDate}`);
     },
+    acceptOrDeclineBooking(requiredFields) {
+        return api.Client.post(`/${EntityTypes.bookings}/resolve-assigned`, requiredFields);
+    }
 };

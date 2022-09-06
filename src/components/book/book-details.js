@@ -56,6 +56,10 @@ import { CustomLink } from '../../common/UI/custom-link';
 import { fetchUsersList } from '../../store/reducers/ListsSlice';
 import { InUseStatusBlock } from '../common/in-use-status-block/in-use-status-block';
 import { ReadOnlyRating } from '../../common/UI';
+import { PendingAcceptanceMessage } from './book-blocks/PendingAcceptanceMessage';
+import { InUseStatusButtons } from './book-blocks/in-use-status-buttons';
+import { PendingAcceptanceStatusButtons } from './book-blocks/pending-acceptance-status-buttons';
+import { AcceptDeclineBooking } from '../../models/accept-decline-booking-model';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -89,6 +93,8 @@ const BookDetails = (props) => {
     const bookingStartDate = parseISO(bookingInfo.startDate);
     const lastDateToProlongate = add(bookingStartDate, { months: 1 });
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
+    const isPendingAcceptanceStatus = book.bookingInfoDto?.status.id === bookingStatus.awaitingConfirmation.id;
+    const showPendingAcceptanceMessage = !isOwner && isAssigned && isPendingAcceptanceStatus;
 
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
@@ -197,6 +203,21 @@ const BookDetails = (props) => {
             });
     };
 
+    const acceptBookingHandler = () => {
+        const acceptBookingFields = new AcceptDeclineBooking(book.id, bookingStatus.accepted);
+
+        BookingsAPI.acceptOrDeclineBooking(acceptBookingFields)
+            .then(res => {
+                onUpdate(res.data);
+                enqueueSnackbar('You have accepted the book.', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            });
+    }
+
     const returnBook = (body) => {
         let bookingId = bookingInfo.id;
         BookingsAPI.cancelBooking(bookingId, body)
@@ -262,7 +283,8 @@ const BookDetails = (props) => {
                 open={isBlockingModalOpen}
                 onClose={setBlockingModalClose}
             />
-
+            {showPendingAcceptanceMessage &&
+                <PendingAcceptanceMessage startDate={bookingInfo.startDate} finishDate={bookingInfo.finishDate} />}
             <Card>
                 <CardHeader
                     title={book.title}
@@ -329,7 +351,7 @@ const BookDetails = (props) => {
                                                         <InUseStatusBlock
                                                             isBookPreviewPage
                                                             currentBookingStatus={book.bookingInfoDto?.status || bookingInfo.status}
-                                                            bookingFinishDate={book.bookingInfoDto.bookingEndDate}
+                                                            bookingFinishDate={bookingInfo.finishDate || book.bookingInfoDto?.bookingEndDate}
                                                             showInUseStatus={!isOwner && !isAssigned}
                                                         />
                                                     </Typography>
@@ -373,19 +395,14 @@ const BookDetails = (props) => {
                         <>
                             {isAssigned ? (
                                 <>
-                                    <Button
-                                        disabled={isDisabledProlongateButton}
-                                        onClick={() => handleBlockingOrAction(setProlongateButtonOpen)}
-                                        sx={{ mr: 1 }}
-                                    >
-                                        Prolongate reading
-                                    </Button>
-                                    <PrimaryButton
-                                        title={'Return the book'}
-                                        size='small'
-                                        fullWidth={false}
-                                        onClick={setReturnButtonOpen}
-                                    />
+                                    {isPendingAcceptanceStatus
+                                        ? <PendingAcceptanceStatusButtons onAcceptButtonClick={acceptBookingHandler} />
+                                        : <InUseStatusButtons
+                                            isDisabledProlongateButton={isDisabledProlongateButton}
+                                            onProlongateButtonClick={() => handleBlockingOrAction(setProlongateButtonOpen)}
+                                            onReturnButtonClick={setReturnButtonOpen}
+                                        />
+                                    }
                                 </>
                             ) : (
                                 <PrimaryButton
