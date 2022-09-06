@@ -1,36 +1,37 @@
 import Head from 'next/head';
-import {useRouter} from 'next/router';
-import {Box, Container} from '@mui/material';
+import { useRouter } from 'next/router';
+import { Box, Container } from '@mui/material';
 import BooksListResults from '../components/books-list/books-list-results';
 import BooksListToolbar from '../components/books-list/books-list-toolbar';
-import {useMemo, useState} from 'react';
-import {Book} from '../models/book-model';
-import {SuggestedBook} from '../models/suggested-book-model';
-import {SuggestionAPI} from '../api/suggested-books-api';
+import { useMemo, useState } from 'react';
+import { Book } from '../models/book-model';
+import { SuggestedBook } from '../models/suggested-book-model';
+import { SuggestionAPI } from '../api/suggested-books-api';
 import {
     bookAddedAndAsignedSuccessfully,
     bookAddedSuccessfully,
     bookStatus,
     bookSuggestionAddedSuccessfully,
+    MY_BOOKS_PATH,
     SUGGESTED_BOOKS_PATH,
-    suggestedBookStatus
+    suggestedBookStatus,
 } from '../common/constants';
-import {useBoolean} from '../utils/hooks/boolean-hook';
-import {PropTypes} from 'prop-types';
-import {types} from '../types';
-import {useCustomSnackbar} from '../utils/hooks/custom-snackbar-hook';
+import { useBoolean } from '../utils/hooks/boolean-hook';
+import { PropTypes } from 'prop-types';
+import { types } from '../types';
+import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import BooksInUseListResults from './books-in-use/books-in-use-list-results';
 import {
     getBookCategoryId,
     getBookLanguageId,
     getBookStatusId,
 } from './books-catalogue-helpers/get-properties-for-payload';
-import {getFilteredBooksList} from './books-catalogue-helpers/get-filtered-books-list';
-import {BookingForTargetReader} from '../models/booking-model';
-import {getDateFormatISO} from '../utils/functions/get-formated-date';
-import {BooksAPI} from '../api/books-api';
+import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-books-list';
+import { BookingForTargetReader } from '../models/booking-model';
+import { getDateFormatISO } from '../utils/functions/get-formated-date';
+import { BooksAPI } from '../api/books-api';
 
 const BooksCatalogue = (props) => {
     const {
@@ -83,7 +84,8 @@ const BooksCatalogue = (props) => {
         newBookFormData.append('withOwnerBookDto', JSON.stringify(createdBook));
         newBookFormData.append('file', newBook.file);
 
-        if (newBook.status === bookStatus.inUse.name) {
+        const isInUseStatus = newBook.status === bookStatus.inUse.name;
+        if (isInUseStatus) {
             const startDateFormatISO = getDateFormatISO(newBook.startDate);
             const finishDateFormatISO = getDateFormatISO(newBook.finishDate);
             const createBookingForTargetReader = new BookingForTargetReader(
@@ -94,7 +96,7 @@ const BooksCatalogue = (props) => {
             newBookFormData.append('bookingForTargetReaderDto', JSON.stringify(createBookingForTargetReader));
         }
 
-        const successNotificationMessage = newBook.status === bookStatus.inUse.name
+        const successNotificationMessage = isInUseStatus
             ? bookAddedAndAsignedSuccessfully
             : bookAddedSuccessfully
 
@@ -102,9 +104,13 @@ const BooksCatalogue = (props) => {
             .then((res) => {
                 setAddButtonClose();
                 if (books) {
-                    const newBooksList = [res.data, ...books];
-                    onUpdateBooks(newBooksList);
-                    onUpdateLoadingStatus(true);
+                    if(isInUseStatus) {
+                        router.replace(MY_BOOKS_PATH);
+                    } else {
+                        const newBooksList = [res.data, ...books];
+                        onUpdateBooks(newBooksList);
+                        onUpdateLoadingStatus(true);
+                    }
                 }
                 enqueueSnackbar(successNotificationMessage, {
                     variant: 'success',
@@ -166,10 +172,7 @@ const BooksCatalogue = (props) => {
             </Head>
             <Box
                 component='main'
-                sx={{
-                    flexGrow: 1,
-                    py: 8,
-                }}
+                sx={{ flexGrow: 1, py: 8 }}
             >
                 <Container maxWidth={false}>
                     <BooksListToolbar
