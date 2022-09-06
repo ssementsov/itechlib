@@ -351,7 +351,7 @@ const BookDetails = (props) => {
                                                         <InUseStatusBlock
                                                             isBookPreviewPage
                                                             currentBookingStatus={book.bookingInfoDto?.status || bookingInfo.status}
-                                                            bookingFinishDate={bookingInfo.finishDate || book.bookingInfoDto?.bookingEndDate}
+                                                            bookingFinishDate={bookingInfo.finishDate}
                                                             showInUseStatus={!isOwner && !isAssigned}
                                                         />
                                                     </Typography>
