@@ -1,15 +1,18 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { GoogleLogin } from 'react-google-login';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { UserAPI } from '../api/user-api';
 import jwt_decode from 'jwt-decode';
 import {
+    isRequired,
     LOGIN_PATH,
     MAIN_CATALOGUE_PATH,
-} from '../common/constants/route-constants';
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
+} from '../common/constants';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { PrimaryButton } from '../common/UI/buttons/primary-button';
 import * as Yup from 'yup';
@@ -24,7 +27,7 @@ const Register = () => {
     function validate(value) {
         let error = {};
         if (!value.email) {
-            error.email = 'Email is required';
+            error.email = isRequired('Email');
         } else if (!/^[A-Z0-9._%+-]+\.+[A-Z0-9._%+-]+@itechart-group.com/i.test(value.email)) {
             error.email = 'Please enter correct corporate email';
         }
@@ -38,8 +41,8 @@ const Register = () => {
         validationSchema: Yup.object({
             email: Yup.string()
                 .trim()
-                .min(24, 'Email must be 24 or more symbols')
-                .max(50, 'Email must be 50 or less symbols'),
+                .min(24, mustBeMoreSymbols('Email', 24))
+                .max(50, mustBeLessSymbols('Email', 50)),
         }),
         validate,
         onSubmit: (value) => {

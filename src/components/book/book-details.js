@@ -9,7 +9,6 @@ import {
     CardHeader,
     Grid,
     IconButton,
-    Rating,
     Table,
     TableBody,
     TableCell,
@@ -19,39 +18,44 @@ import {
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import {
+    BOOK_PREVIEW_PAGE_PATH,
+    bookingStatus,
+    bookStatus,
+    FEEDBACKS_PATH,
+    titles,
+    userRoles,
+} from '../../common/constants';
 import { styled, useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
 import AssignBookModal from '../book/assign-book/assign-book-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import EditBookModal from '../book/add-edit-book/edit-book-modal';
-import { bookStatus } from '../../common/constants/book-status-constants';
 import { Book } from '../../models/book-model';
 import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
-import { BookingsAPI } from './../../api/bookings-api';
+import { BookingsAPI } from '../../api/bookings-api';
 import { useBoolean } from '../../utils/hooks/boolean-hook';
-import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
-import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
-import { getFormatedDate } from '../../utils/functions/get-formated-date';
+import { getDateFormatISO } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
-import { add, format, formatISO, isAfter, parseISO } from 'date-fns';
+import { add, format, isAfter, parseISO } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
-import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 import { userSlice } from '../../store/reducers/UserSlice';
-import { bookingStatus } from '../../common/constants/booking-status-constants';
 import {
     getBookCategoryId,
     getBookLanguageId,
     getBookStatusId,
 } from '../books-catalogue-helpers/get-properties-for-payload';
 import { CustomLink } from '../../common/UI/custom-link';
+import { fetchUsersList } from '../../store/reducers/ListsSlice';
+import { InUseStatusBlock } from '../common/in-use-status-block/in-use-status-block';
+import { ReadOnlyRating } from '../../common/UI';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -83,9 +87,9 @@ const BookDetails = (props) => {
     const readerId = useSelector((state) => state.user.user.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
     const bookingStartDate = parseISO(bookingInfo.startDate);
-    const bookingEndDate = getFormatedDate(book.bookingInfoDto?.bookingEndDate);
     const lastDateToProlongate = add(bookingStartDate, { months: 1 });
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
+
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
             .then((res) => {
@@ -120,6 +124,10 @@ const BookDetails = (props) => {
         }
     };
 
+    const openEditBookModalHandler = () => {
+        setEditButtonOpen();
+        dispatch(fetchUsersList());
+    };
     const editBook = (newBook) => {
         let categoryId = getBookCategoryId(newBook);
         let languageId = getBookLanguageId(newBook);
@@ -153,13 +161,16 @@ const BookDetails = (props) => {
     };
 
     const assignBook = ({ startDate, finishDate }) => {
-        const startDateFormatISO = formatISO(startDate, { representation: 'date' });
-        const finishDateFormatISO = formatISO(finishDate, { representation: 'date' });
-        // add condition for booking status
+        const startDateFormatISO = getDateFormatISO(startDate);
+        const finishDateFormatISO = getDateFormatISO(finishDate);
+
         const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
+
         BookingsAPI.createBooking(booking)
             .then((res) => {
-                onUpdate(res.data.book);
+                const { book, ...rest } = res.data;
+                onUpdate(book);
+                onUpdateBookingInfo(rest);
                 setAssignButtonClose();
                 assignHandler(true);
                 enqueueSnackbar('The book was assigned to you successfully!', {
@@ -172,7 +183,7 @@ const BookDetails = (props) => {
     };
 
     const prolongateReading = (bookingId, finishDate) => {
-        const newFinishDateFormatISO = formatISO(finishDate, { representation: 'date' });
+        const newFinishDateFormatISO = getDateFormatISO(finishDate);
         BookingsAPI.updateBookingFinishedDate(bookingId, newFinishDateFormatISO)
             .then(res => {
                 onUpdateBookingInfo(res.data);
@@ -261,7 +272,7 @@ const BookDetails = (props) => {
                                 <IconButton onClick={setDeleteButtonOpen} aria-label='delete'>
                                     <DarkDeleteIcon fontSize='small' />
                                 </IconButton>
-                                <IconButton onClick={setEditButtonOpen} aria-label='edit'>
+                                <IconButton onClick={openEditBookModalHandler} aria-label='edit'>
                                     <EditIcon fontSize='small' />
                                 </IconButton>
                             </>
@@ -298,20 +309,7 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.rate}</TblCell>
                                         <TblCell>
-                                            <Tooltip title={book.rate} placement='right'>
-                                                <span>
-                                                    <Rating
-                                                        precision={0.5}
-                                                        name='read-only'
-                                                        value={calculateRate(book.rate)}
-                                                        size='small'
-                                                        readOnly
-                                                        sx={{
-                                                            ml: '-3px',
-                                                        }}
-                                                    />
-                                                </span>
-                                            </Tooltip>
+                                            <ReadOnlyRating rate={book.rate} sx={{ ml: '-3px' }} />
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
@@ -324,13 +322,16 @@ const BookDetails = (props) => {
                                                 >
                                                     <Typography
                                                         sx={{
-                                                            width: '170px',
+                                                            width: 'fit-content',
                                                             fontSize: theme.typography.body2,
                                                         }}
                                                     >
-                                                        {`${toLowerCaseExceptFirstLetter(
-                                                            book.status.name,
-                                                        )} till ${bookingEndDate}`}
+                                                        <InUseStatusBlock
+                                                            isBookPreviewPage
+                                                            currentBookingStatus={book.bookingInfoDto?.status || bookingInfo.status}
+                                                            bookingFinishDate={book.bookingInfoDto.bookingEndDate}
+                                                            showInUseStatus={!isOwner && !isAssigned}
+                                                        />
                                                     </Typography>
                                                 </Tooltip>
                                             ) : (

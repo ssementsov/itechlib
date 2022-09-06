@@ -1,10 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
@@ -103,18 +100,18 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to map book to bookAndIsReaderDto");
 
-        return  bookMapper.toFullBookDto(book);
+        return bookMapper.toFullBookDto(book);
     }
 
     @Override
-    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
+    public List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
 
         log.info("Try get books by user id.");
 
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
         List<Book> books = bookRepository.findAllByOwnerId(ownerId, pageable);
 
-        return bookMapper.mapWithOwnerBookDtoList(books);
+        return bookMapper.mapWithBookingInfoBookDto(books);
     }
 
     @Override
@@ -128,7 +125,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList){
+    public void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList) {
         responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
     }
 

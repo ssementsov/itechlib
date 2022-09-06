@@ -2,6 +2,10 @@ package by.library.itechlibrary.constant;
 
 import by.library.itechlibrary.entity.BookStatus;
 
+import java.util.Map;
+
+import static java.util.Map.entry;
+
 public class BookingStatusConstant {
 
     private BookingStatusConstant() {
@@ -11,6 +15,11 @@ public class BookingStatusConstant {
     public static final String DECLINED = "DECLINED";
     public static final String AWAITING_CONFIRMATION = "AWAITING CONFIRMATION";
     public static final String NOT_REQUIRE_CONFIRMATION = "NOT REQUIRE CONFIRMATION";
+
+    public static final Map<String, String> templateBookingStatusMap = Map.ofEntries(
+            entry(ACCEPTED, MailTemplateConstant.BOOK_ACCEPTANCE),
+            entry(DECLINED, MailTemplateConstant.ACCEPTANCE_DECLINED)
+    );
 
     public static final BookStatus ACCEPTED_BOOKING_STATUS = new BookStatus((short) 1, ACCEPTED);
     public static final BookStatus DECLINED_BOOKING_STATUS = new BookStatus((short) 2, DECLINED);

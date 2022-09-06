@@ -1,29 +1,45 @@
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { add } from 'date-fns';
+import { add, sub } from 'date-fns';
 import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
+import {
+    dateNotEarlierThan,
+    dateNotLaterThan,
+    FORMAT_DATE,
+    INVALID_DATE,
+    isRequired,
+} from '../../../common/constants';
+import * as Yup from 'yup';
 
 const initValue = {
     startDate: new Date(),
     finishDate: null,
 };
-const maxDate = add(new Date(), {
-    months: 1,
-});
+const minDatePickerDate = new Date();
+const minFormikDate = sub(new Date(), { days: 1 });
+const maxDate = add(new Date(), { months: 1 });
 
 export const AssignBookAllowed = (props) => {
     const { onAssign, onClose } = props;
 
     function validate(value) {
         let error = {};
+
         if (!value.finishDate) {
-            error.finishDate = 'Date is required';
+            error.finishDate = isRequired('Date');
         }
+        if (value.finishDate && value.finishDate.toString() === INVALID_DATE) {
+            error.finishDate = FORMAT_DATE;
+        }
+
         return error;
     }
 
     const formik = useFormik({
         initialValues: initValue,
+        validationSchema: Yup.object({
+            finishDate: Yup.date().min(minFormikDate, dateNotEarlierThan(minDatePickerDate)).max(maxDate, dateNotLaterThan(maxDate)),
+        }),
         validate,
         onSubmit: async (values, actions) => {
             actions.resetForm({
@@ -37,7 +53,7 @@ export const AssignBookAllowed = (props) => {
         <DatePeriodForm
             formik={formik}
             onClose={onClose}
-            minDate={new Date()}
+            minDate={minDatePickerDate}
             maxDate={maxDate}
             title={'To assign the book please specify period'}
         />

@@ -3,7 +3,7 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import { SuggestionAPI } from '../api/suggested-books-api';
 import { useInfiniteScroll } from '../utils/hooks/infinite-scroll-hook';
 import { ProgressLinear } from '../common/UI/progressLinear';
-import { SortDirection, SortFields } from '../common/constants/sorting-constants';
+import { SortDirection, SortFields } from '../common/constants';
 
 const BooksCatalogue = React.lazy(() => import('../components/books-catalogue'));
 
@@ -47,7 +47,7 @@ const SuggestedBooksCatalogue = () => {
             } else {
                 const isExistedFilterType = prevFilterList.some(filter => filter.field === `${name}.name`);
                 if (isExistedFilterType) {
-                    const newFilterList = prevFilterList.map(filter => {
+                    return prevFilterList.map(filter => {
                         if (filter.field === `${name}.name`) {
                             return {
                                 ...filter,
@@ -57,7 +57,6 @@ const SuggestedBooksCatalogue = () => {
                             return filter;
                         }
                     }).filter(filter => filter.value !== '');
-                    return newFilterList;
                 } else {
                     if (!value) {
                         return prevFilterList;

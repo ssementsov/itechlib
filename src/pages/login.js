@@ -1,12 +1,11 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { GoogleLogin } from 'react-google-login';
-import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
+import { LOGIN_PATH, MAIN_CATALOGUE_PATH, ROOT_PATH } from '../common/constants';
 import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
-import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { api } from '../api/api';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { useDispatch } from 'react-redux';

@@ -1,9 +1,6 @@
 package by.library.itechlibrary.facade;
 
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +15,7 @@ public interface BookFacade {
 
     void attachFile(MultipartFile multipartFile, long bookId);
 
-    List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto);
+    List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto);
 
     List<ResponseOwnBookDto> getCurrentUsersBookedBooks();
 

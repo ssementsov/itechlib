@@ -14,7 +14,7 @@ import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
-import { bookStatus } from '../../common/constants/book-status-constants';
+import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { CloseIcon } from '../../icons/close-icon';
@@ -58,10 +58,7 @@ const MultipurposeBookForm = (props) => {
                     color="textPrimary"
                     variant="h4"
                     textAlign="center"
-                    sx={{
-                        mt: 2,
-                        mb: 2,
-                    }}
+                    sx={{ mt: 2, mb: 2 }}
                 >
                     {title}
                 </Typography>
@@ -191,7 +188,7 @@ const MultipurposeBookForm = (props) => {
                 )}
 
                 {formik.values.status === bookStatus.inUse.name && (
-                    <HiddenForm formik={formik} createOptions={createOptions} />
+                    <HiddenForm formik={formik}/>
                 )}
                 {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
                 <Box sx={{ py: 2 }}>

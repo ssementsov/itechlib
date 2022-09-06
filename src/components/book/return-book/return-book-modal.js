@@ -7,9 +7,11 @@ import StyledModal from '../../styled-modal';
 import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
 import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
 import {
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-} from '../../../common/constants/warning-messages-and-validation';
+} from '../../../common/constants';
 
 const ReturnBookModal = (props) => {
     const { open, onClose, onReturn } = props;
@@ -58,8 +60,8 @@ const ReturnBookModal = (props) => {
         validationSchema: Yup.object({
             feedback: Yup.string()
                 .trim()
-                .min(10, 'Feedback must be 10 or more symbols')
-                .max(250, 'Feedback must be 250 or less symbols')
+                .min(10, mustBeMoreSymbols('Feedback', 10))
+                .max(250, mustBeLessSymbols('Feedback', 250))
         }),
         validate: (value) => {
             let error = {};
@@ -88,27 +90,19 @@ const ReturnBookModal = (props) => {
                     <FormControlLabel
                         label='Please rate the book'
                         labelPlacement='start'
-                        sx={{
-                            ml: 0,
-                        }}
+                        sx={{ ml: 0 }}
                         control={
                             <Rating
                                 name='rate'
                                 value={formik.values.rate}
                                 size='middle'
                                 onChange={handleChangeRate}
-                                sx={{
-                                    ml: 5,
-                                }}
+                                sx={{ ml: 5 }}
                             />
                         }
                     />
                 </Box>
-                <Box
-                    sx={{
-                        mt: 3,
-                    }}
-                >
+                <Box sx={{ mt: 3 }}>
                     <TextField
                         error={Boolean(formik.touched.feedback && formik.errors.feedback)}
                         helperText={formik.touched.feedback && formik.errors.feedback}

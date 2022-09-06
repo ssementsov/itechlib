@@ -1,9 +1,6 @@
 package by.library.itechlibrary.service;
 
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.FileInfo;
@@ -25,7 +22,7 @@ public interface BookService {
 
     FullBookDto getByIdFullVersion(long id);
 
-    List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId);
+    List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId);
 
     List<ResponseOwnBookDto> getCurrentUsersBookedBooks(long currentUserId);
 

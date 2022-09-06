@@ -10,11 +10,11 @@ import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 import EditSuggestedBookModal from './../suggested-book/add-edit-suggested-book/edit-suggested-book-modal';
 import { SuggestedBook } from '../../models/suggested-book-model';
-import { suggestedBookStatus } from '../../common/constants/suggested-book-status-constants';
+import { suggestedBookStatus } from '../../common/constants';
 import { useVoting } from '../../utils/hooks/vote-hook';
 import { languageFilters } from '../book/add-edit-book/datas-for-form-options/languages';
 import { categoryFilters } from '../book/add-edit-book/datas-for-form-options/categories';
-import { SortButton } from '../../common/UI/SortButton';
+import { SortButton } from '../../common/UI/buttons/SortButton';
 import { getBookCategoryId, getBookLanguageId } from '../books-catalogue-helpers/get-properties-for-payload';
 
 const createOptions = (option) => {

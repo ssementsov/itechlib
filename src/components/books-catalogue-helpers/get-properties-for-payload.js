@@ -1,6 +1,4 @@
-import { category } from '../../common/constants/category-constants';
-import { language } from '../../common/constants/language-constants';
-import { bookStatus } from '../../common/constants/book-status-constants';
+import { bookStatus, category, language } from '../../common/constants';
 
 export const getBookCategoryId = (book) => {
     switch (book.category) {

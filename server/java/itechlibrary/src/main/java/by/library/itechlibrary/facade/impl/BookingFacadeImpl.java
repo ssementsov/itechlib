@@ -1,7 +1,5 @@
 package by.library.itechlibrary.facade.impl;
 
-import by.library.itechlibrary.constant.BookingStatusConstant;
-import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
@@ -10,7 +8,9 @@ import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
+import by.library.itechlibrary.exeption_handler.exception.WrongBookingStatusException;
 import by.library.itechlibrary.facade.BookingFacade;
+import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
@@ -18,6 +18,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static by.library.itechlibrary.constant.BookingStatusConstant.templateBookingStatusMap;
 
 
 @Service
@@ -36,6 +40,8 @@ public class BookingFacadeImpl implements BookingFacade {
     private final MailNotificationService mailNotificationService;
 
     private final BookingAcceptanceService bookingAcceptanceService;
+
+    private final BookingInfoMapper bookingInfoMapper;
 
 
     @Override
@@ -61,31 +67,44 @@ public class BookingFacadeImpl implements BookingFacade {
     @Transactional
     public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
+        bookingService.checkDtoForResolveAssignedBooking(bookingAcceptanceDto);
+
         long bookId = bookingAcceptanceDto.getBookId();
         long readerId = securityUserDetailsService.getCurrentUserId();
 
         Book book = bookService.getById(bookId);
-        BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
-        Booking resolvedBooking = bookingService.resolveAssignedBooking(bookingDto, book, readerId, bookingAcceptanceDto.getStatus());
+        Booking booking = bookingService.findAwaitingConfirmationByBookId(bookId);
+
+        Booking resolveAssignedBooking = bookingService.resolveAssignedBooking(booking, book, bookingAcceptanceDto.getStatus(), readerId);
         bookingAcceptanceService.save(bookingAcceptanceDto, book, readerId);
 
-        Booking booking = bookingService.findByIdWithoutMapping(resolvedBooking.getId());
+        sendEmailNotification(resolveAssignedBooking);
 
-        if (bookingAcceptanceDto.getStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
+        FullBookDto fullBookDto = bookService.getByIdFullVersion(bookId);
+        BookingInfo bookingInfo = bookingService.getBookingInfo(bookId, readerId);
+        fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
-            sendEmailAboutBookAcceptance(booking);
-
-        }
-
-        return bookService.getByIdFullVersion(bookId);
+        return fullBookDto;
     }
 
-    private void sendEmailAboutBookAcceptance(Booking booking) {
+    private void sendEmailNotification(Booking booking) {
 
-        Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE);
+        Template template = chooseTemplate(booking.getStatus().getName());
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, true);
+        mailNotificationService.sent(mailNotificationInfo, false);
     }
+
+    private Template chooseTemplate(String bookingStatusName) {
+
+        Optional<String> optionalTemplateName = Optional.ofNullable(templateBookingStatusMap.get(bookingStatusName));
+
+        String templateName = optionalTemplateName.orElseThrow(
+                () -> new WrongBookingStatusException("Incorrect booking status for sending an email about resolving assigned booking.")
+        );
+
+        return mailTemplateService.getByName(templateName);
+    }
+
 }

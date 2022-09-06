@@ -4,7 +4,7 @@ import { CardContent, CardHeader, CardMedia, IconButton, Table, TableBody, Table
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
 import { styled } from '@mui/material/styles';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import { titles } from '../../common/constants';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { LikeIcons } from '../suggested-books-list/like-icons';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';

@@ -5,14 +5,17 @@ export const bookingStatus = {
     },
     declined: {
         id: 2,
-        name: 'DECLINED'
+        name: 'DECLINED',
+        textToShow: 'Acceptance declined'
     },
     awaitingConfirmation: {
         id: 3,
-        name: 'AWAITING CONFIRMATION'
+        name: 'AWAITING CONFIRMATION',
+        textToShow: 'Pending for acceptance'
     },
     notRequireConfirmation: {
         id: 4,
-        name: 'NOT REQUIRE CONFIRMATION'
+        name: 'NOT REQUIRE CONFIRMATION',
+        textToShow: 'In use'
     }
 }

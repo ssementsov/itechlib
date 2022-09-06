@@ -1,6 +1,8 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -19,17 +21,19 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllCurrentsByReaderId(long id);
 
-    Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto);
+    Booking resolveAssignedBooking(Booking booking, Book book, BookingStatusDto bookingStatusDto, long readerId);
 
     List<BookingResponseDto> findAllByBookId(long id);
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
-    BookingDto findAwaitingConfirmationByBookId(long bookId);
+    Booking findAwaitingConfirmationByBookId(long bookId);
+
+    void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto);
 
     BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 
-    Booking update(BookingDto bookingDto, Book book, long readerId);
+    BookingDto update(BookingDto bookingDto, Book book, long readerId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
@@ -41,11 +45,13 @@ public interface BookingService {
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 
+    void fillBookWithBookingInfo(WithBookingInfoBookDto book);
+
     void disableCurrentBooking(long bookId);
 
     BaseBookingInfo getBaseBookingInfo(long bookId);
 
     int getCountActiveBookings(long readerId);
 
-    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId);
 }

@@ -2,10 +2,7 @@ package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -91,11 +88,14 @@ public class BookFacadeImpl implements BookFacade {
 
     @Override
     @Transactional
-    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
+    public List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        return bookService.getOwnersBook(parameterInfoDto, currentUserId);
+        List<WithBookingInfoBookDto> ownersBooks = bookService.getOwnersBook(parameterInfoDto, currentUserId);
+        ownersBooks.forEach(bookingService::fillBookWithBookingInfo);
+
+        return ownersBooks;
     }
 
     @Override
@@ -131,9 +131,11 @@ public class BookFacadeImpl implements BookFacade {
     public FullBookDto getByIdFullVersion(long id) {
 
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
-        if (fullBookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+        String bookStatusName = fullBookDto.getStatus().getName();
+
+        if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
             BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
             fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
@@ -171,7 +173,7 @@ public class BookFacadeImpl implements BookFacade {
 
         if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
-            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, false, bookId);
+            BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, bookId);
             Book book = bookService.getById(bookId);
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
