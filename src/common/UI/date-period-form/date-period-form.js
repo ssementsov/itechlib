@@ -2,6 +2,8 @@ import { Box, Button, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import { ReadOnlyDatePicker } from '../read-only-date-picker';
+import { useSelector } from 'react-redux';
+import { PrimaryButton } from '../buttons/primary-button';
 
 const BoxForDate = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -22,6 +24,8 @@ const BoxForDate = styled(Box)(({ theme }) => ({
 
 export const DatePeriodForm = (props) => {
     const { title, formik, onClose, minDate, maxDate } = props;
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+
     return (
         <>
             <Box sx={{ my: 3 }}>
@@ -63,15 +67,12 @@ export const DatePeriodForm = (props) => {
                     />
                 </BoxForDate>
                 <Box sx={{ py: 2, mt: 4 }}>
-                    <Button
-                        color='primary'
-                        fullWidth
-                        size='large'
+                    <PrimaryButton
+                        loadingButton
+                        loading={isLoadingButton}
+                        title={'Ok'}
                         type='submit'
-                        variant='contained'
-                    >
-                        Ok
-                    </Button>
+                    />
                     <Button
                         onClick={onClose}
                         fullWidth

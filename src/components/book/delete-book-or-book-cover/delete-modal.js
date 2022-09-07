@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
 import StyledModal from '../../styled-modal';
-import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
-import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
+import { PrimaryButton, SecondaryButton } from '../../../common/UI';
+import { useSelector } from 'react-redux';
 
 const DeleteModal = (props) => {
     const { onDelete, onClose, open, title } = props;
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
     return (
         <StyledModal open={open} onClose={onClose}>
@@ -17,6 +18,8 @@ const DeleteModal = (props) => {
             </Box>
             <Box sx={{ py: 2 }}>
                 <PrimaryButton
+                    loadingButton
+                    loading={isLoadingButton}
                     title='Yes'
                     onClick={onDelete}
                 />

@@ -12,9 +12,12 @@ import { LOGIN_PATH, YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants';
 import { ProgressLinear } from '../../../common/UI';
 import { GoBackButton } from '../../../common/UI';
 import { BookingsAPI } from '../../../api/bookings-api';
+import { useDispatch } from 'react-redux';
+import { setLoadingButton } from '../../../store/reducers';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
+    const dispatch = useDispatch();
     const id = router.query.id;
     const [book, setBook] = useState([]);
     const [bookingInfo, setBookingInfo] = useState({});
@@ -26,6 +29,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const { defaultErrorSnackbar } = useCustomSnackbar();
 
     const addBookCover = (file, onClose) => {
+        dispatch(setLoadingButton(true));
         BooksAPI.addBookCover(file)
             .then(() => {
                 onClose();
@@ -34,7 +38,10 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
             })
             .catch(() => {
                 defaultErrorSnackbar();
-            });
+            })
+            .finally(() => {
+                dispatch(setLoadingButton(false));
+            })
     };
 
     const deleteBookCover = (imageId, onDeleteButtonClose) => {

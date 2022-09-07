@@ -21,7 +21,7 @@ import { PropTypes } from 'prop-types';
 import { types } from '../types';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import SuggestedBooksListResults from './suggested-books-list/suggested-books-list-result';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BooksInUseListResults from './books-in-use/books-in-use-list-results';
 import {
     getBookCategoryId,
@@ -32,6 +32,7 @@ import { getFilteredBooksList } from './books-catalogue-helpers/get-filtered-boo
 import { BookingForTargetReader } from '../models/booking-model';
 import { getDateFormatISO } from '../utils/functions/get-formated-date';
 import { BooksAPI } from '../api/books-api';
+import { setLoadingButton } from '../store/reducers';
 
 const BooksCatalogue = (props) => {
     const {
@@ -49,6 +50,7 @@ const BooksCatalogue = (props) => {
         onSorting,
     } = props;
     const router = useRouter();
+    const dispatch = useDispatch();
     const isNotSuggestedBooksPage = router.pathname !== SUGGESTED_BOOKS_PATH;
     const [search, setSearch] = useState('');
     const [isStartedSearch, setIsStartedSearch] = useState(false);
@@ -100,6 +102,7 @@ const BooksCatalogue = (props) => {
             ? bookAddedAndAsignedSuccessfully
             : bookAddedSuccessfully
 
+        dispatch(setLoadingButton(true));
         BooksAPI.addBook(newBookFormData)
             .then((res) => {
                 setAddButtonClose();
@@ -119,7 +122,10 @@ const BooksCatalogue = (props) => {
             .catch(() => {
                 defaultErrorSnackbar();
                 onUpdateLoadingStatus(true);
-            });
+            })
+            .finally(() => {
+                dispatch(setLoadingButton(false));
+            })
     };
 
     const createSuggestedBook = (suggestedBook) => {
@@ -140,6 +146,7 @@ const BooksCatalogue = (props) => {
             suggestedBook.comment,
         );
 
+        dispatch(setLoadingButton(true));
         SuggestionAPI.createSuggestedBook(newSuggestedBook)
             .then((res) => {
                 setSuggestButtonClose();
@@ -161,9 +168,8 @@ const BooksCatalogue = (props) => {
                     variant: 'success',
                 });
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)))
     };
     return (
         <>

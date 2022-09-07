@@ -1,21 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    TextField,
-    InputAdornment,
-    SvgIcon,
-    Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, InputAdornment, SvgIcon, TextField, Typography } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import AddBookModal from './../book/add-edit-book/add-book-modal';
 import AddSuggestedBookModal from '../suggested-book/add-edit-suggested-book/add-suggested-book-modal';
-import { PrimaryButton } from '../../common/UI/buttons/primary-button';
+import { BlockingModal, PrimaryButton } from '../../common/UI';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
-import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 import { fetchUsersList } from '../../store/reducers/ListsSlice';
 import { useDispatch } from 'react-redux';
 

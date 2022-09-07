@@ -4,14 +4,14 @@ import * as Yup from 'yup';
 import { Box, FormControlLabel, Rating, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
-import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
-import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
+import { PrimaryButton, SecondaryButton } from '../../../common/UI';
 import {
     mustBeLessSymbols,
     mustBeMoreSymbols,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
 } from '../../../common/constants';
+import { useSelector } from 'react-redux';
 
 const ReturnBookModal = (props) => {
     const { open, onClose, onReturn } = props;
@@ -19,6 +19,7 @@ const ReturnBookModal = (props) => {
     const [isDisabledSkip, setIsDisabledSkip] = useState(false);
     const [rateValue, setRateValue] = useState(null);
     const [feedbackValue, setFeedbackValue] = useState(null);
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
     const initValue = {
         rate: 0,
         feedback: '',
@@ -119,11 +120,15 @@ const ReturnBookModal = (props) => {
                 </Box>
                 <Box sx={{ py: 2, mt: 4 }}>
                     <PrimaryButton
+                        loadingButton
+                        loading={isLoadingButton && isDisabledSkip}
                         title='Submit'
                         type='submit'
                         disabled={isDisabledSubmit}
                     />
                     <SecondaryButton
+                        loadingButton
+                        loading={isLoadingButton && isDisabledSubmit}
                         title='Skip'
                         type='submit'
                         disabled={isDisabledSkip}

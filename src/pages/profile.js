@@ -12,6 +12,7 @@ import { avatarSlice } from '../store/reducers/AvatarSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProgressLinear } from '../common/UI/progressLinear';
 import { GoBackButton } from '../common/UI/buttons/go-back-button';
+import { setLoadingButton } from '../store/reducers';
 
 function ProfilePage() {
     const router = useRouter();
@@ -27,6 +28,7 @@ function ProfilePage() {
 
     const addAvatar = (file, onClose) => {
         dispatch(setIsLoadingAvatar(true));
+        dispatch(setLoadingButton(true));
         UserAPI.addAvatar(file)
             .then(() => {
                 onClose();
@@ -34,19 +36,20 @@ function ProfilePage() {
                 dispatch(updateAvatar(true));
                 dispatch(setIsLoadingAvatar(false));
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const deleteAvatar = (imageId, onDeleteButtonClose) => {
+        dispatch(setLoadingButton(true));
         UserAPI.deleteAvatar(imageId)
             .then(() => {
                 dispatch(uploadAvatar(false));
                 dispatch(deleteAvatarData());
                 onDeleteButtonClose();
             })
-            .catch(() => defaultErrorSnackbar());
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     useEffect(() => {
@@ -80,7 +83,7 @@ function ProfilePage() {
     ]);
 
     if (!isLoaded) {
-        return <ProgressLinear/>;
+        return <ProgressLinear />;
     } else {
         return (
             <>
@@ -88,16 +91,16 @@ function ProfilePage() {
                     <title>Profile page</title>
                 </Head>
                 <Box
-                    component="main"
+                    component='main'
                     sx={{
                         flexGrow: 1,
                         pt: 3,
                         pb: 8,
                     }}
                 >
-                    <GoBackButton/>
+                    <GoBackButton />
                     <Container
-                        maxWidth="lg"
+                        maxWidth='lg'
                         sx={{
                             pt: 11,
                         }}

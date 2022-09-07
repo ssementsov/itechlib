@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { GoogleLogin } from 'react-google-login';
-import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import { Box, Container, TextField, Typography } from '@mui/material';
 import { UserAPI } from '../api/user-api';
 import jwt_decode from 'jwt-decode';
 import {
@@ -14,15 +14,19 @@ import {
     mustBeMoreSymbols,
 } from '../common/constants';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
-import { PrimaryButton } from '../common/UI/buttons/primary-button';
+import { PrimaryButton } from '../common/UI';
 import * as Yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoadingButton } from '../store/reducers';
 
 const Register = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [disabledGoogle, setDisabledGoogle] = useState(true);
     const [disabledCorp, setDisabledCorp] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
     function validate(value) {
         let error = {};
@@ -46,6 +50,7 @@ const Register = () => {
         }),
         validate,
         onSubmit: (value) => {
+            dispatch(setLoadingButton(true));
             UserAPI.checkCorpEmail(value.email)
                 .then(() => {
                     setDisabledCorp(true);
@@ -62,7 +67,8 @@ const Register = () => {
                     enqueueSnackbar('Your corporate email is not registered.', {
                         variant: 'error',
                     });
-                });
+                })
+                .finally(() => dispatch(setLoadingButton(false)));
         },
     });
 
@@ -73,6 +79,7 @@ const Register = () => {
             let googleEmail = responsePayload.email;
             let corpEmail = localStorage.getItem('corpEmail');
 
+            dispatch(setLoadingButton(true));
             UserAPI.connectGoogleEmail({
                 corpEmail: corpEmail,
                 googleEmail: googleEmail,
@@ -83,9 +90,7 @@ const Register = () => {
                         setDisabledGoogle(true);
                         enqueueSnackbar(
                             'A letter with instructions has been sent to your Google mailbox. To log in please follow the link in the email.',
-                            {
-                                variant: 'success',
-                            },
+                            { variant: 'success' },
                         );
                     } else {
                         router.replace(LOGIN_PATH);
@@ -98,14 +103,13 @@ const Register = () => {
                     ) {
                         enqueueSnackbar(
                             'Please select Google account which You provided on sign up page.',
-                            {
-                                variant: 'error',
-                            },
+                            { variant: 'error' },
                         );
                     } else {
                         defaultErrorSnackbar();
                     }
-                });
+                })
+                .finally(() => dispatch(setLoadingButton(false)));
         }
     };
 
@@ -148,12 +152,7 @@ const Register = () => {
                     }}
                 >
                     <form onSubmit={formik.handleSubmit}>
-                        <Box
-                            sx={{
-                                mt: 3,
-                                mb: 3,
-                            }}
-                        >
+                        <Box sx={{ mt: 3, mb: 3 }} >
                             <Typography
                                 color='textPrimary'
                                 variant='h4'
@@ -180,38 +179,30 @@ const Register = () => {
                             value={formik.values.email}
                             variant='outlined'
                         />
-                        <Box
-                            sx={{
-                                mt: 3,
-                                mb: 2,
-                            }}
+                        <Box sx={{ mt: 3, mb: 2 }}
                         >
                             <PrimaryButton
-                                title='Confirm corporate email'
+                                loadingButton
+                                loading={isLoadingButton && disabledGoogle}
+                                title={'Confirm corporate email'}
                                 type='submit'
                                 disabled={disabledCorp}
                             />
                         </Box>
                     </form>
-                    <Box
-                        sx={{
-                            mt: 1,
-                            mb: 6,
-                        }}
-                    >
+                    <Box sx={{ mt: 1, mb: 6 }}>
                         <GoogleLogin
                             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                             render={(renderProps) => (
-                                <Button
+                                <PrimaryButton
+                                    loadingButton
+                                    loading={isLoadingButton && disabledCorp}
                                     fullWidth
+                                    title={'Confirm Google email'}
                                     color='error'
                                     onClick={renderProps.onClick}
                                     disabled={disabledGoogle}
-                                    size='large'
-                                    variant='contained'
-                                >
-                                    Confirm Google email
-                                </Button>
+                                />
                             )}
                             onSuccess={resGoogleHandlerRegister}
                             onFailure={resGoogleHandlerRegister}

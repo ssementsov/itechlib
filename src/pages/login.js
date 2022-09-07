@@ -1,15 +1,17 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { GoogleLogin } from 'react-google-login';
 import { LOGIN_PATH, MAIN_CATALOGUE_PATH, ROOT_PATH } from '../common/constants';
 import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
 import { api } from '../api/api';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
+import { PrimaryButton } from '../common/UI';
+import { setLoadingButton } from '../store/reducers';
 
 const Login = () => {
     let theme = useTheme();
@@ -20,10 +22,12 @@ const Login = () => {
     const [isRegistered, setIsRegistered] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
     const resGoogleHandlerLogin = (resFromGoogle) => {
         let googleEmail = localStorage.getItem('googleEmail');
         if (resFromGoogle.profileObj.email === googleEmail) {
+            dispatch(setLoadingButton(true));
             UserAPI.auth(resFromGoogle)
                 .then((res) => {
                     localStorage.setItem('token', res.data.token);
@@ -36,9 +40,8 @@ const Login = () => {
                         dispatch(uploadAvatar(true));
                     }
                 })
-                .catch(() => {
-                    defaultErrorSnackbar();
-                });
+                .catch(() => defaultErrorSnackbar())
+                .finally(() => dispatch(setLoadingButton(false)))
         } else {
             setCorrectEmail(false);
         }
@@ -139,16 +142,15 @@ const Login = () => {
                                 <GoogleLogin
                                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                                     render={(renderProps) => (
-                                        <Button
-                                            fullWidth
+                                        <PrimaryButton
+                                            loadingButton
+                                            loading={isLoadingButton}
                                             color="error"
+                                            title={'Log in with Google'}
+                                            type='submit'
                                             onClick={renderProps.onClick}
                                             disabled={renderProps.disabled}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Log in with Google
-                                        </Button>
+                                        />
                                     )}
                                     onSuccess={resGoogleHandlerLogin}
                                     onFailure={resGoogleHandlerLogin}

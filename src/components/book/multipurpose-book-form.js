@@ -1,15 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Box,
-    FormControlLabel,
-    MenuItem,
-    RadioGroup,
-    TextField,
-    Tooltip,
-    Typography,
-    Zoom,
-} from '@mui/material';
+import { Box, FormControlLabel, MenuItem, RadioGroup, TextField, Tooltip, Typography, Zoom } from '@mui/material';
 import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
@@ -20,6 +11,7 @@ import { PrimaryButton } from '../../common/UI';
 import { CloseIcon } from '../../icons/close-icon';
 import { useTheme } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
+import { useSelector } from 'react-redux';
 
 const createOptions = (option) => {
     return (
@@ -32,7 +24,7 @@ const createOptions = (option) => {
 const StyledTextField = (props) => {
     const { children, ...rest } = props;
     return (
-        <TextField fullWidth margin="dense" name="title" variant="outlined" {...rest}>
+        <TextField fullWidth margin='dense' name='title' variant='outlined' {...rest}>
             {children}
         </TextField>
     );
@@ -41,6 +33,7 @@ const StyledTextField = (props) => {
 const MultipurposeBookForm = (props) => {
     const { formik, title, buttonName, isSuggestForm, inEditMode = false, onClose } = props;
     const theme = useTheme();
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
     return (
         <>
@@ -55,9 +48,9 @@ const MultipurposeBookForm = (props) => {
                 }}
             >
                 <Typography
-                    color="textPrimary"
-                    variant="h4"
-                    textAlign="center"
+                    color='textPrimary'
+                    variant='h4'
+                    textAlign='center'
                     sx={{ mt: 2, mb: 2 }}
                 >
                     {title}
@@ -81,8 +74,8 @@ const MultipurposeBookForm = (props) => {
                 <StyledTextField
                     error={Boolean(formik.touched.title && formik.errors.title)}
                     helperText={formik.touched.title && formik.errors.title}
-                    label="Title*"
-                    name="title"
+                    label='Title*'
+                    name='title'
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.title}
@@ -91,7 +84,7 @@ const MultipurposeBookForm = (props) => {
                     error={Boolean(formik.touched.author && formik.errors.author)}
                     helperText={formik.touched.author && formik.errors.author}
                     label={isSuggestForm ? 'Author' : 'Author*'}
-                    name="author"
+                    name='author'
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.author}
@@ -99,7 +92,7 @@ const MultipurposeBookForm = (props) => {
                 <StyledTextField
                     error={Boolean(formik.touched.category && formik.errors.category)}
                     helperText={formik.touched.category && formik.errors.category}
-                    name="category"
+                    name='category'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     label={isSuggestForm ? 'Category' : 'Category*'}
@@ -111,7 +104,7 @@ const MultipurposeBookForm = (props) => {
                 <StyledTextField
                     error={Boolean(formik.touched.language && formik.errors.language)}
                     helperText={formik.touched.language && formik.errors.language}
-                    name="language"
+                    name='language'
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     label={isSuggestForm ? 'Language' : 'Language*'}
@@ -124,9 +117,9 @@ const MultipurposeBookForm = (props) => {
                     <StyledTextField
                         error={Boolean(formik.touched.description && formik.errors.description)}
                         helperText={formik.touched.description && formik.errors.description}
-                        label="Description*"
+                        label='Description*'
                         multiline
-                        name="description"
+                        name='description'
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         value={formik.values.description}
@@ -135,9 +128,9 @@ const MultipurposeBookForm = (props) => {
                     <StyledTextField
                         error={Boolean(formik.touched.comment && formik.errors.comment)}
                         helperText={formik.touched.comment && formik.errors.comment}
-                        label="Comment"
+                        label='Comment'
                         multiline
-                        name="comment"
+                        name='comment'
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         value={formik.values.comment}
@@ -146,26 +139,26 @@ const MultipurposeBookForm = (props) => {
                 <StyledTextField
                     error={Boolean(formik.touched.link && formik.errors.link)}
                     helperText={formik.touched.link && formik.errors.link}
-                    label="Link to external website"
-                    name="link"
+                    label='Link to external website'
+                    name='link'
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     value={formik.values.link || ''}
                 />
                 {!isSuggestForm && (
                     <RadioGroup
-                        name="status"
+                        name='status'
                         value={formik.values.status}
                         onChange={formik.handleChange}
                     >
                         {statuses.map((status) => {
-                            if(status.value === bookStatus.inUse.name && inEditMode) return null;
+                            if (status.value === bookStatus.inUse.name && inEditMode) return null;
 
                             return (
                                 <Tooltip
                                     key={status.label}
                                     title={status.title}
-                                    placement="top-end"
+                                    placement='top-end'
                                     TransitionComponent={Zoom}
                                     arrow
                                     componentsProps={{
@@ -180,8 +173,8 @@ const MultipurposeBookForm = (props) => {
                                         value={status.value}
                                         control={<Radio />}
                                         label={status.label}
-                                        labelPlacement="end"
-                                        sx={{fontSize: theme.typography.body1}}
+                                        labelPlacement='end'
+                                        sx={{ fontSize: theme.typography.body1 }}
                                     />
                                 </Tooltip>
                             );
@@ -190,14 +183,15 @@ const MultipurposeBookForm = (props) => {
                 )}
 
                 {formik.values.status === bookStatus.inUse.name && (
-                    <HiddenForm formik={formik}/>
+                    <HiddenForm formik={formik} />
                 )}
                 {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
                 <Box sx={{ py: 2 }}>
                     <PrimaryButton
+                        loadingButton
+                        loading={isLoadingButton}
                         title={buttonName}
-                        type="submit"
-                        disabled={formik.isSubmitting}
+                        type='submit'
                     />
                 </Box>
             </form>

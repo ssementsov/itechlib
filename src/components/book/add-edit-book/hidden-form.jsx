@@ -55,7 +55,7 @@ const HiddenForm = ({ formik }) => {
                     MenuProps: {
                         PaperProps: {
                             style: {
-                                maxHeight: 48 * 4.5 + 8,
+                                maxHeight: 225,
                                 width: 250,
                             },
                         },

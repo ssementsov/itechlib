@@ -60,6 +60,7 @@ import { PendingAcceptanceMessage } from './book-blocks/PendingAcceptanceMessage
 import { InUseStatusButtons } from './book-blocks/in-use-status-buttons';
 import { PendingAcceptanceStatusButtons } from './book-blocks/pending-acceptance-status-buttons';
 import { AcceptDeclineBooking } from '../../models/accept-decline-booking-model';
+import { setLoadingButton } from '../../store/reducers';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -113,6 +114,7 @@ const BookDetails = (props) => {
 
     const deleteBook = () => {
         if (book.status.name === bookStatus.available.name) {
+            dispatch(setLoadingButton(true));
             BooksAPI.removeBook(book.id)
                 .then(() => {
                     router.back();
@@ -122,7 +124,10 @@ const BookDetails = (props) => {
                 })
                 .catch(() => {
                     defaultErrorSnackbar();
-                });
+                })
+                .finally(() => {
+                    dispatch(setLoadingButton(false));
+                })
         } else {
             enqueueSnackbar('You can only delete books which are currently in “Available” status', {
                 variant: 'error',
@@ -153,6 +158,7 @@ const BookDetails = (props) => {
             newBook.description,
         );
 
+        dispatch(setLoadingButton(true));
         BooksAPI.changeBookInfo(editedBook)
             .then((res) => {
                 setEditButtonClose();
@@ -161,9 +167,8 @@ const BookDetails = (props) => {
                     variant: 'success',
                 });
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)))
     };
 
     const assignBook = ({ startDate, finishDate }) => {
@@ -172,6 +177,7 @@ const BookDetails = (props) => {
 
         const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
 
+        dispatch(setLoadingButton(true));
         BookingsAPI.createBooking(booking)
             .then((res) => {
                 const { book, ...rest } = res.data;
@@ -183,13 +189,14 @@ const BookDetails = (props) => {
                     variant: 'success',
                 });
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)))
     };
 
     const prolongateReading = (bookingId, finishDate) => {
         const newFinishDateFormatISO = getDateFormatISO(finishDate);
+
+        dispatch(setLoadingButton(true));
         BookingsAPI.updateBookingFinishedDate(bookingId, newFinishDateFormatISO)
             .then(res => {
                 onUpdateBookingInfo(res.data);
@@ -198,14 +205,14 @@ const BookDetails = (props) => {
                     variant: 'success',
                 });
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)))
     };
 
     const acceptBookingHandler = () => {
         const acceptBookingFields = new AcceptDeclineBooking(book.id, bookingStatus.accepted);
 
+        dispatch(setLoadingButton(true));
         BookingsAPI.acceptOrDeclineBooking(acceptBookingFields)
             .then(res => {
                 onUpdate(res.data);
@@ -215,11 +222,16 @@ const BookDetails = (props) => {
             })
             .catch(() => {
                 defaultErrorSnackbar();
+            })
+            .finally(() => {
+                dispatch(setLoadingButton(false));
             });
-    }
+    };
 
     const returnBook = (body) => {
         let bookingId = bookingInfo.id;
+
+        dispatch(setLoadingButton(true));
         BookingsAPI.cancelBooking(bookingId, body)
             .then((res) => {
                 if (isNoRoles) {
@@ -239,7 +251,10 @@ const BookDetails = (props) => {
             })
             .catch(() => {
                 defaultErrorSnackbar();
-            });
+            })
+            .finally(() => {
+                dispatch(setLoadingButton(false));
+            })
     };
 
     //overdue booking
