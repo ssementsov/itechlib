@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import DatePicker from '@mui/lab/DatePicker';
-import {Box, MenuItem, TextField, Typography} from '@mui/material';
-import {useTheme} from '@mui/material/styles';
-import {useSelector} from 'react-redux';
-import {add, sub} from 'date-fns';
+import { Box, MenuItem, TextField, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import { add, sub } from 'date-fns';
+import { ReadOnlyDatePicker } from '../../../common/UI/read-only-date-picker';
 
 const createReadersSelectorOptions = (reader, user) => {
     const userFullName = `${user.name} + ' ' + ${user.surname}`;
@@ -19,10 +19,10 @@ const createReadersSelectorOptions = (reader, user) => {
         </MenuItem>
     );
 };
-export const minDate = sub(new Date(), {years: 1});
-export const maxDate = add(new Date(), {months: 1});
+export const minDate = sub(new Date(), { years: 1 });
+export const maxDate = add(new Date(), { months: 1 });
 
-const HiddenForm = ({formik}) => {
+const HiddenForm = ({ formik }) => {
     const theme = useTheme();
     const readers = useSelector(state => state.lists.usersList);
     const user = useSelector(state => state.user.user);
@@ -51,6 +51,16 @@ const HiddenForm = ({formik}) => {
                 select
                 value={formik.values.reader}
                 variant='outlined'
+                SelectProps={{
+                    MenuProps: {
+                        PaperProps: {
+                            style: {
+                                maxHeight: 48 * 4.5 + 8,
+                                width: 250,
+                            },
+                        },
+                    },
+                }}
             >
                 {readers.map(reader => createReadersSelectorOptions(reader, user))}
             </TextField>
@@ -72,70 +82,56 @@ const HiddenForm = ({formik}) => {
                     alignSelf='center'
                     marginLeft='15px'
                     sx={{
-                        [theme.breakpoints.down('md')]: {mb: 1},
+                        [theme.breakpoints.down('md')]: { mb: 1 },
                     }}
                 >
                     In use*
                 </Typography>
-                <DatePicker
-                    minDate={minDate}
-                    maxDate={new Date()}
-                    name='startDate'
+                <ReadOnlyDatePicker
                     onChange={(value) => {
                         formik.setFieldValue('startDate', value);
                     }}
-                    value={formik.values.startDate}
-                    label='from'
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            error={Boolean(formik.touched.startDate && formik.errors.startDate)}
-                            helperText={formik.touched.startDate && formik.errors.startDate}
-                            onBlur={() => {
-                                formik.setFieldTouched('startDate', true);
-                            }}
-                            onChange={(value) => {
-                                formik.setFieldTouched('startDate', true, !!value);
-                            }}
-                            sx={{
-                                width: '170px',
-                                [theme.breakpoints.down('md')]: {
-                                    width: '100%',
-                                },
-                            }}
-                        />
-                    )}
+                    datePickerProps={{
+                        minDate: minDate,
+                        maxDate: new Date(),
+                        name: 'startDate',
+                        value: formik.values.startDate,
+                        label: 'from',
+                        PaperProps: { sx: { mb: '-50px' } },
+                    }}
+                    textFieldProps={{
+                        error: Boolean(formik.touched.startDate && formik.errors.startDate),
+                        helperText: formik.touched.startDate && formik.errors.startDate,
+                        sx: {
+                            width: '170px',
+                            [theme.breakpoints.down('md')]: {
+                                width: '100%',
+                            },
+                        },
+                    }}
                 />
-                <DatePicker
-                    minDate={new Date()}
-                    maxDate={maxDate}
-                    name='finishDate'
+                <ReadOnlyDatePicker
                     onChange={(value) => {
                         formik.setFieldValue('finishDate', value);
                     }}
-                    value={formik.values.finishDate}
-                    label='till'
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            error={Boolean(
-                                formik.touched.finishDate && formik.errors.finishDate,
-                            )}
-                            helperText={formik.touched.finishDate && formik.errors.finishDate}
-                            onBlur={() => {
-                                formik.setFieldTouched('finishDate', true);
-                            }}
-                            onChange={(value) => {
-                                formik.setFieldTouched('finishDate', true, !!value);
-                            }}
-                            sx={{
-                                width: '170px',
-                                [theme.breakpoints.down('md')]: {
-                                    width: '100%',
-                                },
-                            }}
-                        />
-                    )}
+                    datePickerProps={{
+                        minDate: new Date(),
+                        maxDate: maxDate,
+                        name: 'finishDate',
+                        value: formik.values.finishDate,
+                        label: 'till',
+                        PaperProps: { sx: { mb: '-50px' } },
+                    }}
+                    textFieldProps={{
+                        error: Boolean(formik.touched.finishDate && formik.errors.finishDate),
+                        helperText: formik.touched.finishDate && formik.errors.finishDate,
+                        sx: {
+                            width: '170px',
+                            [theme.breakpoints.down('md')]: {
+                                width: '100%',
+                            },
+                        },
+                    }}
                 />
             </Box>
         </Box>

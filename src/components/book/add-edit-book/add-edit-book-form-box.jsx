@@ -6,10 +6,6 @@ import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
 import {
     bookStatus,
-    dateNotEarlierThan,
-    dateNotLaterThan,
-    FORMAT_DATE,
-    INVALID_DATE,
     isRequired,
     mustBeLessSymbols,
     mustBeMoreSymbols,
@@ -17,7 +13,6 @@ import {
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
 } from '../../../common/constants';
 import { styled } from '@mui/material/styles';
-import { maxFinishDate, maxStartDate, minFinishDate, minStartDate } from './add-edit-book-helpers/date-pickers-helpers';
 
 const StyledBox = styled(Box)({
     alignItems: 'center',
@@ -87,14 +82,8 @@ const AddEditBookFormBox = (props) => {
             if (!value.startDate) {
                 error.startDate = isRequired('Date');
             }
-            if (value.startDate && value.startDate.toString() === INVALID_DATE) {
-                error.startDate = FORMAT_DATE;
-            }
             if (!value.finishDate) {
                 error.finishDate = isRequired('Date');
-            }
-            if (value.finishDate && value.finishDate.toString() === INVALID_DATE) {
-                error.finishDate = FORMAT_DATE;
             }
         }
 
@@ -121,8 +110,6 @@ const AddEditBookFormBox = (props) => {
                 .min(10, mustBeMoreSymbols('Description', 10))
                 .max(500, mustBeLessSymbols('Description', 500))
                 .required(isRequired('Description')),
-            startDate: Yup.date().min(minStartDate, dateNotEarlierThan(minStartDate, true)).max(maxStartDate, dateNotLaterThan(maxStartDate)).nullable(),
-            finishDate: Yup.date().min(minFinishDate, dateNotEarlierThan(minFinishDate, true)).max(maxFinishDate, dateNotLaterThan(maxFinishDate)).nullable()
         }),
         validate,
         onSubmit: async (values) => {

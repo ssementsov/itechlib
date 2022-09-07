@@ -28,18 +28,12 @@ export const AssignBookAllowed = (props) => {
         if (!value.finishDate) {
             error.finishDate = isRequired('Date');
         }
-        if (value.finishDate && value.finishDate.toString() === INVALID_DATE) {
-            error.finishDate = FORMAT_DATE;
-        }
 
         return error;
     }
 
     const formik = useFormik({
         initialValues: initValue,
-        validationSchema: Yup.object({
-            finishDate: Yup.date().min(minFormikDate, dateNotEarlierThan(minDatePickerDate)).max(maxDate, dateNotLaterThan(maxDate)),
-        }),
         validate,
         onSubmit: async (values, actions) => {
             actions.resetForm({

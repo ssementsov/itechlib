@@ -23,7 +23,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [isOwner, setIsOwner] = useState(false);
     const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
     const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
-    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const { defaultErrorSnackbar } = useCustomSnackbar();
 
     const addBookCover = (file, onClose) => {
         BooksAPI.addBookCover(file)
@@ -76,17 +76,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     }
                 });
         }
-    }, [
-        isAssigned,
-        assignHandler,
-        enqueueSnackbar,
-        id,
-        router.isReady,
-        defaultErrorSnackbar,
-        isUploadedBookCover,
-        isUpdatedBookCover,
-        router,
-    ]);
+    }, [assignHandler, defaultErrorSnackbar, id, router, isUploadedBookCover, isUpdatedBookCover]);
 
     useEffect(() => {
         if (isAssigned && isLoadedBookInfo) {

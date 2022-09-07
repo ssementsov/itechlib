@@ -221,10 +221,11 @@ const BookDetails = (props) => {
     const returnBook = (body) => {
         let bookingId = bookingInfo.id;
         BookingsAPI.cancelBooking(bookingId, body)
-            .then(() => {
+            .then((res) => {
                 if (isNoRoles) {
                     dispatch(updateUserRoles(userRoles.reader));
                 }
+                onUpdate(res.data);
                 setReturnButtonClose();
                 assignHandler(false);
                 enqueueSnackbar(
