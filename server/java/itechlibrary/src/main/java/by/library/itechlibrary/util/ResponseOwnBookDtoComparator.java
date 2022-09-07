@@ -12,8 +12,8 @@ public class ResponseOwnBookDtoComparator implements Comparator<ResponseOwnBookD
     @Override
     public int compare(ResponseOwnBookDto b1, ResponseOwnBookDto b2) {
 
-        LocalDate b1Date = b1.getBaseBookingInfo().getFinishDate();
-        LocalDate b2Date = b2.getBaseBookingInfo().getFinishDate();
+        LocalDate b1Date = b1.getBaseBookingInfo().getBookingEndDate();
+        LocalDate b2Date = b2.getBaseBookingInfo().getBookingEndDate();
 
         if (b1Date.isBefore(b2Date)) {
 
