@@ -4,6 +4,7 @@ import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Template;
@@ -85,6 +86,15 @@ public class BookingFacadeImpl implements BookingFacade {
         fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         return fullBookDto;
+    }
+
+    @Override
+    public FullBookDto returnBookingAnfGetUpdatedBook(ReviewDto reviewDto, long id) {
+
+        Booking booking = bookingService.returnBooking(reviewDto, id);
+        long bookId = booking.getBook().getId();
+
+        return bookService.getByIdFullVersion(bookId);
     }
 
     private void sendEmailNotification(Booking booking) {
