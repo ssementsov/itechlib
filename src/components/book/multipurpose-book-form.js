@@ -16,7 +16,7 @@ import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
-import { PrimaryButton } from '../../common/UI/buttons/primary-button';
+import { PrimaryButton } from '../../common/UI';
 import { CloseIcon } from '../../icons/close-icon';
 import { useTheme } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
@@ -159,6 +159,8 @@ const MultipurposeBookForm = (props) => {
                         onChange={formik.handleChange}
                     >
                         {statuses.map((status) => {
+                            if(status.value === bookStatus.inUse.name && inEditMode) return null;
+
                             return (
                                 <Tooltip
                                     key={status.label}

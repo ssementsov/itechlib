@@ -11,6 +11,7 @@ export const PrimaryButton = (props) => {
     return (
         <Button
             color="primary"
+            sx={{width: !fullWidth ? '150px' : '100%'}}
             fullWidth={fullWidth}
             size={size}
             variant={variant}

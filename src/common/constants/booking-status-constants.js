@@ -1,7 +1,8 @@
 export const bookingStatus = {
     accepted: {
         id: 1,
-        name: 'ACCEPTED'
+        name: 'ACCEPTED',
+        textToShow: 'In use'
     },
     declined: {
         id: 2,

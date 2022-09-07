@@ -9,8 +9,8 @@ import UploadImageCard from '../../../components/upload-image-card';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from '../../../utils/hooks/custom-snackbar-hook';
 import { LOGIN_PATH, YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants';
-import { ProgressLinear } from '../../../common/UI/progressLinear';
-import { GoBackButton } from '../../../common/UI/buttons/go-back-button';
+import { ProgressLinear } from '../../../common/UI';
+import { GoBackButton } from '../../../common/UI';
 import { BookingsAPI } from '../../../api/bookings-api';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
@@ -104,7 +104,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
         !(isLoadedBookInfo && isLoadedBookingInfo) && isAssigned ||
         !(isLoadedBookInfo)
     ) {
-        return <ProgressLinear/>;
+        return <ProgressLinear />;
     } else {
         return (
             <>
@@ -112,19 +112,13 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     <title>Book preview page</title>
                 </Head>
                 <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        pt: 3,
-                        pb: 8,
-                    }}
+                    component='main'
+                    sx={{ flexGrow: 1, pt: 3, pb: 8 }}
                 >
-                    <GoBackButton/>
+                    <GoBackButton />
                     <Container
-                        maxWidth="lg"
-                        sx={{
-                            pt: 11,
-                        }}
+                        maxWidth='lg'
+                        sx={{ pt: 11 }}
                     >
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
@@ -138,7 +132,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                     description={YOU_CAN_UPLOAD_IMAGE}
                                 />
                             </Grid>
-                            <Grid item lg={8} md={8} xs={12}>
+                            <Grid item lg={8} md={8} xs={12} sx={{ position: 'relative' }}>
                                 <BookDetails
                                     onUpdate={setBook}
                                     onUpdateBookingInfo={setBookingInfo}
