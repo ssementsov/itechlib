@@ -41,7 +41,7 @@ public interface BookingService {
 
     Booking findByIdWithoutMapping(long id);
 
-    void returnBooking(ReviewDto reviewDto, long id);
+    Booking returnBooking(ReviewDto reviewDto, long id);
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 

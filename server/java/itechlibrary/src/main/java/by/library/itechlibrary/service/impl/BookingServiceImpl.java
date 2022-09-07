@@ -206,13 +206,14 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public void returnBooking(ReviewDto reviewDto, long id) {
+    public Booking returnBooking(ReviewDto reviewDto, long id) {
 
         log.info("Try to return booking, make active is false.");
 
         Booking booking = findBookingById(id);
         tryToReturnBooking(reviewDto, id, booking);
 
+        return booking;
     }
 
     @Override
