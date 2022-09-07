@@ -14,8 +14,10 @@ import { suggestedBookStatus } from '../../common/constants';
 import { useVoting } from '../../utils/hooks/vote-hook';
 import { languageFilters } from '../book/add-edit-book/datas-for-form-options/languages';
 import { categoryFilters } from '../book/add-edit-book/datas-for-form-options/categories';
-import { SortButton } from '../../common/UI/buttons/SortButton';
+import { SortButton } from '../../common/UI';
 import { getBookCategoryId, getBookLanguageId } from '../books-catalogue-helpers/get-properties-for-payload';
+import { setLoadingButton } from '../../store/reducers';
+import { useDispatch } from 'react-redux';
 
 const createOptions = (option) => {
     return (
@@ -26,22 +28,23 @@ const createOptions = (option) => {
 };
 
 const StyledSelect = (props) => {
-    const {children, ...rest} = props;
+    const { children, ...rest } = props;
     return (
         <TextField
             sx={{ width: '130px', marginLeft: '25px' }}
-            size="small"
+            size='small'
             select
-            variant="outlined"
+            variant='outlined'
             {...rest}
         >
             {children}
         </TextField>
-    )
-}
+    );
+};
 
 const SuggestedBooksListResults = (props) => {
     const { books, isStartedSearch, suggestedBooks, onUpdateSuggestedBooks, onFiltering, onSorting } = props;
+    const dispatch = useDispatch();
     const [suggestedBook, setSuggestedBook] = useState({});
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isSuggestBookModalOpen, setSuggestBookModalOpen, setSuggestBookModalClose] = useBoolean();
@@ -84,26 +87,27 @@ const SuggestedBooksListResults = (props) => {
             suggestedBookStatus.active.id,
             suggestedBookStatus.active.name,
             newBook.link,
-            newBook.comment
+            newBook.comment,
         );
 
+        dispatch(setLoadingButton(true));
         SuggestionAPI.changeBookInfo(editedBook)
             .then((res) => {
                 editButtonCloseHandler();
                 setSuggestedBook(res.data);
                 onUpdateSuggestedBooks(
-                    suggestedBooks.map((book) => (book.id === res.data.id ? res.data : book))
+                    suggestedBooks.map((book) => (book.id === res.data.id ? res.data : book)),
                 );
                 enqueueSnackbar('Book suggestion has been added successfully!', {
                     variant: 'success',
                 });
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const deleteSuggestedBook = (deletedBook, closeDeleteModal) => {
+        dispatch(setLoadingButton(true));
         SuggestionAPI.removeBook(deletedBook.id)
             .then(() => {
                 closeDeleteModal();
@@ -113,9 +117,8 @@ const SuggestedBooksListResults = (props) => {
                     variant: 'success',
                 });
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            });
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     return (
@@ -135,22 +138,18 @@ const SuggestedBooksListResults = (props) => {
                 book={suggestedBook}
             />
 
-            <Card
-                sx={{
-                    padding: '15px',
-                }}
-            >
+            <Card sx={{ padding: '15px' }}>
                 <Grid container spacing={2} columns={16}>
                     <Grid
-                        alignItems="center"
+                        alignItems='center'
                         item
                         xs={10}
                         sx={{ display: 'flex', paddingBottom: '16px' }}
                     >
-                        <Typography variant="h6">Filter by:</Typography>
+                        <Typography variant='h6'>Filter by:</Typography>
                         <StyledSelect
-                            name="language"
-                            label="Language"
+                            name='language'
+                            label='Language'
                             value={selectedLanguage}
                             onChange={(e) => {
                                 setSelectedLanguage(e.target.value);
@@ -160,8 +159,8 @@ const SuggestedBooksListResults = (props) => {
                             {languageFilters.map(createOptions)}
                         </StyledSelect>
                         <StyledSelect
-                            name="category"
-                            label="Category"
+                            name='category'
+                            label='Category'
                             value={selectedCategory}
                             onChange={(e) => {
                                 setSelectedCategory(e.target.value);
@@ -172,7 +171,7 @@ const SuggestedBooksListResults = (props) => {
                         </StyledSelect>
                     </Grid>
                     <Grid
-                        alignItems="center"
+                        alignItems='center'
                         item
                         xs={6}
                         sx={{
@@ -181,8 +180,8 @@ const SuggestedBooksListResults = (props) => {
                             paddingBottom: '16px',
                         }}
                     >
-                        <Typography variant="h6">Sort by:</Typography>
-                        <SortButton title="Popularity" onSorting={onSorting} />
+                        <Typography variant='h6'>Sort by:</Typography>
+                        <SortButton title='Popularity' onSorting={onSorting} />
                     </Grid>
                 </Grid>
                 <Divider sx={{ mb: 2 }} />

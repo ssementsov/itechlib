@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import StyledModal from '../../styled-modal';
-import {useFormik} from 'formik';
-import {DatePeriodForm} from '../../../common/UI/date-period-form/date-period-form';
-import {add, parseISO} from 'date-fns';
-import * as Yup from 'yup';
-import {dateNotEarlierThan, dateNotLaterThan, FORMAT_DATE, INVALID_DATE, isRequired,} from '../../../common/constants';
+import { useFormik } from 'formik';
+import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
+import { add, parseISO } from 'date-fns';
+import { isRequired } from '../../../common/constants';
 
 export const ProlongateReadingModal = (props) => {
     const { onProlongate, open, onClose, bookingInfo } = props;
@@ -27,18 +26,12 @@ export const ProlongateReadingModal = (props) => {
         if (!value.finishDate) {
             error.finishDate = isRequired('Date');
         }
-        if (value.finishDate && value.finishDate.toString() === INVALID_DATE) {
-            error.finishDate = FORMAT_DATE;
-        }
 
         return error;
     }
 
     const formik = useFormik({
         initialValues: initValue,
-        validationSchema: Yup.object({
-            finishDate: Yup.date().min(minDate, dateNotEarlierThan(minDate)).max(maxDate, dateNotLaterThan(maxDate)),
-        }),
         validate,
         onSubmit: async (values, actions) => {
             actions.resetForm({
