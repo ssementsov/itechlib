@@ -23,6 +23,7 @@ const Login = () => {
     const [loaded, setLoaded] = useState(false);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+    const redirectPath = useSelector(state => state.user.redirectPath);
 
     const resGoogleHandlerLogin = (resFromGoogle) => {
         let googleEmail = localStorage.getItem('googleEmail');
@@ -32,7 +33,13 @@ const Login = () => {
                 .then((res) => {
                     localStorage.setItem('token', res.data.token);
                     api.setupAuth(res.data.token);
-                    router.replace(MAIN_CATALOGUE_PATH);
+
+                    if(redirectPath) {
+                        router.replace(redirectPath)
+                    } else {
+                        router.replace(MAIN_CATALOGUE_PATH);
+
+                    }
 
                     let avatar = res.data.fileInfoDto;
                     if (avatar) {

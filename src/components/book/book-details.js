@@ -46,7 +46,6 @@ import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-
 import { add, format, isAfter, parseISO } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
-import { userSlice } from '../../store/reducers/UserSlice';
 import {
     getBookCategoryId,
     getBookLanguageId,
@@ -60,7 +59,7 @@ import { PendingAcceptanceMessage } from './book-blocks/PendingAcceptanceMessage
 import { InUseStatusButtons } from './book-blocks/in-use-status-buttons';
 import { PendingAcceptanceStatusButtons } from './book-blocks/pending-acceptance-status-buttons';
 import { AcceptDeclineBooking } from '../../models/accept-decline-booking-model';
-import { setLoadingButton } from '../../store/reducers';
+import { setLoadingButton, updateUserRoles } from '../../store/reducers';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -82,7 +81,6 @@ const BookDetails = (props) => {
     const inUseStatus = book.status.name === bookStatus.inUse.name;
     const roles = useSelector(state => state.user.user.roles);
     const isNoRoles = roles?.length === 0;
-    const { updateUserRoles } = userSlice.actions;
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
@@ -122,12 +120,8 @@ const BookDetails = (props) => {
                         variant: 'success',
                     });
                 })
-                .catch(() => {
-                    defaultErrorSnackbar();
-                })
-                .finally(() => {
-                    dispatch(setLoadingButton(false));
-                })
+                .catch(() => defaultErrorSnackbar())
+                .finally(() => dispatch(setLoadingButton(false)));
         } else {
             enqueueSnackbar('You can only delete books which are currently in “Available” status', {
                 variant: 'error',
@@ -168,7 +162,7 @@ const BookDetails = (props) => {
                 });
             })
             .catch(() => defaultErrorSnackbar())
-            .finally(() => dispatch(setLoadingButton(false)))
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const assignBook = ({ startDate, finishDate }) => {
@@ -190,7 +184,7 @@ const BookDetails = (props) => {
                 });
             })
             .catch(() => defaultErrorSnackbar())
-            .finally(() => dispatch(setLoadingButton(false)))
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const prolongateReading = (bookingId, finishDate) => {
@@ -206,7 +200,7 @@ const BookDetails = (props) => {
                 });
             })
             .catch(() => defaultErrorSnackbar())
-            .finally(() => dispatch(setLoadingButton(false)))
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const acceptBookingHandler = () => {
@@ -249,12 +243,8 @@ const BookDetails = (props) => {
                     },
                 );
             })
-            .catch(() => {
-                defaultErrorSnackbar();
-            })
-            .finally(() => {
-                dispatch(setLoadingButton(false));
-            })
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     //overdue booking
