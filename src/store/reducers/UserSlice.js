@@ -10,6 +10,7 @@ const initialState = {
         roles: [],
         fileInfo: null,
     },
+    redirectPath: ''
 };
 export const userSlice = createSlice({
     name: 'user',
@@ -21,7 +22,11 @@ export const userSlice = createSlice({
         updateUserRoles(state, action) {
             state.user.roles.push(action.payload);
         },
+        setRedirectPath(state, action) {
+            state.redirectPath = action.payload;
+        }
     },
 });
 
 export default userSlice.reducer;
+export const { setUser, updateUserRoles, setRedirectPath } = userSlice.actions;

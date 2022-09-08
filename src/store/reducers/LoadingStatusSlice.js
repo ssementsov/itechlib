@@ -14,5 +14,4 @@ export const loadingStatusSlice = createSlice({
 });
 
 export default loadingStatusSlice.reducer;
-export const { setLoadingButton } =
-    loadingStatusSlice.actions;
+export const { setLoadingButton } = loadingStatusSlice.actions;
