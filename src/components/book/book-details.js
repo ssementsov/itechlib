@@ -59,8 +59,7 @@ import { PendingAcceptanceMessage } from './book-blocks/PendingAcceptanceMessage
 import { InUseStatusButtons } from './book-blocks/in-use-status-buttons';
 import { PendingAcceptanceStatusButtons } from './book-blocks/pending-acceptance-status-buttons';
 import { AcceptDeclineBooking } from '../../models/accept-decline-booking-model';
-import { setLoadingButton } from '../../store/reducers';
-import { updateUserRoles } from '../../store/reducers';
+import { setLoadingButton, updateUserRoles } from '../../store/reducers';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
