@@ -103,7 +103,7 @@ public class BookingFacadeImpl implements BookingFacade {
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, false);
+        mailNotificationService.sent(mailNotificationInfo, true);
     }
 
     private Template chooseTemplate(String bookingStatusName) {
