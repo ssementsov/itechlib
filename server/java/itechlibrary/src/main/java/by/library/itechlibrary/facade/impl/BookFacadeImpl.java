@@ -6,7 +6,6 @@ import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
-import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
@@ -55,11 +54,13 @@ public class BookFacadeImpl implements BookFacade {
     @Transactional
     public WithBookingInfoBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
 
-        WithBookingInfoBookDto book = saveBook(withOwnerBookDto, multipartFile);
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+
+        WithBookingInfoBookDto book = saveBook(withOwnerBookDto, multipartFile, currentUserId);
 
         String bookStatusName = book.getStatus().getName();
         Optional<Booking> optionalBooking = tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, book.getId());
-        trySetBookingInfo(book, optionalBooking);
+        bookingService.trySetBookingInfoToBook(book, optionalBooking, currentUserId);
 
         return book;
     }
@@ -156,11 +157,10 @@ public class BookFacadeImpl implements BookFacade {
 
     }
 
-    private WithBookingInfoBookDto saveBook(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile) {
+    private WithBookingInfoBookDto saveBook(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile, long ownerId) {
 
         Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
-        User currentUser = userService.getUserById(currentUserId);
+        User currentUser = userService.getUserById(ownerId);
 
         return bookService.save(withOwnerBookDto, fileInfo, currentUser);
     }
@@ -202,19 +202,5 @@ public class BookFacadeImpl implements BookFacade {
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
 
         mailNotificationService.sent(mailNotificationInfo, true);
-    }
-
-    private void trySetBookingInfo(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking) {
-        if (optionalBooking.isPresent()) {
-
-            long bookId = bookWithBookingInfo.getId();
-            long currentUserId = bookWithBookingInfo.getOwner().getId();
-            Booking booking = optionalBooking.get();
-
-            BookingInfoDto bookingInfoDto = bookingService.buildBookingInfo(bookId, booking, currentUserId);
-
-            bookWithBookingInfo.setBookingInfoDto(bookingInfoDto);
-
-        }
     }
 }

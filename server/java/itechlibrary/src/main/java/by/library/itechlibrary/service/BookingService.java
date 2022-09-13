@@ -7,7 +7,6 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
-import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
@@ -15,6 +14,7 @@ import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingService {
 
@@ -46,7 +46,7 @@ public interface BookingService {
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 
-    BookingInfoDto buildBookingInfo(long bookId, Booking booking, long currentUserId);
+    void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
 
     void fillBookWithBookingInfo(WithBookingInfoBookDto book);
 

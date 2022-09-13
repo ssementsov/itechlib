@@ -224,11 +224,16 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingInfoDto buildBookingInfo(long bookId, Booking booking, long currentUserId) {
+    public void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
 
-        BookingInfo bookingInfo = checkAndBuildBookingInfo(booking, currentUserId);
+        if (optionalBooking.isPresent()) {
 
-        return bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo);
+            Booking booking = optionalBooking.get();
+            BookingInfo bookingInfo = checkAndBuildBookingInfo(booking, currentUserId);
+            BookingInfoDto bookingInfoDto = bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo);
+
+            bookWithBookingInfo.setBookingInfoDto(bookingInfoDto);
+        }
     }
 
     @Override
