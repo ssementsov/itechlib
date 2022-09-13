@@ -17,7 +17,7 @@ public class BookingAcceptanceDto {
     @NotNull
     private long bookId;
 
-    @Size(min = 10, max = 100)
+    @Size(min = 10, max = 250)
     private String comment;
 
     @NotNull
