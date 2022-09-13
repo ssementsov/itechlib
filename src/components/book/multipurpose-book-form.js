@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, FormControlLabel, MenuItem, RadioGroup, TextField, Tooltip, Typography, Zoom } from '@mui/material';
+import { Box, FormControlLabel, MenuItem, RadioGroup, Tooltip, Typography, Zoom } from '@mui/material';
 import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
-import { PrimaryButton } from '../../common/UI';
+import { PrimaryButton, StyledTextField } from '../../common/UI';
 import { CloseIcon } from '../../icons/close-icon';
 import { useTheme } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
@@ -18,15 +18,6 @@ const createOptions = (option) => {
         <MenuItem key={option.value} value={option.value}>
             {option.label}
         </MenuItem>
-    );
-};
-
-const StyledTextField = (props) => {
-    const { children, ...rest } = props;
-    return (
-        <TextField fullWidth margin='dense' name='title' variant='outlined' {...rest}>
-            {children}
-        </TextField>
     );
 };
 

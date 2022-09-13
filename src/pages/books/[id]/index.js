@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { PropTypes } from 'prop-types';
 import { Box, Container, Grid } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
@@ -15,11 +15,12 @@ import { BookingsAPI } from '../../../api/bookings-api';
 import { useDispatch } from 'react-redux';
 import { setLoadingButton } from '../../../store/reducers';
 
-function BookPreviewPage({ isAssigned, assignHandler }) {
+function BookPreviewPage() {
     const router = useRouter();
     const dispatch = useDispatch();
     const id = router.query.id;
     const [book, setBook] = useState([]);
+    const isCurrentUserReader = book.bookingInfoDto?.currentUserReader;
     const [bookingInfo, setBookingInfo] = useState({});
     const [isLoadedBookInfo, setIsLoadedBookInfo] = useState(false);
     const [isLoadedBookingInfo, setIsLoadedBookingInfo] = useState(false);
@@ -63,9 +64,6 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     } else {
                         setIsOwner(false);
                     }
-                    res.data.bookingInfoDto?.currentUserReader
-                        ? assignHandler(true)
-                        : assignHandler(false);
                     setBook(res.data);
                     setIsLoadedBookInfo(true);
                     const bookCover = res.data.fileInfo;
@@ -83,10 +81,10 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     }
                 });
         }
-    }, [assignHandler, defaultErrorSnackbar, id, router, isUploadedBookCover, isUpdatedBookCover]);
+    }, [defaultErrorSnackbar, id, router, isUploadedBookCover, isUpdatedBookCover]);
 
     useEffect(() => {
-        if (isAssigned && isLoadedBookInfo) {
+        if (isCurrentUserReader && isLoadedBookInfo) {
             let bookId = {
                 bookId: book.id,
             };
@@ -95,10 +93,10 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                 setIsLoadedBookingInfo(true);
             });
         }
-    }, [book.id, isAssigned, isLoadedBookInfo]);
+    }, [book.id, isCurrentUserReader, isLoadedBookInfo]);
 
     if (
-        !(isLoadedBookInfo && isLoadedBookingInfo) && isAssigned ||
+        !(isLoadedBookInfo && isLoadedBookingInfo) && isCurrentUserReader ||
         !(isLoadedBookInfo)
     ) {
         return <ProgressLinear />;
@@ -135,8 +133,6 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                     onUpdateBookingInfo={setBookingInfo}
                                     book={book}
                                     bookingInfo={bookingInfo}
-                                    isAssigned={isAssigned}
-                                    assignHandler={assignHandler}
                                     isOwner={isOwner}
                                 />
                             </Grid>
@@ -150,11 +146,6 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
 
 BookPreviewPage.getLayout = (page) => {
     return <DashboardLayout>{page}</DashboardLayout>;
-};
-
-BookPreviewPage.propTypes = {
-    isAssigned: PropTypes.bool,
-    assignHandler: PropTypes.func,
 };
 
 export default BookPreviewPage;

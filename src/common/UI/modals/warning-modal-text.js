@@ -1,4 +1,4 @@
-import {CloseIcon} from '../../../icons/close-icon';
+import { CloseIcon } from '../../../icons/close-icon';
 import { Box, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import classes from './warning-modal-text.module.css';
@@ -10,9 +10,7 @@ export const WarningModalText = (props) => {
             <div className={classes.closeIcon}>
                 <CloseIcon
                     onClick={onClose}
-                    sx={{
-                        justifySelf: 'flex-end',
-                    }}
+                    sx={{ justifySelf: 'flex-end' }}
                 />
             </div>
             <Typography color='textPrimary' variant='h4' textAlign='center'>

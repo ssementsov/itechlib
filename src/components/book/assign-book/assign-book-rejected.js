@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { WarningModalText } from '../../../common/UI/modals/warning-modal-text';
+import { WarningModalText } from '../../../common/UI';
 
 export const AssignBookRejected = (props) => {
     const { onClose } = props;
