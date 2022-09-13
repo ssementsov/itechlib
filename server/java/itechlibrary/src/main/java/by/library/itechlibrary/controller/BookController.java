@@ -63,7 +63,7 @@ public class BookController {
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
-    public WithOwnerBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
+    public WithBookingInfoBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
                                     @Valid @RequestPart(required = false) BookingForTargetReaderDto bookingForTargetReaderDto,
                                     @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
 

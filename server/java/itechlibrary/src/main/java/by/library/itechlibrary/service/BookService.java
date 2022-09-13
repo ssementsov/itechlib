@@ -16,7 +16,7 @@ public interface BookService {
 
     BookUpdatedInfo update(WithLikAndStatusBookDto bookDto, long currentUserId);
 
-    WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser);
+    WithBookingInfoBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser);
 
     Book getById(long id);
 
