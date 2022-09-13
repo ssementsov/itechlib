@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
 import { fetchBooksInUse } from '../store/reducers/BooksInUseSlice';
-import BooksCatalogue from './../components/books-catalogue';
 import { ProgressLinear } from '../common/UI/progressLinear';
+
+const BooksCatalogue = React.lazy(() => import('./../components/books-catalogue'));
 
 const BooksInUseCatalogue = () => {
     const dispatch = useDispatch();
@@ -20,9 +21,13 @@ const BooksInUseCatalogue = () => {
     }, [defaultErrorSnackbar, dispatch, isError]);
 
     if (isLoading) {
-        return <ProgressLinear/>;
+        return <ProgressLinear />;
     } else {
-        return <BooksCatalogue title={'Books in use'} isBooksInUseList={true} />;
+        return (
+            <React.Suspense fallback={<ProgressLinear />}>
+                <BooksCatalogue title={'Books in use'} isBooksInUseList={true} />
+            </React.Suspense>
+        );
     }
 };
 BooksInUseCatalogue.getLayout = (page) => {

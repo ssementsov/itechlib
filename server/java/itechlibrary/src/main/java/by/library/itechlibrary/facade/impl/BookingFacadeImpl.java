@@ -4,6 +4,7 @@ import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Template;
@@ -87,13 +88,22 @@ public class BookingFacadeImpl implements BookingFacade {
         return fullBookDto;
     }
 
+    @Override
+    public FullBookDto returnBookingAnfGetUpdatedBook(ReviewDto reviewDto, long id) {
+
+        Booking booking = bookingService.returnBooking(reviewDto, id);
+        long bookId = booking.getBook().getId();
+
+        return bookService.getByIdFullVersion(bookId);
+    }
+
     private void sendEmailNotification(Booking booking) {
 
         Template template = chooseTemplate(booking.getStatus().getName());
         String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
         MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
 
-        mailNotificationService.sent(mailNotificationInfo, false);
+        mailNotificationService.sent(mailNotificationInfo, true);
     }
 
     private Template chooseTemplate(String bookingStatusName) {

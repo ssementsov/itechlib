@@ -1,4 +1,4 @@
-import { bookStatus } from '../../../../common/constants/book-status-constants';
+import { bookStatus } from '../../../../common/constants';
 export const statuses = [
     {
         value: bookStatus.available.name,

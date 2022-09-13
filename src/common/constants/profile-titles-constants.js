@@ -1,4 +1,4 @@
-export const titles = {
+export const profileTitles = {
     title: 'Personal profile',
     name: 'First name',
     surname: 'Last name',

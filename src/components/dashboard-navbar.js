@@ -1,18 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { AppBar, Avatar, Box, IconButton, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HoverMenu from 'material-ui-popup-state/HoverMenu';
-import { usePopupState, bindHover, bindMenu } from 'material-ui-popup-state/hooks';
+import { bindHover, bindMenu, usePopupState } from 'material-ui-popup-state/hooks';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import Logout from '@mui/icons-material/Logout';
 import { GoogleLogout } from 'react-google-login';
-import { LOGIN_PATH, PROFILE_PATH } from '../common/constants/route-constants';
+import { LOGIN_PATH, PROFILE_PATH } from '../common/constants';
 import { useSelector } from 'react-redux';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({

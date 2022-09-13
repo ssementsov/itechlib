@@ -4,8 +4,7 @@ import { IconButton, Typography } from '@mui/material';
 import { StyledDeleteIcon } from '../../icons/styled-delete-icon';
 import classes from './upload-book-cover-field.module.css';
 import { theme } from '../../theme';
-import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages';
-import { MAX_SIZE } from '../../common/constants/file-size';
+import { allowedImagesMimeTypes, allowedImagesTypes, MAX_SIZE, YOU_CAN_UPLOAD_IMAGE } from '../../common/constants';
 import { limitFileNameLength } from '../../utils/functions/limit-file-name-length';
 
 export const UploadBookCoverField = (props) => {
@@ -16,7 +15,12 @@ export const UploadBookCoverField = (props) => {
     const imageSelectedHandler = (e) => {
         const imgFile = e.target.files[0];
         if (imgFile) {
-            if (imgFile.size > MAX_SIZE) {
+            const imgFileName = imgFile.name;
+            const imgFileExtension = imgFileName.slice(imgFileName.lastIndexOf('.') + 1);
+            const allowedImageMimeType = allowedImagesMimeTypes.find(type => type === imgFile.type);
+            const allowedImageType = allowedImagesTypes.find(type => type === imgFileExtension);
+
+            if (imgFile.size > MAX_SIZE || !(allowedImageMimeType && allowedImageType)) {
                 setIsAllowedImage(false);
                 return;
             } else {

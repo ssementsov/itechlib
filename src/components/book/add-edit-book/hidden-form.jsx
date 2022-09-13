@@ -1,35 +1,68 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import DatePicker from '@mui/lab/DatePicker';
-import { Box, TextField, Typography } from '@mui/material';
-import { readers } from './datas-for-form-options/readers';
-import { sub, add } from 'date-fns';
+import { Box, MenuItem, TextField, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import { add, sub } from 'date-fns';
+import { ReadOnlyDatePicker } from '../../../common/UI/read-only-date-picker';
 
-const HiddenForm = ({ formik, createOptions }) => {
+const createReadersSelectorOptions = (reader, user) => {
+    const userFullName = `${user.name} + ' ' + ${user.surname}`;
+    const readerFullName = `${reader.name} + ' ' + ${reader.surname}`;
+
+    if (userFullName === readerFullName) return;
+
+    return (
+        <MenuItem key={reader.id} value={reader.id}>
+            {reader.name + ' ' + reader.surname}
+        </MenuItem>
+    );
+};
+export const minDate = sub(new Date(), { years: 1 });
+export const maxDate = add(new Date(), { months: 1 });
+
+const HiddenForm = ({ formik }) => {
     const theme = useTheme();
-    const minDate = sub(new Date(), {
-        years: 1,
-    });
-    const maxDate = add(new Date(), {
-        months: 1,
-    });
+    const readers = useSelector(state => state.lists.usersList);
+    const user = useSelector(state => state.user.user);
+
+    useEffect(() => {
+        formik.setFieldValue('reader', '');
+        formik.setFieldValue('startDate', null);
+        formik.setFieldValue('finishDate', null);
+
+        formik.setFieldTouched('reader', false, false);
+        formik.setFieldTouched('startDate', false, false);
+        formik.setFieldTouched('finishDate', false, false);
+    }, []);
+
     return (
         <Box>
             <TextField
                 error={Boolean(formik.touched.reader && formik.errors.reader)}
                 fullWidth
                 helperText={formik.touched.reader && formik.errors.reader}
-                name="reader"
+                name='reader'
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                margin="dense"
-                label="Reader*"
+                margin='dense'
+                label='Reader*'
                 select
                 value={formik.values.reader}
-                variant="outlined"
+                variant='outlined'
+                SelectProps={{
+                    MenuProps: {
+                        PaperProps: {
+                            style: {
+                                maxHeight: 225,
+                                width: 250,
+                            },
+                        },
+                    },
+                }}
             >
-                {readers.map(createOptions)}
+                {readers.map(reader => createReadersSelectorOptions(reader, user))}
             </TextField>
             <Box
                 sx={{
@@ -44,67 +77,62 @@ const HiddenForm = ({ formik, createOptions }) => {
                 }}
             >
                 <Typography
-                    color="textSecondary"
-                    variant="boby1"
-                    alignSelf="center"
-                    marginLeft="15px"
+                    color='textSecondary'
+                    variant='boby1'
+                    alignSelf='center'
+                    marginLeft='15px'
                     sx={{
-                        [theme.breakpoints.down('md')]: {
-                            mb: 1
-                        }
+                        [theme.breakpoints.down('md')]: { mb: 1 },
                     }}
                 >
                     In use*
                 </Typography>
-                    <DatePicker
-                        minDate={minDate}
-                        maxDate={new Date()}
-                        name="startDate"
-                        onChange={(value) => {
-                            formik.setFieldValue('startDate', value);
-                        }}
-                        value={formik.values.startDate}
-                        label="from"
-                        renderInput={(params) => (
-                            <TextField
-                                error={Boolean(formik.touched.startDate && formik.errors.startDate)}
-                                helperText={formik.touched.startDate && formik.errors.startDate}
-                                sx={{
-                                    width: '170px',
-                                    [theme.breakpoints.down('md')]: {
-                                        width: '100%'
-                                    }
-                                }}
-
-                                {...params}
-                            />
-                        )}
-                    />
-                    <DatePicker
-                        minDate={new Date()}
-                        maxDate={maxDate}
-                        name="finishDate"
-                        onChange={(value) => {
-                            formik.setFieldValue('finishDate', value);
-                        }}
-                        value={formik.values.finishDate}
-                        label="till"
-                        renderInput={(params) => (
-                            <TextField
-                                error={Boolean(
-                                    formik.touched.finishDate && formik.errors.finishDate
-                                )}
-                                helperText={formik.touched.finishDate && formik.errors.finishDate}
-                                sx={{
-                                    width: '170px',
-                                    [theme.breakpoints.down('md')]: {
-                                        width: '100%'
-                                    }
-                                }}
-                                {...params}
-                            />
-                        )}
-                    />
+                <ReadOnlyDatePicker
+                    onChange={(value) => {
+                        formik.setFieldValue('startDate', value);
+                    }}
+                    datePickerProps={{
+                        minDate: minDate,
+                        maxDate: new Date(),
+                        name: 'startDate',
+                        value: formik.values.startDate,
+                        label: 'from',
+                        PaperProps: { sx: { mb: '-50px' } },
+                    }}
+                    textFieldProps={{
+                        error: Boolean(formik.touched.startDate && formik.errors.startDate),
+                        helperText: formik.touched.startDate && formik.errors.startDate,
+                        sx: {
+                            width: '170px',
+                            [theme.breakpoints.down('md')]: {
+                                width: '100%',
+                            },
+                        },
+                    }}
+                />
+                <ReadOnlyDatePicker
+                    onChange={(value) => {
+                        formik.setFieldValue('finishDate', value);
+                    }}
+                    datePickerProps={{
+                        minDate: new Date(),
+                        maxDate: maxDate,
+                        name: 'finishDate',
+                        value: formik.values.finishDate,
+                        label: 'till',
+                        PaperProps: { sx: { mb: '-50px' } },
+                    }}
+                    textFieldProps={{
+                        error: Boolean(formik.touched.finishDate && formik.errors.finishDate),
+                        helperText: formik.touched.finishDate && formik.errors.finishDate,
+                        sx: {
+                            width: '170px',
+                            [theme.breakpoints.down('md')]: {
+                                width: '100%',
+                            },
+                        },
+                    }}
+                />
             </Box>
         </Box>
     );
@@ -112,7 +140,6 @@ const HiddenForm = ({ formik, createOptions }) => {
 
 HiddenForm.propTypes = {
     formik: PropTypes.object,
-    createOptions: PropTypes.func,
 };
 
 export default HiddenForm;

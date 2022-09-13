@@ -9,8 +9,6 @@ import {
     CardHeader,
     Grid,
     IconButton,
-    Link,
-    Rating,
     Table,
     TableBody,
     TableCell,
@@ -20,34 +18,48 @@ import {
 } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import {
+    BOOK_PREVIEW_PAGE_PATH,
+    bookingStatus,
+    bookStatus,
+    FEEDBACKS_PATH,
+    titles,
+    userRoles,
+} from '../../common/constants';
 import { styled, useTheme } from '@mui/material/styles';
 import { useRouter } from 'next/router';
 import ReturnBookModal from '../book/return-book/return-book-modal';
 import AssignBookModal from '../book/assign-book/assign-book-modal';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
 import EditBookModal from '../book/add-edit-book/edit-book-modal';
-import { bookStatus } from '../../common/constants/book-status-constants';
-import { language } from '../../common/constants/language-constants';
-import { category } from '../../common/constants/category-constants';
 import { Book } from '../../models/book-model';
 import { Booking } from '../../models/booking-model';
 import { BooksAPI } from '../../api/books-api';
-import { BookingsAPI } from './../../api/bookings-api';
+import { BookingsAPI } from '../../api/bookings-api';
 import { useBoolean } from '../../utils/hooks/boolean-hook';
-import { calculateRate } from './../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
-import { BOOK_PREVIEW_PAGE_PATH, FEEDBACKS_PATH } from '../../common/constants/route-constants';
 import { useCustomSnackbar } from '../../utils/hooks/custom-snackbar-hook';
-import { getFormatedDate } from '../../utils/functions/get-formated-date';
+import { getDateFormatISO } from '../../utils/functions/get-formated-date';
 import { PrimaryButton } from '../../common/UI/buttons/primary-button';
 import { useDispatch, useSelector } from 'react-redux';
 import { ProlongateReadingModal } from './prolongate-reading/prolongate-reading-modal';
-import { formatISO, format, parseISO, isAfter, add } from 'date-fns';
+import { add, format, isAfter, parseISO } from 'date-fns';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
-import { userRoles } from '../../common/constants/user-roles-constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
-import { userSlice } from '../../store/reducers/UserSlice';
+import {
+    getBookCategoryId,
+    getBookLanguageId,
+    getBookStatusId,
+} from '../books-catalogue-helpers/get-properties-for-payload';
+import { CustomLink } from '../../common/UI/custom-link';
+import { fetchUsersList } from '../../store/reducers/ListsSlice';
+import { InUseStatusBlock } from '../common/in-use-status-block/in-use-status-block';
+import { ReadOnlyRating } from '../../common/UI';
+import { PendingAcceptanceMessage } from './book-blocks/PendingAcceptanceMessage';
+import { InUseStatusButtons } from './book-blocks/in-use-status-buttons';
+import { PendingAcceptanceStatusButtons } from './book-blocks/pending-acceptance-status-buttons';
+import { AcceptDeclineBooking } from '../../models/accept-decline-booking-model';
+import { setLoadingButton, updateUserRoles } from '../../store/reducers';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -69,7 +81,6 @@ const BookDetails = (props) => {
     const inUseStatus = book.status.name === bookStatus.inUse.name;
     const roles = useSelector(state => state.user.user.roles);
     const isNoRoles = roles?.length === 0;
-    const { updateUserRoles } = userSlice.actions;
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
     const [isEditButtonOpen, setEditButtonOpen, setEditButtonClose] = useBoolean();
     const [isDeleteButtonOpen, setDeleteButtonOpen, setDeleteButtonClose] = useBoolean();
@@ -79,36 +90,38 @@ const BookDetails = (props) => {
     const readerId = useSelector((state) => state.user.user.id);
     const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
     const bookingStartDate = parseISO(bookingInfo.startDate);
-    const bookingEndDate = getFormatedDate(book.bookingInfoDto?.bookingEndDate);
     const lastDateToProlongate = add(bookingStartDate, { months: 1 });
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
+    const isPendingAcceptanceStatus = book.bookingInfoDto?.status.id === bookingStatus.awaitingConfirmation.id;
+    const showPendingAcceptanceMessage = !isOwner && isAssigned && isPendingAcceptanceStatus;
+
     const assignBookHandler = useCallback(async () => {
         await BookingsAPI.getCountActiveBookings(readerId)
-        .then((res) => {
-            if (res.data === LIMIT_COUNT_NOTIFICATIONS) {
-                setIsRejectedToAssign(true);
-            } else {
-                setIsRejectedToAssign(false);
-            }
-            setAssignButtonOpen();
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
-    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen]);
-
-    const deleteBook = () => {
-        if (book.status.name === bookStatus.available.name) {
-            BooksAPI.removeBook(book.id)
-            .then(() => {
-                router.back();
-                enqueueSnackbar('Your book has been deleted successfully!', {
-                    variant: 'success',
-                });
+            .then((res) => {
+                if (res.data === LIMIT_COUNT_NOTIFICATIONS) {
+                    setIsRejectedToAssign(true);
+                } else {
+                    setIsRejectedToAssign(false);
+                }
+                setAssignButtonOpen();
             })
             .catch(() => {
                 defaultErrorSnackbar();
             });
+    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen]);
+
+    const deleteBook = () => {
+        if (book.status.name === bookStatus.available.name) {
+            dispatch(setLoadingButton(true));
+            BooksAPI.removeBook(book.id)
+                .then(() => {
+                    router.back();
+                    enqueueSnackbar('Your book has been deleted successfully!', {
+                        variant: 'success',
+                    });
+                })
+                .catch(() => defaultErrorSnackbar())
+                .finally(() => dispatch(setLoadingButton(false)));
         } else {
             enqueueSnackbar('You can only delete books which are currently in “Available” status', {
                 variant: 'error',
@@ -116,104 +129,122 @@ const BookDetails = (props) => {
         }
     };
 
+    const openEditBookModalHandler = () => {
+        setEditButtonOpen();
+        dispatch(fetchUsersList());
+    };
     const editBook = (newBook) => {
-        let idCategory =
-            newBook.category === category.professional.name
-                ? category.professional.id
-                : category.fiction.id;
-        let idLanguage =
-            newBook.language === language.english.name ? language.english.id : language.russian.id;
-        let idStatus;
-        switch (newBook.status) {
-            case bookStatus.notAvailable.name:
-                idStatus = bookStatus.notAvailable.id;
-                break;
-            case bookStatus.inUse.name:
-                idStatus = bookStatus.inUse.id;
-                break;
-            default:
-                idStatus = bookStatus.available.id;
-        }
+        let categoryId = getBookCategoryId(newBook);
+        let languageId = getBookLanguageId(newBook);
+        const idStatus = getBookStatusId(newBook);
+
         const editedBook = new Book(
             newBook.id,
             newBook.title,
             newBook.author,
-            idCategory,
+            categoryId,
             newBook.category,
-            idLanguage,
+            languageId,
             newBook.language,
             newBook.link,
             idStatus,
             newBook.status,
             newBook.description,
         );
+
+        dispatch(setLoadingButton(true));
         BooksAPI.changeBookInfo(editedBook)
-        .then((res) => {
-            setEditButtonClose();
-            onUpdate(res.data);
-            enqueueSnackbar('Your book has been updated successfully!', {
-                variant: 'success',
-            });
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
+            .then((res) => {
+                setEditButtonClose();
+                onUpdate(res.data);
+                enqueueSnackbar('Your book has been updated successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const assignBook = ({ startDate, finishDate }) => {
-        const startDateFormatISO = formatISO(startDate, { representation: 'date' });
-        const finishDateFormatISO = formatISO(finishDate, { representation: 'date' });
-        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO);
+        const startDateFormatISO = getDateFormatISO(startDate);
+        const finishDateFormatISO = getDateFormatISO(finishDate);
+
+        const booking = new Booking(true, 0, book.id, startDateFormatISO, finishDateFormatISO, bookingStatus.notRequireConfirmation);
+
+        dispatch(setLoadingButton(true));
         BookingsAPI.createBooking(booking)
-        .then((res) => {
-            onUpdate(res.data.book);
-            setAssignButtonClose();
-            assignHandler(true);
-            enqueueSnackbar('The book was assigned to you successfully!', {
-                variant: 'success',
-            });
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
+            .then((res) => {
+                const { book, ...rest } = res.data;
+                onUpdate(book);
+                onUpdateBookingInfo(rest);
+                setAssignButtonClose();
+                assignHandler(true);
+                enqueueSnackbar('The book was assigned to you successfully!', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     const prolongateReading = (bookingId, finishDate) => {
-        const newFinishDateFormatISO = formatISO(finishDate, { representation: 'date' });
+        const newFinishDateFormatISO = getDateFormatISO(finishDate);
+
+        dispatch(setLoadingButton(true));
         BookingsAPI.updateBookingFinishedDate(bookingId, newFinishDateFormatISO)
-        .then(res => {
-            onUpdateBookingInfo(res.data);
-            setProlongateButtonClose();
-            enqueueSnackbar(`Reading period has been prolongated till ${format(finishDate, 'MM.dd.yyyy')}`, {
-                variant: 'success',
+            .then(res => {
+                onUpdateBookingInfo(res.data);
+                setProlongateButtonClose();
+                enqueueSnackbar(`Reading period has been prolongated till ${format(finishDate, 'MM.dd.yyyy')}`, {
+                    variant: 'success',
+                });
+            })
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
+    };
+
+    const acceptBookingHandler = () => {
+        const acceptBookingFields = new AcceptDeclineBooking(book.id, bookingStatus.accepted);
+
+        dispatch(setLoadingButton(true));
+        BookingsAPI.acceptOrDeclineBooking(acceptBookingFields)
+            .then(res => {
+                onUpdate(res.data);
+                enqueueSnackbar('You have accepted the book.', {
+                    variant: 'success',
+                });
+            })
+            .catch(() => {
+                defaultErrorSnackbar();
+            })
+            .finally(() => {
+                dispatch(setLoadingButton(false));
             });
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
     };
 
     const returnBook = (body) => {
         let bookingId = bookingInfo.id;
+
+        dispatch(setLoadingButton(true));
         BookingsAPI.cancelBooking(bookingId, body)
-        .then(() => {
-            if(isNoRoles) {
-                dispatch(updateUserRoles(userRoles.reader))
-            }
-            setReturnButtonClose();
-            assignHandler(false);
-            enqueueSnackbar(
-                !body.feedback && !body.rate
-                    ? 'Your book was returned successfully!'
-                    : 'Thank you for feedback. Read on!',
-                {
-                    variant: 'success',
-                },
-            );
-        })
-        .catch(() => {
-            defaultErrorSnackbar();
-        });
+            .then((res) => {
+                if (isNoRoles) {
+                    dispatch(updateUserRoles(userRoles.reader));
+                }
+                onUpdate(res.data);
+                setReturnButtonClose();
+                assignHandler(false);
+                enqueueSnackbar(
+                    !body.feedback && !body.rate
+                        ? 'Your book was returned successfully!'
+                        : 'Thank you for feedback. Read on!',
+                    {
+                        variant: 'success',
+                    },
+                );
+            })
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
     };
 
     //overdue booking
@@ -258,7 +289,8 @@ const BookDetails = (props) => {
                 open={isBlockingModalOpen}
                 onClose={setBlockingModalClose}
             />
-
+            {showPendingAcceptanceMessage &&
+                <PendingAcceptanceMessage startDate={bookingInfo.startDate} finishDate={bookingInfo.finishDate} />}
             <Card>
                 <CardHeader
                     title={book.title}
@@ -268,18 +300,14 @@ const BookDetails = (props) => {
                                 <IconButton onClick={setDeleteButtonOpen} aria-label='delete'>
                                     <DarkDeleteIcon fontSize='small' />
                                 </IconButton>
-                                <IconButton onClick={setEditButtonOpen} aria-label='edit'>
+                                <IconButton onClick={openEditBookModalHandler} aria-label='edit'>
                                     <EditIcon fontSize='small' />
                                 </IconButton>
                             </>
                         )
                     }
                 />
-                <CardContent
-                    sx={{
-                        p: 0,
-                    }}
-                >
+                <CardContent sx={{ p: 0 }}>
                     <Grid container spacing={3}>
                         <Grid item md={12} xs={12}>
                             <Table>
@@ -303,37 +331,13 @@ const BookDetails = (props) => {
                                     <TableRow>
                                         <TblCell>{titles.link}</TblCell>
                                         <TblCell>
-                                            {!book.link ? (
-                                                'No link yet'
-                                            ) : (
-                                                <Link
-                                                    href={book.link}
-                                                    underline='hover'
-                                                    target='_blank'
-                                                    rel='noopener'
-                                                >
-                                                    {'Open site'}
-                                                </Link>
-                                            )}
+                                            <CustomLink link={book.link} />
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
                                         <TblCell>{titles.rate}</TblCell>
                                         <TblCell>
-                                            <Tooltip title={book.rate} placement='right'>
-                                                <span>
-                                                    <Rating
-                                                        precision={0.5}
-                                                        name='read-only'
-                                                        value={calculateRate(book.rate)}
-                                                        size='small'
-                                                        readOnly
-                                                        sx={{
-                                                            ml: '-3px',
-                                                        }}
-                                                    />
-                                                </span>
-                                            </Tooltip>
+                                            <ReadOnlyRating rate={book.rate} sx={{ ml: '-3px' }} />
                                         </TblCell>
                                     </TableRow>
                                     <TableRow>
@@ -346,13 +350,16 @@ const BookDetails = (props) => {
                                                 >
                                                     <Typography
                                                         sx={{
-                                                            width: '170px',
+                                                            width: 'fit-content',
                                                             fontSize: theme.typography.body2,
                                                         }}
                                                     >
-                                                        {`${toLowerCaseExceptFirstLetter(
-                                                            book.status.name,
-                                                        )} till ${bookingEndDate}`}
+                                                        <InUseStatusBlock
+                                                            isBookPreviewPage
+                                                            currentBookingStatus={book.bookingInfoDto?.status || bookingInfo.status}
+                                                            bookingFinishDate={bookingInfo.finishDate}
+                                                            showInUseStatus={!isOwner && !isAssigned}
+                                                        />
                                                     </Typography>
                                                 </Tooltip>
                                             ) : (
@@ -381,13 +388,7 @@ const BookDetails = (props) => {
                     </Grid>
                 </CardContent>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        p: 2,
-                    }}
-                >
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
                     <Button
                         onClick={() =>
                             router.push(`${BOOK_PREVIEW_PAGE_PATH}/${book.id}${FEEDBACKS_PATH}`)
@@ -400,19 +401,14 @@ const BookDetails = (props) => {
                         <>
                             {isAssigned ? (
                                 <>
-                                    <Button
-                                        disabled={isDisabledProlongateButton}
-                                        onClick={() => handleBlockingOrAction(setProlongateButtonOpen)}
-                                        sx={{ mr: 1 }}
-                                    >
-                                        Prolongate reading
-                                    </Button>
-                                    <PrimaryButton
-                                        title={'Return the book'}
-                                        size='small'
-                                        fullWidth={false}
-                                        onClick={setReturnButtonOpen}
-                                    />
+                                    {isPendingAcceptanceStatus
+                                        ? <PendingAcceptanceStatusButtons onAcceptButtonClick={acceptBookingHandler} />
+                                        : <InUseStatusButtons
+                                            isDisabledProlongateButton={isDisabledProlongateButton}
+                                            onProlongateButtonClick={() => handleBlockingOrAction(setProlongateButtonOpen)}
+                                            onReturnButtonClick={setReturnButtonOpen}
+                                        />
+                                    }
                                 </>
                             ) : (
                                 <PrimaryButton

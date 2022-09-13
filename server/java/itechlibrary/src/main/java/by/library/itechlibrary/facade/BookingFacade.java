@@ -4,6 +4,7 @@ import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.ReviewDto;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
 public interface BookingFacade {
@@ -13,5 +14,7 @@ public interface BookingFacade {
     BookingResponseDto save(BookingDto bookingDto);
 
     FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto);
+
+    FullBookDto returnBookingAnfGetUpdatedBook(ReviewDto reviewDto, long id);
 
 }

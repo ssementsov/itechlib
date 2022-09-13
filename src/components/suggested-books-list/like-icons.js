@@ -7,7 +7,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import style from './like-icons.module.css';
 import { types } from '../../types';
-import { voteType } from '../../common/constants/vote-constants';
+import { voteType } from '../../common/constants';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
 import { BlockingModal } from '../../common/UI/modals/blocking-modal';
 

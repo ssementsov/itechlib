@@ -5,6 +5,13 @@ import { Box } from '@mui/material';
 import MultipurposeBookForm from '../../book/multipurpose-book-form';
 import { types } from '../../../types';
 import { useTheme } from '@mui/material/styles';
+import {
+    isRequired,
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+} from '../../../common/constants';
 
 const AddEditSuggestedBookFormBox = (props) => {
     const { book, onClose, title, buttonName, open, onCreate, onEdit } = props;
@@ -43,6 +50,16 @@ const AddEditSuggestedBookFormBox = (props) => {
         ) {
             error.link = 'Please enter correct link';
         }
+        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.comment)) {
+            error.comment = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+
         return error;
     }
 
@@ -51,19 +68,19 @@ const AddEditSuggestedBookFormBox = (props) => {
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
-                .min(2, 'Title must be 2 or more symbols')
-                .max(255, 'Title must be 255 or less symbols')
-                .required('Title is required'),
+                .min(2, mustBeMoreSymbols('Title', 2))
+                .max(255, mustBeLessSymbols('Title', 255))
+                .required(isRequired('Title')),
             author: Yup.string()
                 .trim()
-                .min(2, 'Author must be 2 or more symbols')
-                .max(500, 'Author must be 500 or less symbols'),
+                .min(2, mustBeMoreSymbols('Author', 2))
+                .max(500, mustBeLessSymbols('Author', 500)),
             category: Yup.string(),
             language: Yup.string(),
             comment: Yup.string()
                 .trim()
-                .min(10, 'Comment must be 10 or more symbols')
-                .max(250, 'Comment must be 250 or less symbols'),
+                .min(10, mustBeMoreSymbols('Comment', 10))
+                .max(250, mustBeLessSymbols('Comment', 250)),
         }),
         validate,
         onSubmit: async (values) => {

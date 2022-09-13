@@ -1,25 +1,16 @@
 import { types } from '../../types';
 import { PropTypes } from 'prop-types';
-import {
-    CardHeader,
-    CardContent,
-    CardMedia,
-    IconButton,
-    Link,
-    Table,
-    TableBody,
-    TableCell,
-    TableRow,
-} from '@mui/material';
+import { CardContent, CardHeader, CardMedia, IconButton, Table, TableBody, TableCell, TableRow } from '@mui/material';
 import { EditIcon } from '../../icons/edit-icon';
 import { DarkDeleteIcon } from '../../icons/dark-delete-icon';
 import { styled } from '@mui/material/styles';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import { titles } from '../../common/constants';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { LikeIcons } from '../suggested-books-list/like-icons';
 import { getLinkAndAltTextofBookIcon } from '../../utils/functions/get-link-and-alt-text-of-book-icon';
 import { useBoolean } from '../../utils/hooks/boolean-hook';
 import DeleteModal from '../book/delete-book-or-book-cover/delete-modal';
+import { CustomLink } from '../../common/UI/custom-link';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -50,17 +41,15 @@ export default function SuggestedBookInfo(props) {
             />
 
             <CardHeader
-                sx={{
-                    padding: 0,
-                }}
+                sx={{ p: 0 }}
                 action={
                     isCreater && (
                         <>
-                            <IconButton onClick={setDeleteButtonOpen} aria-label="delete">
-                                <DarkDeleteIcon fontSize="small" />
+                            <IconButton onClick={setDeleteButtonOpen} aria-label='delete'>
+                                <DarkDeleteIcon fontSize='small' />
                             </IconButton>
-                            <IconButton onClick={onOpen} aria-label="edit">
-                                <EditIcon fontSize="small" />
+                            <IconButton onClick={onOpen} aria-label='edit'>
+                                <EditIcon fontSize='small' />
                             </IconButton>
                         </>
                     )
@@ -73,7 +62,7 @@ export default function SuggestedBookInfo(props) {
                     objectFit: 'contain',
                     margin: '0 auto',
                 }}
-                component="img"
+                component='img'
                 image={bookIconLink}
                 alt={altText}
             />
@@ -99,18 +88,7 @@ export default function SuggestedBookInfo(props) {
                         <TableRow>
                             <TitleTblCell>{titles.link}</TitleTblCell>
                             <TblCell>
-                                {book.link === '' ? (
-                                    'No link yet'
-                                ) : (
-                                    <Link
-                                        href={book.link}
-                                        underline="hover"
-                                        target="_blank"
-                                        rel="noopener"
-                                    >
-                                        {'Open site'}
-                                    </Link>
-                                )}
+                                <CustomLink link={book.link} />
                             </TblCell>
                         </TableRow>
                         <TableRow>

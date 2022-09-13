@@ -2,23 +2,25 @@ import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
 import { add } from 'date-fns';
 import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
+import { isRequired } from '../../../common/constants';
 
 const initValue = {
     startDate: new Date(),
     finishDate: null,
 };
-const maxDate = add(new Date(), {
-    months: 1,
-});
+const minDatePickerDate = new Date();
+const maxDate = add(new Date(), { months: 1 });
 
 export const AssignBookAllowed = (props) => {
     const { onAssign, onClose } = props;
 
     function validate(value) {
         let error = {};
+
         if (!value.finishDate) {
-            error.finishDate = 'Date is required';
+            error.finishDate = isRequired('Date');
         }
+
         return error;
     }
 
@@ -37,7 +39,7 @@ export const AssignBookAllowed = (props) => {
         <DatePeriodForm
             formik={formik}
             onClose={onClose}
-            minDate={new Date()}
+            minDate={minDatePickerDate}
             maxDate={maxDate}
             title={'To assign the book please specify period'}
         />

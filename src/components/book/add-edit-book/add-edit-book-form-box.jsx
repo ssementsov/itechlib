@@ -4,7 +4,14 @@ import { types } from '../../../types';
 import * as Yup from 'yup';
 import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
-import { bookStatus } from '../../../common/constants/book-status-constants';
+import {
+    bookStatus,
+    isRequired,
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
+    ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+} from '../../../common/constants';
 import { styled } from '@mui/material/styles';
 
 const StyledBox = styled(Box)({
@@ -12,7 +19,7 @@ const StyledBox = styled(Box)({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100%',
-    paddingTop: '0'
+    paddingTop: '0',
 });
 
 const AddEditBookFormBox = (props) => {
@@ -50,22 +57,33 @@ const AddEditBookFormBox = (props) => {
 
     function validate(value) {
         let error = {};
+
         if (
             value.link &&
-            !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#%=~_|$?!:,.]*\)|[-A-Z0-9+&@#%=~_|$?!:,.])/i.test(
-                value.link
+            !/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z\d+&@#%=~_|$?!:,.]*\)|[-A-Z\d+&@#%=~_|$?!:,.])/i.test(
+                value.link,
             )
         ) {
             error.link = 'Please enter correct link';
-        } else if (value.status === bookStatus.inUse.name) {
+        }
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+            error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+            error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
+            error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+        }
+        if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
-                error.reader = 'Reader is required';
+                error.reader = isRequired('Reader');
             }
             if (!value.startDate) {
-                error.startDate = 'Date is required';
+                error.startDate = isRequired('Date');
             }
             if (!value.finishDate) {
-                error.finishDate = 'Date is required';
+                error.finishDate = isRequired('Date');
             }
         }
 
@@ -77,21 +95,21 @@ const AddEditBookFormBox = (props) => {
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
-                .min(2, 'Title must be 2 or more symbols')
-                .max(255, 'Title must be 255 or less symbols')
-                .required('Title is required'),
+                .min(2, mustBeMoreSymbols('Title', 2))
+                .max(255, mustBeLessSymbols('Title', 255))
+                .required(isRequired('Title')),
             author: Yup.string()
                 .trim()
-                .min(2, 'Author must be 2 or more symbols')
-                .max(500, 'Author must be 500 or less symbols')
-                .required('Author is required'),
-            category: Yup.string().required('Category is required'),
-            language: Yup.string().required('Language is required'),
+                .min(2, mustBeMoreSymbols('Author', 2))
+                .max(500, mustBeLessSymbols('Author', 500))
+                .required(isRequired('Author')),
+            category: Yup.string().required(isRequired('Category')),
+            language: Yup.string().required(isRequired('Language')),
             description: Yup.string()
                 .trim()
-                .min(10, 'Description must be 10 or more symbols')
-                .max(500, 'Description must be 500 or less symbols')
-                .required('Description is required'),
+                .min(10, mustBeMoreSymbols('Description', 10))
+                .max(500, mustBeLessSymbols('Description', 500))
+                .required(isRequired('Description')),
         }),
         validate,
         onSubmit: async (values) => {
@@ -104,17 +122,15 @@ const AddEditBookFormBox = (props) => {
     });
 
     return (
-        <>
-            <StyledBox>
-                <MultipurposeBookForm
-                    formik={formik}
-                    title={title}
-                    buttonName={buttonName}
-                    onClose={onClose}
-                    {...rest}
-                />
-            </StyledBox>
-        </>
+        <StyledBox>
+            <MultipurposeBookForm
+                formik={formik}
+                title={title}
+                buttonName={buttonName}
+                onClose={onClose}
+                {...rest}
+            />
+        </StyledBox>
     );
 };
 

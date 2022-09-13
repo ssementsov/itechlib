@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { Box, Container, Grid } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
@@ -8,14 +8,16 @@ import BookDetails from '../../../components/book/book-details';
 import UploadImageCard from '../../../components/upload-image-card';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from '../../../utils/hooks/custom-snackbar-hook';
-import { LOGIN_PATH } from '../../../common/constants/route-constants';
-import { YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants/warning-messages';
-import { ProgressLinear } from '../../../common/UI/progressLinear';
-import { GoBackButton } from '../../../common/UI/buttons/go-back-button';
+import { LOGIN_PATH, YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants';
+import { ProgressLinear } from '../../../common/UI';
+import { GoBackButton } from '../../../common/UI';
 import { BookingsAPI } from '../../../api/bookings-api';
+import { useDispatch } from 'react-redux';
+import { setLoadingButton } from '../../../store/reducers';
 
 function BookPreviewPage({ isAssigned, assignHandler }) {
     const router = useRouter();
+    const dispatch = useDispatch();
     const id = router.query.id;
     const [book, setBook] = useState([]);
     const [bookingInfo, setBookingInfo] = useState({});
@@ -24,9 +26,10 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
     const [isOwner, setIsOwner] = useState(false);
     const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
     const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
-    const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const { defaultErrorSnackbar } = useCustomSnackbar();
 
     const addBookCover = (file, onClose) => {
+        dispatch(setLoadingButton(true));
         BooksAPI.addBookCover(file)
             .then(() => {
                 onClose();
@@ -35,7 +38,10 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
             })
             .catch(() => {
                 defaultErrorSnackbar();
-            });
+            })
+            .finally(() => {
+                dispatch(setLoadingButton(false));
+            })
     };
 
     const deleteBookCover = (imageId, onDeleteButtonClose) => {
@@ -77,17 +83,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     }
                 });
         }
-    }, [
-        isAssigned,
-        assignHandler,
-        enqueueSnackbar,
-        id,
-        router.isReady,
-        defaultErrorSnackbar,
-        isUploadedBookCover,
-        isUpdatedBookCover,
-        router,
-    ]);
+    }, [assignHandler, defaultErrorSnackbar, id, router, isUploadedBookCover, isUpdatedBookCover]);
 
     useEffect(() => {
         if (isAssigned && isLoadedBookInfo) {
@@ -105,7 +101,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
         !(isLoadedBookInfo && isLoadedBookingInfo) && isAssigned ||
         !(isLoadedBookInfo)
     ) {
-        return <ProgressLinear/>;
+        return <ProgressLinear />;
     } else {
         return (
             <>
@@ -113,19 +109,13 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                     <title>Book preview page</title>
                 </Head>
                 <Box
-                    component="main"
-                    sx={{
-                        flexGrow: 1,
-                        pt: 3,
-                        pb: 8,
-                    }}
+                    component='main'
+                    sx={{ flexGrow: 1, pt: 3, pb: 8 }}
                 >
-                    <GoBackButton/>
+                    <GoBackButton />
                     <Container
-                        maxWidth="lg"
-                        sx={{
-                            pt: 11,
-                        }}
+                        maxWidth='lg'
+                        sx={{ pt: 11 }}
                     >
                         <Grid container spacing={12}>
                             <Grid item lg={4} md={4} xs={12}>
@@ -139,7 +129,7 @@ function BookPreviewPage({ isAssigned, assignHandler }) {
                                     description={YOU_CAN_UPLOAD_IMAGE}
                                 />
                             </Grid>
-                            <Grid item lg={8} md={8} xs={12}>
+                            <Grid item lg={8} md={8} xs={12} sx={{ position: 'relative' }}>
                                 <BookDetails
                                     onUpdate={setBook}
                                     onUpdateBookingInfo={setBookingInfo}

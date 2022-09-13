@@ -1,5 +1,5 @@
 import { fictionImageLink, professionalImageLink } from '../../assets/images';
-import { category } from '../../common/constants/category-constants';
+import { category } from '../../common/constants';
 
 export function getLinkAndAltTextofBookIcon(book) {
     let bookIconLink;
