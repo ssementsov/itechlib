@@ -101,12 +101,6 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toBookingDtoFromBooking(booking);
     }
 
-    @Override
-    public void changeActivity(long bookingId, boolean isActive) {
-
-        bookingRepository.setActivity(bookingId, isActive);
-    }
-
     @Transactional
     @Override
     public Booking resolveAssignedBooking(Booking booking, Book book, BookingStatusDto bookingStatusDto, long readerId) {
@@ -254,9 +248,21 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Optional<Booking> findActiveByBookId(long bookId) {
+    public void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName) {
 
-        return getActiveByBookId(bookId);
+        Optional<Booking> optionalBooking = getActiveByBookId(bookId);
+
+        if (optionalBooking.isPresent()) {
+
+            Booking booking = optionalBooking.get();
+
+            if (bookStatusName.equals(BookStatusConstant.AVAILABLE)
+                    && booking.getStatus().getName().equals(BookingStatusConstant.DECLINED)) {
+
+                bookingRepository.setActivity(booking.getId(), false);
+            }
+
+        }
     }
 
     @Override

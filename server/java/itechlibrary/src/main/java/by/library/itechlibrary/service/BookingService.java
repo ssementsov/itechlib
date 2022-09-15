@@ -36,8 +36,6 @@ public interface BookingService {
 
     BookingDto update(BookingDto bookingDto, Book book, long readerId);
 
-    void changeActivity(long bookingId, boolean isActive);
-
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
     BookingResponseDto findById(long id);
@@ -54,7 +52,7 @@ public interface BookingService {
 
     void disableCurrentBooking(long bookId);
 
-    Optional<Booking> findActiveByBookId(long bookId);
+    void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName);
 
     BaseBookingInfo getBaseBookingInfo(long bookId);
 

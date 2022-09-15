@@ -1,7 +1,6 @@
 package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.booking.BookingDto;
@@ -114,21 +113,9 @@ public class BookFacadeImpl implements BookFacade {
     @Transactional
     public FullBookDto update(WithLikAndStatusBookDto bookDto) {
 
+        bookingService.tryDeactivateDeclinedBookingDuringUpdatingBook(bookDto.getId(), bookDto.getStatus().getName());
+
         long currentUserId = securityUserDetailsService.getCurrentUserId();
-        Optional<Booking> optionalBooking = bookingService.findActiveByBookId(bookDto.getId());
-
-        if (optionalBooking.isPresent()) {
-
-            Booking booking = optionalBooking.get();
-
-            if (bookDto.getStatus().getName().equals(BookStatusConstant.AVAILABLE)
-                    && booking.getStatus().getName().equals(BookingStatusConstant.DECLINED)) {
-
-                bookingService.changeActivity(booking.getId(), false);
-            }
-
-        }
-
         BookUpdatedInfo bookUpdatedInfo = bookService.update(bookDto, currentUserId);
 
         if (bookUpdatedInfo.isDisableBooking()) {
