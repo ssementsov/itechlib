@@ -101,6 +101,12 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toBookingDtoFromBooking(booking);
     }
 
+    @Override
+    public void changeActivity(long bookingId, boolean isActive) {
+
+        bookingRepository.setActivity(bookingId, isActive);
+    }
+
     @Transactional
     @Override
     public Booking resolveAssignedBooking(Booking booking, Book book, BookingStatusDto bookingStatusDto, long readerId) {
@@ -245,6 +251,12 @@ public class BookingServiceImpl implements BookingService {
             book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }
+    }
+
+    @Override
+    public Optional<Booking> findActiveByBookId(long bookId) {
+
+        return getActiveByBookId(bookId);
     }
 
     @Override
