@@ -23,7 +23,7 @@ const StyledBox = styled(Box)({
 });
 
 const AddEditBookFormBox = (props) => {
-    const { onClose, onCreate, onEdit, title, buttonName, book, ...rest } = props;
+    const { onCreate, onEdit, title, buttonName, book, ...rest } = props;
     let newBook;
 
     if (book) {
@@ -127,7 +127,6 @@ const AddEditBookFormBox = (props) => {
                 formik={formik}
                 title={title}
                 buttonName={buttonName}
-                onClose={onClose}
                 {...rest}
             />
         </StyledBox>
@@ -135,7 +134,6 @@ const AddEditBookFormBox = (props) => {
 };
 
 AddEditBookFormBox.propTypes = {
-    onClose: PropTypes.func,
     createBook: PropTypes.func,
     onEdit: PropTypes.func,
     title: PropTypes.string,

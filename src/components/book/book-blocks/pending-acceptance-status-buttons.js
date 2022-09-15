@@ -1,10 +1,10 @@
 import { Button } from '@mui/material';
 import { PrimaryButton } from '../../../common/UI';
-import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 
-export const PendingAcceptanceStatusButtons = (props) => {
-    const { onDeclineButtonClick, onAcceptButtonClick } = props;
-    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+const PendingAcceptanceStatusButtons = (props) => {
+    const { onDeclineButtonClick, onAcceptButtonClick, isLoadingAcceptButton } = props;
+
     return (
         <>
             <Button
@@ -15,7 +15,7 @@ export const PendingAcceptanceStatusButtons = (props) => {
             </Button>
             <PrimaryButton
                 loadingButton
-                loading={isLoadingButton}
+                loading={isLoadingAcceptButton}
                 title={'Accept'}
                 size='small'
                 fullWidth={false}
@@ -24,3 +24,11 @@ export const PendingAcceptanceStatusButtons = (props) => {
         </>
     );
 };
+
+PendingAcceptanceStatusButtons.propTypes = {
+    onDeclineButtonClick: PropTypes.func.isRequired,
+    onAcceptButtonClick: PropTypes.func.isRequired,
+    isLoadingAcceptButton: PropTypes.bool.isRequired,
+};
+
+export default PendingAcceptanceStatusButtons;

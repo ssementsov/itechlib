@@ -11,7 +11,6 @@ export default function EditSuggestedBookModal(props) {
             <AddEditSuggestedBookFormBox
                 title={'Edit Book Information'}
                 buttonName={'Save'}
-                onClose={onClose}
                 open={open}
                 onEdit={onEdit}
                 book={book}

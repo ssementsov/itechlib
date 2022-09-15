@@ -4,6 +4,7 @@ import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.UserRole;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -54,5 +55,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true")
     List<Booking> findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(LocalDate maximumFinishDate);
+
+    @Modifying
+    @Query("update Booking b set b.isActive = :isActive where b.id = :id")
+    void setActivity(long id, boolean isActive);
 
 }

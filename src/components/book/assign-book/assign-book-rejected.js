@@ -1,16 +1,9 @@
-import PropTypes from 'prop-types';
-import { WarningModalText } from '../../../common/UI/modals/warning-modal-text';
+import { WarningModalText } from '../../../common/UI';
 
-export const AssignBookRejected = (props) => {
-    const { onClose } = props;
+export const AssignBookRejected = () => {
     return (
         <WarningModalText
-            onClose={onClose}
             contentText={'Oops! You already have 5 books. Please return some book to assign a new one.'}
         />
     );
-};
-
-AssignBookRejected.propTypes = {
-    onClose: PropTypes.func.isRequired,
 };

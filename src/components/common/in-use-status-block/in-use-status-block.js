@@ -27,9 +27,13 @@ export const InUseStatusBlock = (props) => {
             );
         case bookingStatus.declined.id:
             return (
-                <span className={`${classes.statusBlock} ${classes.statusDeclined}`}>
-               {bookingStatus.declined.textToShow}
-            </span>
+                showInUseStatus
+                    ? bookingStatus.notRequireConfirmation.textToShow
+                    : (
+                        <span className={`${classes.statusBlock} ${classes.statusDeclined}`}>
+                            {bookingStatus.declined.textToShow}
+                        </span>
+                    )
             );
         default:
             return bookingStatus.notRequireConfirmation.textToShow;

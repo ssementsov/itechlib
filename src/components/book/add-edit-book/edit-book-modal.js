@@ -13,7 +13,6 @@ export default function EditBookModal(props) {
                 buttonName={'Save'}
                 onEdit={onEdit}
                 book={book}
-                onClose={onClose}
                 inEditMode
             />
         </StyledModal>

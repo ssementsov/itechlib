@@ -14,6 +14,7 @@ import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingService {
 
@@ -45,9 +46,13 @@ public interface BookingService {
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 
+    void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
+
     void fillBookWithBookingInfo(WithBookingInfoBookDto book);
 
     void disableCurrentBooking(long bookId);
+
+    void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName);
 
     BaseBookingInfo getBaseBookingInfo(long bookId);
 

@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12092022-change-comment-type-in-booking-acceptance
+      author: vladimir_egorov
+      changes:
+        - modifyDataType:
+            columnName: comment
+            newDataType: VARCHAR(250)
+            tableName: booking_acceptance

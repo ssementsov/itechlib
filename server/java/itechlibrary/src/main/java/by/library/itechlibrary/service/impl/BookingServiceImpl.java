@@ -11,6 +11,7 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
@@ -223,12 +224,43 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
+
+        if (optionalBooking.isPresent()) {
+
+            Booking booking = optionalBooking.get();
+            BookingInfo bookingInfo = checkAndBuildBookingInfo(booking, currentUserId);
+            BookingInfoDto bookingInfoDto = bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo);
+
+            bookWithBookingInfo.setBookingInfoDto(bookingInfoDto);
+        }
+    }
+
+    @Override
     public void fillBookWithBookingInfo(WithBookingInfoBookDto book) {
 
         if (book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
             BookingInfo bookingInfo = getBookingInfoForUserByBookId(book.getId(), book.getOwner().getId());
             book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+    }
+
+    @Override
+    public void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName) {
+
+        Optional<Booking> optionalBooking = getActiveByBookId(bookId);
+
+        if (optionalBooking.isPresent()) {
+
+            Booking booking = optionalBooking.get();
+
+            if (bookStatusName.equals(BookStatusConstant.AVAILABLE)
+                    && booking.getStatus().getName().equals(BookingStatusConstant.DECLINED)) {
+
+                bookingRepository.setActivity(booking.getId(), false);
+            }
 
         }
     }
@@ -328,7 +360,7 @@ public class BookingServiceImpl implements BookingService {
 
         Optional<Booking> bookingOptional = getActiveByBookId(bookId);
 
-        return checkAndBuildBookingInfo(bookId, bookingOptional, currentUserId);
+        return checkAndBuildBookingInfoFromOptional(bookId, bookingOptional, currentUserId);
     }
 
     private Optional<Booking> getActiveByBookId(long bookId) {
@@ -337,22 +369,26 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional, long currentUserId) {
+    private BookingInfo checkAndBuildBookingInfoFromOptional(long bookId, Optional<Booking> bookingOptional, long currentUserId) {
 
-        if (bookingOptional.isPresent()) {
+        Booking booking = bookingOptional
+                .orElseThrow(
+                        () -> new NotActiveBookingException("Booking with the specified activity has not found for book id " + bookId)
+                );
 
-            BookingInfo bookingInfo = new BookingInfo();
+        return checkAndBuildBookingInfo(booking, currentUserId);
+    }
 
-            Booking currentBooking = bookingOptional.get();
-            setFullNameReaderToBookingInfo(bookingInfo, currentBooking);
-            checkAndSetCurrentUserIsReader(bookingInfo, currentBooking.getReader().getId(), currentUserId);
-            tryToSetCommentToBookingInfo(currentBooking.getStatus().getName(), currentBooking.getBook().getId(), bookingInfo);
-            bookingInfo.setStatus(currentBooking.getStatus());
-            bookingInfo.setBookingEndDate(currentBooking.getFinishDate());
+    private BookingInfo checkAndBuildBookingInfo(Booking booking, long currentUserId) {
+        BookingInfo bookingInfo = new BookingInfo();
 
-            return bookingInfo;
+        setFullNameReaderToBookingInfo(bookingInfo, booking);
+        checkAndSetCurrentUserIsReader(bookingInfo, booking.getReader().getId(), currentUserId);
+        tryToSetCommentToBookingInfo(booking.getStatus().getName(), booking.getBook().getId(), bookingInfo);
+        bookingInfo.setStatus(booking.getStatus());
+        bookingInfo.setBookingEndDate(booking.getFinishDate());
 
-        } else throw new NotActiveBookingException("Booking with the specified activity has not found for book id " + bookId);
+        return bookingInfo;
     }
 
     private void checkAndSetCurrentUserIsReader(BookingInfo bookingInfo, long bookingReaderId, long currentUserId) {

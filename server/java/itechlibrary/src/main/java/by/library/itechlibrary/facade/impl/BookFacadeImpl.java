@@ -52,18 +52,17 @@ public class BookFacadeImpl implements BookFacade {
 
     @Override
     @Transactional
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
+    public WithBookingInfoBookDto save(WithOwnerBookDto withOwnerBookDto, BookingForTargetReaderDto bookingForTargetReaderDto, MultipartFile multipartFile) {
 
-        Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
         long currentUserId = securityUserDetailsService.getCurrentUserId();
-        User currentUser = userService.getUserById(currentUserId);
-        WithOwnerBookDto createdBook = bookService.save(withOwnerBookDto, fileInfo, currentUser);
 
-        String bookStatusName = createdBook.getStatus().getName();
-        long bookId = createdBook.getId();
-        tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, bookId);
+        WithBookingInfoBookDto book = saveBook(withOwnerBookDto, multipartFile, currentUserId);
 
-        return createdBook;
+        String bookStatusName = book.getStatus().getName();
+        Optional<Booking> optionalBooking = tryCreateBookingForAcceptanceByReader(bookingForTargetReaderDto, bookStatusName, book.getId());
+        bookingService.trySetBookingInfoToBook(book, optionalBooking, currentUserId);
+
+        return book;
     }
 
     @Override
@@ -114,6 +113,8 @@ public class BookFacadeImpl implements BookFacade {
     @Transactional
     public FullBookDto update(WithLikAndStatusBookDto bookDto) {
 
+        bookingService.tryDeactivateDeclinedBookingDuringUpdatingBook(bookDto.getId(), bookDto.getStatus().getName());
+
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         BookUpdatedInfo bookUpdatedInfo = bookService.update(bookDto, currentUserId);
 
@@ -158,6 +159,14 @@ public class BookFacadeImpl implements BookFacade {
 
     }
 
+    private WithBookingInfoBookDto saveBook(WithOwnerBookDto withOwnerBookDto, MultipartFile multipartFile, long ownerId) {
+
+        Optional<FileInfo> fileInfo = getFileInfo(multipartFile);
+        User currentUser = userService.getUserById(ownerId);
+
+        return bookService.save(withOwnerBookDto, fileInfo, currentUser);
+    }
+
     private Optional<FileInfo> getFileInfo(MultipartFile multipartFile) {
 
         if (multipartFile != null) {
@@ -169,7 +178,9 @@ public class BookFacadeImpl implements BookFacade {
         return Optional.empty();
     }
 
-    private void tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
+    private Optional<Booking> tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
+
+        Optional<Booking> bookingOptional = Optional.empty();
 
         if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
 
@@ -179,7 +190,11 @@ public class BookFacadeImpl implements BookFacade {
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
 
             sendEmailAboutAcceptanceByReader(booking);
+
+            bookingOptional = Optional.of(booking);
         }
+
+        return bookingOptional;
     }
 
     private void sendEmailAboutAcceptanceByReader(Booking booking) {

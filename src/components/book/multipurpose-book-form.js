@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, FormControlLabel, MenuItem, RadioGroup, TextField, Tooltip, Typography, Zoom } from '@mui/material';
+import { Box, FormControlLabel, MenuItem, RadioGroup, Tooltip, Typography, Zoom } from '@mui/material';
 import { categories } from './add-edit-book/datas-for-form-options/categories';
 import { languages } from './add-edit-book/datas-for-form-options/languages';
 import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
-import { PrimaryButton } from '../../common/UI';
-import { CloseIcon } from '../../icons/close-icon';
+import { PrimaryButton, StyledTextField } from '../../common/UI';
 import { useTheme } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
 import { useSelector } from 'react-redux';
@@ -21,17 +20,8 @@ const createOptions = (option) => {
     );
 };
 
-const StyledTextField = (props) => {
-    const { children, ...rest } = props;
-    return (
-        <TextField fullWidth margin='dense' name='title' variant='outlined' {...rest}>
-            {children}
-        </TextField>
-    );
-};
-
 const MultipurposeBookForm = (props) => {
-    const { formik, title, buttonName, isSuggestForm, inEditMode = false, onClose } = props;
+    const { formik, title, buttonName, isSuggestForm, inEditMode = false } = props;
     const theme = useTheme();
     const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
@@ -66,7 +56,6 @@ const MultipurposeBookForm = (props) => {
                         },
                     }}
                 >
-                    <CloseIcon onClick={onClose} />
                 </Box>
             </Box>
 
@@ -182,7 +171,7 @@ const MultipurposeBookForm = (props) => {
                     </RadioGroup>
                 )}
 
-                {formik.values.status === bookStatus.inUse.name && (
+                {formik.values.status === bookStatus.inUse.name && !inEditMode && (
                     <HiddenForm formik={formik} />
                 )}
                 {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}

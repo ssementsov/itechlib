@@ -7,7 +7,6 @@ export const BlockingModal = (props) => {
     return (
         <StyledModal open={open} onClose={onClose}>
             <WarningModalText
-                onClose={onClose}
                 contentText={'Oops! You have been blocked. Please return the book to remove blocking'}
             />
         </StyledModal>
