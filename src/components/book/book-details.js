@@ -241,6 +241,7 @@ const BookDetails = (props) => {
                 if (isNoRoles) {
                     dispatch(updateUserRoles(userRoles.reader));
                 }
+                setAssigned(false);
                 onUpdate(res.data);
                 setReturnButtonClose();
                 enqueueSnackbar(
@@ -280,7 +281,7 @@ const BookDetails = (props) => {
         setBlockingModalClose,
         handleBlockingOrAction,
     } = useOverdueBookingBlocking();
-
+console.log(book.bookingInfoDto?.bookingEndDate, bookingInfo.finishDate)
     return (
         <>
             <EditBookModal
@@ -388,7 +389,7 @@ const BookDetails = (props) => {
                                                         <InUseStatusBlock
                                                             isBookPreviewPage
                                                             currentBookingStatus={book.bookingInfoDto?.status || bookingInfo.status}
-                                                            bookingFinishDate={book.bookingInfoDto?.bookingEndDate || bookingInfo.finishDate}
+                                                            bookingFinishDate={bookingInfo.finishDate || book.bookingInfoDto?.bookingEndDate}
                                                             showInUseStatus={showInUseStatus}
                                                         />
                                                     </Typography>
