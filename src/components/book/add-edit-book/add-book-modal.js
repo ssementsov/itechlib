@@ -11,7 +11,6 @@ export default function AddBookModal(props) {
                 title={'Add New Book'}
                 buttonName={'Add'}
                 onCreate={onCreate}
-                onClose={onClose}
             />
         </StyledModal>
     );

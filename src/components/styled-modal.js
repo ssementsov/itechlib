@@ -29,6 +29,7 @@ const style = {
 
 const StyledModal = (props) => {
     const { open, onClose, children, isSticky = false, ...prop } = props;
+    const theme = useTheme();
 
     return (
         <Modal {...prop} open={open} onClose={onClose}>
@@ -43,6 +44,7 @@ const StyledModal = (props) => {
                         cursor: 'pointer',
                         right: 22,
                         top: 22,
+                        zIndex: theme.zIndex.modal + 1
                     }}
                 >
                     <CloseIcon onClick={onClose} />

@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
-import { PropTypes } from 'prop-types';
+import { useEffect, useState } from 'react';
 import { Box, Container, Grid } from '@mui/material';
 import { DashboardLayout } from '../../../components/dashboard-layout';
 import BookDetails from '../../../components/book/book-details';
@@ -9,11 +8,10 @@ import UploadImageCard from '../../../components/upload-image-card';
 import { BooksAPI } from '../../../api/books-api';
 import { useCustomSnackbar } from '../../../utils/hooks/custom-snackbar-hook';
 import { LOGIN_PATH, YOU_CAN_UPLOAD_IMAGE } from '../../../common/constants';
-import { ProgressLinear } from '../../../common/UI';
-import { GoBackButton } from '../../../common/UI';
+import { GoBackButton, ProgressLinear } from '../../../common/UI';
 import { BookingsAPI } from '../../../api/bookings-api';
-import { useDispatch } from 'react-redux';
-import { setLoadingButton } from '../../../store/reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoadingButton, setRedirectPath } from '../../../store/reducers';
 
 function BookPreviewPage() {
     const router = useRouter();
@@ -28,6 +26,7 @@ function BookPreviewPage() {
     const [isUploadedBookCover, setIsUploadedBookCover] = useState(false);
     const [isUpdatedBookCover, setIsUpdatedBookCover] = useState(false);
     const { defaultErrorSnackbar } = useCustomSnackbar();
+    const redirectPath = useSelector(state => state.user.redirectPath);
 
     const addBookCover = (file, onClose) => {
         dispatch(setLoadingButton(true));
@@ -42,7 +41,7 @@ function BookPreviewPage() {
             })
             .finally(() => {
                 dispatch(setLoadingButton(false));
-            })
+            });
     };
 
     const deleteBookCover = (imageId, onDeleteButtonClose) => {
@@ -94,6 +93,10 @@ function BookPreviewPage() {
             });
         }
     }, [book.id, isCurrentUserReader, isLoadedBookInfo]);
+
+    useEffect(() => {
+        if (redirectPath) dispatch(setRedirectPath(''));
+    }, [dispatch, redirectPath]);
 
     if (
         !(isLoadedBookInfo && isLoadedBookingInfo) && isCurrentUserReader ||

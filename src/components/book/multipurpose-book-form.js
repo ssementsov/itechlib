@@ -8,7 +8,6 @@ import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
 import { PrimaryButton, StyledTextField } from '../../common/UI';
-import { CloseIcon } from '../../icons/close-icon';
 import { useTheme } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
 import { useSelector } from 'react-redux';
@@ -22,7 +21,7 @@ const createOptions = (option) => {
 };
 
 const MultipurposeBookForm = (props) => {
-    const { formik, title, buttonName, isSuggestForm, inEditMode = false, onClose } = props;
+    const { formik, title, buttonName, isSuggestForm, inEditMode = false } = props;
     const theme = useTheme();
     const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
@@ -57,7 +56,6 @@ const MultipurposeBookForm = (props) => {
                         },
                     }}
                 >
-                    <CloseIcon onClick={onClose} />
                 </Box>
             </Box>
 
@@ -173,7 +171,7 @@ const MultipurposeBookForm = (props) => {
                     </RadioGroup>
                 )}
 
-                {formik.values.status === bookStatus.inUse.name && (
+                {formik.values.status === bookStatus.inUse.name && !inEditMode && (
                     <HiddenForm formik={formik} />
                 )}
                 {!isSuggestForm && !inEditMode && <UploadBookCoverField formik={formik} />}
