@@ -79,7 +79,9 @@ const BookDetails = (props) => {
     const theme = useTheme();
     const corpEmail = localStorage.getItem('corpEmail');
     const isOwner = book.owner.corpEmail === corpEmail;
+    // TODO: need to refact
     const isCurrentUserReader = book.bookingInfoDto?.currentUserReader;
+    const [isAssigned, setAssigned] = useState(false);
     const inUseStatus = book.status.name === bookStatus.inUse.name;
     const roles = useSelector(state => state.user.user.roles);
     const isNoRoles = roles?.length === 0;
@@ -185,6 +187,7 @@ const BookDetails = (props) => {
         BookingsAPI.createBooking(booking)
             .then((res) => {
                 const { book, ...rest } = res.data;
+                setAssigned(true);
                 onUpdate(book);
                 onUpdateBookingInfo(rest);
                 setAssignButtonClose();
@@ -374,7 +377,8 @@ const BookDetails = (props) => {
                                         <TblCell>{titles.status}</TblCell>
                                         <TblCell>
                                             {inUseStatus ? (
-                                                <Tooltip disableHoverListener={!isOwner} title={statusTooltipTitle} placement='right'>
+                                                <Tooltip disableHoverListener={!isOwner} title={statusTooltipTitle}
+                                                         placement='right'>
                                                     <Typography
                                                         sx={{
                                                             width: 'fit-content',
@@ -384,7 +388,7 @@ const BookDetails = (props) => {
                                                         <InUseStatusBlock
                                                             isBookPreviewPage
                                                             currentBookingStatus={book.bookingInfoDto?.status || bookingInfo.status}
-                                                            bookingFinishDate={bookingInfo.finishDate}
+                                                            bookingFinishDate={book.bookingInfoDto?.bookingEndDate || bookingInfo.finishDate}
                                                             showInUseStatus={showInUseStatus}
                                                         />
                                                     </Typography>
@@ -414,7 +418,6 @@ const BookDetails = (props) => {
                         </Grid>
                     </Grid>
                 </CardContent>
-
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
                     <Button
                         onClick={() =>
@@ -426,7 +429,7 @@ const BookDetails = (props) => {
                     </Button>
                     {!isOwner && (
                         <>
-                            {isCurrentUserReader && !isDeclinedBookingStatus ? (
+                            {(isCurrentUserReader || isAssigned) && !isDeclinedBookingStatus ? (
                                 <>
                                     {isPendingAcceptanceStatus
                                         ? <PendingAcceptanceStatusButtons
