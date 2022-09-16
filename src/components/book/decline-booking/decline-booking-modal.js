@@ -9,21 +9,21 @@ import { isRequired, mustBeLessSymbols, mustBeMoreSymbols } from '../../../commo
 const DeclineBookingModal = (props) => {
     const { onDecline, onClose, open, isLoadingButton } = props;
 
-    const initValue = { declineReasone: '' };
+    const initValue = { declineReason: '' };
     const formik = useFormik({
         initialValues: initValue,
         validationSchema: Yup.object({
-            declineReasone: Yup.string()
+            declineReason: Yup.string()
                 .trim()
-                .min(10, mustBeMoreSymbols('Decline reasone', 10))
-                .max(250, mustBeLessSymbols('Decline reasone', 250))
-                .required(isRequired('Decline reasone')),
+                .min(10, mustBeMoreSymbols('Decline reason', 10))
+                .max(250, mustBeLessSymbols('Decline reason', 250))
+                .required(isRequired('Decline reason')),
         }),
         onSubmit: (values, actions) => {
             actions.resetForm({
                 values: initValue,
             });
-            onDecline(values.declineReasone)
+            onDecline(values.declineReason)
         },
     });
 
@@ -42,20 +42,20 @@ const DeclineBookingModal = (props) => {
             </Box>
             <form onSubmit={formik.handleSubmit}>
                 <StyledTextField
-                    error={Boolean(formik.touched.declineReasone && formik.errors.declineReasone)}
-                    helperText={formik.touched.declineReasone && formik.errors.declineReasone}
-                    label='Decline reasone*'
-                    name='declineReasone'
+                    error={Boolean(formik.touched.declineReason && formik.errors.declineReason)}
+                    helperText={formik.touched.declineReason && formik.errors.declineReason}
+                    label='Decline reason*'
+                    name='declineReason'
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.declineReasone}
+                    value={formik.values.declineReason}
                     multiline
                 />
                 <Box sx={{ py: 2 }}>
                     <PrimaryButton
                         loadingButton
                         loading={isLoadingButton}
-                        disabled={!formik.values.declineReasone}
+                        disabled={!formik.values.declineReason}
                         title='Submit'
                         type='submit'
                     />
