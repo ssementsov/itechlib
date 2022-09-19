@@ -3,10 +3,8 @@ package by.library.itechlibrary.service;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
-import by.library.itechlibrary.dto.booking.BookingDto;
-import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
-import by.library.itechlibrary.dto.booking.BookingResponseDto;
-import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.booking.*;
+import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
@@ -32,19 +30,21 @@ public interface BookingService {
 
     void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto);
 
-    BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
+    BookingWithCurrentUserReaderDto save(BookingDto bookingDto, Book book, long currentUserId);
 
     BookingDto update(BookingDto bookingDto, Book book, long readerId);
 
-    BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
+    BookingWithCurrentUserReaderDto updateFinishDate(long bookingId, long currentUserId, LocalDate newFinishDate);
 
     BookingResponseDto findById(long id);
 
     Booking findByIdWithoutMapping(long id);
 
-    Booking returnBooking(ReviewDto reviewDto, long id);
+    void returnBooking(ReviewDto reviewDto, long id);
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
+
+    BookingInfoDto getBookingInfoDtoFromBooking(Booking booking, long currentUserId);
 
     void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
 
@@ -59,4 +59,5 @@ public interface BookingService {
     int getCountActiveBookings(long readerId);
 
     BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId);
+
 }

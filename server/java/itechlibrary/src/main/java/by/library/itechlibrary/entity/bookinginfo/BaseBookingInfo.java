@@ -11,6 +11,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BaseBookingInfo {
 
-    private LocalDate bookingEndDate;
+    private LocalDate finishDate;
 
 }

@@ -7,10 +7,7 @@ import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
-import by.library.itechlibrary.dto.booking.BookingDto;
-import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
-import by.library.itechlibrary.dto.booking.BookingResponseDto;
-import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.booking.*;
 import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
@@ -70,17 +67,17 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto save(BookingDto bookingDto, Book book, long readerId) {
+    public BookingWithCurrentUserReaderDto save(BookingDto bookingDto, Book book, long currentUserId) {
 
         if (bookingDto.getId() == 0) {
 
             log.info("Try to map bookingDto and save booking.");
 
             Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
-            fillBookingFields(booking, book, readerId);
+            fillBookingFields(booking, book, currentUserId);
             booking = getSavedAndRefreshed(booking);
 
-            return bookingMapper.toNewBookingResponseDto(booking);
+            return bookingMapper.toBookingWithCurrentUserReaderDtoFromBooking(booking, currentUserId);
 
         } else {
 
@@ -195,32 +192,39 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
+    public BookingWithCurrentUserReaderDto updateFinishDate(long bookingId, long currentUserId, LocalDate newFinishDate) {
 
         Booking booking = findBookingById(bookingId);
         checkFinishDate(booking.getStartDate(), newFinishDate);
         booking.setFinishDate(newFinishDate);
         booking = bookingRepository.save(booking);
 
-        return bookingMapper.toNewBookingResponseDto(booking);
+        return bookingMapper.toBookingWithCurrentUserReaderDtoFromBooking(booking, currentUserId);
     }
 
     @Transactional
     @Override
-    public Booking returnBooking(ReviewDto reviewDto, long id) {
+    public void returnBooking(ReviewDto reviewDto, long id) {
 
         log.info("Try to return booking, make active is false.");
 
         Booking booking = findBookingById(id);
         tryToReturnBooking(reviewDto, id, booking);
 
-        return booking;
     }
 
     @Override
     public BookingInfo getBookingInfo(long bookId, long currentUserId) {
 
         return getBookingInfoForUserByBookId(bookId, currentUserId);
+    }
+
+    @Override
+    public BookingInfoDto getBookingInfoDtoFromBooking(Booking booking, long currentUserId) {
+
+        BookingInfo bookingInfo = checkAndBuildBookingInfo(booking, currentUserId);
+
+        return bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo);
     }
 
     @Override
@@ -273,7 +277,7 @@ public class BookingServiceImpl implements BookingService {
         if (bookingOptional.isPresent()) {
 
             BaseBookingInfo baseBookingInfo = new BaseBookingInfo();
-            baseBookingInfo.setBookingEndDate(bookingOptional.get().getFinishDate());
+            baseBookingInfo.setFinishDate(bookingOptional.get().getFinishDate());
 
             return baseBookingInfo;
 
@@ -386,7 +390,7 @@ public class BookingServiceImpl implements BookingService {
         checkAndSetCurrentUserIsReader(bookingInfo, booking.getReader().getId(), currentUserId);
         tryToSetCommentToBookingInfo(booking.getStatus().getName(), booking.getBook().getId(), bookingInfo);
         bookingInfo.setStatus(booking.getStatus());
-        bookingInfo.setBookingEndDate(booking.getFinishDate());
+        bookingInfo.setFinishDate(booking.getFinishDate());
 
         return bookingInfo;
     }

@@ -1,11 +1,8 @@
 package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.booking.BookingDto;
-import by.library.itechlibrary.dto.booking.BookingResponseDto;
-import by.library.itechlibrary.dto.booking.FeedbackResponseDto;
-import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.booking.*;
+import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.facade.BookingFacade;
 import by.library.itechlibrary.service.BookingService;
@@ -86,7 +83,7 @@ public class BookingController {
     @PostMapping
     @ApiOperation("create new booking")
     @ResponseStatus(HttpStatus.CREATED)
-    public BookingResponseDto addBook(@Valid @RequestBody BookingDto bookingDto) {
+    public BookingWithCurrentUserReaderDto addBook(@Valid @RequestBody BookingDto bookingDto) {
 
         return bookingFacade.save(bookingDto);
     }
@@ -95,7 +92,7 @@ public class BookingController {
     @PostMapping("/resolve-assigned")
     @ApiOperation("Accept or decline booking request by assigned reader")
     @ResponseStatus(HttpStatus.OK)
-    public FullBookDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
+    public BookingInfoDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
 
         return bookingFacade.resolveAssignedBooking(bookingAcceptanceDto);
     }
@@ -104,18 +101,18 @@ public class BookingController {
     @PutMapping("/finish-date")
     @ApiOperation("update booking finish date")
     @ResponseStatus(HttpStatus.OK)
-    public BookingResponseDto updateBookingFinishDate(@RequestParam("bookingId") long bookingId,
-                                                      @RequestParam("newFinishDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate newFinishDate) {
+    public BookingWithCurrentUserReaderDto updateBookingFinishDate(@RequestParam("bookingId") long bookingId,
+                                                                   @RequestParam("newFinishDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate newFinishDate) {
 
-        return bookingService.updateFinishDate(bookingId, newFinishDate);
+        return bookingFacade.updateFinishDate(bookingId, newFinishDate);
     }
 
     @PostMapping("/{id}/return")
     @ApiOperation("return book, make current booking not active")
-    @ResponseStatus(HttpStatus.CREATED)
-    public FullBookDto returnBookSetReview(@RequestBody ReviewDto reviewDto, @PathVariable("id") long bookingId) {
+    @ResponseStatus(HttpStatus.OK)
+    public void returnBookSetReview(@RequestBody ReviewDto reviewDto, @PathVariable("id") long bookingId) {
 
-      return bookingFacade.returnBookingAnfGetUpdatedBook(reviewDto, bookingId);
+        bookingService.returnBooking(reviewDto, bookingId);
     }
 
     @GetMapping("/feedback")

@@ -5,7 +5,7 @@ import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
-import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.BookingWithCurrentUserReaderDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
@@ -186,8 +186,8 @@ public class BookFacadeImpl implements BookFacade {
 
             BookingDto bookingDto = bookingService.tryGetBookingDto(bookingForUserDto, bookId);
             Book book = bookService.getById(bookId);
-            BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
-            Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
+            BookingWithCurrentUserReaderDto savedBooking = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
+            Booking booking = bookingService.findByIdWithoutMapping(savedBooking.getId());
 
             sendEmailAboutAcceptanceByReader(booking);
 

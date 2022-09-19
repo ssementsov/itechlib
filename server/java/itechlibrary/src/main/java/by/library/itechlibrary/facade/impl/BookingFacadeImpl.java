@@ -1,10 +1,9 @@
 package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
-import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
-import by.library.itechlibrary.dto.booking.BookingResponseDto;
-import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.booking.BookingWithCurrentUserReaderDto;
+import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.Template;
@@ -20,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static by.library.itechlibrary.constant.BookingStatusConstant.templateBookingStatusMap;
@@ -56,7 +56,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     @Override
     @Transactional
-    public BookingResponseDto save(BookingDto bookingDto) {
+    public BookingWithCurrentUserReaderDto save(BookingDto bookingDto) {
 
         long currentUserId = securityUserDetailsService.getCurrentUserId();
         Book book = bookService.getById(bookingDto.getBookId());
@@ -65,36 +65,31 @@ public class BookingFacadeImpl implements BookingFacade {
     }
 
     @Override
+    public BookingWithCurrentUserReaderDto updateFinishDate(long bookingId, LocalDate newFinishDate) {
+
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
+
+        return bookingService.updateFinishDate(bookingId, currentUserId, newFinishDate);
+    }
+
+    @Override
     @Transactional
-    public FullBookDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
+    public BookingInfoDto resolveAssignedBooking(BookingAcceptanceDto bookingAcceptanceDto) {
 
         bookingService.checkDtoForResolveAssignedBooking(bookingAcceptanceDto);
 
         long bookId = bookingAcceptanceDto.getBookId();
-        long readerId = securityUserDetailsService.getCurrentUserId();
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         Book book = bookService.getById(bookId);
         Booking booking = bookingService.findAwaitingConfirmationByBookId(bookId);
 
-        Booking resolveAssignedBooking = bookingService.resolveAssignedBooking(booking, book, bookingAcceptanceDto.getStatus(), readerId);
-        bookingAcceptanceService.save(bookingAcceptanceDto, book, readerId);
+        Booking resolveAssignedBooking = bookingService.resolveAssignedBooking(booking, book, bookingAcceptanceDto.getStatus(), currentUserId);
+        bookingAcceptanceService.save(bookingAcceptanceDto, book, currentUserId);
 
         sendEmailNotification(resolveAssignedBooking);
 
-        FullBookDto fullBookDto = bookService.getByIdFullVersion(bookId);
-        BookingInfo bookingInfo = bookingService.getBookingInfo(bookId, readerId);
-        fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
-
-        return fullBookDto;
-    }
-
-    @Override
-    public FullBookDto returnBookingAnfGetUpdatedBook(ReviewDto reviewDto, long id) {
-
-        Booking booking = bookingService.returnBooking(reviewDto, id);
-        long bookId = booking.getBook().getId();
-
-        return bookService.getByIdFullVersion(bookId);
+        return bookingService.getBookingInfoDtoFromBooking(resolveAssignedBooking, currentUserId);
     }
 
     private void sendEmailNotification(Booking booking) {

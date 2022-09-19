@@ -4,6 +4,7 @@ import by.library.itechlibrary.dto.BookingStatusDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
+import by.library.itechlibrary.dto.booking.BookingWithCurrentUserReaderDto;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.BookingStatus;
 import org.mapstruct.IterableMapping;
@@ -19,6 +20,10 @@ public interface BookingMapper {
     @Mapping(source = "book.id", target = "bookId")
     @Named(value = "booking")
     BookingDto toBookingDtoFromBooking(Booking booking);
+
+    @Mapping(source = "booking.book.id", target = "bookId")
+    @Mapping(target = "currentUserReader", expression = "java(booking.getReader().getId()==currentUserId)")
+    BookingWithCurrentUserReaderDto toBookingWithCurrentUserReaderDtoFromBooking(Booking booking, long currentUserId);
 
     @Mapping(source = "bookId", target = "book.id")
     @Named(value = "BookingDto")

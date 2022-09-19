@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BaseBookingInfoDto {
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private LocalDate bookingEndDate;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate finishDate;
 
 }
