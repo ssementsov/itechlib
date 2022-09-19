@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Card, Modal } from '@mui/material';
 import PropTypes from 'prop-types';
-import { CloseIcon } from '../icons/close-icon';
+import { CloseIcon } from '../../../icons/close-icon';
 import { useTheme } from '@mui/material/styles';
 
 const style = {
@@ -27,8 +27,8 @@ const style = {
     },
 };
 
-const StyledModal = (props) => {
-    const { open, onClose, children, isSticky = false, ...prop } = props;
+export const StyledModal = (props) => {
+    const { open, onClose, children, isSticky = false, isCloseIconHidden = false, ...prop } = props;
     const theme = useTheme();
 
     return (
@@ -42,20 +42,18 @@ const StyledModal = (props) => {
                     sx={{
                         position: 'absolute',
                         cursor: 'pointer',
-                        right: 22,
-                        top: 22,
-                        zIndex: theme.zIndex.modal + 1
+                        right: 16,
+                        top: 16,
+                        zIndex: theme.zIndex.modal + 1,
                     }}
                 >
-                    <CloseIcon onClick={onClose} />
+                    {!isCloseIconHidden && <CloseIcon onClick={onClose} />}
                 </Box>
                 {children}
             </Card>
         </Modal>
     );
 };
-
-export default StyledModal;
 
 StyledModal.propTypes = {
     open: PropTypes.bool.isRequired,

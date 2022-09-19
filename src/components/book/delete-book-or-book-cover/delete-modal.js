@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
-import StyledModal from '../../styled-modal';
-import { PrimaryButton, SecondaryButton } from '../../../common/UI';
+import { PrimaryButton, SecondaryButton, StyledModal } from '../../../common/UI';
 import { useSelector } from 'react-redux';
 
 const DeleteModal = (props) => {
@@ -10,7 +9,7 @@ const DeleteModal = (props) => {
     const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
     return (
-        <StyledModal open={open} onClose={onClose}>
+        <StyledModal open={open} onClose={onClose} isCloseIconHidden>
             <Box sx={{ my: 3 }}>
                 <Typography color="textPrimary" variant="h4" textAlign="center">
                     Are you sure you want to delete the {title}?

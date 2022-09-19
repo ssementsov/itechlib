@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { WarningModalText } from './warning-modal-text';
-import StyledModal from '../../../components/styled-modal';
+import { StyledModal } from './styled-modal';
 
 export const BlockingModal = (props) => {
     const { open, onClose } = props;

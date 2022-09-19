@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import StyledModal from '../../styled-modal';
+import { StyledModal } from '../../../common/UI';
 import AddEditSuggestedBookFormBox from './add-edit-suggested-book-form-box';
 import { types } from '../../../types';
 

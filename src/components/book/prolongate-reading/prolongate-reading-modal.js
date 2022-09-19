@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledModal from '../../styled-modal';
+import { DatePeriodForm, StyledModal } from '../../../common/UI';
 import { useFormik } from 'formik';
-import { DatePeriodForm } from '../../../common/UI/date-period-form/date-period-form';
 import { add, parseISO } from 'date-fns';
 import { isRequired } from '../../../common/constants';
 

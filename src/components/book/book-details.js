@@ -281,7 +281,7 @@ const BookDetails = (props) => {
         setBlockingModalClose,
         handleBlockingOrAction,
     } = useOverdueBookingBlocking();
-console.log(book.bookingInfoDto?.bookingEndDate, bookingInfo.finishDate)
+
     return (
         <>
             <EditBookModal

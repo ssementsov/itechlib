@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StyledModal from '../../styled-modal';
+import { StyledModal } from '../../../common/UI';
 import { AssignBookAllowed } from './assign-book-allowed';
 import { AssignBookRejected } from './assign-book-rejected';
 

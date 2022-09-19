@@ -8,6 +8,7 @@ export {DatePeriodForm} from './date-period-form/date-period-form';
 // modals
 export {BlockingModal} from './modals/blocking-modal';
 export {WarningModalText} from './modals/warning-modal-text';
+export {StyledModal} from './modals/styled-modal';
 // loading progress
 export {ProgressLinear} from './progressLinear';
 export {ProgressSpinner} from './progressSpinner';

@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
-import StyledModal from '../styled-modal';
+import { PrimaryButton, SecondaryButton, StyledModal } from '../../common/UI';
 import SelectFileButton from '../common/select-file-button';
 import { theme } from '../../theme/index';
-import { PrimaryButton, SecondaryButton } from '../../common/UI';
 import { useSelector } from 'react-redux';
 
 const SelectImageModal = (props) => {

@@ -3,8 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, FormControlLabel, Rating, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import StyledModal from '../../styled-modal';
-import { PrimaryButton, SecondaryButton } from '../../../common/UI';
+import { PrimaryButton, SecondaryButton, StyledModal } from '../../../common/UI';
 import {
     mustBeLessSymbols,
     mustBeMoreSymbols,

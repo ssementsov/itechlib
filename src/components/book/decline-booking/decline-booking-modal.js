@@ -1,6 +1,5 @@
-import StyledModal from '../../styled-modal';
+import { PrimaryButton, StyledModal, StyledTextField } from '../../../common/UI';
 import { Box, Typography } from '@mui/material';
-import { PrimaryButton, StyledTextField } from '../../../common/UI';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
