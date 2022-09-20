@@ -531,10 +531,8 @@ public class BookingServiceImpl implements BookingService {
     private void checkAndSetStartDate(Booking booking) {
 
         LocalDate currentDate = LocalDate.now();
-        String bookingStatusName = booking.getStatus().getName();
 
-        if (bookingStatusName.equals(BookingStatusConstant.NOT_REQUIRE_CONFIRMATION) &&
-                (booking.getStartDate() == null || !booking.getStartDate().isEqual(currentDate))) {
+        if (booking.getStartDate() == null || !booking.getStartDate().isEqual(currentDate)) {
 
             booking.setStartDate(currentDate);
 
