@@ -37,7 +37,7 @@ const AddEditBookFormBox = (props) => {
             link: book.link,
             status: book.status.name,
             reader: '',
-            startDate: null,
+            startDate: new Date(),
             finishDate: null,
         };
     } else {
@@ -50,7 +50,7 @@ const AddEditBookFormBox = (props) => {
             link: '',
             status: 'AVAILABLE',
             reader: '',
-            startDate: null,
+            startDate: new Date(),
             finishDate: null,
         };
     }
@@ -78,9 +78,6 @@ const AddEditBookFormBox = (props) => {
         if (value.status === bookStatus.inUse.name) {
             if (!value.reader) {
                 error.reader = isRequired('Reader');
-            }
-            if (!value.startDate) {
-                error.startDate = isRequired('Date');
             }
             if (!value.finishDate) {
                 error.finishDate = isRequired('Date');

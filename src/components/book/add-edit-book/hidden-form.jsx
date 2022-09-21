@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Box, MenuItem, TextField, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-import { add, sub } from 'date-fns';
+import { add } from 'date-fns';
 import { ReadOnlyDatePicker } from '../../../common/UI/read-only-date-picker';
 
 const createReadersSelectorOptions = (reader, user) => {
@@ -19,7 +19,7 @@ const createReadersSelectorOptions = (reader, user) => {
         </MenuItem>
     );
 };
-export const minDate = sub(new Date(), { years: 1 });
+
 export const maxDate = add(new Date(), { months: 1 });
 
 const HiddenForm = ({ formik }) => {
@@ -29,11 +29,9 @@ const HiddenForm = ({ formik }) => {
 
     useEffect(() => {
         formik.setFieldValue('reader', '');
-        formik.setFieldValue('startDate', null);
         formik.setFieldValue('finishDate', null);
 
         formik.setFieldTouched('reader', false, false);
-        formik.setFieldTouched('startDate', false, false);
         formik.setFieldTouched('finishDate', false, false);
     }, []);
 
@@ -88,14 +86,9 @@ const HiddenForm = ({ formik }) => {
                     In use*
                 </Typography>
                 <ReadOnlyDatePicker
-                    onChange={(value) => {
-                        formik.setFieldValue('startDate', value);
-                    }}
                     datePickerProps={{
-                        minDate: minDate,
-                        maxDate: new Date(),
+                        disabled: true,
                         name: 'startDate',
-                        value: formik.values.startDate,
                         label: 'from',
                         PaperProps: { sx: { mb: '-50px' } },
                     }}

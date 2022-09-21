@@ -36,9 +36,6 @@ export const DatePeriodForm = (props) => {
             <form onSubmit={formik.handleSubmit}>
                 <BoxForDate>
                     <ReadOnlyDatePicker
-                        onChange={(value) => {
-                            formik.setFieldValue('startDate', value);
-                        }}
                         datePickerProps={{
                             disabled: true,
                             name: 'startDate',
