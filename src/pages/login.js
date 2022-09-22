@@ -34,8 +34,8 @@ const Login = () => {
                     localStorage.setItem('token', res.data.token);
                     api.setupAuth(res.data.token);
 
-                    if(redirectPath) {
-                        router.replace(redirectPath)
+                    if (redirectPath) {
+                        router.replace(redirectPath);
                     } else {
                         router.replace(MAIN_CATALOGUE_PATH);
 
@@ -48,7 +48,7 @@ const Login = () => {
                     }
                 })
                 .catch(() => defaultErrorSnackbar())
-                .finally(() => dispatch(setLoadingButton(false)))
+                .finally(() => dispatch(setLoadingButton(false)));
         } else {
             setCorrectEmail(false);
         }
@@ -88,7 +88,7 @@ const Login = () => {
                 <title>Login</title>
             </Head>
             <Box
-                component="main"
+                component='main'
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
@@ -97,7 +97,7 @@ const Login = () => {
                 }}
             >
                 <Container
-                    maxWidth="sm"
+                    maxWidth='sm'
                     sx={{
                         border: '1px solid #838E9F',
                         boxShadow: '2px 2px 4px #838E9F',
@@ -105,32 +105,23 @@ const Login = () => {
                     }}
                 >
                     <form>
-                        <Box
-                            sx={{
-                                my: 4,
-                                textAlign: 'center',
-                            }}
-                        >
-                            <Typography color="textPrimary" variant="h4">
+                        <Box sx={{ my: 4, textAlign: 'center' }}>
+                            <Typography color='textPrimary' variant='h4'>
                                 Log in with Google account
                             </Typography>
                             {isRegistered && (
                                 <Typography
                                     color={'textPrimary'}
-                                    variant="body1"
-                                    sx={{
-                                        mt: 5,
-                                    }}
+                                    variant='body1'
+                                    sx={{ mt: 5 }}
                                 >
                                     Your Google account has been confirmed successfully
                                 </Typography>
                             )}
                             <Typography
                                 color={correctEmail ? 'textPrimary' : theme.palette.error.main}
-                                variant="body1"
-                                sx={{
-                                    mt: 5,
-                                }}
+                                variant='body1'
+                                sx={{ mt: 5 }}
                             >
                                 {correctEmail
                                     ? ''
@@ -140,10 +131,7 @@ const Login = () => {
                         <Grid
                             container
                             spacing={3}
-                            sx={{
-                                mt: 4,
-                                mb: 5,
-                            }}
+                            sx={{ mt: 4, mb: 5 }}
                         >
                             <Grid item xs={12} md={12}>
                                 <GoogleLogin
@@ -152,7 +140,7 @@ const Login = () => {
                                         <PrimaryButton
                                             loadingButton
                                             loading={isLoadingButton}
-                                            color="error"
+                                            color='error'
                                             title={'Log in with Google'}
                                             type='submit'
                                             onClick={renderProps.onClick}
