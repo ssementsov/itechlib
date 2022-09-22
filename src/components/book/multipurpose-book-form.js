@@ -7,7 +7,7 @@ import { statuses } from './add-edit-book/datas-for-form-options/statuses';
 import HiddenForm from './add-edit-book/hidden-form';
 import { bookStatus } from '../../common/constants';
 import { UploadBookCoverField } from './upload-book-cover-field';
-import { PrimaryButton, StyledTextField } from '../../common/UI';
+import { NoAutocompleteForm, PrimaryButton, StyledTextField } from '../../common/UI';
 import { useTheme } from '@mui/material/styles';
 import Radio from '@mui/material/Radio';
 import { useSelector } from 'react-redux';
@@ -59,7 +59,7 @@ const MultipurposeBookForm = (props) => {
                 </Box>
             </Box>
 
-            <form onSubmit={formik.handleSubmit}>
+            <NoAutocompleteForm onSubmit={formik.handleSubmit}>
                 <StyledTextField
                     error={Boolean(formik.touched.title && formik.errors.title)}
                     helperText={formik.touched.title && formik.errors.title}
@@ -183,7 +183,7 @@ const MultipurposeBookForm = (props) => {
                         type='submit'
                     />
                 </Box>
-            </form>
+            </NoAutocompleteForm>
         </>
     );
 };

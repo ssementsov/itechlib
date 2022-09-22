@@ -14,7 +14,7 @@ import {
     mustBeMoreSymbols,
 } from '../common/constants';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
-import { PrimaryButton } from '../common/UI';
+import { NoAutocompleteForm, PrimaryButton } from '../common/UI';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLoadingButton } from '../store/reducers';
@@ -151,8 +151,8 @@ const Register = () => {
                         borderRadius: '25px',
                     }}
                 >
-                    <form onSubmit={formik.handleSubmit}>
-                        <Box sx={{ mt: 3, mb: 3 }} >
+                    <NoAutocompleteForm onSubmit={formik.handleSubmit}>
+                        <Box sx={{ mt: 3, mb: 3 }}>
                             <Typography
                                 color='textPrimary'
                                 variant='h4'
@@ -189,7 +189,7 @@ const Register = () => {
                                 disabled={disabledCorp}
                             />
                         </Box>
-                    </form>
+                    </NoAutocompleteForm>
                     <Box sx={{ mt: 1, mb: 6 }}>
                         <GoogleLogin
                             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}

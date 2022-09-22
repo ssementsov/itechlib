@@ -1,4 +1,4 @@
-import { PrimaryButton, StyledModal, StyledTextField } from '../../../common/UI';
+import { NoAutocompleteForm, PrimaryButton, StyledModal, StyledTextField } from '../../../common/UI';
 import { Box, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
@@ -39,7 +39,7 @@ const DeclineBookingModal = (props) => {
                     Decline the book
                 </Typography>
             </Box>
-            <form onSubmit={formik.handleSubmit}>
+            <NoAutocompleteForm onSubmit={formik.handleSubmit}>
                 <StyledTextField
                     error={Boolean(formik.touched.declineReason && formik.errors.declineReason)}
                     helperText={formik.touched.declineReason && formik.errors.declineReason}
@@ -59,7 +59,7 @@ const DeclineBookingModal = (props) => {
                         type='submit'
                     />
                 </Box>
-            </form>
+            </NoAutocompleteForm>
         </StyledModal>
     );
 };

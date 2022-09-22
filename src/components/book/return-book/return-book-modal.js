@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, FormControlLabel, Rating, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { PrimaryButton, SecondaryButton, StyledModal } from '../../../common/UI';
+import { NoAutocompleteForm, PrimaryButton, SecondaryButton, StyledModal } from '../../../common/UI';
 import {
     mustBeLessSymbols,
     mustBeMoreSymbols,
@@ -61,12 +61,12 @@ const ReturnBookModal = (props) => {
             feedback: Yup.string()
                 .trim()
                 .min(10, mustBeMoreSymbols('Feedback', 10))
-                .max(250, mustBeLessSymbols('Feedback', 250))
+                .max(250, mustBeLessSymbols('Feedback', 250)),
         }),
         validate: (value) => {
             let error = {};
             if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.feedback)) {
-                error.feedback =  ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+                error.feedback = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
             }
             return error;
         },
@@ -85,7 +85,7 @@ const ReturnBookModal = (props) => {
                     Please leave your feedback
                 </Typography>
             </Box>
-            <form onSubmit={formik.handleSubmit}>
+            <NoAutocompleteForm onSubmit={formik.handleSubmit}>
                 <Box sx={{ mt: '50px' }}>
                     <FormControlLabel
                         label='Please rate the book'
@@ -133,7 +133,7 @@ const ReturnBookModal = (props) => {
                         disabled={isDisabledSkip}
                     />
                 </Box>
-            </form>
+            </NoAutocompleteForm>
         </StyledModal>
     );
 };
