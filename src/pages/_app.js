@@ -1,11 +1,10 @@
 import Head from 'next/head';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, Slide } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from '../theme';
 import { SnackbarProvider } from 'notistack';
-import { Slide } from '@mui/material';
 import { Provider } from 'react-redux';
 import { setupStore } from '../store/store';
 

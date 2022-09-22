@@ -99,6 +99,9 @@ export const theme = createTheme({
                     height: '100%',
                     width: '100%',
                 },
+                input: {
+                    boxShadow: '0 0 0 30px #FFF inset !important',
+                }
             },
         },
         MuiOutlinedInput: {

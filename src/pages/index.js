@@ -149,6 +149,7 @@ const Register = () => {
                         border: '1px solid #838E9F',
                         boxShadow: '2px 2px 4px #838E9F',
                         borderRadius: '25px',
+                        background: '#FFF'
                     }}
                 >
                     <NoAutocompleteForm onSubmit={formik.handleSubmit}>
