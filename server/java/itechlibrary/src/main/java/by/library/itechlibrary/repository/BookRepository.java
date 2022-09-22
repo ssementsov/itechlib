@@ -32,7 +32,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @EntityGraph(attributePaths = {"language", "status", "category", "owner", "owner.roles", "fileInfo"})
     @Query("select distinct book from Book book" +
             " left join book.bookings booking where booking.isActive = true " +
-            "and booking.reader.id = :readerId")
-    List<Book> findAllActiveBooksByReaderId(long readerId);
+            "and booking.reader.id = :readerId and booking.status.name <> 'DECLINED'")
+    List<Book> findAllNotDeclinedActiveBooksByReaderId(long readerId);
 
 }

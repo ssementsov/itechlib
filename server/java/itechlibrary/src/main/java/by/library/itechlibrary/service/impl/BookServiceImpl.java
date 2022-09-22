@@ -119,7 +119,7 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to get current users books.");
 
-        List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
+        List<Book> currentBooks = bookRepository.findAllNotDeclinedActiveBooksByReaderId(currentUserId);
 
         return bookMapper.mapToResponseOwnBookDtoList(currentBooks);
     }
