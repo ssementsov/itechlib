@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -15,6 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"confirmationData"})
+@EqualsAndHashCode(exclude = {"user"})
 public class User {
 
     @Id

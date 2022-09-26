@@ -1,9 +1,6 @@
 package by.library.itechlibrary.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"user"})
+@EqualsAndHashCode(exclude = {"user"})
 public class ConfirmationData {
 
     @Id
