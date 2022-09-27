@@ -2,11 +2,7 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
-import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.ConfirmationData;
-import by.library.itechlibrary.entity.Template;
-import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.entity.UserRole;
+import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
@@ -22,7 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -59,20 +56,15 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         log.info("Get all active bookings where date is overdue.");
 
-        List<Booking> bookings = bookingRepository.findAllByFinishDateBeforeAndActiveIsTrue(UserRoleConstant.BOOK_READER_ROLE);
+        List<Booking> bookings = bookingRepository.findOverdueBookingsByUsersRole(UserRoleConstant.BOOK_READER_ROLE);
+        Map<User, List<Booking>> userBookingsMap = getUserBookingsMap(bookings);
 
-        if (!bookings.isEmpty()) {
+        userBookingsMap.keySet().forEach(user -> {
 
-            bookings.forEach(booking -> {
+            sendBookingOverdueMailNotifications(userBookingsMap.get(user));
+            removeUsersRole(user, UserRoleConstant.BOOK_READER_ROLE);
 
-                if (checkAndDeleteRole(booking)) {
-
-                    fillTemplateAndSentEmailNotification(booking, MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME);
-
-                }
-            });
-
-        }
+        });
 
         log.info("Get all active bookings where date is overdue.");
 
@@ -86,7 +78,7 @@ public class SchedulerServiceImpl implements SchedulerService {
         log.info("Try to find bookings and send remind notifications to readers");
 
         LocalDate maxFinishDate = LocalDate.now().plusDays(3);
-        List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(maxFinishDate);
+        List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAndActiveIsTrueAndAssignmentStatuses(maxFinishDate);
         bookings.forEach(this::getTemplateAndSendNotification);
 
     }
@@ -110,21 +102,23 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
-    private boolean checkAndDeleteRole(Booking booking) {
+    private Map<User, List<Booking>> getUserBookingsMap(List<Booking> bookings) {
 
-        Set<UserRole> roles = booking.getReader().getRoles();
+        return bookings.stream()
+                .collect(
+                        Collectors.groupingBy(Booking::getReader, Collectors.toList())
+                );
+    }
 
-        log.info("Check roles and delete if user has book reader role.");
+    private void removeUsersRole(User user, UserRole role) {
+        user.getRoles().remove(role);
+    }
 
-        if (roles.contains(UserRoleConstant.BOOK_READER_ROLE)) {
+    private void sendBookingOverdueMailNotifications(List<Booking> bookings) {
 
-            roles.remove(UserRoleConstant.BOOK_READER_ROLE);
-            booking.getReader().setRoles(roles);
-            return true;
-
-        }
-
-        return false;
+        bookings.forEach(booking ->
+                fillTemplateAndSentEmailNotification(booking, MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME)
+        );
     }
 
     private void checkAndDelete(List<ConfirmationData> confirmationDataList) {

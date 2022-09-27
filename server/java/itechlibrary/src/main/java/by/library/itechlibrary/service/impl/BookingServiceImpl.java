@@ -6,6 +6,7 @@ import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -224,7 +225,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
+    public void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
 
         if (optionalBooking.isPresent()) {
 
@@ -237,12 +238,23 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void fillBookWithBookingInfo(WithBookingInfoBookDto book) {
+    public void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto bookDto) {
 
-        if (book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
-            BookingInfo bookingInfo = getBookingInfoForUserByBookId(book.getId(), book.getOwner().getId());
-            book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), bookDto.getOwner().getId());
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+    }
+
+    @Override
+    public void trySetBookingInfoToFullBookDto(FullBookDto bookDto) {
+
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), bookDto.getOwner().getId());
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }
     }
@@ -343,15 +355,22 @@ public class BookingServiceImpl implements BookingService {
     private void checkAndSetUserRoles(Booking booking) {
 
         Set<UserRole> roles = booking.getReader().getRoles();
-        int countOfOverdueBookings = bookingRepository.findByReaderIdAndFinishDateBeforeAndActiveIsTrue(booking.getReader().getId());
+        List<Booking> overdueBookings = bookingRepository.findOverdueBookingsByReaderId(booking.getReader().getId());
 
-        if (!(roles.contains(UserRoleConstant.BOOK_READER_ROLE)) &&
-                countOfOverdueBookings == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS) {
+        boolean isCurrentBookingOverdue = overdueBookings.stream()
+                .anyMatch(overdueBooking -> overdueBooking.getId() == booking.getId());
 
-            roles.add(UserRoleConstant.BOOK_READER_ROLE);
-            booking.getReader().setRoles(roles);
+        if (overdueBookings.size() == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS && isCurrentBookingOverdue
+                && !(roles.contains(UserRoleConstant.BOOK_READER_ROLE))) {
+
+            setRoleToUser(booking.getReader(), UserRoleConstant.BOOK_READER_ROLE, roles);
 
         }
+    }
+
+    private void setRoleToUser(User user, UserRole role, Set<UserRole> roles) {
+        roles.add(role);
+        user.setRoles(roles);
     }
 
     private BookingInfo getBookingInfoForUserByBookId(long bookId, long currentUserId) {

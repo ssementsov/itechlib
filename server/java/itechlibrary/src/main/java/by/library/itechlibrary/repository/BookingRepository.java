@@ -44,17 +44,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b.rate from Booking b where b.book.id = :bookId and b.rate <> 0")
     List<Short> getRatesByBookId(Long bookId);
 
-    @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true")
-    List<Booking> findAllByFinishDateBeforeAndActiveIsTrue(UserRole role);
+    @EntityGraph(attributePaths = {"reader", "reader.roles"})
+    @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.status.name " +
+            "not in('DECLINED','AWAITING CONFIRMATION') and :role member of b.reader.roles")
+    List<Booking> findOverdueBookingsByUsersRole(UserRole role);
 
-    @Query("select count(b) from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.reader.id = :readerId")
-    int findByReaderIdAndFinishDateBeforeAndActiveIsTrue(long readerId);
+    @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.reader.id = :readerId " +
+            "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")
+    List<Booking> findOverdueBookingsByReaderId(long readerId);
 
     @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId")
     int findCountByReaderIdAndActiveIsTrue(long readerId);
 
-    @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true")
-    List<Booking> findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(LocalDate maximumFinishDate);
+    @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true " +
+            "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")
+    List<Booking> findAllByFinishDateLessOnThreeDaysAndActiveIsTrueAndAssignmentStatuses(LocalDate maximumFinishDate);
 
     @Modifying
     @Query("update Booking b set b.isActive = :isActive where b.id = :id")
