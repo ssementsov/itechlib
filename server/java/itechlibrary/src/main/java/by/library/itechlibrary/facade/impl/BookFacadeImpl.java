@@ -8,7 +8,6 @@ import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.*;
-import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.mapper.BookingMapper;
@@ -92,7 +91,7 @@ public class BookFacadeImpl implements BookFacade {
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         List<WithBookingInfoBookDto> ownersBooks = bookService.getOwnersBook(parameterInfoDto, currentUserId);
-        ownersBooks.forEach(bookingService::fillBookWithBookingInfo);
+        ownersBooks.forEach(bookingService::tryFillBookWithBookingDtoWithBookingInfo);
 
         return ownersBooks;
     }
@@ -125,7 +124,7 @@ public class BookFacadeImpl implements BookFacade {
         }
 
         FullBookDto fullBookDto = bookUpdatedInfo.getFullBookDto();
-        tryFillFullBookDtoWithBookingInfo(fullBookDto, currentUserId);
+        bookingService.tryFillFullBookDtoWithBookingInfo(fullBookDto);
 
         return fullBookDto;
     }
@@ -135,8 +134,7 @@ public class BookFacadeImpl implements BookFacade {
     public FullBookDto getByIdFullVersion(long id) {
 
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
-        long currentUserId = securityUserDetailsService.getCurrentUserId();
-        tryFillFullBookDtoWithBookingInfo(fullBookDto, currentUserId);
+        bookingService.tryFillFullBookDtoWithBookingInfo(fullBookDto);
 
         return fullBookDto;
     }
@@ -171,17 +169,6 @@ public class BookFacadeImpl implements BookFacade {
         }
 
         return Optional.empty();
-    }
-
-    private void tryFillFullBookDtoWithBookingInfo(FullBookDto fullBookDto, long currentUserId) {
-
-        if (fullBookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
-
-            BookingInfo bookingInfo = bookingService.getBookingInfo(fullBookDto.getId(), currentUserId);
-            fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
-
-        }
-
     }
 
     private Optional<Booking> tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {

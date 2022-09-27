@@ -6,6 +6,7 @@ import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -237,12 +238,23 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void fillBookWithBookingInfo(WithBookingInfoBookDto book) {
+    public void tryFillBookWithBookingDtoWithBookingInfo(WithBookingInfoBookDto bookDto) {
 
-        if (book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
-            BookingInfo bookingInfo = getBookingInfoForUserByBookId(book.getId(), book.getOwner().getId());
-            book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), bookDto.getOwner().getId());
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+    }
+
+    @Override
+    public void tryFillFullBookDtoWithBookingInfo(FullBookDto bookDto){
+
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), bookDto.getOwner().getId());
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }
     }
