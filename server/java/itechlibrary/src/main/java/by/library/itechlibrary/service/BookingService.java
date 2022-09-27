@@ -47,13 +47,13 @@ public interface BookingService {
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 
-    void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
+    void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
 
-    void tryFillBookWithBookingDtoWithBookingInfo(WithBookingInfoBookDto book);
+    void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto book);
 
     void disableCurrentBooking(long bookId);
 
-    void tryFillFullBookDtoWithBookingInfo(FullBookDto bookDto);
+    void trySetBookingInfoToFullBookDto(FullBookDto bookDto);
 
     void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName);
 

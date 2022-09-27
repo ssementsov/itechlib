@@ -225,7 +225,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
+    public void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
 
         if (optionalBooking.isPresent()) {
 
@@ -238,7 +238,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void tryFillBookWithBookingDtoWithBookingInfo(WithBookingInfoBookDto bookDto) {
+    public void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto bookDto) {
 
         if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
@@ -249,7 +249,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void tryFillFullBookDtoWithBookingInfo(FullBookDto bookDto){
+    public void trySetBookingInfoToFullBookDto(FullBookDto bookDto) {
 
         if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
