@@ -124,7 +124,10 @@ public class BookFacadeImpl implements BookFacade {
 
         }
 
-        return bookUpdatedInfo.getFullBookDto();
+        FullBookDto fullBookDto = bookUpdatedInfo.getFullBookDto();
+        tryFillFullBookDtoWithBookingInfo(fullBookDto, currentUserId);
+
+        return fullBookDto;
     }
 
     @Override
@@ -132,16 +135,8 @@ public class BookFacadeImpl implements BookFacade {
     public FullBookDto getByIdFullVersion(long id) {
 
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
-
         long currentUserId = securityUserDetailsService.getCurrentUserId();
-        String bookStatusName = fullBookDto.getStatus().getName();
-
-        if (bookStatusName.equals(BookStatusConstant.IN_USE)) {
-
-            BookingInfo bookingInfo = bookingService.getBookingInfo(id, currentUserId);
-            fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
-
-        }
+        tryFillFullBookDtoWithBookingInfo(fullBookDto, currentUserId);
 
         return fullBookDto;
     }
@@ -176,6 +171,17 @@ public class BookFacadeImpl implements BookFacade {
         }
 
         return Optional.empty();
+    }
+
+    private void tryFillFullBookDtoWithBookingInfo(FullBookDto fullBookDto, long currentUserId) {
+
+        if (fullBookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = bookingService.getBookingInfo(fullBookDto.getId(), currentUserId);
+            fullBookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+
     }
 
     private Optional<Booking> tryCreateBookingForAcceptanceByReader(BookingForTargetReaderDto bookingForUserDto, String bookStatusName, long bookId) {
