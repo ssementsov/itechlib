@@ -238,22 +238,22 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto bookDto) {
+    public void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto bookDto, long currentUserId) {
 
         if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
-            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), bookDto.getOwner().getId());
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), currentUserId);
             bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }
     }
 
     @Override
-    public void trySetBookingInfoToFullBookDto(FullBookDto bookDto) {
+    public void trySetBookingInfoToFullBookDto(FullBookDto bookDto, long currentUserId) {
 
         if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
-            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), bookDto.getOwner().getId());
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), currentUserId);
             bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }

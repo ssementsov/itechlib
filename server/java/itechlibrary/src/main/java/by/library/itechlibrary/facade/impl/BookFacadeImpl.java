@@ -91,7 +91,7 @@ public class BookFacadeImpl implements BookFacade {
         long currentUserId = securityUserDetailsService.getCurrentUserId();
 
         List<WithBookingInfoBookDto> ownersBooks = bookService.getOwnersBook(parameterInfoDto, currentUserId);
-        ownersBooks.forEach(bookingService::trySetBookingInfoToBookWithBookingDto);
+        ownersBooks.forEach(book -> bookingService.trySetBookingInfoToBookWithBookingDto(book, currentUserId));
 
         return ownersBooks;
     }
@@ -124,7 +124,7 @@ public class BookFacadeImpl implements BookFacade {
         }
 
         FullBookDto fullBookDto = bookUpdatedInfo.getFullBookDto();
-        bookingService.trySetBookingInfoToFullBookDto(fullBookDto);
+        bookingService.trySetBookingInfoToFullBookDto(fullBookDto, currentUserId);
 
         return fullBookDto;
     }
@@ -133,8 +133,9 @@ public class BookFacadeImpl implements BookFacade {
     @Transactional
     public FullBookDto getByIdFullVersion(long id) {
 
+        long currentUserId = securityUserDetailsService.getCurrentUserId();
         FullBookDto fullBookDto = bookService.getByIdFullVersion(id);
-        bookingService.trySetBookingInfoToFullBookDto(fullBookDto);
+        bookingService.trySetBookingInfoToFullBookDto(fullBookDto, currentUserId);
 
         return fullBookDto;
     }
