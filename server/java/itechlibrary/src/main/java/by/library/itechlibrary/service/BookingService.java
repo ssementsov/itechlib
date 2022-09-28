@@ -49,11 +49,11 @@ public interface BookingService {
 
     void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
 
-    void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto book);
+    void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto book, long currentUserId);
 
     void disableCurrentBooking(long bookId);
 
-    void trySetBookingInfoToFullBookDto(FullBookDto bookDto);
+    void trySetBookingInfoToFullBookDto(FullBookDto bookDto, long currentUserId);
 
     void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName);
 
