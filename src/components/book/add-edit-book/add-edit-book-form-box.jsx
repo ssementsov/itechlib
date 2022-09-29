@@ -23,7 +23,7 @@ const StyledBox = styled(Box)({
 });
 
 const AddEditBookFormBox = (props) => {
-    const { onCreate, onEdit, title, buttonName, book, ...rest } = props;
+    const { onCreate, onEdit, title, buttonName, book, inEditMode } = props;
     let newBook;
 
     if (book) {
@@ -75,7 +75,7 @@ const AddEditBookFormBox = (props) => {
         if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
             error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
-        if (value.status === bookStatus.inUse.name) {
+        if (value.status === bookStatus.inUse.name && !inEditMode) {
             if (!value.reader) {
                 error.reader = isRequired('Reader');
             }
@@ -124,18 +124,20 @@ const AddEditBookFormBox = (props) => {
                 formik={formik}
                 title={title}
                 buttonName={buttonName}
-                {...rest}
+                inEditMode={inEditMode}
+                currentBookStatus={book?.status.name}
             />
         </StyledBox>
     );
 };
 
 AddEditBookFormBox.propTypes = {
-    createBook: PropTypes.func,
+    onCreate: PropTypes.func,
     onEdit: PropTypes.func,
     title: PropTypes.string,
     buttonName: PropTypes.string,
     book: types.bookTypes,
+    inEditMode: PropTypes.bool
 };
 
 export default AddEditBookFormBox;

@@ -6,6 +6,7 @@ import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -224,7 +225,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
+    public void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
 
         if (optionalBooking.isPresent()) {
 
@@ -237,12 +238,23 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public void fillBookWithBookingInfo(WithBookingInfoBookDto book) {
+    public void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto bookDto, long currentUserId) {
 
-        if (book.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
 
-            BookingInfo bookingInfo = getBookingInfoForUserByBookId(book.getId(), book.getOwner().getId());
-            book.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), currentUserId);
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+    }
+
+    @Override
+    public void trySetBookingInfoToFullBookDto(FullBookDto bookDto, long currentUserId) {
+
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), currentUserId);
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
 
         }
     }

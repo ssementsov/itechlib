@@ -60,13 +60,13 @@ public class BookServiceImpl implements BookService {
         updatedBook.setFileInfo(book.getFileInfo());
         updatedBook.setOwner(book.getOwner());
         checkCurrentUserIsOwner(updatedBook.getOwner().getId(), currentUserId);
+        boolean isDisableBooking = updateStatus(book.getStatus(), updatedBook.getStatus());
 
         log.info("Try to save updated book");
 
         bookRepository.save(updatedBook);
 
         FullBookDto fullBookDto = bookMapper.toFullBookDto(updatedBook);
-        boolean isDisableBooking = updateStatus(book.getStatus(), updatedBook.getStatus());
 
         return new BookUpdatedInfo(fullBookDto, isDisableBooking);
     }

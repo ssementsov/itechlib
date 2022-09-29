@@ -2,6 +2,7 @@ package by.library.itechlibrary.service;
 
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
@@ -46,11 +47,13 @@ public interface BookingService {
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 
-    void trySetBookingInfoToBook(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
+    void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
 
-    void fillBookWithBookingInfo(WithBookingInfoBookDto book);
+    void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto book, long currentUserId);
 
     void disableCurrentBooking(long bookId);
+
+    void trySetBookingInfoToFullBookDto(FullBookDto bookDto, long currentUserId);
 
     void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName);
 
