@@ -11,6 +11,7 @@ export default function AddBookModal(props) {
                 title={'Add New Book'}
                 buttonName={'Add'}
                 onCreate={onCreate}
+                inEditMode={false}
             />
         </StyledModal>
     );

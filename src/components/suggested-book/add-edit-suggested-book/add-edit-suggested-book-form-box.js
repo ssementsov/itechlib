@@ -14,7 +14,7 @@ import {
 } from '../../../common/constants';
 
 const AddEditSuggestedBookFormBox = (props) => {
-    const { book, title, buttonName, open, onCreate, onEdit } = props;
+    const { book, title, buttonName, open, onCreate, onEdit, inEditMode } = props;
     const theme = useTheme();
 
     let newBook;
@@ -116,6 +116,7 @@ const AddEditSuggestedBookFormBox = (props) => {
                     title={title}
                     buttonName={buttonName}
                     isSuggestForm={open}
+                    inEditMode={inEditMode}
                 />
             </Box>
         </>
@@ -129,6 +130,7 @@ AddEditSuggestedBookFormBox.propTypes = {
     onCreate: PropTypes.func,
     onEdit: PropTypes.func,
     book: types.suggestedBookTypes,
+    inEditMode: PropTypes.bool
 };
 
 export default AddEditSuggestedBookFormBox;

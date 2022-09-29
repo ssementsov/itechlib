@@ -21,9 +21,19 @@ const createOptions = (option) => {
 };
 
 const MultipurposeBookForm = (props) => {
-    const { formik, title, buttonName, isSuggestForm, inEditMode = false } = props;
+    const {
+        formik,
+        title,
+        buttonName,
+        isSuggestForm,
+        inEditMode,
+        currentBookStatus = bookStatus.available.name,
+    } = props;
     const theme = useTheme();
     const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+    const isHiddenAvalableStatusOption = (status) => (
+        inEditMode && status.value === bookStatus.available.name && currentBookStatus === bookStatus.inUse.name
+    );
 
     return (
         <>
@@ -141,7 +151,8 @@ const MultipurposeBookForm = (props) => {
                         onChange={formik.handleChange}
                     >
                         {statuses.map((status) => {
-                            if (status.value === bookStatus.inUse.name && inEditMode) return null;
+                            if (isHiddenAvalableStatusOption(status)) return null;
+                            // if (isHiddenInUseStatusOption(status)) return null;
 
                             return (
                                 <Tooltip
@@ -194,6 +205,7 @@ MultipurposeBookForm.propTypes = {
     title: PropTypes.string,
     isSuggestForm: PropTypes.bool,
     inEditMode: PropTypes.bool,
+    currentBookStatus: PropTypes.string,
 };
 
 export default MultipurposeBookForm;
