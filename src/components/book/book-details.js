@@ -434,7 +434,7 @@ const BookDetails = (props) => {
                                 <>
                                     {isPendingAcceptanceStatus
                                         ? <PendingAcceptanceStatusButtons
-                                            onAcceptButtonClick={acceptBookingHandler}
+                                            onAcceptButtonClick={() => handleBlockingOrAction(acceptBookingHandler)}
                                             onDeclineButtonClick={setDeclineButtonOpen}
                                             isLoadingAcceptButton={isLoadingButton && !isDeclineButtonOpen}
                                         />

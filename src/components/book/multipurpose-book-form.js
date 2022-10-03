@@ -31,6 +31,9 @@ const MultipurposeBookForm = (props) => {
     } = props;
     const theme = useTheme();
     const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+    const isHiddenInUseStatusOption = (status) => (
+        inEditMode && status.value === bookStatus.inUse.name && currentBookStatus !== bookStatus.inUse.name
+    );
     const isHiddenAvalableStatusOption = (status) => (
         inEditMode && status.value === bookStatus.available.name && currentBookStatus === bookStatus.inUse.name
     );
@@ -152,7 +155,7 @@ const MultipurposeBookForm = (props) => {
                     >
                         {statuses.map((status) => {
                             if (isHiddenAvalableStatusOption(status)) return null;
-                            // if (isHiddenInUseStatusOption(status)) return null;
+                            if (isHiddenInUseStatusOption(status)) return null;
 
                             return (
                                 <Tooltip
