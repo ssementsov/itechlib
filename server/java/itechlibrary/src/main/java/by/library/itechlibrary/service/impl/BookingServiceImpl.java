@@ -104,10 +104,10 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public Booking resolveAssignedBooking(Booking booking, Book book, BookingStatusDto bookingStatusDto, long readerId) {
+    public Booking resolveAssignedBooking(BookingDto bookingDto, Book book, BookingStatusDto bookingStatusDto, long readerId) {
 
-        BookingStatus bookingStatus = bookingMapper.toBookingStatusFromBookingStatusDto(bookingStatusDto);
-        booking.setStatus(bookingStatus);
+        bookingDto.setStatus(bookingStatusDto);
+        Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
 
         return updateBooking(booking, book, readerId);
     }
@@ -131,12 +131,14 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking findAwaitingConfirmationByBookId(long bookId) {
+    public BookingDto findAwaitingConfirmationByBookId(long bookId) {
 
-        return bookingRepository.findAwaitingConfirmationByBookId(bookId)
+        Booking booking = bookingRepository.findAwaitingConfirmationByBookId(bookId)
                 .orElseThrow(() -> new NotFoundException(
                         String.format("Can't find a booking waiting for confirmation for a book with id %d.", bookId)
                 ));
+
+        return bookingMapper.toBookingDtoFromBooking(booking);
     }
 
     @Override
@@ -297,7 +299,7 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Try get count of active bookings of reader.");
 
-        return bookingRepository.findCountByReaderIdAndActiveIsTrue(readerId);
+        return bookingRepository.countBooksUsedByUserWithId(readerId);
     }
 
     @Transactional
@@ -329,7 +331,7 @@ public class BookingServiceImpl implements BookingService {
     private void fillBookingFields(Booking booking, Book book, long readerId) {
         checkAndSetDates(booking);
         trySetReader(booking, readerId);
-        checkLimitOfActiveBookings(booking.getReader().getId());
+        checkLimitOfActiveBookings(booking.getStatus().getName(), booking.getReader().getId());
         setBookAndChangeItsStatus(booking, book);
         booking.setActive(true);
     }
@@ -467,7 +469,13 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void checkLimitOfActiveBookings(long userId) {
+    private void checkLimitOfActiveBookings(String bookingStatusName, long userId) {
+
+        if (bookingStatusName.equals(BookingStatusConstant.AWAITING_CONFIRMATION) ||
+                bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            return;
+        }
 
         List<Booking> bookings = bookingRepository.findByReaderIdAndActiveIsTrue(userId);
         bookings = filterActiveBookingsForLimitByStatus(bookings);

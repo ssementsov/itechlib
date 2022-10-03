@@ -23,13 +23,13 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllCurrentsByReaderId(long id);
 
-    Booking resolveAssignedBooking(Booking booking, Book book, BookingStatusDto bookingStatusDto, long readerId);
+    Booking resolveAssignedBooking(BookingDto bookingDto, Book book, BookingStatusDto bookingStatusDto, long readerId);
 
     List<BookingResponseDto> findAllByBookId(long id);
 
     BookingResponseDto findCurrentByBookId(long bookId);
 
-    Booking findAwaitingConfirmationByBookId(long bookId);
+    BookingDto findAwaitingConfirmationByBookId(long bookId);
 
     void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto);
 

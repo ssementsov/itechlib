@@ -61,6 +61,7 @@ import PendingAcceptanceStatusButtons from './book-blocks/pending-acceptance-sta
 import { AcceptDeclineBooking } from '../../models/accept-decline-booking-model';
 import { setLoadingButton, updateUserRoles } from '../../store/reducers';
 import DeclineBookingModal from './decline-booking/decline-booking-modal';
+import { RejectedBookingModal } from './assign-book/rejected-booking-modal';
 
 const TblCell = styled(TableCell)(() => ({
     textAlign: 'left',
@@ -71,6 +72,8 @@ const TblCell = styled(TableCell)(() => ({
 }));
 
 const LIMIT_COUNT_NOTIFICATIONS = 5;
+const ASSIGN_BOOK_ACTION = 'ASSIGN_BOOK_ACTION';
+const ACCEPT_BOOKING_ACTION = 'ACCEPT_BOOKING_ACTION';
 
 const BookDetails = (props) => {
     const { book, bookingInfo, onUpdate, onUpdateBookingInfo } = props;
@@ -92,8 +95,8 @@ const BookDetails = (props) => {
     const [isProlongateButtonOpen, setProlongateButtonOpen, setProlongateButtonClose] = useBoolean();
     const [isReturnButtonOpen, setReturnButtonOpen, setReturnButtonClose] = useBoolean();
     const [isDeclineButtonOpen, setDeclineButtonOpen, setDeclineButtonClose] = useBoolean();
+    const [isRejectedBookingModalOpen, setRejectedBookingModalOpen, setRejectedBookingModalClose] = useBoolean();
     const readerId = useSelector((state) => state.user.user.id);
-    const [isRejectedToAssign, setIsRejectedToAssign] = useState(false);
     const bookingStartDate = parseISO(bookingInfo.startDate);
     const lastDateToProlongate = add(bookingStartDate, { months: 1 });
     const isDisabledProlongateButton = isAfter(new Date(), lastDateToProlongate);
@@ -106,20 +109,52 @@ const BookDetails = (props) => {
         ? `${book.bookingInfoDto?.nameOfReader} write: ${book.bookingInfoDto?.comment}`
         : `Reader: ${book.bookingInfoDto?.nameOfReader}`;
 
-    const assignBookHandler = useCallback(async () => {
+    const acceptBookingHandler = useCallback(async () => {
+        const bookingStatusFields = {
+            id: bookingStatus.accepted.id,
+            name: bookingStatus.accepted.name,
+        };
+        const acceptBookingFields = new AcceptDeclineBooking(book.id, bookingStatusFields);
+
+        dispatch(setLoadingButton(true));
+        await BookingsAPI.acceptOrDeclineBooking(acceptBookingFields)
+            .then(res => {
+                onUpdate(res.data);
+                enqueueSnackbar('You have accepted the book.', { variant: 'success' });
+            })
+            .catch(() => defaultErrorSnackbar())
+            .finally(() => dispatch(setLoadingButton(false)));
+    }, []);
+
+    const getCountActiveBookingsHandler = useCallback(async (checkingAction) => {
         await BookingsAPI.getCountActiveBookings(readerId)
             .then((res) => {
                 if (res.data === LIMIT_COUNT_NOTIFICATIONS) {
-                    setIsRejectedToAssign(true);
+                    setRejectedBookingModalOpen();
                 } else {
-                    setIsRejectedToAssign(false);
+                    switch (checkingAction) {
+                        case ASSIGN_BOOK_ACTION:
+                            setAssignButtonOpen();
+                            break;
+                        case ACCEPT_BOOKING_ACTION:
+                            acceptBookingHandler();
+                            break;
+                        default:
+                            setRejectedBookingModalClose();
+                    }
                 }
-                setAssignButtonOpen();
             })
             .catch(() => {
                 defaultErrorSnackbar();
             });
-    }, [defaultErrorSnackbar, readerId, setAssignButtonOpen]);
+    }, [
+        defaultErrorSnackbar,
+        readerId,
+        setAssignButtonOpen,
+        acceptBookingHandler,
+        setRejectedBookingModalOpen,
+        setRejectedBookingModalClose,
+    ]);
 
     const deleteBook = () => {
         if (book.status.name === bookStatus.available.name) {
@@ -215,23 +250,6 @@ const BookDetails = (props) => {
             .finally(() => dispatch(setLoadingButton(false)));
     };
 
-    const acceptBookingHandler = () => {
-        const bookingStatusFields = {
-            id: bookingStatus.accepted.id,
-            name: bookingStatus.accepted.name,
-        };
-        const acceptBookingFields = new AcceptDeclineBooking(book.id, bookingStatusFields);
-
-        dispatch(setLoadingButton(true));
-        BookingsAPI.acceptOrDeclineBooking(acceptBookingFields)
-            .then(res => {
-                onUpdate(res.data);
-                enqueueSnackbar('You have accepted the book.', { variant: 'success' });
-            })
-            .catch(() => defaultErrorSnackbar())
-            .finally(() => dispatch(setLoadingButton(false)));
-    };
-
     const returnBook = (body) => {
         let bookingId = bookingInfo.id;
 
@@ -300,7 +318,10 @@ const BookDetails = (props) => {
                 onAssign={assignBook}
                 open={isAssignButtonOpen}
                 onClose={setAssignButtonClose}
-                isRejectedToAssign={isRejectedToAssign}
+            />
+            <RejectedBookingModal
+                open={isRejectedBookingModalOpen}
+                onClose={setRejectedBookingModalClose}
             />
             <ProlongateReadingModal
                 onProlongate={prolongateReading}
@@ -434,7 +455,7 @@ const BookDetails = (props) => {
                                 <>
                                     {isPendingAcceptanceStatus
                                         ? <PendingAcceptanceStatusButtons
-                                            onAcceptButtonClick={acceptBookingHandler}
+                                            onAcceptButtonClick={() => handleBlockingOrAction(() => getCountActiveBookingsHandler(ACCEPT_BOOKING_ACTION))}
                                             onDeclineButtonClick={setDeclineButtonOpen}
                                             isLoadingAcceptButton={isLoadingButton && !isDeclineButtonOpen}
                                         />
@@ -450,7 +471,7 @@ const BookDetails = (props) => {
                                     title={'Assign to me'}
                                     size='small'
                                     fullWidth={false}
-                                    onClick={() => handleBlockingOrAction(assignBookHandler)}
+                                    onClick={() => handleBlockingOrAction(() => getCountActiveBookingsHandler(ASSIGN_BOOK_ACTION))}
                                     disabled={book.status.name !== bookStatus.available.name}
                                 />
                             )}

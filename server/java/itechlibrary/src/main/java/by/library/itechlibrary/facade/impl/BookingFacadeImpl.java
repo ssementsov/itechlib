@@ -74,9 +74,9 @@ public class BookingFacadeImpl implements BookingFacade {
         long readerId = securityUserDetailsService.getCurrentUserId();
 
         Book book = bookService.getById(bookId);
-        Booking booking = bookingService.findAwaitingConfirmationByBookId(bookId);
+        BookingDto bookingDto = bookingService.findAwaitingConfirmationByBookId(bookId);
 
-        Booking resolveAssignedBooking = bookingService.resolveAssignedBooking(booking, book, bookingAcceptanceDto.getStatus(), readerId);
+        Booking resolveAssignedBooking = bookingService.resolveAssignedBooking(bookingDto, book, bookingAcceptanceDto.getStatus(), readerId);
         bookingAcceptanceService.save(bookingAcceptanceDto, book, readerId);
 
         sendEmailNotification(resolveAssignedBooking);
