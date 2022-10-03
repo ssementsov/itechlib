@@ -299,7 +299,7 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Try get count of active bookings of reader.");
 
-        return bookingRepository.findCountByReaderIdAndActiveIsTrue(readerId);
+        return bookingRepository.countBooksUsedByUserWithId(readerId);
     }
 
     @Transactional

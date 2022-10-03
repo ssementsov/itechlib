@@ -53,8 +53,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")
     List<Booking> findOverdueBookingsByReaderId(long readerId);
 
-    @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId")
-    int findCountByReaderIdAndActiveIsTrue(long readerId);
+    @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId and b.status.name not in ('DECLINED','AWAITING CONFIRMATION')")
+    int countBooksUsedByUserWithId(long readerId);
 
     @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true " +
             "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")
