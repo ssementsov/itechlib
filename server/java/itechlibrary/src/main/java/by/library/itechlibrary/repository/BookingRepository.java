@@ -1,7 +1,6 @@
 package by.library.itechlibrary.repository;
 
 import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.UserRole;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -46,8 +45,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @EntityGraph(attributePaths = {"reader", "reader.roles"})
     @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.status.name " +
-            "not in('DECLINED','AWAITING CONFIRMATION') and :role member of b.reader.roles")
-    List<Booking> findOverdueBookingsByUsersRole(UserRole role);
+            "not in('DECLINED','AWAITING CONFIRMATION')")
+    List<Booking> findOverdueBookings();
 
     @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.reader.id = :readerId " +
             "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")

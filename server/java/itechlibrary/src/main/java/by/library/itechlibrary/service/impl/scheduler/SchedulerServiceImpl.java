@@ -56,7 +56,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         log.info("Get all active bookings where date is overdue.");
 
-        List<Booking> bookings = bookingRepository.findOverdueBookingsByUsersRole(UserRoleConstant.BOOK_READER_ROLE);
+        List<Booking> bookings = bookingRepository.findOverdueBookings();
         Map<User, List<Booking>> userBookingsMap = getUserBookingsMap(bookings);
 
         userBookingsMap.keySet().forEach(user -> {
