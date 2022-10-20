@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 17102022-rename-internal-notification-tables
+      author: vladimir_egorov
+      changes:
+        - renameTable:
+            oldTableName: internal_notification
+            newTableName: internal_notification_template
+        - renameTable:
+            oldTableName: users_internal_notifications
+            newTableName: users_internal_notification

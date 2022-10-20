@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog-rename-internal-notification-table.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: db.changelog-change-columns-in-users-internal-notifications.yaml
+      relativeToChangelogFile: true

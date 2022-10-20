@@ -13,7 +13,6 @@ import by.library.itechlibrary.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +35,6 @@ public class SchedulerServiceImpl implements SchedulerService {
     private final MailTemplateService mailTemplateService;
 
     private final MailNotificationService mailNotificationService;
-
-    private final SimpMessagingTemplate simpMessagingTemplate;
 
     private final UserService userService;
 
@@ -90,12 +87,6 @@ public class SchedulerServiceImpl implements SchedulerService {
         LocalDate maxFinishDate = LocalDate.now().plusDays(3);
         List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(maxFinishDate);
         bookings.forEach(this::getTemplateAndSendNotification);
-
-    }
-
-    public void testWebSocket() {
-
-        simpMessagingTemplate.convertAndSend("/topic/6", "");
 
     }
 

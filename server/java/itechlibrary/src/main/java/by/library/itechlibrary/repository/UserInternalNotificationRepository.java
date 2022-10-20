@@ -17,7 +17,7 @@ public interface UserInternalNotificationRepository extends JpaRepository<UserIn
     @Query("update UserInternalNotification uin set uin.isRead = true where uin.id = :id")
     void setReadIsTrueById(@Param("id") Long id);
 
-    @Query("select new java.lang.Boolean(count(*) > 0) from UserInternalNotification uin where uin.userId = :userId")
+    @Query("select new java.lang.Boolean(count(*) > 0) from UserInternalNotification uin where uin.userId = :userId and uin.isRead is false")
     Boolean isUnreadByUserId(@Param("userId") Long userId);
 
 }

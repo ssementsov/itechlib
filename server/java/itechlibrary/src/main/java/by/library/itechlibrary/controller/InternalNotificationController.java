@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 import java.util.List;
 
@@ -22,12 +23,12 @@ public class InternalNotificationController {
 
 
     @GetMapping("/user/{id}")
-    public List<UserInternalNotificationDto> getByUserId(@PathVariable("id") Long userId) {
+    public List<UserInternalNotificationDto> getUnreadByUserId(@PathVariable("id") Long userId) {
 
         return userInternalNotificationService.getUnReadNotificationsByUserId(userId);
     }
 
-    @GetMapping("/{id}")
+    @PatchMapping("/{id}")
     public void markIsRead(@PathVariable("id") Long userInternalNotificationId) {
 
         userInternalNotificationService.markIsRead(userInternalNotificationId);

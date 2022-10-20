@@ -10,11 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "internal_notification")
+@Table(name = "internal_notification_template")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InternalNotification {
+public class InternalNotificationTemplate {
 
     @Id
     private Long id;

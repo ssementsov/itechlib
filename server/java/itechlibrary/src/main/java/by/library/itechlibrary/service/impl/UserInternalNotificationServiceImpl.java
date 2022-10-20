@@ -1,6 +1,8 @@
 package by.library.itechlibrary.service.impl;
 
 
+import by.library.itechlibrary.constant.InternalNotificationConstant;
+import by.library.itechlibrary.dto.internal_notification.UserInternalNotificationCreateDto;
 import by.library.itechlibrary.dto.internal_notification.UserInternalNotificationDto;
 import by.library.itechlibrary.entity.internal_notification.UserInternalNotification;
 import by.library.itechlibrary.mapper.UserInternalNotificationMapper;
@@ -8,8 +10,10 @@ import by.library.itechlibrary.repository.UserInternalNotificationRepository;
 import by.library.itechlibrary.service.UserInternalNotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -20,6 +24,8 @@ public class UserInternalNotificationServiceImpl implements UserInternalNotifica
     private final UserInternalNotificationRepository userInternalNotificationRepository;
 
     private final UserInternalNotificationMapper userInternalNotificationMapper;
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
 
     @Override
@@ -49,4 +55,32 @@ public class UserInternalNotificationServiceImpl implements UserInternalNotifica
         return userInternalNotificationRepository.isUnreadByUserId(userId);
 
     }
+
+    @Override
+    @Transactional
+    public void sent(UserInternalNotificationCreateDto internalNotificationCreateDto) {
+
+        save(internalNotificationCreateDto);
+        notifyUserAboutNotifications(internalNotificationCreateDto.getUserId(), true);
+
+    }
+
+    private UserInternalNotificationDto save(UserInternalNotificationCreateDto internalNotificationCreateDto) {
+
+        log.info("Try to save internal notification for user.");
+
+        UserInternalNotification internalNotification = userInternalNotificationMapper.toUserInternalNotification(internalNotificationCreateDto);
+        internalNotification = userInternalNotificationRepository.save(internalNotification);
+
+        return userInternalNotificationMapper.toUserInternalNotificationDto(internalNotification);
+    }
+
+    private void notifyUserAboutNotifications(long userId, boolean existUnreadNotification) {
+
+        String destination = String.format("%s/%d", InternalNotificationConstant.DESTINATION_PREFIX, userId);
+        simpMessagingTemplate.convertAndSend(destination, existUnreadNotification);
+
+    }
+
+
 }
