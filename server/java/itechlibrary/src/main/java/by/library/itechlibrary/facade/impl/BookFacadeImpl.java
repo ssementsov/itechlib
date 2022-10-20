@@ -11,18 +11,20 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
-import by.library.itechlibrary.dto.internal_notification.UserInternalNotificationCreateDto;
-import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.Booking;
+import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
-import by.library.itechlibrary.entity.internal_notification.InternalNotificationTemplate;
+import by.library.itechlibrary.event.NotificationEventPublisher;
 import by.library.itechlibrary.facade.BookFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
-import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -55,6 +57,10 @@ public class BookFacadeImpl implements BookFacade {
     private final BookingInfoMapper bookingInfoMapper;
 
     private final MailNotificationService mailNotificationService;
+
+    private final NotificationEventPublisher notificationEventPublisher;
+
+    private final ApplicationEventPublisher eventPublisher;
 
 
     @Override
@@ -180,33 +186,9 @@ public class BookFacadeImpl implements BookFacade {
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
 
-            sendNotificationAboutAcceptanceByReader(booking);
-            sendEmailAboutAcceptanceByReader(booking);
+            notificationEventPublisher.publishInternalNotificationEventAboutBooking(booking, booking.getReader().getId(), InternalTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
+            notificationEventPublisher.publishEmailNotificationEventAboutBooking(booking, booking.getReader(), MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER, true);
         }
     }
 
-    private void sendNotificationAboutAcceptanceByReader(Booking booking) {
-
-        InternalNotificationTemplate template = internalNotificationTemplateService.getByName(InternalTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
-        String filedTemplateText = internalNotificationTemplateService.fillTemplateTextFromBooking(booking, template.getText());
-        String filedTemplateLink = internalNotificationTemplateService.fillTemplateLinkFromBooking(booking, template.getLink());
-
-        UserInternalNotificationCreateDto internalNotificationDto = UserInternalNotificationCreateDto.builder()
-                .userId(booking.getReader().getId())
-                .text(filedTemplateText)
-                .link(filedTemplateLink)
-                .templateId(template.getId())
-                .build();
-
-        userInternalNotificationService.sent(internalNotificationDto);
-    }
-
-    private void sendEmailAboutAcceptanceByReader(Booking booking) {
-
-        Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
-        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
-        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
-
-        mailNotificationService.sent(mailNotificationInfo, true);
-    }
 }
