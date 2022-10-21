@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { DashboardNavbar } from './dashboard-navbar';
 import { DashboardSidebar } from './dashboard-sidebar';
-import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
+import { LOGIN_PATH, ROOT_PATH } from '../common/constants';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
-import { userSlice } from "../store/reducers/UserSlice";
 import { UserAPI } from '../api/user-api';
 import { api } from '../api/api';
-import { ProgressSpinner } from '../common/UI/progressSpinner';
+import { ProgressSpinner } from '../common/UI';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
-import { endOfDay, differenceInMilliseconds } from 'date-fns';
+import { differenceInMilliseconds, endOfDay } from 'date-fns';
+import { setRedirectPath, setUser } from '../store/reducers';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -32,7 +32,6 @@ export const DashboardLayout = (props) => {
     const [loaded, setLoaded] = useState(false);
     const { setAvatarData, uploadAvatar, setIsLoadingAvatar } = avatarSlice.actions;
     const { defaultErrorSnackbar } = useCustomSnackbar();
-    const { setUser } = userSlice.actions;
 
     useEffect(() => {
         const now = new Date();
@@ -41,34 +40,51 @@ export const DashboardLayout = (props) => {
         setTimeout(() => {
             router.replace(LOGIN_PATH);
             localStorage.removeItem('token');
-        }, timeToEndDay)
-    },[router])
+        }, timeToEndDay);
+    }, [router]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        let corpEmail = localStorage.getItem('corpEmail');
+        if (!token && !corpEmail) {
+            router.replace(ROOT_PATH);
+        } else if (!token) {
+            if(router.isReady) {
+                const pathForRediraction = router.pathname.replace('[id]', router.query.id);
+                dispatch(setRedirectPath(pathForRediraction));
+                router.replace(LOGIN_PATH);
+            }
+        } else {
+            setLoaded(true);
+        }
+    }, [dispatch, router]);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
             api.setupAuth(token);
-        }
-        dispatch(setIsLoadingAvatar(true));
-        UserAPI.getUser()
-            .then((res) => {
-                dispatch(setUser(res.data));
-                dispatch(setIsLoadingAvatar(false));
-                let avatar = res.data.fileInfo;
-                if (avatar) {
-                    dispatch(setAvatarData(avatar));
-                    dispatch(uploadAvatar(true));
+
+            dispatch(setIsLoadingAvatar(true));
+            UserAPI.getUser()
+                .then((res) => {
+                    dispatch(setUser(res.data));
                     dispatch(setIsLoadingAvatar(false));
-                }
-            })
-            .catch((err) => {
-                if (err.response?.status === 403) {
-                    router.replace(LOGIN_PATH);
-                    localStorage.removeItem('token');
-                } else {
-                    defaultErrorSnackbar();
-                }
-            });
+                    let avatar = res.data.fileInfo;
+                    if (avatar) {
+                        dispatch(setAvatarData(avatar));
+                        dispatch(uploadAvatar(true));
+                        dispatch(setIsLoadingAvatar(false));
+                    }
+                })
+                .catch((err) => {
+                    if (err.response?.status === 403) {
+                        router.replace(LOGIN_PATH);
+                        localStorage.removeItem('token');
+                    } else {
+                        defaultErrorSnackbar();
+                    }
+                });
+        }
     }, [
         dispatch,
         setAvatarData,
@@ -78,20 +94,8 @@ export const DashboardLayout = (props) => {
         defaultErrorSnackbar,
         router]);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        let corpEmail = localStorage.getItem('corpEmail');
-        if (!token && !corpEmail) {
-            router.replace(ROOT_PATH);
-        } else if (!token) {
-            router.replace(LOGIN_PATH);
-        } else {
-            setLoaded(true);
-        }
-    }, [router]);
-
     if (!loaded) {
-        return <ProgressSpinner/>;
+        return <ProgressSpinner />;
     }
 
     return (

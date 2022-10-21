@@ -1,9 +1,5 @@
 import { Vote } from '../../models/vote-model';
-import {
-    voteObjectTypes,
-    voteType,
-    isAlreadyVotedMessage,
-} from '../../common/constants/vote-constants';
+import { isAlreadyVotedMessage, voteObjectTypes, voteType } from '../../common/constants';
 import { VoteAPI } from '../../api/vote-api';
 import { useCustomSnackbar } from './custom-snackbar-hook';
 

@@ -99,6 +99,9 @@ export const theme = createTheme({
                     height: '100%',
                     width: '100%',
                 },
+                input: {
+                    boxShadow: '0 0 0 30px #FFF inset !important',
+                }
             },
         },
         MuiOutlinedInput: {
@@ -203,7 +206,7 @@ export const theme = createTheme({
         divider: '#E6E8F0',
         primary: {
             main: '#5048E5',
-            light: '#828DF8',
+            light: '#CCCBE8',
             dark: '#3832A0',
             contrastText: '#FFFFFF',
         },

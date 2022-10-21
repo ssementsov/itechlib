@@ -3,13 +3,14 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, FormControlLabel, Rating, TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import StyledModal from '../../styled-modal';
-import { PrimaryButton } from '../../../common/UI/buttons/primary-button';
-import { SecondaryButton } from '../../../common/UI/buttons/secondary-button';
+import { NoAutocompleteForm, PrimaryButton, SecondaryButton, StyledModal } from '../../../common/UI';
 import {
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
     ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
-} from '../../../common/constants/warning-messages-and-validation';
+} from '../../../common/constants';
+import { useSelector } from 'react-redux';
 
 const ReturnBookModal = (props) => {
     const { open, onClose, onReturn } = props;
@@ -17,6 +18,7 @@ const ReturnBookModal = (props) => {
     const [isDisabledSkip, setIsDisabledSkip] = useState(false);
     const [rateValue, setRateValue] = useState(null);
     const [feedbackValue, setFeedbackValue] = useState(null);
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
     const initValue = {
         rate: 0,
         feedback: '',
@@ -58,13 +60,13 @@ const ReturnBookModal = (props) => {
         validationSchema: Yup.object({
             feedback: Yup.string()
                 .trim()
-                .min(10, 'Feedback must be 10 or more symbols')
-                .max(250, 'Feedback must be 250 or less symbols')
+                .min(10, mustBeMoreSymbols('Feedback', 10))
+                .max(250, mustBeLessSymbols('Feedback', 250)),
         }),
         validate: (value) => {
             let error = {};
             if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.feedback)) {
-                error.feedback =  ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
+                error.feedback = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
             }
             return error;
         },
@@ -83,32 +85,24 @@ const ReturnBookModal = (props) => {
                     Please leave your feedback
                 </Typography>
             </Box>
-            <form onSubmit={formik.handleSubmit}>
+            <NoAutocompleteForm onSubmit={formik.handleSubmit}>
                 <Box sx={{ mt: '50px' }}>
                     <FormControlLabel
                         label='Please rate the book'
                         labelPlacement='start'
-                        sx={{
-                            ml: 0,
-                        }}
+                        sx={{ ml: 0 }}
                         control={
                             <Rating
                                 name='rate'
                                 value={formik.values.rate}
                                 size='middle'
                                 onChange={handleChangeRate}
-                                sx={{
-                                    ml: 5,
-                                }}
+                                sx={{ ml: 5 }}
                             />
                         }
                     />
                 </Box>
-                <Box
-                    sx={{
-                        mt: 3,
-                    }}
-                >
+                <Box sx={{ mt: 3 }}>
                     <TextField
                         error={Boolean(formik.touched.feedback && formik.errors.feedback)}
                         helperText={formik.touched.feedback && formik.errors.feedback}
@@ -125,17 +119,21 @@ const ReturnBookModal = (props) => {
                 </Box>
                 <Box sx={{ py: 2, mt: 4 }}>
                     <PrimaryButton
+                        loadingButton
+                        loading={isLoadingButton && isDisabledSkip}
                         title='Submit'
                         type='submit'
                         disabled={isDisabledSubmit}
                     />
                     <SecondaryButton
+                        loadingButton
+                        loading={isLoadingButton && isDisabledSubmit}
                         title='Skip'
                         type='submit'
                         disabled={isDisabledSkip}
                     />
                 </Box>
-            </form>
+            </NoAutocompleteForm>
         </StyledModal>
     );
 };

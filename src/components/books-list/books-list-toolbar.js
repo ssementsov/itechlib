@@ -1,30 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    TextField,
-    InputAdornment,
-    SvgIcon,
-    Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, InputAdornment, SvgIcon, TextField, Typography } from '@mui/material';
 import { Search as SearchIcon } from '../../icons/search';
 import AddBookModal from './../book/add-edit-book/add-book-modal';
 import AddSuggestedBookModal from '../suggested-book/add-edit-suggested-book/add-suggested-book-modal';
-import { PrimaryButton } from '../../common/UI/buttons/primary-button';
+import { BlockingModal, PrimaryButton } from '../../common/UI';
 import { useOverdueBookingBlocking } from '../../utils/hooks/overdue-booking-blocking-hook';
-import { BlockingModal } from '../../common/UI/modals/blocking-modal';
+import { fetchUsersList } from '../../store/reducers/ListsSlice';
+import { useDispatch } from 'react-redux';
 
 const BooksListToolbar = (props) => {
     const { onCreate, setSearch, search, open, onOpen, onClose, title } = props;
+    const dispatch = useDispatch();
+
     //overdue booking
     const {
         isBlockingModalOpen,
         setBlockingModalClose,
         handleBlockingOrAction,
     } = useOverdueBookingBlocking();
+
+    const openAddBookModalHandler = () => {
+        dispatch(fetchUsersList());
+        onOpen.add();
+    }
 
     return (
         <Box>
@@ -66,7 +65,7 @@ const BooksListToolbar = (props) => {
                         title='Add a book'
                         size='medium'
                         fullWidth={false}
-                        onClick={() => handleBlockingOrAction(onOpen.add)}
+                        onClick={() => handleBlockingOrAction(openAddBookModalHandler)}
                     />
                 </Box>
             </Box>

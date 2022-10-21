@@ -1,6 +1,8 @@
 import React from 'react';
-import { Card, Modal } from '@mui/material';
+import { Box, Card, Modal } from '@mui/material';
 import PropTypes from 'prop-types';
+import { CloseIcon } from '../../../icons/close-icon';
+import { useTheme } from '@mui/material/styles';
 
 const style = {
     position: 'absolute',
@@ -14,7 +16,7 @@ const style = {
     px: 4,
     pb: 3,
     maxWidth: 580,
-    minWidth: 320,
+    minWidth: 500,
     overflowY: 'auto',
     maxHeight: '95vh',
     '&:focus': {
@@ -25,8 +27,9 @@ const style = {
     },
 };
 
-const StyledModal = (props) => {
-    const { open, onClose, children, isSticky = false, ...prop } = props;
+export const StyledModal = (props) => {
+    const { open, onClose, children, isSticky = false, isCloseIconHidden = false, ...prop } = props;
+    const theme = useTheme();
 
     return (
         <Modal {...prop} open={open} onClose={onClose}>
@@ -35,13 +38,22 @@ const StyledModal = (props) => {
                 ...style,
             }}
             >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        cursor: 'pointer',
+                        right: 16,
+                        top: 16,
+                        zIndex: theme.zIndex.modal + 1,
+                    }}
+                >
+                    {!isCloseIconHidden && <CloseIcon onClick={onClose} />}
+                </Box>
                 {children}
             </Card>
         </Modal>
     );
 };
-
-export default StyledModal;
 
 StyledModal.propTypes = {
     open: PropTypes.bool.isRequired,

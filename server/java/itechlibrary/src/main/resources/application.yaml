@@ -140,3 +140,8 @@ application-data:
       surname: Sukolen
       corpEmail: alina.sukolen@itechart-group.com
       isActive: true
+    -
+      name: Ruslana
+      surname: Markouskaya
+      corpEmail: ruslana.markouskaya@itechart-group.com
+      isActive: true

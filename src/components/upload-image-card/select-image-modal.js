@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography } from '@mui/material';
-import StyledModal from '../styled-modal';
+import { PrimaryButton, SecondaryButton, StyledModal } from '../../common/UI';
 import SelectFileButton from '../common/select-file-button';
 import { theme } from '../../theme/index';
-import { PrimaryButton } from '../../common/UI/buttons/primary-button';
-import { SecondaryButton } from '../../common/UI/buttons/secondary-button';
+import { useSelector } from 'react-redux';
 
 const SelectImageModal = (props) => {
     const { onClose, open, onSelect, urlImage, isAllowedImage, onUpload, title, description } =
         props;
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
 
     return (
         <StyledModal open={open} onClose={onClose}>
@@ -31,6 +31,8 @@ const SelectImageModal = (props) => {
                             <img height="200px" src={urlImage} alt="book cover" />
                         </Box>
                         <PrimaryButton
+                            loadingButton
+                            loading={isLoadingButton}
                             title='Upload image'
                             component="span"
                             onClick={onUpload}

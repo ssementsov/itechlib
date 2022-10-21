@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { LOGIN_PATH } from '../../common/constants/route-constants';
+import { LOGIN_PATH } from '../../common/constants';
 import { useCustomSnackbar } from './custom-snackbar-hook';
 
 export const useInfiniteScroll = (api, items, setItems) => {

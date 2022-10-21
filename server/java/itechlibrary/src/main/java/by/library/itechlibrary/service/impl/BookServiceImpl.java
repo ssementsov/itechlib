@@ -1,10 +1,7 @@
 package by.library.itechlibrary.service.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
-import by.library.itechlibrary.dto.book.FullBookDto;
-import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
-import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
-import by.library.itechlibrary.dto.book.WithOwnerBookDto;
+import by.library.itechlibrary.dto.book.*;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.BookStatus;
@@ -63,19 +60,19 @@ public class BookServiceImpl implements BookService {
         updatedBook.setFileInfo(book.getFileInfo());
         updatedBook.setOwner(book.getOwner());
         checkCurrentUserIsOwner(updatedBook.getOwner().getId(), currentUserId);
+        boolean isDisableBooking = updateStatus(book.getStatus(), updatedBook.getStatus());
 
         log.info("Try to save updated book");
 
         bookRepository.save(updatedBook);
 
         FullBookDto fullBookDto = bookMapper.toFullBookDto(updatedBook);
-        boolean isDisableBooking = updateStatus(book.getStatus(), updatedBook.getStatus());
 
         return new BookUpdatedInfo(fullBookDto, isDisableBooking);
     }
 
     @Override
-    public WithOwnerBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser) {
+    public WithBookingInfoBookDto save(WithOwnerBookDto withOwnerBookDto, Optional<FileInfo> fileInfo, User currentUser) {
 
         log.info("Try to map bookDto to book");
 
@@ -88,7 +85,7 @@ public class BookServiceImpl implements BookService {
         fileInfo.ifPresent(book::setFileInfo);
         book = bookRepository.save(book);
 
-        return bookMapper.toWithOwnerBookDto(book);
+        return bookMapper.toWithBookingInfoBookDto(book);
     }
 
     @Override
@@ -103,18 +100,18 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to map book to bookAndIsReaderDto");
 
-        return  bookMapper.toFullBookDto(book);
+        return bookMapper.toFullBookDto(book);
     }
 
     @Override
-    public List<WithOwnerBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
+    public List<WithBookingInfoBookDto> getOwnersBook(SortingCriteria parameterInfoDto, long ownerId) {
 
         log.info("Try get books by user id.");
 
         Pageable pageable = PaginationUtil.getPageable(parameterInfoDto);
         List<Book> books = bookRepository.findAllByOwnerId(ownerId, pageable);
 
-        return bookMapper.mapWithOwnerBookDtoList(books);
+        return bookMapper.mapWithBookingInfoBookDto(books);
     }
 
     @Override
@@ -122,13 +119,13 @@ public class BookServiceImpl implements BookService {
 
         log.info("Try to get current users books.");
 
-        List<Book> currentBooks = bookRepository.findAllActiveBooksByReaderId(currentUserId);
+        List<Book> currentBooks = bookRepository.findAllUsedBooksByReaderId(currentUserId);
 
         return bookMapper.mapToResponseOwnBookDtoList(currentBooks);
     }
 
     @Override
-    public void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList){
+    public void sortResponseOwnBookDtoListByFinishDate(List<ResponseOwnBookDto> responseOwnBookDtoList) {
         responseOwnBookDtoList.sort(responseOwnBookDtoComparator);
     }
 

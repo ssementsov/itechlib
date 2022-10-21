@@ -2,6 +2,7 @@ package by.library.itechlibrary.controller;
 
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
+import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.book.WithOwnerBookDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
@@ -45,7 +46,7 @@ public class BookController {
     @GetMapping("/users")
     @ApiOperation("get owners books")
     @ResponseStatus(HttpStatus.OK)
-    public List<WithOwnerBookDto> getUsersBook(SortingCriteria sortingCriteria) {
+    public List<WithBookingInfoBookDto> getUsersBook(SortingCriteria sortingCriteria) {
 
         return bookFacade.getOwnersBook(sortingCriteria);
     }
@@ -62,7 +63,7 @@ public class BookController {
     @PostMapping
     @ApiOperation("create new book")
     @ResponseStatus(HttpStatus.CREATED)
-    public WithOwnerBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
+    public WithBookingInfoBookDto addBook(@Valid @RequestPart WithOwnerBookDto withOwnerBookDto,
                                     @Valid @RequestPart(required = false) BookingForTargetReaderDto bookingForTargetReaderDto,
                                     @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
 

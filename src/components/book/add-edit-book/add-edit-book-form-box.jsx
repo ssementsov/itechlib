@@ -4,12 +4,15 @@ import { types } from '../../../types';
 import * as Yup from 'yup';
 import { Box } from '@mui/material';
 import MultipurposeBookForm from '../multipurpose-book-form';
-import { bookStatus } from '../../../common/constants/book-status-constants';
-import { styled } from '@mui/material/styles';
 import {
-    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+    bookStatus,
+    isRequired,
+    mustBeLessSymbols,
+    mustBeMoreSymbols,
     ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE,
-} from '../../../common/constants/warning-messages-and-validation';
+    ONLY_ONE_WHITESPACE_ALLOWED_REGEX,
+} from '../../../common/constants';
+import { styled } from '@mui/material/styles';
 
 const StyledBox = styled(Box)({
     alignItems: 'center',
@@ -20,7 +23,7 @@ const StyledBox = styled(Box)({
 });
 
 const AddEditBookFormBox = (props) => {
-    const { onClose, onCreate, onEdit, title, buttonName, book, ...rest } = props;
+    const { onCreate, onEdit, title, buttonName, book, inEditMode } = props;
     let newBook;
 
     if (book) {
@@ -34,7 +37,7 @@ const AddEditBookFormBox = (props) => {
             link: book.link,
             status: book.status.name,
             reader: '',
-            startDate: null,
+            startDate: new Date(),
             finishDate: null,
         };
     } else {
@@ -47,7 +50,7 @@ const AddEditBookFormBox = (props) => {
             link: '',
             status: 'AVAILABLE',
             reader: '',
-            startDate: null,
+            startDate: new Date(),
             finishDate: null,
         };
     }
@@ -63,24 +66,21 @@ const AddEditBookFormBox = (props) => {
         ) {
             error.link = 'Please enter correct link';
         }
-        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.title)) {
             error.title = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
-        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.author)) {
             error.author = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
-        if(ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
+        if (ONLY_ONE_WHITESPACE_ALLOWED_REGEX.test(value.description)) {
             error.description = ONLY_ONE_WHITESPACE_ALLOWED_MESSAGE;
         }
-        if (value.status === bookStatus.inUse.name) {
+        if (value.status === bookStatus.inUse.name && !inEditMode) {
             if (!value.reader) {
-                error.reader = 'Reader is required';
-            }
-            if (!value.startDate) {
-                error.startDate = 'Date is required';
+                error.reader = isRequired('Reader');
             }
             if (!value.finishDate) {
-                error.finishDate = 'Date is required';
+                error.finishDate = isRequired('Date');
             }
         }
 
@@ -92,21 +92,21 @@ const AddEditBookFormBox = (props) => {
         validationSchema: Yup.object({
             title: Yup.string()
                 .trim()
-                .min(2, 'Title must be 2 or more symbols')
-                .max(255, 'Title must be 255 or less symbols')
-                .required('Title is required'),
+                .min(2, mustBeMoreSymbols('Title', 2))
+                .max(255, mustBeLessSymbols('Title', 255))
+                .required(isRequired('Title')),
             author: Yup.string()
                 .trim()
-                .min(2, 'Author must be 2 or more symbols')
-                .max(500, 'Author must be 500 or less symbols')
-                .required('Author is required'),
-            category: Yup.string().required('Category is required'),
-            language: Yup.string().required('Language is required'),
+                .min(2, mustBeMoreSymbols('Author', 2))
+                .max(500, mustBeLessSymbols('Author', 500))
+                .required(isRequired('Author')),
+            category: Yup.string().required(isRequired('Category')),
+            language: Yup.string().required(isRequired('Language')),
             description: Yup.string()
                 .trim()
-                .min(10, 'Description must be 10 or more symbols')
-                .max(500, 'Description must be 500 or less symbols')
-                .required('Description is required'),
+                .min(10, mustBeMoreSymbols('Description', 10))
+                .max(500, mustBeLessSymbols('Description', 500))
+                .required(isRequired('Description')),
         }),
         validate,
         onSubmit: async (values) => {
@@ -119,27 +119,25 @@ const AddEditBookFormBox = (props) => {
     });
 
     return (
-        <>
-            <StyledBox>
-                <MultipurposeBookForm
-                    formik={formik}
-                    title={title}
-                    buttonName={buttonName}
-                    onClose={onClose}
-                    {...rest}
-                />
-            </StyledBox>
-        </>
+        <StyledBox>
+            <MultipurposeBookForm
+                formik={formik}
+                title={title}
+                buttonName={buttonName}
+                inEditMode={inEditMode}
+                currentBookStatus={book?.status.name}
+            />
+        </StyledBox>
     );
 };
 
 AddEditBookFormBox.propTypes = {
-    onClose: PropTypes.func,
-    createBook: PropTypes.func,
+    onCreate: PropTypes.func,
     onEdit: PropTypes.func,
     title: PropTypes.string,
     buttonName: PropTypes.string,
     book: types.bookTypes,
+    inEditMode: PropTypes.bool
 };
 
 export default AddEditBookFormBox;

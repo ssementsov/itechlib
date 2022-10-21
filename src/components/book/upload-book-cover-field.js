@@ -4,8 +4,7 @@ import { IconButton, Typography } from '@mui/material';
 import { StyledDeleteIcon } from '../../icons/styled-delete-icon';
 import classes from './upload-book-cover-field.module.css';
 import { theme } from '../../theme';
-import { YOU_CAN_UPLOAD_IMAGE } from '../../common/constants/warning-messages-and-validation';
-import { MAX_SIZE, allowedImagesMimeTypes, allowedImagesTypes } from '../../common/constants/file-constants';
+import { allowedImagesMimeTypes, allowedImagesTypes, MAX_SIZE, YOU_CAN_UPLOAD_IMAGE } from '../../common/constants';
 import { limitFileNameLength } from '../../utils/functions/limit-file-name-length';
 
 export const UploadBookCoverField = (props) => {

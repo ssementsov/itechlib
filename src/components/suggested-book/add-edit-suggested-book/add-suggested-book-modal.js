@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import StyledModal from '../../styled-modal';
+import { StyledModal } from '../../../common/UI';
 import AddEditSuggestedBookFormBox from './add-edit-suggested-book-form-box';
 
 export default function AddSuggestedBookModal(props) {
@@ -10,7 +10,6 @@ export default function AddSuggestedBookModal(props) {
             <AddEditSuggestedBookFormBox
                 title={'Suggest a book'}
                 buttonName={'Submit'}
-                onClose={onClose}
                 open={open}
                 onCreate={onCreate}
             />

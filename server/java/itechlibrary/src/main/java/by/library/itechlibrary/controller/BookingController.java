@@ -113,10 +113,9 @@ public class BookingController {
     @PostMapping("/{id}/return")
     @ApiOperation("return book, make current booking not active")
     @ResponseStatus(HttpStatus.CREATED)
-    public void returnBookSetReview(@RequestBody ReviewDto reviewDto, @PathVariable("id") long bookingId) {
+    public FullBookDto returnBookSetReview(@RequestBody ReviewDto reviewDto, @PathVariable("id") long bookingId) {
 
-        bookingService.returnBooking(reviewDto, bookingId);
-
+      return bookingFacade.returnBookingAnfGetUpdatedBook(reviewDto, bookingId);
     }
 
     @GetMapping("/feedback")

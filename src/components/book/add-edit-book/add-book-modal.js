@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import AddEditBookFormBox from './add-edit-book-form-box';
-import StyledModal from '../../styled-modal';
+import { StyledModal } from '../../../common/UI';
 
 export default function AddBookModal(props) {
     const { onCreate, open, onClose } = props;
@@ -11,7 +11,7 @@ export default function AddBookModal(props) {
                 title={'Add New Book'}
                 buttonName={'Add'}
                 onCreate={onCreate}
-                onClose={onClose}
+                inEditMode={false}
             />
         </StyledModal>
     );

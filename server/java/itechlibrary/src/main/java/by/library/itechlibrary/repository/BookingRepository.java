@@ -1,9 +1,9 @@
 package by.library.itechlibrary.repository;
 
 import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.UserRole;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -14,45 +14,53 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     List<Booking> findAllByReaderId(long readerId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     List<Booking> findAllByBookId(long bookId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     @Query("select b from Booking b where b.reader.id = :readerId and" +
             " b.startDate <= :currentDate and b.finishDate >= :currentDate")
     List<Booking> findAllByReaderIdAndCurrentDate(LocalDate currentDate, long readerId);
 
     @EntityGraph(attributePaths = {"status", "reader", "book"})
-    @Query("select b from Booking b where b.book.id = :bookId and b.status.name = 'AWAITING CONFIRMATION' and b.isActive = false")
+    @Query("select b from Booking b where b.book.id = :bookId and b.status.name = 'AWAITING CONFIRMATION' and b.isActive = true")
     Optional<Booking> findAwaitingConfirmationByBookId(long bookId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     Optional<Booking> findById(long id);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status", "status"})
     @Query("select b from Booking b where b.book.id = :bookId and b.isActive = true")
     Optional<Booking> findByBookIdAndActiveIsTrue(long bookId);
 
-    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles"})
+    @EntityGraph(attributePaths = {"book.language", "book.category", "book.status", "book.owner", "book.owner.roles", "reader", "reader.roles", "status"})
     @Query("select b from Booking b where b.reader.id = :readerId and b.isActive = true")
     List<Booking> findByReaderIdAndActiveIsTrue(long readerId);
 
     @Query("select b.rate from Booking b where b.book.id = :bookId and b.rate <> 0")
     List<Short> getRatesByBookId(Long bookId);
 
-    @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true")
-    List<Booking> findAllByFinishDateBeforeAndActiveIsTrue(UserRole role);
+    @EntityGraph(attributePaths = {"reader", "reader.roles"})
+    @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.status.name " +
+            "not in('DECLINED','AWAITING CONFIRMATION')")
+    List<Booking> findOverdueBookings();
 
-    @Query("select count(b) from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.reader.id = :readerId")
-    int findByReaderIdAndFinishDateBeforeAndActiveIsTrue(long readerId);
+    @Query("select b from Booking b where b.finishDate < CURRENT_DATE and b.isActive = true and b.reader.id = :readerId " +
+            "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")
+    List<Booking> findOverdueBookingsByReaderId(long readerId);
 
-    @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId")
-    int findCountByReaderIdAndActiveIsTrue(long readerId);
+    @Query("select count(b) from Booking b where b.isActive = true and b.reader.id = :readerId and b.status.name not in ('DECLINED','AWAITING CONFIRMATION')")
+    int countBooksUsedByUserWithId(long readerId);
 
-    @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true")
-    List<Booking> findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(LocalDate maximumFinishDate);
+    @Query("select b from Booking b where b.finishDate < :maximumFinishDate and b.finishDate >= CURRENT_DATE and b.isActive = true " +
+            "and b.status.name not in('DECLINED','AWAITING CONFIRMATION')")
+    List<Booking> findAllByFinishDateLessOnThreeDaysAndActiveIsTrueAndAssignmentStatuses(LocalDate maximumFinishDate);
+
+    @Modifying
+    @Query("update Booking b set b.isActive = :isActive where b.id = :id")
+    void setActivity(long id, boolean isActive);
 
 }

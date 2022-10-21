@@ -1,24 +1,13 @@
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import {
-    Box,
-    Card,
-    Rating,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Tooltip,
-    Typography,
-} from '@mui/material';
-import { titles } from '../../common/constants/book-page-titles-constants';
+import { Box, Card, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { BOOK_PREVIEW_PAGE_PATH, bookStatus, titles } from '../../common/constants';
 import router from 'next/router';
-import { BOOK_PREVIEW_PAGE_PATH } from '../../common/constants/route-constants';
-import { calculateRate } from '../../utils/functions/calculate-rate';
 import { toLowerCaseExceptFirstLetter } from '../../utils/functions/transform-words';
 import { trimmedString } from '../../utils/functions/trim-long-string';
 import { types } from '../../types';
+import { ReadOnlyRating } from '../../common/UI';
+import { InUseStatusBlock } from '../common/in-use-status-block/in-use-status-block';
 
 const StyledTableCell = styled(TableCell)(() => ({ width: 115, textAlign: 'center' }));
 
@@ -41,6 +30,8 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                     <TableBody>
                         {books.length ? (
                             books.map((book) => {
+                                const inUseStatus = book.status.name === bookStatus.inUse.name;
+
                                 return (
                                     <TableRow
                                         onClick={() =>
@@ -59,20 +50,13 @@ const BooksListResults = ({ books, isStartedSearch }) => {
                                             {toLowerCaseExceptFirstLetter(book.language.name)}
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            <Tooltip title={book.rate} placement='right'>
-                                                    <span>
-                                                        <Rating
-                                                            precision={0.5}
-                                                            name='read-only'
-                                                            value={calculateRate(book.rate)}
-                                                            size='small'
-                                                            readOnly
-                                                        />
-                                                    </span>
-                                            </Tooltip>
+                                            <ReadOnlyRating rate={book.rate} />
                                         </StyledTableCell>
                                         <StyledTableCell>
-                                            {toLowerCaseExceptFirstLetter(book.status.name)}
+                                            {inUseStatus
+                                                ? <InUseStatusBlock currentBookingStatus={book.bookingInfoDto?.status} />
+                                                : toLowerCaseExceptFirstLetter(book.status.name)
+                                            }
                                         </StyledTableCell>
                                     </TableRow>
                                 );

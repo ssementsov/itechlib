@@ -1,7 +1,9 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import DatePicker from '@mui/lab/DatePicker';
+import { Box, Button, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import { ReadOnlyDatePicker } from '../read-only-date-picker';
+import { useSelector } from 'react-redux';
+import { PrimaryButton } from '../buttons/primary-button';
 
 const BoxForDate = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -21,70 +23,57 @@ const BoxForDate = styled(Box)(({ theme }) => ({
 }));
 
 export const DatePeriodForm = (props) => {
-    const {title, formik, onClose, minDate, maxDate} = props;
+    const { title, formik, onClose, minDate, maxDate } = props;
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+
     return (
         <>
             <Box sx={{ my: 3 }}>
-                <Typography color="textPrimary" variant="h4" textAlign="center">
+                <Typography color='textPrimary' variant='h4' textAlign='center'>
                     {title}
                 </Typography>
             </Box>
             <form onSubmit={formik.handleSubmit}>
                 <BoxForDate>
-                    <DatePicker
-                        disabled
-                        name="startDate"
-                        onChange={(value) => {
-                            formik.setFieldValue('startDate', value);
+                    <ReadOnlyDatePicker
+                        datePickerProps={{
+                            disabled: true,
+                            name: 'startDate',
+                            value: formik.values.startDate,
+                            label: 'from',
                         }}
-                        value={formik.values.startDate}
-                        label="from"
-                        renderInput={(params) => (
-                            <TextField
-                                sx={{
-                                    width: '200px',
-                                }}
-                                {...params}
-                            />
-                        )}
+                        textFieldProps={{ sx: { width: '200px' } }}
                     />
-                    <DatePicker
-                        minDate={minDate}
-                        maxDate={maxDate}
-                        name="finishDate"
+                    <ReadOnlyDatePicker
                         onChange={(value) => {
                             formik.setFieldValue('finishDate', value);
                         }}
-                        value={formik.values.finishDate}
-                        label="till"
-                        renderInput={(params) => (
-                            <TextField
-                                error={Boolean(
-                                    formik.touched.finishDate && formik.errors.finishDate
-                                )}
-                                helperText={formik.touched.finishDate && formik.errors.finishDate}
-                                sx={{
-                                    width: '200px',
-                                }}
-                                {...params}
-                            />
-                        )}
+                        datePickerProps={{
+                            minDate: minDate,
+                            maxDate: maxDate,
+                            name: 'finishDate',
+                            value: formik.values.finishDate,
+                            label: 'till',
+                            PaperProps: { sx: { mt: '-50px' } },
+                        }}
+                        textFieldProps={{
+                            error: Boolean(formik.touched.finishDate && formik.errors.finishDate),
+                            helperText: formik.touched.finishDate && formik.errors.finishDate,
+                            sx: { width: '200px' },
+                        }}
                     />
                 </BoxForDate>
                 <Box sx={{ py: 2, mt: 4 }}>
-                    <Button
-                        color="primary"
-                        fullWidth
-                        size="large"
-                        type="submit"
-                        variant="contained"
-                    >
-                        Ok
-                    </Button>
+                    <PrimaryButton
+                        loadingButton
+                        loading={isLoadingButton}
+                        title={'Ok'}
+                        type='submit'
+                    />
                     <Button
                         onClick={onClose}
                         fullWidth
-                        size="large"
+                        size='large'
                         sx={{
                             my: '20px',
                             borderWidth: '1px',
@@ -105,5 +94,5 @@ DatePeriodForm.propTypes = {
     formik: PropTypes.object.isRequired,
     onClose: PropTypes.func.isRequired,
     minDate: PropTypes.instanceOf(Date),
-    maxDate: PropTypes.instanceOf(Date)
+    maxDate: PropTypes.instanceOf(Date),
 };

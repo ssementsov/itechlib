@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { DashboardLayout } from '../components/dashboard-layout';
-import BooksCatalogue from '../components/books-catalogue';
 import { BooksAPI } from '../api/books-api';
 import { useInfiniteScroll } from '../utils/hooks/infinite-scroll-hook';
 import { ProgressLinear } from '../common/UI/progressLinear';
+import React from 'react';
+
+const BooksCatalogue = React.lazy(() => import('../components/books-catalogue'));
 
 const OwnerCatalogue = () => {
     const [books, setBooks] = useState([]);
@@ -14,13 +16,15 @@ const OwnerCatalogue = () => {
         return <ProgressLinear />;
     } else {
         return (
-            <BooksCatalogue
-                books={books}
-                title={'My books'}
-                onUpdateBooks={setBooks}
-                onUpdateLoadingStatus={setIsLoaded}
-                isMyBooks={true}
-            />
+            <React.Suspense fallback={<ProgressLinear />}>
+                <BooksCatalogue
+                    books={books}
+                    title={'My books'}
+                    onUpdateBooks={setBooks}
+                    onUpdateLoadingStatus={setIsLoaded}
+                    isMyBooks={true}
+                />
+            </React.Suspense>
         );
     }
 };

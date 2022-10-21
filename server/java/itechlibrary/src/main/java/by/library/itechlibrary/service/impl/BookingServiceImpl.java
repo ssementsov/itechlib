@@ -4,17 +4,23 @@ import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.BookingConstant;
 import by.library.itechlibrary.constant.BookingStatusConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.booking.ReviewDto;
+import by.library.itechlibrary.dto.booking.bookinginfo.BookingInfoDto;
 import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.entity.bookinginfo.BaseBookingInfo;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.exeption_handler.exception.*;
+import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.mapper.BookingMapper;
 import by.library.itechlibrary.repository.BookRepository;
+import by.library.itechlibrary.repository.BookingAcceptanceRepository;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.service.BookingService;
 import lombok.Data;
@@ -30,6 +36,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -43,6 +50,11 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
 
     private final BookRepository bookRepository;
+
+    private final BookingAcceptanceRepository bookingAcceptanceRepository;
+
+    private final BookingInfoMapper bookingInfoMapper;
+
 
     private final EntityManager entityManager;
 
@@ -81,17 +93,23 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public Booking update(BookingDto bookingDto, Book book, long readerId) {
-        return updateBooking(bookingDto, book, readerId);
+    public BookingDto update(BookingDto bookingDto, Book book, long readerId) {
+
+        Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
+
+        booking = updateBooking(booking, book, readerId);
+
+        return bookingMapper.toBookingDtoFromBooking(booking);
     }
 
     @Transactional
     @Override
-    public Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto) {
+    public Booking resolveAssignedBooking(BookingDto bookingDto, Book book, BookingStatusDto bookingStatusDto, long readerId) {
 
         bookingDto.setStatus(bookingStatusDto);
+        Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
 
-        return updateBooking(bookingDto, book, readerId);
+        return updateBooking(booking, book, readerId);
     }
 
     @Override
@@ -117,10 +135,36 @@ public class BookingServiceImpl implements BookingService {
 
         Booking booking = bookingRepository.findAwaitingConfirmationByBookId(bookId)
                 .orElseThrow(() -> new NotFoundException(
-                        String.format("Can't find booking by book id %d with status 'AWAITING CONFIRMATION'.", bookId)
+                        String.format("Can't find a booking waiting for confirmation for a book with id %d.", bookId)
                 ));
 
         return bookingMapper.toBookingDtoFromBooking(booking);
+    }
+
+    @Override
+    public void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto) {
+
+        String bookingStatusName = acceptanceDto.getStatus().getName();
+        String comment = acceptanceDto.getComment();
+
+        if (!bookingStatusName.equals(BookingStatusConstant.ACCEPTED) && !bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            throw new WrongBookingStatusException("The booking status must be accepted or declined for the booking assignment to be resolved.");
+
+        }
+
+        if (Objects.isNull(comment) && bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            throw new WrongDtoDataException("The comment must be correct when declining the assigned booking.");
+
+        }
+
+        if (Objects.nonNull(comment) && bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
+
+            throw new WrongDtoDataException("The comment should be absent when accepting the assigned booking.");
+
+        }
+
     }
 
     @Override
@@ -166,23 +210,73 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public void returnBooking(ReviewDto reviewDto, long id) {
+    public Booking returnBooking(ReviewDto reviewDto, long id) {
 
         log.info("Try to return booking, make active is false.");
 
         Booking booking = findBookingById(id);
         tryToReturnBooking(reviewDto, id, booking);
 
+        return booking;
     }
 
     @Override
     public BookingInfo getBookingInfo(long bookId, long currentUserId) {
 
-        log.info("Try to find active booking by book id = {}", bookId);
+        return getBookingInfoForUserByBookId(bookId, currentUserId);
+    }
 
-        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
+    @Override
+    public void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId) {
 
-        return checkAndBuildBookingInfo(bookId, bookingOptional, currentUserId);
+        if (optionalBooking.isPresent()) {
+
+            Booking booking = optionalBooking.get();
+            BookingInfo bookingInfo = checkAndBuildBookingInfo(booking, currentUserId);
+            BookingInfoDto bookingInfoDto = bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo);
+
+            bookWithBookingInfo.setBookingInfoDto(bookingInfoDto);
+        }
+    }
+
+    @Override
+    public void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto bookDto, long currentUserId) {
+
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), currentUserId);
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+    }
+
+    @Override
+    public void trySetBookingInfoToFullBookDto(FullBookDto bookDto, long currentUserId) {
+
+        if (bookDto.getStatus().getName().equals(BookStatusConstant.IN_USE)) {
+
+            BookingInfo bookingInfo = getBookingInfoForUserByBookId(bookDto.getId(), currentUserId);
+            bookDto.setBookingInfoDto(bookingInfoMapper.toBookingInfoDtoFromBooking(bookingInfo));
+
+        }
+    }
+
+    @Override
+    public void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName) {
+
+        Optional<Booking> optionalBooking = getActiveByBookId(bookId);
+
+        if (optionalBooking.isPresent()) {
+
+            Booking booking = optionalBooking.get();
+
+            if (bookStatusName.equals(BookStatusConstant.AVAILABLE)
+                    && booking.getStatus().getName().equals(BookingStatusConstant.DECLINED)) {
+
+                bookingRepository.setActivity(booking.getId(), false);
+            }
+
+        }
     }
 
     @Override
@@ -205,7 +299,7 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Try get count of active bookings of reader.");
 
-        return bookingRepository.findCountByReaderIdAndActiveIsTrue(readerId);
+        return bookingRepository.countBooksUsedByUserWithId(readerId);
     }
 
     @Transactional
@@ -223,7 +317,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId) {
+    public BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId) {
 
         if (Objects.isNull(bookingForUserDto)) {
 
@@ -231,15 +325,15 @@ public class BookingServiceImpl implements BookingService {
 
         }
 
-        return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, isActive, bookId);
+        return bookingMapper.bookingForTargetReaderDtoToBookingDto(bookingForUserDto, bookId);
     }
 
     private void fillBookingFields(Booking booking, Book book, long readerId) {
         checkAndSetDates(booking);
-        setReader(booking, readerId);
-        checkLimitOfActiveBookings(booking.getReader().getId());
+        trySetReader(booking, readerId);
+        checkLimitOfActiveBookings(booking.getStatus().getName(), booking.getReader().getId());
         setBookAndChangeItsStatus(booking, book);
-        chooseBookingActivity(booking);
+        booking.setActive(true);
     }
 
     private void tryToReturnBooking(ReviewDto reviewDto, long id, Booking booking) {
@@ -263,15 +357,31 @@ public class BookingServiceImpl implements BookingService {
     private void checkAndSetUserRoles(Booking booking) {
 
         Set<UserRole> roles = booking.getReader().getRoles();
-        int countOfOverdueBookings = bookingRepository.findByReaderIdAndFinishDateBeforeAndActiveIsTrue(booking.getReader().getId());
+        List<Booking> overdueBookings = bookingRepository.findOverdueBookingsByReaderId(booking.getReader().getId());
 
-        if (!(roles.contains(UserRoleConstant.BOOK_READER_ROLE)) &&
-                countOfOverdueBookings == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS) {
+        boolean isCurrentBookingOverdue = overdueBookings.stream()
+                .anyMatch(overdueBooking -> overdueBooking.getId() == booking.getId());
 
-            roles.add(UserRoleConstant.BOOK_READER_ROLE);
-            booking.getReader().setRoles(roles);
+        if (overdueBookings.size() == BookingConstant.MINIMUM_COUNT_OVERDUE_BOOKINGS && isCurrentBookingOverdue
+                && !(roles.contains(UserRoleConstant.BOOK_READER_ROLE))) {
+
+            setRoleToUser(booking.getReader(), UserRoleConstant.BOOK_READER_ROLE, roles);
 
         }
+    }
+
+    private void setRoleToUser(User user, UserRole role, Set<UserRole> roles) {
+        roles.add(role);
+        user.setRoles(roles);
+    }
+
+    private BookingInfo getBookingInfoForUserByBookId(long bookId, long currentUserId) {
+
+        log.info("Try to find active booking by book id = {}", bookId);
+
+        Optional<Booking> bookingOptional = getActiveByBookId(bookId);
+
+        return checkAndBuildBookingInfoFromOptional(bookId, bookingOptional, currentUserId);
     }
 
     private Optional<Booking> getActiveByBookId(long bookId) {
@@ -280,20 +390,26 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private BookingInfo checkAndBuildBookingInfo(long bookId, Optional<Booking> bookingOptional, long currentUserId) {
+    private BookingInfo checkAndBuildBookingInfoFromOptional(long bookId, Optional<Booking> bookingOptional, long currentUserId) {
 
-        if (bookingOptional.isPresent()) {
+        Booking booking = bookingOptional
+                .orElseThrow(
+                        () -> new NotActiveBookingException("Booking with the specified activity has not found for book id " + bookId)
+                );
 
-            BookingInfo bookingInfo = new BookingInfo();
+        return checkAndBuildBookingInfo(booking, currentUserId);
+    }
 
-            Booking currentBooking = bookingOptional.get();
-            setFullNameReaderToBookingInfo(bookingInfo, currentBooking);
-            checkAndSetCurrentUserIsReader(bookingInfo, currentBooking.getReader().getId(), currentUserId);
-            bookingInfo.setBookingEndDate(currentBooking.getFinishDate());
+    private BookingInfo checkAndBuildBookingInfo(Booking booking, long currentUserId) {
+        BookingInfo bookingInfo = new BookingInfo();
 
-            return bookingInfo;
+        setFullNameReaderToBookingInfo(bookingInfo, booking);
+        checkAndSetCurrentUserIsReader(bookingInfo, booking.getReader().getId(), currentUserId);
+        tryToSetCommentToBookingInfo(booking.getStatus().getName(), booking.getBook().getId(), bookingInfo);
+        bookingInfo.setStatus(booking.getStatus());
+        bookingInfo.setBookingEndDate(booking.getFinishDate());
 
-        } else throw new NotActiveBookingException("Active booking has not found for book id " + bookId);
+        return bookingInfo;
     }
 
     private void checkAndSetCurrentUserIsReader(BookingInfo bookingInfo, long bookingReaderId, long currentUserId) {
@@ -302,6 +418,20 @@ public class BookingServiceImpl implements BookingService {
 
             bookingInfo.setCurrentUserReader(true);
         }
+    }
+
+    private void tryToSetCommentToBookingInfo(String bookingStatusName, long bookId, BookingInfo bookingInfo) {
+
+        if (bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            BookingAcceptance bookingAcceptance = bookingAcceptanceRepository.findByBook_Id(bookId)
+                    .orElseThrow(() -> new NotFoundException(
+                            String.format("Can't find decline comment for booking with book id %d.", bookId))
+                    );
+
+            bookingInfo.setComment(bookingAcceptance.getComment());
+        }
+
     }
 
     private void setFullNameReaderToBookingInfo(BookingInfo bookingInfo, Booking booking) {
@@ -339,9 +469,16 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private void checkLimitOfActiveBookings(long userId) {
+    private void checkLimitOfActiveBookings(String bookingStatusName, long userId) {
+
+        if (bookingStatusName.equals(BookingStatusConstant.AWAITING_CONFIRMATION) ||
+                bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
+
+            return;
+        }
 
         List<Booking> bookings = bookingRepository.findByReaderIdAndActiveIsTrue(userId);
+        bookings = filterActiveBookingsForLimitByStatus(bookings);
 
         if (bookings.size() >= BookingConstant.ACTIVE_BOOKINGS_LIMIT) {
 
@@ -350,6 +487,14 @@ public class BookingServiceImpl implements BookingService {
             throw new BookingBookLimitException("You can have maximum count active bookings.");
 
         }
+    }
+
+    private List<Booking> filterActiveBookingsForLimitByStatus(List<Booking> bookings) {
+        return bookings
+                .stream()
+                .filter(booking -> !booking.getStatus().getName().equals(BookingStatusConstant.AWAITING_CONFIRMATION)
+                        && !booking.getStatus().getName().equals(BookingStatusConstant.DECLINED))
+                .collect(Collectors.toList());
     }
 
     private void recountingBookRate(Booking booking) {
@@ -363,13 +508,10 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private Booking updateBooking(BookingDto bookingDto, Book book, long readerId) {
+    private Booking updateBooking(Booking booking, Book book, long readerId) {
 
-        if (bookingDto.getId() > 0) {
+        if (booking.getId() > 0) {
 
-            log.info("Try to map bookingDto and update booking.");
-
-            Booking booking = bookingMapper.toBookingFromBookingDto(bookingDto);
             fillBookingFields(booking, book, readerId);
 
             return bookingRepository.save(booking);
@@ -396,14 +538,17 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private void setReader(Booking booking, long readerId) {
+    private void trySetReader(Booking booking, long readerId) {
 
         log.info("Try to find current user and set to booking");
 
-        User user = new User();
-        user.setId(readerId);
-        booking.setReader(user);
+        if (Objects.isNull(booking.getReader()) || booking.getReader().getId() != readerId) {
 
+            User user = new User();
+            user.setId(readerId);
+            booking.setReader(user);
+
+        }
     }
 
     private void checkAndSetStartDate(Booking booking) {
@@ -453,7 +598,6 @@ public class BookingServiceImpl implements BookingService {
 
         } else if (bookStatusName.equals(BookStatusConstant.IN_USE) && bookingStatusName.equals(BookingStatusConstant.DECLINED)) {
 
-            book.setStatus(BookStatusConstant.NOT_AVAILABLE_BOOK_STATUS);
             booking.setBook(book);
 
         } else {
@@ -464,16 +608,6 @@ public class BookingServiceImpl implements BookingService {
             );
 
         }
-    }
-
-    private void chooseBookingActivity(Booking booking) {
-
-        String bookingStatusName = booking.getStatus().getName();
-
-        if (bookingStatusName.equals(BookingStatusConstant.ACCEPTED)) {
-            booking.setActive(true);
-        }
-
     }
 
     private Booking getSavedAndRefreshed(Booking booking) {

@@ -2,7 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { types } from '../../../types';
 import AddEditBookFormBox from './add-edit-book-form-box';
-import StyledModal from '../../styled-modal';
+import { StyledModal } from '../../../common/UI';
 
 export default function EditBookModal(props) {
     const { onEdit, book, open, onClose } = props;
@@ -13,7 +13,6 @@ export default function EditBookModal(props) {
                 buttonName={'Save'}
                 onEdit={onEdit}
                 book={book}
-                onClose={onClose}
                 inEditMode
             />
         </StyledModal>

@@ -38,14 +38,11 @@ public class MailNotificationServiceImpl implements MailNotificationService {
     @Override
     public void sent(MailNotificationInfo mailNotificationInfo, boolean isCorporateEmail) {
 
-        MailNotification notification = getMailNotification(mailNotificationInfo);
+        MailNotification notification = getMailNotification(mailNotificationInfo, isCorporateEmail);
         mailNotificationRepository.save(notification);
         MimeMessage mimeMessage = emailSender.createMimeMessage();
-        String email = isCorporateEmail
-                ? mailNotificationInfo.getUser().getCorpEmail()
-                : mailNotificationInfo.getUser().getGoogleEmail();
+        trySetDataMimeMessage(notification.getTo(), notification, mimeMessage);
 
-        trySetDataMimeMessage(email, notification, mimeMessage);
         emailSender.send(mimeMessage);
 
     }
@@ -68,12 +65,17 @@ public class MailNotificationServiceImpl implements MailNotificationService {
         }
     }
 
-    private MailNotification getMailNotification(MailNotificationInfo mailNotificationInfo) {
+    private MailNotification getMailNotification(MailNotificationInfo mailNotificationInfo, boolean isCorporateEmail) {
 
         MailNotification notification = new MailNotification();
 
         notification.setFrom(fromMail);
-        notification.setTo(mailNotificationInfo.getUser().getGoogleEmail());
+
+        String toEmail = isCorporateEmail
+                ? mailNotificationInfo.getUser().getCorpEmail()
+                : mailNotificationInfo.getUser().getGoogleEmail();
+
+        notification.setTo(toEmail);
         notification.setSubject(mailNotificationInfo.getTemplate().getSubject());
         notification.setTemplate(mailNotificationInfo.getTemplate());
         notification.setText(mailNotificationInfo.getFiledTemplateText());

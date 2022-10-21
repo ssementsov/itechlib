@@ -1,6 +1,9 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.BookingStatusDto;
+import by.library.itechlibrary.dto.book.FullBookDto;
+import by.library.itechlibrary.dto.book.WithBookingInfoBookDto;
 import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
@@ -12,6 +15,7 @@ import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingService {
 
@@ -19,7 +23,7 @@ public interface BookingService {
 
     List<BookingResponseDto> findAllCurrentsByReaderId(long id);
 
-    Booking resolveAssignedBooking(BookingDto bookingDto, Book book, long readerId, BookingStatusDto bookingStatusDto);
+    Booking resolveAssignedBooking(BookingDto bookingDto, Book book, BookingStatusDto bookingStatusDto, long readerId);
 
     List<BookingResponseDto> findAllByBookId(long id);
 
@@ -27,9 +31,11 @@ public interface BookingService {
 
     BookingDto findAwaitingConfirmationByBookId(long bookId);
 
+    void checkDtoForResolveAssignedBooking(BookingAcceptanceDto acceptanceDto);
+
     BookingResponseDto save(BookingDto bookingDto, Book book, long readerId);
 
-    Booking update(BookingDto bookingDto, Book book, long readerId);
+    BookingDto update(BookingDto bookingDto, Book book, long readerId);
 
     BookingResponseDto updateFinishDate(long bookingId, LocalDate newFinishDate);
 
@@ -37,15 +43,23 @@ public interface BookingService {
 
     Booking findByIdWithoutMapping(long id);
 
-    void returnBooking(ReviewDto reviewDto, long id);
+    Booking returnBooking(ReviewDto reviewDto, long id);
 
     BookingInfo getBookingInfo(long bookId, long currentUserId);
 
+    void trySetInfoFromBookingToBookWithBookingDto(WithBookingInfoBookDto bookWithBookingInfo, Optional<Booking> optionalBooking, long currentUserId);
+
+    void trySetBookingInfoToBookWithBookingDto(WithBookingInfoBookDto book, long currentUserId);
+
     void disableCurrentBooking(long bookId);
+
+    void trySetBookingInfoToFullBookDto(FullBookDto bookDto, long currentUserId);
+
+    void tryDeactivateDeclinedBookingDuringUpdatingBook(long bookId, String bookStatusName);
 
     BaseBookingInfo getBaseBookingInfo(long bookId);
 
     int getCountActiveBookings(long readerId);
 
-    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, boolean isActive, long bookId);
+    BookingDto tryGetBookingDto(BookingForTargetReaderDto bookingForUserDto, long bookId);
 }

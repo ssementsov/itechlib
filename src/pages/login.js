@@ -1,16 +1,17 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import { GoogleLogin } from 'react-google-login';
-import { MAIN_CATALOGUE_PATH } from '../common/constants/route-constants';
+import { LOGIN_PATH, MAIN_CATALOGUE_PATH, ROOT_PATH } from '../common/constants';
 import { UserAPI } from '../api/user-api';
 import { useTheme } from '@mui/material/styles';
-import { LOGIN_PATH, ROOT_PATH } from '../common/constants/route-constants';
 import { api } from '../api/api';
 import { useCustomSnackbar } from '../utils/hooks/custom-snackbar-hook';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { avatarSlice } from '../store/reducers/AvatarSlice';
+import { PrimaryButton } from '../common/UI';
+import { setLoadingButton } from '../store/reducers';
 
 const Login = () => {
     let theme = useTheme();
@@ -21,15 +22,24 @@ const Login = () => {
     const [isRegistered, setIsRegistered] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const { enqueueSnackbar, defaultErrorSnackbar } = useCustomSnackbar();
+    const isLoadingButton = useSelector(state => state.loadingStatus.isLoadingButton);
+    const redirectPath = useSelector(state => state.user.redirectPath);
 
     const resGoogleHandlerLogin = (resFromGoogle) => {
         let googleEmail = localStorage.getItem('googleEmail');
         if (resFromGoogle.profileObj.email === googleEmail) {
+            dispatch(setLoadingButton(true));
             UserAPI.auth(resFromGoogle)
                 .then((res) => {
                     localStorage.setItem('token', res.data.token);
                     api.setupAuth(res.data.token);
-                    router.replace(MAIN_CATALOGUE_PATH);
+
+                    if (redirectPath) {
+                        router.replace(redirectPath);
+                    } else {
+                        router.replace(MAIN_CATALOGUE_PATH);
+
+                    }
 
                     let avatar = res.data.fileInfoDto;
                     if (avatar) {
@@ -37,9 +47,8 @@ const Login = () => {
                         dispatch(uploadAvatar(true));
                     }
                 })
-                .catch(() => {
-                    defaultErrorSnackbar();
-                });
+                .catch(() => defaultErrorSnackbar())
+                .finally(() => dispatch(setLoadingButton(false)));
         } else {
             setCorrectEmail(false);
         }
@@ -79,7 +88,7 @@ const Login = () => {
                 <title>Login</title>
             </Head>
             <Box
-                component="main"
+                component='main'
                 sx={{
                     alignItems: 'center',
                     display: 'flex',
@@ -88,7 +97,7 @@ const Login = () => {
                 }}
             >
                 <Container
-                    maxWidth="sm"
+                    maxWidth='sm'
                     sx={{
                         border: '1px solid #838E9F',
                         boxShadow: '2px 2px 4px #838E9F',
@@ -96,32 +105,23 @@ const Login = () => {
                     }}
                 >
                     <form>
-                        <Box
-                            sx={{
-                                my: 4,
-                                textAlign: 'center',
-                            }}
-                        >
-                            <Typography color="textPrimary" variant="h4">
+                        <Box sx={{ my: 4, textAlign: 'center' }}>
+                            <Typography color='textPrimary' variant='h4'>
                                 Log in with Google account
                             </Typography>
                             {isRegistered && (
                                 <Typography
                                     color={'textPrimary'}
-                                    variant="body1"
-                                    sx={{
-                                        mt: 5,
-                                    }}
+                                    variant='body1'
+                                    sx={{ mt: 5 }}
                                 >
                                     Your Google account has been confirmed successfully
                                 </Typography>
                             )}
                             <Typography
                                 color={correctEmail ? 'textPrimary' : theme.palette.error.main}
-                                variant="body1"
-                                sx={{
-                                    mt: 5,
-                                }}
+                                variant='body1'
+                                sx={{ mt: 5 }}
                             >
                                 {correctEmail
                                     ? ''
@@ -131,25 +131,21 @@ const Login = () => {
                         <Grid
                             container
                             spacing={3}
-                            sx={{
-                                mt: 4,
-                                mb: 5,
-                            }}
+                            sx={{ mt: 4, mb: 5 }}
                         >
                             <Grid item xs={12} md={12}>
                                 <GoogleLogin
                                     clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                                     render={(renderProps) => (
-                                        <Button
-                                            fullWidth
-                                            color="error"
+                                        <PrimaryButton
+                                            loadingButton
+                                            loading={isLoadingButton}
+                                            color='error'
+                                            title={'Log in with Google'}
+                                            type='submit'
                                             onClick={renderProps.onClick}
                                             disabled={renderProps.disabled}
-                                            size="large"
-                                            variant="contained"
-                                        >
-                                            Log in with Google
-                                        </Button>
+                                        />
                                     )}
                                     onSuccess={resGoogleHandlerLogin}
                                     onFailure={resGoogleHandlerLogin}

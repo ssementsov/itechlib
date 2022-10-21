@@ -4,14 +4,15 @@ import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
 import by.library.itechlibrary.entity.Booking;
 import by.library.itechlibrary.entity.ConfirmationData;
+import by.library.itechlibrary.entity.Template;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.UserRole;
-import by.library.itechlibrary.facade.NotificationFacade;
+import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
 import by.library.itechlibrary.service.MailNotificationService;
 import by.library.itechlibrary.service.MailTemplateService;
 import by.library.itechlibrary.service.SchedulerService;
-import by.library.itechlibrary.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Data
@@ -37,10 +39,6 @@ public class SchedulerServiceImpl implements SchedulerService {
     private final MailTemplateService mailTemplateService;
 
     private final MailNotificationService mailNotificationService;
-
-    private final UserService userService;
-
-    private final NotificationFacade notifier;
 
 
     @Override
@@ -62,13 +60,13 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         log.info("Get all active bookings where date is overdue.");
 
-        List<Booking> bookings = bookingRepository.findAllByFinishDateBeforeAndActiveIsTrue(UserRoleConstant.BOOK_READER_ROLE);
+        List<Booking> bookings = bookingRepository.findOverdueBookings();
+        Map<User, List<Booking>> userBookingsMap = getUserBookingsMap(bookings);
 
-        if (!bookings.isEmpty()) {
+        userBookingsMap.keySet().forEach(user -> {
 
-            bookings.forEach(booking -> {
-
-                if (checkAndDeleteRole(booking)) {
+            sendBookingOverdueMailNotifications(userBookingsMap.get(user));
+            removeUsersRole(user, UserRoleConstant.BOOK_READER_ROLE);
 
                     notifier.sentEmailNotificationAboutBooking(booking, booking.getReader(), MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME, true);
 
@@ -89,28 +87,47 @@ public class SchedulerServiceImpl implements SchedulerService {
         log.info("Try to find bookings and send remind notifications to readers");
 
         LocalDate maxFinishDate = LocalDate.now().plusDays(3);
-        List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(maxFinishDate);
-        bookings.forEach(booking ->
-                notifier.sentEmailNotificationAboutBooking(booking, booking.getReader(), MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME, true)
-        );
+        List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAndActiveIsTrueAndAssignmentStatuses(maxFinishDate);
+        bookings.forEach(this::getTemplateAndSendNotification);
 
     }
 
-    private boolean checkAndDeleteRole(Booking booking) {
+    private void fillTemplateAndSentEmailNotification(Booking booking, String templateName) {
 
-        Set<UserRole> roles = booking.getReader().getRoles();
+        User user = booking.getReader();
+        Template template = mailTemplateService.getByName(templateName);
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
 
-        log.info("Check roles and delete if user has book reader role.");
+        mailNotificationService.sent(mailNotificationInfo, true);
+    }
 
-        if (roles.contains(UserRoleConstant.BOOK_READER_ROLE)) {
+    private void getTemplateAndSendNotification(Booking booking) {
 
-            roles.remove(UserRoleConstant.BOOK_READER_ROLE);
-            booking.getReader().setRoles(roles);
-            return true;
+        Template template = mailTemplateService.getByName(MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME);
+        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
+        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
+        mailNotificationService.sent(mailNotificationInfo, true);
 
-        }
+    }
 
-        return false;
+    private Map<User, List<Booking>> getUserBookingsMap(List<Booking> bookings) {
+
+        return bookings.stream()
+                .collect(
+                        Collectors.groupingBy(Booking::getReader, Collectors.toList())
+                );
+    }
+
+    private void removeUsersRole(User user, UserRole role) {
+        user.getRoles().remove(role);
+    }
+
+    private void sendBookingOverdueMailNotifications(List<Booking> bookings) {
+
+        bookings.forEach(booking ->
+                fillTemplateAndSentEmailNotification(booking, MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME)
+        );
     }
 
     private void checkAndDelete(List<ConfirmationData> confirmationDataList) {
