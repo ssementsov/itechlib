@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -57,7 +56,6 @@ public class UserInternalNotificationServiceImpl implements UserInternalNotifica
     }
 
     @Override
-    @Transactional
     public void sent(UserInternalNotificationCreateDto internalNotificationCreateDto) {
 
         save(internalNotificationCreateDto);

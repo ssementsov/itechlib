@@ -1,6 +1,7 @@
 package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.BookingStatusConstant;
+import by.library.itechlibrary.constant.InternalTemplateConstant;
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.BookingAcceptanceDto;
 import by.library.itechlibrary.dto.book.FullBookDto;
@@ -8,11 +9,13 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.entity.Book;
 import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.Template;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
 import by.library.itechlibrary.facade.BookingFacade;
-import by.library.itechlibrary.pojo.MailNotificationInfo;
-import by.library.itechlibrary.service.*;
+import by.library.itechlibrary.facade.NotificationFacade;
+import by.library.itechlibrary.service.BookService;
+import by.library.itechlibrary.service.BookingAcceptanceService;
+import by.library.itechlibrary.service.BookingService;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +34,7 @@ public class BookingFacadeImpl implements BookingFacade {
 
     private final BookService bookService;
 
-    private final MailTemplateService mailTemplateService;
-
-    private final MailNotificationService mailNotificationService;
+    private final NotificationFacade notifier;
 
     private final BookingAcceptanceService bookingAcceptanceService;
 
@@ -73,19 +74,14 @@ public class BookingFacadeImpl implements BookingFacade {
 
         if (bookingAcceptanceDto.getStatus().getName().equals(BookingStatusConstant.ACCEPTED)) {
 
-            sendEmailAboutBookAcceptance(booking);
+            User targetUser = booking.getBook().getOwner();
+
+            notifier.sentEmailNotificationAboutBooking(booking, targetUser, MailTemplateConstant.BOOK_ACCEPTANCE, true);
+            notifier.sentInternalNotificationAboutBooking(booking, targetUser.getId(), InternalTemplateConstant.BOOK_ACCEPTANCE);
 
         }
 
         return bookService.getByIdFullVersion(bookId);
     }
 
-    private void sendEmailAboutBookAcceptance(Booking booking) {
-
-        Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE);
-        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
-        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getBook().getOwner(), template, filedTemplateText);
-
-        mailNotificationService.sent(mailNotificationInfo, true);
-    }
 }

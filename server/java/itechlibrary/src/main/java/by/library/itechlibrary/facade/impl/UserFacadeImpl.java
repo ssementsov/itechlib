@@ -4,10 +4,9 @@ import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.EmailCheckerDto;
 import by.library.itechlibrary.dto.user.UserProfileDto;
 import by.library.itechlibrary.entity.FileInfo;
-import by.library.itechlibrary.entity.Template;
 import by.library.itechlibrary.entity.User;
+import by.library.itechlibrary.facade.NotificationFacade;
 import by.library.itechlibrary.facade.UserFacade;
-import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,8 @@ public class UserFacadeImpl implements UserFacade {
 
     private final MailTemplateService mailTemplateService;
 
+    private final NotificationFacade notifier;
+
     private final UserInternalNotificationService userInternalNotificationService;
 
 
@@ -40,14 +41,9 @@ public class UserFacadeImpl implements UserFacade {
 
         User user = userService.checkEmails(emailCheckerDto);
 
-        if(user.getConfirmationData().isActivated()) return true;
+        if (user.getConfirmationData().isActivated()) return true;
 
-        Template template = mailTemplateService.getByName(MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME);
-        String filedTemplateText = mailTemplateService.getAndFillConfirmationTemplateFromUser(user, template.getText());
-
-        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
-
-        mailNotificationService.sent(mailNotificationInfo,false);
+        notifier.sentEmailNotificationAboutUser(user, MailTemplateConstant.MAIL_CONFIRMATION_TEMPLATE_NAME, false);
 
         return false;
     }

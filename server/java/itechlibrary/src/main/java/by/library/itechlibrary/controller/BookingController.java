@@ -93,7 +93,7 @@ public class BookingController {
 
     @PreAuthorize("hasRole('BOOK_READER')")
     @PostMapping("/resolve-assigned")
-    @ApiOperation("Accept booking request by assigned reader")
+    @ApiOperation("Accept or decline booking request by assigned reader")
     @ResponseStatus(HttpStatus.OK)
     public FullBookDto acceptBooking(@RequestBody @Valid BookingAcceptanceDto bookingAcceptanceDto) {
 

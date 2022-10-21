@@ -2,8 +2,10 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
-import by.library.itechlibrary.entity.*;
-import by.library.itechlibrary.pojo.MailNotificationInfo;
+import by.library.itechlibrary.entity.Booking;
+import by.library.itechlibrary.entity.ConfirmationData;
+import by.library.itechlibrary.entity.UserRole;
+import by.library.itechlibrary.facade.NotificationFacade;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
 import by.library.itechlibrary.service.MailNotificationService;
@@ -38,6 +40,8 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     private final UserService userService;
 
+    private final NotificationFacade notifier;
+
 
     @Override
     @Scheduled(cron = "${cron.check-confirm-data}")
@@ -66,7 +70,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
                 if (checkAndDeleteRole(booking)) {
 
-                    fillTemplateAndSentEmailNotification(booking, MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME);
+                    notifier.sentEmailNotificationAboutBooking(booking, booking.getReader(), MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME, true);
 
                 }
             });
@@ -86,26 +90,9 @@ public class SchedulerServiceImpl implements SchedulerService {
 
         LocalDate maxFinishDate = LocalDate.now().plusDays(3);
         List<Booking> bookings = bookingRepository.findAllByFinishDateLessOnThreeDaysAnActiveIsTrue(maxFinishDate);
-        bookings.forEach(this::getTemplateAndSendNotification);
-
-    }
-
-    private void fillTemplateAndSentEmailNotification(Booking booking, String templateName) {
-
-        User user = booking.getReader();
-        Template template = mailTemplateService.getByName(templateName);
-        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
-        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(user, template, filedTemplateText);
-
-        mailNotificationService.sent(mailNotificationInfo, true);
-    }
-
-    private void getTemplateAndSendNotification(Booking booking) {
-
-        Template template = mailTemplateService.getByName(MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME);
-        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
-        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
-        mailNotificationService.sent(mailNotificationInfo, true);
+        bookings.forEach(booking ->
+                notifier.sentEmailNotificationAboutBooking(booking, booking.getReader(), MailTemplateConstant.RETURN_BOOK_TEMPLATE_NAME, true)
+        );
 
     }
 

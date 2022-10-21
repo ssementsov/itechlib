@@ -2,7 +2,6 @@ package by.library.itechlibrary.facade.impl;
 
 import by.library.itechlibrary.constant.BookStatusConstant;
 import by.library.itechlibrary.constant.InternalTemplateConstant;
-import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.dto.book.FullBookDto;
 import by.library.itechlibrary.dto.book.ResponseOwnBookDto;
 import by.library.itechlibrary.dto.book.WithLikAndStatusBookDto;
@@ -11,14 +10,15 @@ import by.library.itechlibrary.dto.booking.BookingDto;
 import by.library.itechlibrary.dto.booking.BookingForTargetReaderDto;
 import by.library.itechlibrary.dto.booking.BookingResponseDto;
 import by.library.itechlibrary.dto.criteria.SortingCriteria;
-import by.library.itechlibrary.dto.internal_notification.UserInternalNotificationCreateDto;
-import by.library.itechlibrary.entity.*;
+import by.library.itechlibrary.entity.Book;
+import by.library.itechlibrary.entity.Booking;
+import by.library.itechlibrary.entity.FileInfo;
+import by.library.itechlibrary.entity.User;
 import by.library.itechlibrary.entity.bookinginfo.BookingInfo;
-import by.library.itechlibrary.entity.internal_notification.InternalNotificationTemplate;
 import by.library.itechlibrary.facade.BookFacade;
+import by.library.itechlibrary.facade.NotificationFacade;
 import by.library.itechlibrary.mapper.BookingInfoMapper;
 import by.library.itechlibrary.pojo.BookUpdatedInfo;
-import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.service.*;
 import by.library.itechlibrary.service.impl.SecurityUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -44,17 +44,11 @@ public class BookFacadeImpl implements BookFacade {
 
     private final BookingService bookingService;
 
-    private final MailTemplateService mailTemplateService;
-
-    private final InternalNotificationTemplateService internalNotificationTemplateService;
-
-    private final UserInternalNotificationService userInternalNotificationService;
-
     private final FileInfoService fileInfoService;
 
     private final BookingInfoMapper bookingInfoMapper;
 
-    private final MailNotificationService mailNotificationService;
+    private final NotificationFacade notifier;
 
 
     @Override
@@ -180,33 +174,10 @@ public class BookFacadeImpl implements BookFacade {
             BookingResponseDto bookingResponseDto = bookingService.save(bookingDto, book, bookingForUserDto.getReaderId());
             Booking booking = bookingService.findByIdWithoutMapping(bookingResponseDto.getId());
 
-            sendNotificationAboutAcceptanceByReader(booking);
-            sendEmailAboutAcceptanceByReader(booking);
+            notifier.sentEmailNotificationAboutBooking(booking, booking.getReader(), InternalTemplateConstant.BOOK_ACCEPTANCE_BY_READER, true);
+            notifier.sentInternalNotificationAboutBooking(booking, bookingForUserDto.getReaderId(), InternalTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
+
         }
     }
 
-    private void sendNotificationAboutAcceptanceByReader(Booking booking) {
-
-        InternalNotificationTemplate template = internalNotificationTemplateService.getByName(InternalTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
-        String filedTemplateText = internalNotificationTemplateService.fillTemplateTextFromBooking(booking, template.getText());
-        String filedTemplateLink = internalNotificationTemplateService.fillTemplateLinkFromBooking(booking, template.getLink());
-
-        UserInternalNotificationCreateDto internalNotificationDto = UserInternalNotificationCreateDto.builder()
-                .userId(booking.getReader().getId())
-                .text(filedTemplateText)
-                .link(filedTemplateLink)
-                .templateId(template.getId())
-                .build();
-
-        userInternalNotificationService.sent(internalNotificationDto);
-    }
-
-    private void sendEmailAboutAcceptanceByReader(Booking booking) {
-
-        Template template = mailTemplateService.getByName(MailTemplateConstant.BOOK_ACCEPTANCE_BY_READER);
-        String filedTemplateText = mailTemplateService.getAndFillTemplateFromBookingInfo(booking, template.getText());
-        MailNotificationInfo mailNotificationInfo = new MailNotificationInfo(booking.getReader(), template, filedTemplateText);
-
-        mailNotificationService.sent(mailNotificationInfo, true);
-    }
 }
