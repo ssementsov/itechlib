@@ -2,11 +2,7 @@ package by.library.itechlibrary.service.impl.scheduler;
 
 import by.library.itechlibrary.constant.MailTemplateConstant;
 import by.library.itechlibrary.constant.UserRoleConstant;
-import by.library.itechlibrary.entity.Booking;
-import by.library.itechlibrary.entity.ConfirmationData;
-import by.library.itechlibrary.entity.Template;
-import by.library.itechlibrary.entity.User;
-import by.library.itechlibrary.entity.UserRole;
+import by.library.itechlibrary.entity.*;
 import by.library.itechlibrary.pojo.MailNotificationInfo;
 import by.library.itechlibrary.repository.BookingRepository;
 import by.library.itechlibrary.repository.ConfirmationDataRepository;
@@ -67,13 +63,7 @@ public class SchedulerServiceImpl implements SchedulerService {
 
             sendBookingOverdueMailNotifications(userBookingsMap.get(user));
             removeUsersRole(user, UserRoleConstant.BOOK_READER_ROLE);
-
-                    notifier.sentEmailNotificationAboutBooking(booking, booking.getReader(), MailTemplateConstant.BLOCK_OR_UNBLOCK_READER_TEMPLATE_NAME, true);
-
-                }
-            });
-
-        }
+        });
 
         log.info("Get all active bookings where date is overdue.");
 

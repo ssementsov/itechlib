@@ -16,9 +16,14 @@ public class BookingStatusConstant {
     public static final String AWAITING_CONFIRMATION = "AWAITING CONFIRMATION";
     public static final String NOT_REQUIRE_CONFIRMATION = "NOT REQUIRE CONFIRMATION";
 
-    public static final Map<String, String> templateBookingStatusMap = Map.ofEntries(
+    public static final Map<String, String> emailTemplateBookingStatusMap = Map.ofEntries(
             entry(ACCEPTED, MailTemplateConstant.BOOK_ACCEPTANCE),
             entry(DECLINED, MailTemplateConstant.ACCEPTANCE_DECLINED)
+    );
+
+    public static final Map<String, String> internalTemplateBookingStatusMap = Map.ofEntries(
+            entry(ACCEPTED, InternalTemplateConstant.BOOK_ACCEPTANCE),
+            entry(DECLINED, InternalTemplateConstant.ACCEPTANCE_DECLINED)
     );
 
     public static final BookStatus ACCEPTED_BOOKING_STATUS = new BookStatus((short) 1, ACCEPTED);

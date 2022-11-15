@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02112022-create-booking-internal-notification-table
+      author: vladimir_egorov
+      changes:
+        - createTable:
+            tableName: booking_internal_notification
+            columns:
+              - column:
+                  name: booking_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: template_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: internal_notification_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 02112022-add-UniqueConstraint-booking-internal-notification-for-internal-notification-id
+      author: vladimir_egorov
+      changes:
+        - addUniqueConstraint:
+            tableName: booking_internal_notification
+            columnNames: internal_notification_id
+            constraintName: unique_internal_notification_id_in_booking_internal_notification
+
+  - changeSet:
+      id: 02112022-add-ForeignKeyConstraint-booking-internal-notification-to-booking
+      author: vladimir_egorov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: booking_id
+            baseTableName: booking_internal_notification
+            constraintName: fk_booking_internal_notification_booking
+            referencedColumnNames: id
+            referencedTableName: booking
+
+  - changeSet:
+      id: 02112022-add-ForeignKeyConstraint-booking-internal-notification-to-user
+      author: vladimir_egorov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: booking_internal_notification
+            constraintName: fk_booking_internal_notification_to_user
+            referencedColumnNames: id
+            referencedTableName: user
+
+  - changeSet:
+      id: 02112022-add-ForeignKeyConstraint-booking-internal-notification-to-template
+      author: vladimir_egorov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: template_id
+            baseTableName: booking_internal_notification
+            constraintName: fk_booking_internal_notification_to_template
+            referencedColumnNames: id
+            referencedTableName: internal_notification_template
+
+  - changeSet:
+      id:  02112022-add-ForeignKeyConstraint-booking-internal-notification-to-users-internal-notification
+      author: vladimir_egorov
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: internal_notification_id
+            baseTableName: booking_internal_notification
+            constraintName: fk_booking_internal_notification_to_users_internal_notification
+            referencedColumnNames: id
+            referencedTableName: users_internal_notification
+
+  - changeSet:
+      id: 04112022-add-PrimaryKey-for-booking-internal-notification
+      author: vladimir_egorov
+      changes:
+        - addPrimaryKey:
+            columnNames: booking_id, user_id, template_id
+            tableName: booking_internal_notification
+            constraintName: pk_booking_internal_notification

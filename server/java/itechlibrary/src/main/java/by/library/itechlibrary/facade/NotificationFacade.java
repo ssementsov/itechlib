@@ -11,4 +11,10 @@ public interface NotificationFacade {
 
     void sentInternalNotificationAboutBooking(Booking booking, long targetUserId, String templateName);
 
+    void markInternalNotificationAsRead(long userId, long bookingId, String templateName);
+
+    String chooseEmailTemplateName(String bookingStatusName);
+
+    String chooseInternalTemplateName(String bookingStatusName);
+
 }

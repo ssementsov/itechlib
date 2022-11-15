@@ -1,5 +1,6 @@
 package by.library.itechlibrary.service;
 
+import by.library.itechlibrary.dto.internal_notification.BookingInternalNotificationDto;
 import by.library.itechlibrary.dto.internal_notification.UserInternalNotificationCreateDto;
 import by.library.itechlibrary.dto.internal_notification.UserInternalNotificationDto;
 
@@ -13,5 +14,10 @@ public interface UserInternalNotificationService {
 
     boolean isUnread(long userId);
 
-    void sent(UserInternalNotificationCreateDto internalNotificationCreateDto);
+    UserInternalNotificationDto save(UserInternalNotificationCreateDto internalNotificationCreateDto);
+
+    BookingInternalNotificationDto saveBookingInternalNotification(BookingInternalNotificationDto bookingInternalNotificationDto);
+
+    void notifyUserAboutNotifications(long userId, boolean existUnreadNotification);
+
 }

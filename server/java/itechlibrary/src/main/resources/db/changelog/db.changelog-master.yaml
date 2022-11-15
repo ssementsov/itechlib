@@ -39,8 +39,5 @@ databaseChangeLog:
       file: v.1.3/db.changelog-master.yaml
       relativeToChangelogFile: true
   - include:
-      file: v.1.3/db.changelog-change-comment-type-in-booking-acceptance.yml
-      relativeToChangelogFile: true
-  - include:
       file: v.1.4/db.changelog-master.yaml
       relativeToChangelogFile: true

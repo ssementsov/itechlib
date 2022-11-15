@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
     avatar: avatarReducer,
     booksInUse: booksInUseReducer,
     lists: listsReducer,
-    loadingStatus: loadingStatusReducer
+    loadingStatus: loadingStatusReducer,
     internalNotifications: internalNotificationsReducer,
 });
 
